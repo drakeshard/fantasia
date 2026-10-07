@@ -8,25 +8,34 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   bootstrap-evidence:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version-file: .node-version
-          cache: pnpm
+
       - name: Enable Corepack
         run: corepack enable
+
       - name: Prepare shared-library artifacts
         run: node scripts/prepare-shared-packages.mjs
+
       - name: Generate bootstrap lockfile
-        run: corepack pnpm install --lockfile-only --ignore-scripts
+        run: pnpm install --lockfile-only --ignore-scripts
+
       - name: Upload bootstrap evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: game-i00-bootstrap-evidence
           path: |
