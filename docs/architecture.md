@@ -4,22 +4,30 @@
 
 `apps/web` → `packages/runtime` → `packages/game` → selected Drakeshard RPG/Tactical package contracts.
 
-Web Foundation infrastructure will be integrated separately under GAME-I01.
+Foundation is consumed as exact public `@drakeshard/foundation@0.1.2` infrastructure. Browser-only Foundation adapters stay in `apps/web`; renderer-neutral timing, RNG, input handoff, and aggregate persistence orchestration stay in `packages/runtime`. `packages/game` does not depend on Foundation.
 
 ## Ownership
 
 - `packages/game` owns authoritative Fantasia domain state, commands, validation, deterministic simulation, title policy, combat/action semantics, jobs/skills/statuses, objectives, AI, encounter rules, and RPG↔Tactical composition.
-- `packages/runtime` owns application/session orchestration and future Foundation adapters. It is not a renderer owner.
-- `apps/web` owns browser presentation, HTML/CSS/Preact UI, future renderer adapters, camera/animation/effects/audio, and input mapping to game intentions.
+- `packages/runtime` owns application/session orchestration around Foundation fixed-step time, deterministic RNG, normalized input handoff, and aggregate save services. It is not a renderer or browser owner.
+- `apps/web` owns browser presentation, HTML/CSS/Preact UI, browser input adapters, IndexedDB storage adapters, future renderer adapters, camera/animation/effects/audio, and input mapping to game intentions.
 - Drakeshard RPG and Tactical remain sibling dependencies. Fantasia may consume selected package subpaths, but neither library may depend on the other because Fantasia uses both.
+
+## Foundation boundary
+
+Fantasia imports Foundation only through supported package subpaths. Package-root imports and repository/source imports are forbidden.
+
+The application or future renderer supplies elapsed frame time to `FixedStepDriver`; Foundation does not own the browser frame loop. `DeterministicRng` state is part of runtime state and can be snapshotted for later aggregate persistence. Physical browser input is normalized by Foundation browser adapters and enters authoritative processing only through `TickInputHandoff.consumeTick()` at a simulation tick.
+
+Foundation validates save envelopes and save-format migration mechanics. Fantasia owns aggregate payload structure, game/content/schema versions, payload validation, and when a migrated payload is saved again. IndexedDB and wall-clock save timestamps remain browser/application concerns.
 
 ## Renderer boundary
 
-GAME-I00 does not select Phaser or PlayCanvas. The GDD still permits either 2D or true 2.5D presentation. Renderer coordinates, physics, frame timing, DOM state, and animation state cannot become authoritative simulation inputs.
+No production renderer is selected yet. The GDD still permits either 2D or true 2.5D presentation. Renderer coordinates, physics, frame timing, DOM state, and animation state cannot become authoritative simulation inputs.
 
 ## Determinism
 
-Authoritative simulation code must not use uncontrolled `Math.random()`, wall-clock time, browser frame timing, renderer physics, or presentation state. Explicit time/RNG integration arrives with the admitted Foundation contracts under GAME-I01.
+Authoritative simulation code must not use uncontrolled `Math.random()`, wall-clock time, browser frame timing, renderer physics, or presentation state. Runtime time and randomness are explicit Foundation-backed inputs, while the game/domain stays renderer and browser neutral.
 
 ## Private-repository workflow
 
