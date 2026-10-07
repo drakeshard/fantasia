@@ -28,6 +28,12 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+
+      - name: Verify shared-library provenance
+        run: node scripts/verify-shared-packages.mjs
+
       - name: Require committed lockfile
         run: test -f pnpm-lock.yaml
 
@@ -39,12 +45,6 @@ jobs:
 
       - name: Foundation package consumer
         run: pnpm foundation:consumer
-
-      - name: Prepare pinned shared-library artifacts
-        run: pnpm shared:prepare
-
-      - name: Verify shared-library provenance
-        run: pnpm shared:verify
 
       - name: Combined RPG/Tactical package consumer
         run: pnpm shared:consumer
