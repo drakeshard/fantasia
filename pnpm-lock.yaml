@@ -204,7 +204,14 @@ importers:
         specifier: 8.3.1
         version: 8.3.1(@types/node@24.19.1)
 
-  packages/game: {}
+  packages/game:
+    dependencies:
+      '@drakeshard/rpg':
+        specifier: file:../../.artifacts/shared/drakeshard-rpg-0.1.0.tgz
+        version: file:.artifacts/shared/drakeshard-rpg-0.1.0.tgz
+      '@drakeshard/tactical':
+        specifier: file:../../.artifacts/shared/drakeshard-tactical-0.1.0.tgz
+        version: file:.artifacts/shared/drakeshard-tactical-0.1.0.tgz
 
   packages/runtime:
     dependencies:
@@ -276,6 +283,14 @@ packages:
 
   '@drakeshard/foundation@0.1.2':
     resolution: {integrity: sha512-qIpWsSbE0lw7b/bftKdWJYq0azHTLWiT6Z/POU1KsNYeq4uSzJRhbcvsnAK+t+DKVxSBHxCCiiX/5hnKHouhGQ==}
+
+  '@drakeshard/rpg@file:.artifacts/shared/drakeshard-rpg-0.1.0.tgz':
+    resolution: {integrity: sha512-SvukEr9tEdY5+FfKYRkZGRbyhm86XYDpjzbtCScM851BfeUpe7imgQFrzgghvyOJ41418kT/8JSb8vEN8TsSlQ==, tarball: file:.artifacts/shared/drakeshard-rpg-0.1.0.tgz}
+    version: 0.1.0
+
+  '@drakeshard/tactical@file:.artifacts/shared/drakeshard-tactical-0.1.0.tgz':
+    resolution: {integrity: sha512-YiMGU5vbzdd/adHfkcWHrXRW6CBvmztwbZ0XiTtuJOxhgELYzjlSry3qMa7SXAu1/Ze8wAqPswWz//EAa/TKHg==, tarball: file:.artifacts/shared/drakeshard-tactical-0.1.0.tgz}
+    version: 0.1.0
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -863,6 +878,10 @@ snapshots:
   '@drakeshard/foundation@0.1.2':
     dependencies:
       idb: 8.0.3
+
+  '@drakeshard/rpg@file:.artifacts/shared/drakeshard-rpg-0.1.0.tgz': {}
+
+  '@drakeshard/tactical@file:.artifacts/shared/drakeshard-tactical-0.1.0.tgz': {}
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
