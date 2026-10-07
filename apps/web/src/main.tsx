@@ -35,8 +35,8 @@ function App() {
       <h1>Fantasia</h1>
       <p class="status">{runtimeStatus()}</p>
       <p class="note">
-        GAME-I01 runtime infrastructure is wired. Gameplay and renderer selection remain intentionally
-        deferred.
+        GAME-I01 runtime infrastructure is wired. Gameplay and renderer selection remain
+        intentionally deferred.
       </p>
     </main>
   );
