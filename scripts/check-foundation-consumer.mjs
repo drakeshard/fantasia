@@ -1,3 +1,7 @@
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
+
+const runtimeRequire = createRequire(new URL("../packages/runtime/package.json", import.meta.url));
 const supportedSubpaths = [
   "@drakeshard/foundation/time",
   "@drakeshard/foundation/random",
@@ -8,13 +12,14 @@ const supportedSubpaths = [
 ];
 
 for (const specifier of supportedSubpaths) {
-  await import(specifier);
+  const resolved = runtimeRequire.resolve(specifier);
+  await import(pathToFileURL(resolved).href);
   console.log(`resolved ${specifier}`);
 }
 
 let rootResolved = false;
 try {
-  await import("@drakeshard/foundation");
+  runtimeRequire.resolve("@drakeshard/foundation");
   rootResolved = true;
 } catch {
   // Expected: Foundation intentionally has no package-root export.
