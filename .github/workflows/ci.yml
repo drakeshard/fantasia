@@ -43,6 +43,9 @@ jobs:
       - name: Verify shared-library provenance
         run: pnpm shared:verify
 
+      - name: Combined RPG/Tactical package consumer
+        run: pnpm shared:consumer
+
       - name: Formatting, lint, architecture, and determinism
         run: pnpm check
 
