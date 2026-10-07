@@ -6,22 +6,19 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: quality-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  bootstrap-evidence:
-    if: github.event_name == 'pull_request'
+  quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
-      - name: Checkout feature branch
+      - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.head_ref }}
 
       - name: Setup Node
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -31,23 +28,35 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Prepare shared-library artifacts
-        run: node scripts/prepare-shared-packages.mjs
+      - name: Require committed lockfile
+        run: test -f pnpm-lock.yaml
 
-      - name: Generate bootstrap lockfile
-        run: pnpm install --lockfile-only --ignore-scripts
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Record shared-library provenance
-        run: cp .artifacts/shared/generated-provenance.json config/shared-library-provenance.json
+      - name: Dependency audit
+        run: pnpm audit
 
-      - name: Commit generated bootstrap evidence once
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pnpm-lock.yaml config/shared-library-provenance.json
-          if git diff --cached --quiet; then
-            echo "Bootstrap evidence is already committed."
-          else
-            git commit -m "chore: record bootstrap lockfile and shared provenance"
-            git push origin HEAD:${{ github.head_ref }}
-          fi
+      - name: Prepare pinned shared-library artifacts
+        run: pnpm shared:prepare
+
+      - name: Verify shared-library provenance
+        run: pnpm shared:verify
+
+      - name: Formatting, lint, architecture, and determinism
+        run: pnpm check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit and integration tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Browser smoke
+        run: pnpm test:e2e
