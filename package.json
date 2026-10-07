@@ -17,11 +17,12 @@
     "check:determinism": "node scripts/check-determinism.mjs",
     "shared:prepare": "node scripts/prepare-shared-packages.mjs",
     "shared:verify": "node scripts/verify-shared-packages.mjs",
+    "audit": "pnpm audit --audit-level moderate",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test --project=chromium",
     "build": "pnpm -r build",
-    "verify": "pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
+    "verify": "pnpm audit && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
