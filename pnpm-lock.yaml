@@ -187,6 +187,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@drakeshard/foundation':
+        specifier: 0.1.2
+        version: 0.1.2
+      '@fantasia/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
       '@preact/signals':
         specifier: 2.11.2
         version: 2.11.2(preact@10.29.8)
@@ -194,9 +200,6 @@ importers:
         specifier: 10.29.8
         version: 10.29.8
     devDependencies:
-      '@fantasia/runtime':
-        specifier: workspace:*
-        version: link:../../packages/runtime
       vite:
         specifier: 8.3.1
         version: 8.3.1(@types/node@24.19.1)
@@ -205,6 +208,9 @@ importers:
 
   packages/runtime:
     dependencies:
+      '@drakeshard/foundation':
+        specifier: 0.1.2
+        version: 0.1.2
       '@fantasia/game':
         specifier: workspace:*
         version: link:../game
@@ -267,6 +273,9 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
+
+  '@drakeshard/foundation@0.1.2':
+    resolution: {integrity: sha512-qIpWsSbE0lw7b/bftKdWJYq0azHTLWiT6Z/POU1KsNYeq4uSzJRhbcvsnAK+t+DKVxSBHxCCiiX/5hnKHouhGQ==}
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -575,6 +584,9 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  idb@8.0.3:
+    resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
+
   lightningcss-android-arm64@1.33.0:
     resolution: {integrity: sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==}
     engines: {node: '>= 12.0.0'}
@@ -848,6 +860,10 @@ snapshots:
   '@biomejs/cli-win32-x64@2.5.14':
     optional: true
 
+  '@drakeshard/foundation@0.1.2':
+    dependencies:
+      idb: 8.0.3
+
   '@jridgewell/resolve-uri@3.1.2': {}
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
@@ -1021,6 +1037,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  idb@8.0.3: {}
 
   lightningcss-android-arm64@1.33.0:
     optional: true

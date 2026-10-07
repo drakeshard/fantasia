@@ -37,6 +37,9 @@ jobs:
       - name: Dependency audit
         run: pnpm audit
 
+      - name: Foundation package consumer
+        run: pnpm foundation:consumer
+
       - name: Prepare pinned shared-library artifacts
         run: pnpm shared:prepare
 

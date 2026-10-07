@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@drakeshard/foundation": "0.1.2",
+    "@fantasia/runtime": "workspace:*",
     "@preact/signals": "2.11.2",
     "preact": "10.29.8"
   },
   "devDependencies": {
-    "@fantasia/runtime": "workspace:*",
     "vite": "8.3.1"
   }
 }
