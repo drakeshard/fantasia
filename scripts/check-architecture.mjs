@@ -26,7 +26,8 @@ const rules = [
       /\b(?:window|document|HTMLElement|HTMLCanvasElement)\b/,
       /["'](?:\.\.\/)*\.cache\/shared-sources\//,
     ],
-    message: "game/domain must stay renderer, DOM, UI, Foundation-runtime, and repository-source neutral",
+    message:
+      "game/domain must stay renderer, DOM, UI, Foundation-runtime, and repository-source neutral",
   },
   {
     dir: join(root, "packages/runtime/src"),
