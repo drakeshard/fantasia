@@ -1,19 +1,11 @@
-import {
-  MonotonicInputSequence,
-  type PhysicalInputEvent,
-} from "@drakeshard/foundation/input";
+import { MonotonicInputSequence, type PhysicalInputEvent } from "@drakeshard/foundation/input";
 import {
   BrowserInputLifecycle,
   KeyboardBrowserAdapter,
 } from "@drakeshard/foundation/input/browser";
-import {
-  IndexedDbSaveStorage,
-} from "@drakeshard/foundation/storage/browser";
 import type { JsonValue, SaveService } from "@drakeshard/foundation/storage";
-import {
-  createFantasiaSaveService,
-  type FantasiaRuntimeSession,
-} from "@fantasia/runtime";
+import { IndexedDbSaveStorage } from "@drakeshard/foundation/storage/browser";
+import { createFantasiaSaveService, type FantasiaRuntimeSession } from "@fantasia/runtime";
 
 export interface BrowserInputBinding {
   attach(): void;
