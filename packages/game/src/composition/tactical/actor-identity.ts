@@ -4,10 +4,10 @@ import {
   type TacticalEntityId,
 } from "@drakeshard/tactical/identity";
 import {
+  type ActorId,
   actorIdsEqual,
   deserializeActorId,
   serializeActorId,
-  type ActorId,
 } from "../../actors/identity.js";
 
 export interface ActorTacticalAssociation {
@@ -75,7 +75,9 @@ export function actorForTacticalEntity(
   )?.actorId;
 }
 
-export function serializeActorIdentityState(state: ActorIdentityState): SerializedActorIdentityState {
+export function serializeActorIdentityState(
+  state: ActorIdentityState,
+): SerializedActorIdentityState {
   return {
     associations: state.associations.map((association) => ({
       actorId: serializeActorId(association.actorId),
