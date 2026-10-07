@@ -1,8 +1,11 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 
 const root = process.cwd();
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".mjs", ".cjs"]);
+const pins = JSON.parse(
+  await readFile(join(root, "config/shared-library-pins.json"), "utf8"),
+);
 
 async function collect(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -22,9 +25,9 @@ const rules = [
       /from\s+["'](?:preact|@preact\/signals|phaser|playcanvas)["']/,
       /from\s+["'](?:\.\.\/)*apps\//,
       /\b(?:window|document|HTMLElement|HTMLCanvasElement)\b/,
-      /from\s+["']@drakeshard\/(?:rpg|tactical)["']/,
+      /["'](?:\.\.\/)*\.cache\/shared-sources\//,
     ],
-    message: "game/domain must stay renderer, DOM, UI, and sibling-root-import neutral",
+    message: "game/domain must stay renderer, DOM, UI, and repository-source neutral",
   },
   {
     dir: join(root, "packages/runtime/src"),
@@ -42,6 +45,24 @@ for (const rule of rules) {
         console.error(`${relative(root, file)}: ${rule.message}`);
         failed = true;
       }
+    }
+  }
+}
+
+const sharedImportPattern = /["'](@drakeshard\/(rpg|tactical)(?:\/([^"']+))?)["']/g;
+for (const file of await collect(join(root, "packages/game/src"))) {
+  const source = await readFile(file, "utf8");
+  for (const match of source.matchAll(sharedImportPattern)) {
+    const [, specifier, libraryName, subpath] = match;
+    if (!subpath) {
+      console.error(`${relative(root, file)}: unsupported shared-library root import ${specifier}`);
+      failed = true;
+      continue;
+    }
+    const selected = pins.libraries[libraryName]?.selectedSubpaths ?? [];
+    if (!selected.includes(subpath)) {
+      console.error(`${relative(root, file)}: unselected shared-library subpath ${specifier}`);
+      failed = true;
     }
   }
 }
