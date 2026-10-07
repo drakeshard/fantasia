@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+.vite/
+.cache/
+.artifacts/shared/*.tgz
+.artifacts/shared/generated-provenance.json
+.env
+.env.*
+!.env.example
+.DS_Store

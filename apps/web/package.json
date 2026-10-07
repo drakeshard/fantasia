@@ -1,0 +1,20 @@
+{
+  "name": "@fantasia/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@preact/signals": "2.11.2",
+    "preact": "10.29.8"
+  },
+  "devDependencies": {
+    "@fantasia/runtime": "workspace:*",
+    "vite": "8.3.1"
+  }
+}

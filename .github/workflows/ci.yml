@@ -1,0 +1,35 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Prepare shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+      - name: Generate bootstrap lockfile
+        run: corepack pnpm install --lockfile-only --ignore-scripts
+      - name: Upload bootstrap evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-i00-bootstrap-evidence
+          path: |
+            pnpm-lock.yaml
+            .artifacts/shared/generated-provenance.json
+          if-no-files-found: error

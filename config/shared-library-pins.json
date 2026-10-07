@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "libraries": {
+    "rpg": {
+      "repository": "https://github.com/drakeshard/rpg.git",
+      "sha": "66506160896175ad205867819c7db2fe31b7f594",
+      "package": "@drakeshard/rpg",
+      "version": "0.1.0",
+      "selectedSubpaths": [
+        "advancement",
+        "attributes",
+        "capabilities",
+        "loadout",
+        "resources",
+        "roles",
+        "specialization"
+      ]
+    },
+    "tactical": {
+      "repository": "https://github.com/drakeshard/tactical.git",
+      "sha": "f27c8b6ab605e27cf54384a24098fd4da336bd78",
+      "package": "@drakeshard/tactical",
+      "version": "0.1.0",
+      "selectedSubpaths": [
+        "identity",
+        "topology",
+        "square",
+        "square-queries",
+        "placement",
+        "traversal",
+        "reachability",
+        "pathfinding",
+        "elevation",
+        "square-visibility",
+        "square-cover",
+        "displacement"
+      ]
+    }
+  }
+}
