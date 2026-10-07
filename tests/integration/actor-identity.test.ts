@@ -1,5 +1,5 @@
 import type { AdvancementState } from "@drakeshard/rpg/advancement";
-import { tacticalEntityId, type TacticalEntityId } from "@drakeshard/tactical/identity";
+import { type TacticalEntityId, tacticalEntityId } from "@drakeshard/tactical/identity";
 import { describe, expect, it } from "vitest";
 import {
   actorForTacticalEntity,
