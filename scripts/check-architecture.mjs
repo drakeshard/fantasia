@@ -21,11 +21,12 @@ const rules = [
     dir: join(root, "packages/game/src"),
     forbidden: [
       /from\s+["'](?:preact|@preact\/signals|phaser|playcanvas)["']/,
+      /from\s+["']@drakeshard\/foundation(?:\/[^"']+)?["']/,
       /from\s+["'](?:\.\.\/)*apps\//,
       /\b(?:window|document|HTMLElement|HTMLCanvasElement)\b/,
       /["'](?:\.\.\/)*\.cache\/shared-sources\//,
     ],
-    message: "game/domain must stay renderer, DOM, UI, and repository-source neutral",
+    message: "game/domain must stay renderer, DOM, UI, Foundation-runtime, and repository-source neutral",
   },
   {
     dir: join(root, "packages/runtime/src"),
@@ -44,6 +45,22 @@ for (const rule of rules) {
         failed = true;
       }
     }
+  }
+}
+
+const applicationSources = [
+  ...(await collect(join(root, "packages/runtime/src"))),
+  ...(await collect(join(root, "apps/web/src"))),
+];
+for (const file of applicationSources) {
+  const source = await readFile(file, "utf8");
+  if (/from\s+["']@drakeshard\/foundation["']/.test(source)) {
+    console.error(`${relative(root, file)}: unsupported Foundation package-root import`);
+    failed = true;
+  }
+  if (/drakeshard\/web-foundation|packages\/foundation\/src/.test(source)) {
+    console.error(`${relative(root, file)}: Foundation repository/source import is forbidden`);
+    failed = true;
   }
 }
 
