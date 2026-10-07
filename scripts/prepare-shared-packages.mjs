@@ -1,10 +1,12 @@
-import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
 
 const root = process.cwd();
-const pins = JSON.parse(await readFile(join(root, "config/shared-library-pins.json"), "utf8"));
+const pins = JSON.parse(
+  await readFile(join(root, "config/shared-library-pins.json"), "utf8"),
+);
 const sourceRoot = join(root, ".cache/shared-sources");
 const artifactRoot = join(root, ".artifacts/shared");
 
@@ -59,7 +61,9 @@ for (const [key, library] of Object.entries(pins.libraries)) {
   await run("corepack", ["pnpm", "build"], { cwd: checkout });
   await run("corepack", ["pnpm", "check:public-api-readiness"], { cwd: checkout });
   await run("corepack", ["pnpm", "check:package-consumer"], { cwd: checkout });
-  await run("corepack", ["pnpm", "pack", "--pack-destination", artifactRoot], { cwd: checkout });
+  await run("corepack", ["pnpm", "pack", "--pack-destination", artifactRoot], {
+    cwd: checkout,
+  });
 
   const expectedName = `${library.package.replace("@", "").replace("/", "-")}-${library.version}.tgz`;
   const artifactPath = resolve(artifactRoot, expectedName);
