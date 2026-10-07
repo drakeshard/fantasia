@@ -1,32 +1,27 @@
-import type {
-  PersistenceResult,
-  SaveSlotId,
-  SaveStorage,
-} from "@drakeshard/foundation/storage";
 import { describe, expect, it } from "vitest";
 import {
   createFantasiaSaveService,
   FANTASIA_SAVE_FORMAT_VERSION,
 } from "../../packages/runtime/src/index.ts";
 
-class MemorySaveStorage implements SaveStorage {
-  readonly records = new Map<SaveSlotId, string>();
+class MemorySaveStorage {
+  readonly records = new Map<string, string>();
 
-  async read(slotId: SaveSlotId): Promise<PersistenceResult<string | null>> {
-    return { ok: true, value: this.records.get(slotId) ?? null };
+  async read(slotId: string) {
+    return { ok: true as const, value: this.records.get(slotId) ?? null };
   }
 
-  async write(slotId: SaveSlotId, serialized: string): Promise<PersistenceResult<void>> {
+  async write(slotId: string, serialized: string) {
     this.records.set(slotId, serialized);
-    return { ok: true, value: undefined };
+    return { ok: true as const, value: undefined };
   }
 
-  async delete(slotId: SaveSlotId): Promise<PersistenceResult<boolean>> {
-    return { ok: true, value: this.records.delete(slotId) };
+  async delete(slotId: string) {
+    return { ok: true as const, value: this.records.delete(slotId) };
   }
 
-  async list(): Promise<PersistenceResult<readonly SaveSlotId[]>> {
-    return { ok: true, value: [...this.records.keys()].sort() };
+  async list() {
+    return { ok: true as const, value: [...this.records.keys()].sort() };
   }
 }
 
