@@ -1,0 +1,36 @@
+{
+  "name": "@fantasia/workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@12.8.1",
+  "engines": {
+    "node": "24.21.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @fantasia/web dev",
+    "check": "pnpm check:format && pnpm check:architecture && pnpm check:determinism",
+    "check:write": "biome check --write .",
+    "check:format": "biome check .",
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "check:determinism": "node scripts/check-determinism.mjs",
+    "shared:prepare": "node scripts/prepare-shared-packages.mjs",
+    "shared:verify": "node scripts/verify-shared-packages.mjs",
+    "shared:consumer": "node scripts/check-shared-consumer.mjs",
+    "audit": "pnpm audit --audit-level moderate",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test --project=chromium",
+    "build": "pnpm -r build",
+    "verify": "pnpm audit && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.19.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.1",
+    "vitest": "5.0.2"
+  }
+}

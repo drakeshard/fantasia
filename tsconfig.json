@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/game" },
+    { "path": "./packages/runtime" },
+    { "path": "./apps/web" }
+  ]
+}
