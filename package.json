@@ -17,6 +17,7 @@
     "check:determinism": "node scripts/check-determinism.mjs",
     "shared:prepare": "node scripts/prepare-shared-packages.mjs",
     "shared:verify": "node scripts/verify-shared-packages.mjs",
+    "shared:consumer": "node scripts/check-shared-consumer.mjs",
     "audit": "pnpm audit --audit-level moderate",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run --passWithNoTests",
