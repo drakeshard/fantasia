@@ -4,9 +4,7 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
 
 const root = process.cwd();
-const pins = JSON.parse(
-  await readFile(join(root, "config/shared-library-pins.json"), "utf8"),
-);
+const pins = JSON.parse(await readFile(join(root, "config/shared-library-pins.json"), "utf8"));
 const sourceRoot = join(root, ".cache/shared-sources");
 const artifactRoot = join(root, ".artifacts/shared");
 
