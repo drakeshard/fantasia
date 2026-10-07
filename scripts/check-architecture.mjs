@@ -3,9 +3,7 @@ import { extname, join, relative } from "node:path";
 
 const root = process.cwd();
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".mjs", ".cjs"]);
-const pins = JSON.parse(
-  await readFile(join(root, "config/shared-library-pins.json"), "utf8"),
-);
+const pins = JSON.parse(await readFile(join(root, "config/shared-library-pins.json"), "utf8"));
 
 async function collect(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
