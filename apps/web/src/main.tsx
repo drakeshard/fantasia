@@ -1,5 +1,5 @@
-import { render } from "preact";
 import { runtimeStatus } from "@fantasia/runtime";
+import { render } from "preact";
 import "./styles.css";
 
 function App() {
@@ -8,7 +8,9 @@ function App() {
       <p class="eyebrow">Drakeshard Studios</p>
       <h1>Fantasia</h1>
       <p class="status">{runtimeStatus()}</p>
-      <p class="note">GAME-I00 engineering bootstrap. Gameplay and renderer selection intentionally deferred.</p>
+      <p class="note">
+        GAME-I00 engineering bootstrap. Gameplay and renderer selection intentionally deferred.
+      </p>
     </main>
   );
 }
