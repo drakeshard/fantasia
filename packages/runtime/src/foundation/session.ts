@@ -1,20 +1,17 @@
 import {
-  ActionBindingResolver,
-  InputContextRouter,
-  TickInputHandoff,
   type ActionBinding,
+  ActionBindingResolver,
   type InputContextDefinition,
+  InputContextRouter,
   type PhysicalInputEvent,
+  TickInputHandoff,
   type TickInputSnapshot,
 } from "@drakeshard/foundation/input";
+import { DeterministicRng, type DeterministicRngState } from "@drakeshard/foundation/random";
 import {
-  DeterministicRng,
-  type DeterministicRngState,
-} from "@drakeshard/foundation/random";
-import {
-  FixedStepDriver,
   type FixedStepAdvanceResult,
   type FixedStepConfig,
+  FixedStepDriver,
 } from "@drakeshard/foundation/time";
 
 export type RuntimeRandomSource =
@@ -78,7 +75,10 @@ export class FantasiaRuntimeSession {
     this.#input.ingest(event);
   }
 
-  advance(frameDeltaMs: number, onTick: (context: RuntimeTickContext) => void): FixedStepAdvanceResult {
+  advance(
+    frameDeltaMs: number,
+    onTick: (context: RuntimeTickContext) => void,
+  ): FixedStepAdvanceResult {
     const frame = this.#driver.advance(frameDeltaMs);
 
     for (let index = 0; index < frame.steps; index += 1) {
