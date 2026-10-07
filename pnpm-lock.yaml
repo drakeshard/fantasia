@@ -190,6 +190,9 @@ importers:
       '@drakeshard/foundation':
         specifier: 0.1.2
         version: 0.1.2
+      '@fantasia/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
       '@preact/signals':
         specifier: 2.11.2
         version: 2.11.2(preact@10.29.8)
@@ -197,9 +200,6 @@ importers:
         specifier: 10.29.8
         version: 10.29.8
     devDependencies:
-      '@fantasia/runtime':
-        specifier: workspace:*
-        version: link:../../packages/runtime
       vite:
         specifier: 8.3.1
         version: 8.3.1(@types/node@24.19.1)
