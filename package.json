@@ -15,7 +15,7 @@
     "check:format": "biome check .",
     "check:architecture": "node scripts/check-architecture.mjs",
     "check:determinism": "node scripts/check-determinism.mjs",
-    "foundation:consumer": "node scripts/check-foundation-consumer.mjs",
+    "foundation:consumer": "node packages/runtime/scripts/check-foundation-consumer.mjs",
     "shared:prepare": "node scripts/prepare-shared-packages.mjs",
     "shared:verify": "node scripts/verify-shared-packages.mjs",
     "shared:consumer": "node scripts/check-shared-consumer.mjs",
