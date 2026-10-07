@@ -9,5 +9,9 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@drakeshard/rpg": "file:../../.artifacts/shared/drakeshard-rpg-0.1.0.tgz",
+    "@drakeshard/tactical": "file:../../.artifacts/shared/drakeshard-tactical-0.1.0.tgz"
   }
 }
