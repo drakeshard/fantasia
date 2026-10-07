@@ -9,6 +9,9 @@ export interface ActorRpgSubject<TState> {
   readonly state: TState;
 }
 
-export function associateRpgSubject<TState>(actorId: ActorId, state: TState): ActorRpgSubject<TState> {
+export function associateRpgSubject<TState>(
+  actorId: ActorId,
+  state: TState,
+): ActorRpgSubject<TState> {
   return { actorId, state };
 }
