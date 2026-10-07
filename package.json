@@ -15,6 +15,7 @@
     "check:format": "biome check .",
     "check:architecture": "node scripts/check-architecture.mjs",
     "check:determinism": "node scripts/check-determinism.mjs",
+    "foundation:consumer": "node scripts/check-foundation-consumer.mjs",
     "shared:prepare": "node scripts/prepare-shared-packages.mjs",
     "shared:verify": "node scripts/verify-shared-packages.mjs",
     "shared:consumer": "node scripts/check-shared-consumer.mjs",
@@ -23,7 +24,7 @@
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test --project=chromium",
     "build": "pnpm -r build",
-    "verify": "pnpm audit && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
+    "verify": "pnpm audit && pnpm foundation:consumer && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
