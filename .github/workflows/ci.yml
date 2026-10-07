@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: quality-${{ github.workflow }}-${{ github.ref }}
@@ -14,11 +14,14 @@ concurrency:
 
 jobs:
   bootstrap-evidence:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout
+      - name: Checkout feature branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Setup Node
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -34,11 +37,17 @@ jobs:
       - name: Generate bootstrap lockfile
         run: pnpm install --lockfile-only --ignore-scripts
 
-      - name: Upload bootstrap evidence
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: game-i00-bootstrap-evidence
-          path: |
-            pnpm-lock.yaml
-            .artifacts/shared/generated-provenance.json
-          if-no-files-found: error
+      - name: Record shared-library provenance
+        run: cp .artifacts/shared/generated-provenance.json config/shared-library-provenance.json
+
+      - name: Commit generated bootstrap evidence once
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pnpm-lock.yaml config/shared-library-provenance.json
+          if git diff --cached --quiet; then
+            echo "Bootstrap evidence is already committed."
+          else
+            git commit -m "chore: record bootstrap lockfile and shared provenance"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
