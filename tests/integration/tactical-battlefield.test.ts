@@ -26,7 +26,10 @@ const groundRules = {
 
 function placeMcAtOrigin() {
   const battlefield = createBattlefieldState({ minX: 0, maxX: 2, minY: 0, maxY: 2 });
-  const result = placeActorOnBattlefield(battlefield, identities, actorId("actor:mc"), { x: 1, y: 1 });
+  const result = placeActorOnBattlefield(battlefield, identities, actorId("actor:mc"), {
+    x: 1,
+    y: 1,
+  });
   if (result.kind !== "placed") throw new Error(`Expected MC placement: ${result.reason.kind}`);
   return result.state;
 }
@@ -56,23 +59,23 @@ describe("GAME-I03 Tactical battlefield production slice", () => {
 
   it("enforces Fantasia exclusive active-entity occupancy", () => {
     const state = placeMcAtOrigin();
-    const result = placeActorOnBattlefield(state, identities, actorId("actor:ally"), { x: 1, y: 1 });
+    const result = placeActorOnBattlefield(state, identities, actorId("actor:ally"), {
+      x: 1,
+      y: 1,
+    });
 
     expect(result.kind).toBe("rejected");
     if (result.kind === "rejected") expect(result.reason.kind).toBe("occupancy-conflict");
   });
 
   it("routes deterministically around static blocked structure", () => {
-    const battlefield = createBattlefieldState(
-      { minX: 0, maxX: 2, minY: 0, maxY: 2 },
-      [{ x: 1, y: 0 }],
-    );
-    const placed = placeActorOnBattlefield(
-      battlefield,
-      identities,
-      actorId("actor:mc"),
-      { x: 0, y: 0 },
-    );
+    const battlefield = createBattlefieldState({ minX: 0, maxX: 2, minY: 0, maxY: 2 }, [
+      { x: 1, y: 0 },
+    ]);
+    const placed = placeActorOnBattlefield(battlefield, identities, actorId("actor:mc"), {
+      x: 0,
+      y: 0,
+    });
     if (placed.kind !== "placed") throw new Error(`Expected MC placement: ${placed.reason.kind}`);
 
     const first = findActorGroundPath(
@@ -112,12 +115,10 @@ describe("GAME-I03 Tactical battlefield production slice", () => {
       [],
       [{ coord: { x: 1, y: 0 }, level: 2 }],
     );
-    const placed = placeActorOnBattlefield(
-      battlefield,
-      identities,
-      actorId("actor:mc"),
-      { x: 0, y: 0 },
-    );
+    const placed = placeActorOnBattlefield(battlefield, identities, actorId("actor:mc"), {
+      x: 0,
+      y: 0,
+    });
     if (placed.kind !== "placed") throw new Error(`Expected MC placement: ${placed.reason.kind}`);
 
     const result = findActorGroundPath(
@@ -174,16 +175,13 @@ describe("GAME-I03 Tactical battlefield production slice", () => {
   });
 
   it("leaves state unchanged when a destination is structurally unreachable", () => {
-    const battlefield = createBattlefieldState(
-      { minX: 0, maxX: 2, minY: 0, maxY: 0 },
-      [{ x: 1, y: 0 }],
-    );
-    const placed = placeActorOnBattlefield(
-      battlefield,
-      identities,
-      actorId("actor:mc"),
-      { x: 0, y: 0 },
-    );
+    const battlefield = createBattlefieldState({ minX: 0, maxX: 2, minY: 0, maxY: 0 }, [
+      { x: 1, y: 0 },
+    ]);
+    const placed = placeActorOnBattlefield(battlefield, identities, actorId("actor:mc"), {
+      x: 0,
+      y: 0,
+    });
     if (placed.kind !== "placed") throw new Error(`Expected MC placement: ${placed.reason.kind}`);
 
     const before = serializeBattlefieldState(placed.state);
