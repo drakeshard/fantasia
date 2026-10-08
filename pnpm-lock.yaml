@@ -162,6 +162,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  pixi.js@8.22.0: 95f906ee0430c3379ac3736ca9127d6132f9c7e158d2a25bd9e307d7e31c3c92
+
 importers:
 
   .:
@@ -198,7 +201,7 @@ importers:
         version: 2.11.2(preact@10.29.8)
       pixi.js:
         specifier: 8.22.0
-        version: 8.22.0
+        version: 8.22.0(patch_hash=95f906ee0430c3379ac3736ca9127d6132f9c7e158d2a25bd9e307d7e31c3c92)
       preact:
         specifier: 10.29.8
         version: 10.29.8
@@ -1183,7 +1186,7 @@ snapshots:
 
   picomatch@4.0.7: {}
 
-  pixi.js@8.22.0:
+  pixi.js@8.22.0(patch_hash=95f906ee0430c3379ac3736ca9127d6132f9c7e158d2a25bd9e307d7e31c3c92):
     dependencies:
       '@pixi/colord': 2.9.6
       '@types/earcut': 3.0.0
