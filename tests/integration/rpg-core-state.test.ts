@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  type ActorRpgDefinition,
   actorId,
   actorRpgProfile,
   createActorRpgState,
   deserializeActorRpgState,
   serializeActorRpgState,
-  type ActorRpgDefinition,
 } from "../../packages/game/src/index.ts";
 
 const definitions: readonly ActorRpgDefinition[] = [
@@ -73,7 +73,10 @@ describe("GAME-I04 RPG core state", () => {
   });
 
   it("rejects duplicate actor definitions and malformed persisted module state", () => {
-    expect(() => createActorRpgState([definitions[0]!, definitions[0]!])).toThrow(
+    const heroDefinition = definitions[0];
+    if (heroDefinition === undefined) throw new Error("Test RPG fixture requires a hero definition");
+
+    expect(() => createActorRpgState([heroDefinition, heroDefinition])).toThrow(
       /Duplicate RPG ActorId definition/,
     );
 
