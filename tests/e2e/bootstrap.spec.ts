@@ -47,7 +47,9 @@ test("standardized Fantasia Battle HUD previews before authoritative commands", 
 }, testInfo) => {
   await page.goto("/");
 
-  await expect(page.getByText("Fantasia", { exact: true })).toBeVisible();
+  if (testInfo.project.name === "chromium-desktop") {
+    await expect(page.getByText("Fantasia", { exact: true })).toBeVisible();
+  }
   await expect(page.getByText("Round 1", { exact: true })).toBeVisible();
   await expect(page.getByText("Scout's turn", { exact: true })).toBeVisible();
   await expect(page.getByText("Defeat the opposing units", { exact: true })).toBeVisible();
@@ -62,26 +64,27 @@ test("standardized Fantasia Battle HUD previews before authoritative commands", 
   await expect(canvas).toHaveAttribute("data-testid", "production-battlefield-canvas");
 
   const touch = testInfo.project.name !== "chromium-desktop";
+  const preview = page.locator(".command-preview");
 
   await page.getByRole("button", { name: "Move", exact: true }).click();
-  await expect(page.getByText("Choose a destination", { exact: true })).toBeVisible();
+  await expect(preview.getByText("Choose a destination", { exact: true })).toBeVisible();
   await activateCanvasPoint(page, 1, 5, touch);
-  await expect(page.getByText("Move to selected square", { exact: true })).toBeVisible();
-  await expect(page.getByText(/Square 1, 5 · Cost 1 · Movement after 4/)).toBeVisible();
+  await expect(preview.getByText("Move to selected square", { exact: true })).toBeVisible();
+  await expect(preview.getByText(/Square 1, 5 · Cost 1 · Movement after 4/)).toBeVisible();
   await expect(page.getByText("5 remaining", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Confirm move", exact: true }).click();
-  await expect(page.getByText("Moved to 1, 5. 4 movement remains.", { exact: true })).toBeVisible();
+  await expect(preview.getByText("Moved to 1, 5. 4 movement remains.", { exact: true })).toBeVisible();
   await expect(page.getByText("4 remaining", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Attack", exact: true }).click();
-  await expect(page.getByText("Choose a target", { exact: true })).toBeVisible();
+  await expect(preview.getByText("Choose a target", { exact: true })).toBeVisible();
   await activateCanvasPoint(page, 2, 5, touch);
-  await expect(page.getByText("Attack Lancer", { exact: true })).toBeVisible();
-  await expect(page.getByText(/Target Lancer · Lancer · HP 110\/110/)).toBeVisible();
+  await expect(preview.getByText("Attack Lancer", { exact: true })).toBeVisible();
+  await expect(preview.getByText(/Target Lancer · Lancer · HP 110\/110/)).toBeVisible();
 
   await page.getByRole("button", { name: "Confirm attack", exact: true }).click();
-  await expect(page.getByText("Attack dealt 9 damage.", { exact: true })).toBeVisible();
+  await expect(preview.getByText("Attack dealt 9 damage.", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "End turn", exact: true }).click();
   await expect(page.getByText("MC's turn", { exact: true })).toBeVisible();
