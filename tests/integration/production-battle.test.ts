@@ -31,9 +31,9 @@ describe("GAME-I08 production battle presentation session", () => {
     expect(moved.view.runtimeTick).toBe(1);
     expect(moved.view.movementRemaining).toBe(4);
     expect(moved.event?.kind).toBe("actor-moved");
-    expect(
-      moved.view.cells.find((cell) => cell.x === 1 && cell.y === 5)?.occupantActorId,
-    ).toBe("production:scout");
+    expect(moved.view.cells.find((cell) => cell.x === 1 && cell.y === 5)?.occupantActorId).toBe(
+      "production:scout",
+    );
 
     const attacked = battle.attackSelected("production:lancer");
     expect(attacked.kind).toBe("applied");

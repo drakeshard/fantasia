@@ -115,11 +115,19 @@ export class ProductionBattleRenderer {
   #draw(): void {
     const view = this.#view;
     if (!view) return;
-    this.#app.stage.removeChildren().forEach((child) => child.destroy({ children: true }));
+    this.#app.stage.removeChildren().forEach((child) => {
+      child.destroy({ children: true });
+    });
 
     const projected = view.cells.map((cell) => ({ cell, point: projection(cell) }));
-    const xs = projected.flatMap(({ point }) => [point.x - TILE_WIDTH / 2, point.x + TILE_WIDTH / 2]);
-    const ys = projected.flatMap(({ point }) => [point.y - TILE_HEIGHT / 2, point.y + TILE_HEIGHT / 2]);
+    const xs = projected.flatMap(({ point }) => [
+      point.x - TILE_WIDTH / 2,
+      point.x + TILE_WIDTH / 2,
+    ]);
+    const ys = projected.flatMap(({ point }) => [
+      point.y - TILE_HEIGHT / 2,
+      point.y + TILE_HEIGHT / 2,
+    ]);
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
     const minY = Math.min(...ys) - UNIT_RADIUS * 2;

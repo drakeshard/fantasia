@@ -28,7 +28,9 @@ function commandMessage(result: ReturnType<ProductionBattleSession["moveSelected
 function App() {
   const battle = useMemo(() => new ProductionBattleSession(), []);
   const [view, setView] = useState<ProductionBattleView>(() => battle.view());
-  const [message, setMessage] = useState("Select a unit or battlefield cell. The active unit may act.");
+  const [message, setMessage] = useState(
+    "Select a unit or battlefield cell. The active unit may act.",
+  );
   const rendererHost = useRef<HTMLDivElement>(null);
   const renderer = useRef<ProductionBattleRenderer>();
 
@@ -151,32 +153,39 @@ function App() {
                     {actor.role} · HP {actor.hpCurrent}/{actor.hpCapacity}
                   </small>
                 </span>
-                <span class="unit-move">{actor.active ? "ACTIVE" : actor.defeated ? "DOWN" : actor.side}</span>
+                <span class="unit-move">
+                  {actor.active ? "ACTIVE" : actor.defeated ? "DOWN" : actor.side}
+                </span>
               </button>
             ))}
           </div>
         </aside>
 
-        <section class="battlefield-panel production-battlefield-panel" aria-label="Production tactical battlefield">
+        <section
+          class="battlefield-panel production-battlefield-panel"
+          aria-label="Production tactical battlefield"
+        >
           <div class="battlefield-toolbar">
             <div>
               <p class="section-kicker">Production Battlefield</p>
               <strong>Fixed oblique 2.5D projection · authoritative square geometry</strong>
             </div>
             <div class="legend">
-              <span><i class="legend-dot reachable" /> Reachable</span>
-              <span><i class="legend-dot elevated" /> Elevation</span>
-              <span><i class="legend-dot blocked" /> Blocked</span>
+              <span>
+                <i class="legend-dot reachable" /> Reachable
+              </span>
+              <span>
+                <i class="legend-dot elevated" /> Elevation
+              </span>
+              <span>
+                <i class="legend-dot blocked" /> Blocked
+              </span>
             </div>
           </div>
-          <div
-            ref={rendererHost}
-            class="pixi-battlefield"
-            data-testid="production-battlefield"
-            aria-label="Interactive Pixi battlefield canvas"
-          />
+          <div ref={rendererHost} class="pixi-battlefield" data-testid="production-battlefield" />
           <p class="renderer-note">
-            Placeholder unit markers are renderer-engineering visuals only. Final pixel sprites remain a separate art-production approval.
+            Placeholder unit markers are renderer-engineering visuals only. Final pixel sprites
+            remain a separate art-production approval.
           </p>
         </section>
 
@@ -194,16 +203,48 @@ function App() {
           </div>
 
           <dl class="stat-grid" aria-label="Selected unit RPG stats">
-            <div><dt>HP</dt><dd>{view.selectedHpCurrent}/{view.selectedHpCapacity}</dd></div>
-            <div><dt>Movement</dt><dd>{selectedIsActive ? view.movementRemaining : "—"}</dd></div>
-            <div><dt>Physical Power</dt><dd>{view.selectedAttributes.physicalPower}</dd></div>
-            <div><dt>Magical Power</dt><dd>{view.selectedAttributes.magicalPower}</dd></div>
-            <div><dt>Defense</dt><dd>{view.selectedAttributes.defense}</dd></div>
-            <div><dt>Resistance</dt><dd>{view.selectedAttributes.resistance}</dd></div>
-            <div><dt>Speed</dt><dd>{view.selectedAttributes.speed}</dd></div>
-            <div><dt>Stability</dt><dd>{view.selectedAttributes.stability}</dd></div>
-            <div><dt>Main Act</dt><dd>{selectedIsActive ? (view.mainActAvailable ? "Ready" : "Spent") : "—"}</dd></div>
-            <div><dt>Path cost</dt><dd>{view.pathCost ?? "—"}</dd></div>
+            <div>
+              <dt>HP</dt>
+              <dd>
+                {view.selectedHpCurrent}/{view.selectedHpCapacity}
+              </dd>
+            </div>
+            <div>
+              <dt>Movement</dt>
+              <dd>{selectedIsActive ? view.movementRemaining : "—"}</dd>
+            </div>
+            <div>
+              <dt>Physical Power</dt>
+              <dd>{view.selectedAttributes.physicalPower}</dd>
+            </div>
+            <div>
+              <dt>Magical Power</dt>
+              <dd>{view.selectedAttributes.magicalPower}</dd>
+            </div>
+            <div>
+              <dt>Defense</dt>
+              <dd>{view.selectedAttributes.defense}</dd>
+            </div>
+            <div>
+              <dt>Resistance</dt>
+              <dd>{view.selectedAttributes.resistance}</dd>
+            </div>
+            <div>
+              <dt>Speed</dt>
+              <dd>{view.selectedAttributes.speed}</dd>
+            </div>
+            <div>
+              <dt>Stability</dt>
+              <dd>{view.selectedAttributes.stability}</dd>
+            </div>
+            <div>
+              <dt>Main Act</dt>
+              <dd>{selectedIsActive ? (view.mainActAvailable ? "Ready" : "Spent") : "—"}</dd>
+            </div>
+            <div>
+              <dt>Path cost</dt>
+              <dd>{view.pathCost ?? "—"}</dd>
+            </div>
           </dl>
 
           <div class="command-box">
@@ -213,7 +254,9 @@ function App() {
                 type="button"
                 class="command-action"
                 onClick={attack}
-                disabled={encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget}
+                disabled={
+                  encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget
+                }
               >
                 Attack {attackTarget?.name ?? "—"}
               </button>
@@ -232,7 +275,9 @@ function App() {
           <div class="dev-note production-note">
             <strong>Authority boundary</strong>
             <p>
-              Pixi projects square coordinates and logical elevation into screen space. Movement legality, occupancy, attacks, HP, turns, outcome, and RNG remain authoritative in the encounter/runtime layers.
+              Pixi projects square coordinates and logical elevation into screen space. Movement
+              legality, occupancy, attacks, HP, turns, outcome, and RNG remain authoritative in the
+              encounter/runtime layers.
             </p>
           </div>
         </aside>

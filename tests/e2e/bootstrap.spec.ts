@@ -26,11 +26,15 @@ function projectedCellPoint(width: number, height: number, x: number, y: number)
   };
 }
 
-test("Fantasia production renderer drives the authoritative encounter", async ({ page }, testInfo) => {
+test("Fantasia production renderer drives the authoritative encounter", async ({
+  page,
+}, testInfo) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Fantasia" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Fantasia Production Battlefield" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Fantasia Production Battlefield" }),
+  ).toBeVisible();
   await expect(page.getByText(/Foundation 0\.1\.2 runtime integration ready/)).toBeVisible();
   await expect(page.getByText("Round 1", { exact: true })).toBeVisible();
   await expect(page.getByText("Turn: Scout", { exact: true })).toBeVisible();

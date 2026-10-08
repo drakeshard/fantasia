@@ -408,9 +408,10 @@ export class ProductionBattleSession {
       return { kind: "rejected", reason: runtimeEvent.reason, view: this.view() };
     }
 
-    const encounterEvent = after.state.events.length > before.state.events.length
-      ? after.state.events.at(-1)
-      : undefined;
+    const encounterEvent =
+      after.state.events.length > before.state.events.length
+        ? after.state.events.at(-1)
+        : undefined;
     return {
       kind: "applied",
       view: this.view(),
