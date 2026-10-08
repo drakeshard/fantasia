@@ -10,10 +10,7 @@ import {
   type SerializedBattlefieldState,
   serializeBattlefieldState,
 } from "../battlefield/state.js";
-import type {
-  CombatEffectiveness,
-  DirectAttackResolvedEvent,
-} from "../combat/foundation.js";
+import type { CombatEffectiveness, DirectAttackResolvedEvent } from "../combat/foundation.js";
 import {
   type ActorRpgDefinition,
   deserializeActorRpgState,
@@ -116,7 +113,9 @@ function serializeEncounterEvent(event: EncounterEvent): SerializedEncounterEven
   }
 }
 
-export function serializeEncounterTurnState(state: EncounterTurnState): SerializedEncounterTurnState {
+export function serializeEncounterTurnState(
+  state: EncounterTurnState,
+): SerializedEncounterTurnState {
   return {
     round: state.round,
     pendingActorIds: state.pendingActorIds.map(serializeActorId),
@@ -137,7 +136,9 @@ export function serializeEncounterState(state: EncounterState): SerializedEncoun
 }
 
 function participantIds(definition: EncounterDefinition): Set<string> {
-  return new Set(definition.participants.map((participant) => serializeActorId(participant.actorId)));
+  return new Set(
+    definition.participants.map((participant) => serializeActorId(participant.actorId)),
+  );
 }
 
 function participantFor(definition: EncounterDefinition, actorId: ActorId) {
@@ -181,7 +182,9 @@ function deserializeEncounterTurnState(
     seen.add(actorId);
   }
   if (!knownParticipants.has(serialized.activeActorId)) {
-    throw new RangeError(`Serialized encounter active actor is unknown: ${serialized.activeActorId}`);
+    throw new RangeError(
+      `Serialized encounter active actor is unknown: ${serialized.activeActorId}`,
+    );
   }
   if (serialized.pendingActorIds[0] !== serialized.activeActorId) {
     throw new RangeError("Serialized encounter active actor must be first in the pending queue");
@@ -203,7 +206,11 @@ function deserializeEncounterTurnState(
   };
 }
 
-function assertKnownActor(actorId: string, knownActors: ReadonlySet<string>, field: string): ActorId {
+function assertKnownActor(
+  actorId: string,
+  knownActors: ReadonlySet<string>,
+  field: string,
+): ActorId {
   if (!knownActors.has(actorId)) {
     throw new RangeError(`${field} references unknown encounter actor: ${actorId}`);
   }
@@ -230,7 +237,8 @@ function deserializeResolvedEvent(
   knownActors: ReadonlySet<string>,
 ): DirectAttackResolvedEvent {
   assertKnownAttack(event.attackReference, definition);
-  if (typeof event.critical !== "boolean") throw new RangeError("Serialized critical must be boolean");
+  if (typeof event.critical !== "boolean")
+    throw new RangeError("Serialized critical must be boolean");
   assertSafeNonNegativeInteger(event.requestedDamage, "requestedDamage");
   assertSafeNonNegativeInteger(event.appliedDamage, "appliedDamage");
   assertSafeNonNegativeInteger(event.hpBefore, "hpBefore");
