@@ -29,6 +29,17 @@ export {
   type RuntimeSessionSnapshot,
   type RuntimeTickContext,
 } from "./foundation/session.js";
+export {
+  createFantasiaEncounterSavePayload,
+  type EncounterSaveCompatibilityRejection,
+  type EncounterSaveResult,
+  FANTASIA_DATA_SCHEMA_VERSION,
+  type FantasiaEncounterSavePayload,
+  loadFantasiaEncounter,
+  type RestoredEncounterRuntime,
+  type RestoreEncounterRuntimeOptions,
+  saveFantasiaEncounter,
+} from "./persistence/encounter-save.js";
 
 export const runtimeStatus = (): string =>
   `${gameDomainStatus()} Foundation 0.1.2 runtime integration ready.`;
