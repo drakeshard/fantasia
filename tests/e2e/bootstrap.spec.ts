@@ -31,7 +31,7 @@ test("Fantasia production renderer drives the authoritative encounter", async ({
 }, testInfo) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "Fantasia" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Fantasia", exact: true })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Fantasia Production Battlefield" }),
   ).toBeVisible();
