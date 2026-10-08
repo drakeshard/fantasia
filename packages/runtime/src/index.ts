@@ -14,6 +14,16 @@ export {
   type RuntimeSessionSnapshot,
   type RuntimeTickContext,
 } from "./foundation/session.js";
+export {
+  createPlaytestBattlefield,
+  FantasiaPlaytestBattlefield,
+  type PlaytestActor,
+  type PlaytestBattlefieldSnapshot,
+  type PlaytestCoord,
+  type PlaytestMoveResult,
+  type PlaytestPath,
+  type PlaytestTile,
+} from "./playtest.js";
 
 export const runtimeStatus = (): string =>
   `${gameDomainStatus()} Foundation 0.1.2 runtime integration ready.`;
