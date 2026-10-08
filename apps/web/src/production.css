@@ -1,0 +1,132 @@
+.production-layout {
+  grid-template-columns: minmax(180px, 220px) minmax(640px, 1fr) minmax(240px, 290px);
+}
+
+.production-battlefield-panel {
+  display: flex;
+  min-height: 620px;
+  flex-direction: column;
+}
+
+.pixi-battlefield {
+  position: relative;
+  min-height: 520px;
+  flex: 1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 45%, rgb(50 82 119 / 42%), transparent 52%),
+    linear-gradient(180deg, rgb(16 26 41 / 92%), rgb(7 12 21 / 98%));
+  touch-action: manipulation;
+}
+
+.pixi-battlefield canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.renderer-note {
+  margin: 0;
+  padding: 10px 16px 12px;
+  border-top: 1px solid rgb(191 208 240 / 8%);
+  color: #7588a8;
+  background: rgb(5 10 18 / 72%);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.command-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 9px 0 10px;
+}
+
+.command-action {
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid rgb(111 166 239 / 52%);
+  border-radius: 9px;
+  color: #edf5ff;
+  background: linear-gradient(145deg, rgb(56 112 188 / 82%), rgb(39 76 129 / 88%));
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.command-action.secondary {
+  border-color: rgb(178 193 218 / 25%);
+  background: rgb(255 255 255 / 4%);
+}
+
+.command-action:hover:not(:disabled),
+.command-action:focus-visible:not(:disabled) {
+  border-color: rgb(174 211 255 / 80%);
+  outline: none;
+  filter: brightness(1.12);
+}
+
+.command-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.production-note {
+  margin-top: 14px;
+}
+
+@media (max-width: 1120px) {
+  .production-layout {
+    grid-template-columns: 180px minmax(560px, 1fr);
+  }
+
+  .production-battlefield-panel {
+    min-height: 560px;
+  }
+
+  .pixi-battlefield {
+    min-height: 460px;
+  }
+}
+
+@media (max-width: 820px) {
+  .production-layout {
+    display: flex;
+  }
+
+  .production-battlefield-panel {
+    min-height: 500px;
+  }
+
+  .pixi-battlefield {
+    min-height: min(68vh, 480px);
+  }
+
+  .unit-list {
+    grid-template-columns: repeat(3, minmax(145px, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .runtime-chip {
+    max-width: 100%;
+    font-size: 0.74rem;
+  }
+
+  .mission-meta span {
+    font-size: 0.68rem;
+  }
+
+  .production-battlefield-panel {
+    min-height: 430px;
+  }
+
+  .pixi-battlefield {
+    min-height: 360px;
+  }
+
+  .command-actions {
+    grid-template-columns: 1fr;
+  }
+}
