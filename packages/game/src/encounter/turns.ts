@@ -1,7 +1,7 @@
 import type { ActorId } from "../actors/identity.js";
 import { serializeActorId } from "../actors/identity.js";
-import { actorRpgProfile, type ActorRpgState } from "../composition/rpg/actor-state.js";
 import type { CombatSide } from "../combat/foundation.js";
+import { type ActorRpgState, actorRpgProfile } from "../composition/rpg/actor-state.js";
 
 export interface EncounterTurnParticipant {
   readonly actorId: ActorId;
@@ -44,7 +44,8 @@ function validateParticipants(
     }
 
     const profile = actorRpgProfile(rpg, participant.actorId);
-    if (profile === undefined) throw new RangeError(`Missing RPG profile for encounter actor: ${id}`);
+    if (profile === undefined)
+      throw new RangeError(`Missing RPG profile for encounter actor: ${id}`);
     return { ...participant, speed: profile.attributes.speed };
   });
 

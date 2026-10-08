@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("Fantasia development UI resolves an authoritative turn, attack, and move", async ({ page }) => {
+test("Fantasia development UI resolves an authoritative turn, attack, and move", async ({
+  page,
+}) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Fantasia" })).toBeVisible();
@@ -29,6 +31,8 @@ test("Fantasia development UI resolves an authoritative turn, attack, and move",
   await destination.hover();
   await expect(page.getByText("1", { exact: true }).last()).toBeVisible();
   await destination.click();
-  await expect(page.getByText("Scout moved to 1, 5. 4 movement remains.", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Scout moved to 1, 5. 4 movement remains.", { exact: true }),
+  ).toBeVisible();
   await expect(destination.getByText("SC")).toBeVisible();
 });

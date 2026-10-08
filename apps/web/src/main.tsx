@@ -254,7 +254,8 @@ function App() {
             <div>
               <h3>{view.selectedActorName}</h3>
               <p>
-                {view.selectedActorRole} · {view.selectedActorSide} {selectedIsActive ? "· Active" : ""}
+                {view.selectedActorRole} · {view.selectedActorSide}{" "}
+                {selectedIsActive ? "· Active" : ""}
               </p>
             </div>
           </div>

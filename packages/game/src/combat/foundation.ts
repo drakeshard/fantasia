@@ -2,7 +2,7 @@ import type { ActorId } from "../actors/identity.js";
 import { actorIdsEqual } from "../actors/identity.js";
 import { battlefieldReadModel } from "../battlefield/read-model.js";
 import type { BattlefieldState } from "../battlefield/state.js";
-import { actorRpgProfile, type ActorRpgState } from "../composition/rpg/actor-state.js";
+import { type ActorRpgState, actorRpgProfile } from "../composition/rpg/actor-state.js";
 import { damageActorHp } from "../composition/rpg/hp.js";
 import type { ActorIdentityState } from "../composition/tactical/actor-identity.js";
 
@@ -164,10 +164,7 @@ export function combatEffectiveness(
     damageCategoryMultiplier,
     elementalMultiplier,
     combinedMultiplier:
-      1 +
-      (classMultiplier - 1) +
-      (damageCategoryMultiplier - 1) +
-      (elementalMultiplier - 1),
+      1 + (classMultiplier - 1) + (damageCategoryMultiplier - 1) + (elementalMultiplier - 1),
   };
 }
 
@@ -219,17 +216,19 @@ function mitigationFor(
   return null;
 }
 
-export function resolveDirectAttack(input: Readonly<{
-  definition: DirectAttackDefinition;
-  attackerId: ActorId;
-  defenderId: ActorId;
-  participants: readonly CombatParticipant[];
-  rpg: ActorRpgState;
-  battlefield: BattlefieldState;
-  identities: ActorIdentityState;
-  rolls: AttackResolutionRolls;
-  damagePolicy: DamagePolicy;
-}>): DirectAttackOutcome {
+export function resolveDirectAttack(
+  input: Readonly<{
+    definition: DirectAttackDefinition;
+    attackerId: ActorId;
+    defenderId: ActorId;
+    participants: readonly CombatParticipant[];
+    rpg: ActorRpgState;
+    battlefield: BattlefieldState;
+    identities: ActorIdentityState;
+    rolls: AttackResolutionRolls;
+    damagePolicy: DamagePolicy;
+  }>,
+): DirectAttackOutcome {
   const { definition } = input;
   if (!validDefinition(definition)) {
     return { kind: "rejected", rpg: input.rpg, reason: "invalid-definition" };
@@ -346,8 +345,5 @@ export function resolveDirectAttack(input: Readonly<{
 export const developmentGrayboxDamagePolicy: DamagePolicy = (input) => {
   const scaled = input.power * input.coefficient;
   const mitigated = Math.max(0, scaled - (input.mitigation?.value ?? 0));
-  return Math.max(
-    0,
-    Math.round(mitigated * input.effectiveness * input.criticalMultiplier),
-  );
+  return Math.max(0, Math.round(mitigated * input.effectiveness * input.criticalMultiplier));
 };

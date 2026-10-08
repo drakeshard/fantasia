@@ -1,19 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
+  type ActorRpgDefinition,
   actorId,
+  type CombatParticipant,
   combatEffectiveness,
   createActorRpgState,
   createBattlefieldState,
   createEncounterTurnState,
+  type DamagePolicyInput,
+  type DirectAttackDefinition,
   damageActorHp,
   deserializeActorIdentityState,
-  type DirectAttackDefinition,
   placeActorOnBattlefield,
   resolveDirectAttack,
   serializeActorId,
-  type ActorRpgDefinition,
-  type CombatParticipant,
-  type DamagePolicyInput,
 } from "../../packages/game/src/index.ts";
 
 const attackerId = actorId("combat:attacker");
@@ -68,10 +68,16 @@ function combatFixture() {
     ],
   });
   let battlefield = createBattlefieldState({ minX: 0, maxX: 2, minY: 0, maxY: 0 });
-  const attackerPlaced = placeActorOnBattlefield(battlefield, identities, attackerId, { x: 0, y: 0 });
+  const attackerPlaced = placeActorOnBattlefield(battlefield, identities, attackerId, {
+    x: 0,
+    y: 0,
+  });
   if (attackerPlaced.kind !== "placed") throw new Error("Failed to place combat attacker fixture");
   battlefield = attackerPlaced.state;
-  const defenderPlaced = placeActorOnBattlefield(battlefield, identities, defenderId, { x: 1, y: 0 });
+  const defenderPlaced = placeActorOnBattlefield(battlefield, identities, defenderId, {
+    x: 1,
+    y: 0,
+  });
   if (defenderPlaced.kind !== "placed") throw new Error("Failed to place combat defender fixture");
   battlefield = defenderPlaced.state;
   const participants: readonly CombatParticipant[] = [
@@ -89,16 +95,24 @@ describe("GAME-I05 combat effectiveness", () => {
       elementalMultiplier: 1.25,
       combinedMultiplier: 1.05,
     });
-    expect(combatEffectiveness("Archer", "Aquatic", "magical", "lightning").combinedMultiplier).toBeCloseTo(1.35);
-    expect(combatEffectiveness("Archer", "Flyer", "magical", "wind").combinedMultiplier).toBeCloseTo(1.6);
-    expect(combatEffectiveness("Holy", "Demon", "magical", "light").combinedMultiplier).toBeCloseTo(2.25);
+    expect(
+      combatEffectiveness("Archer", "Aquatic", "magical", "lightning").combinedMultiplier,
+    ).toBeCloseTo(1.35);
+    expect(
+      combatEffectiveness("Archer", "Flyer", "magical", "wind").combinedMultiplier,
+    ).toBeCloseTo(1.6);
+    expect(combatEffectiveness("Holy", "Demon", "magical", "light").combinedMultiplier).toBeCloseTo(
+      2.25,
+    );
     expect(combatEffectiveness("Demon", "Holy", "physical", "dark")).toEqual({
       classMultiplier: 0.5,
       damageCategoryMultiplier: 1,
       elementalMultiplier: 1.25,
       combinedMultiplier: 0.75,
     });
-    expect(combatEffectiveness("Sorcerer", "Holy", "magical", "light").elementalMultiplier).toBe(0.9);
+    expect(combatEffectiveness("Sorcerer", "Holy", "magical", "light").elementalMultiplier).toBe(
+      0.9,
+    );
   });
 });
 

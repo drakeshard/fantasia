@@ -1,7 +1,7 @@
 import { decreaseResource } from "@drakeshard/rpg/resources";
 import type { ActorId } from "../../actors/identity.js";
 import { actorIdsEqual } from "../../actors/identity.js";
-import { HP_RESOURCE_REFERENCE, type ActorRpgState } from "./actor-state.js";
+import { type ActorRpgState, HP_RESOURCE_REFERENCE } from "./actor-state.js";
 
 export type ActorHpDamageOutcome =
   | Readonly<{
