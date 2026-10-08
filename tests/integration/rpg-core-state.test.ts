@@ -74,7 +74,8 @@ describe("GAME-I04 RPG core state", () => {
 
   it("rejects duplicate actor definitions and malformed persisted module state", () => {
     const heroDefinition = definitions[0];
-    if (heroDefinition === undefined) throw new Error("Test RPG fixture requires a hero definition");
+    if (heroDefinition === undefined)
+      throw new Error("Test RPG fixture requires a hero definition");
 
     expect(() => createActorRpgState([heroDefinition, heroDefinition])).toThrow(
       /Duplicate RPG ActorId definition/,
