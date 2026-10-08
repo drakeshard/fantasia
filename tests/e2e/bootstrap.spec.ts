@@ -45,6 +45,7 @@ test("Fantasia production renderer drives the authoritative encounter", async ({
   const canvas = host.locator("canvas");
   await expect(canvas).toBeVisible();
   await expect(canvas).toHaveAttribute("data-testid", "production-battlefield-canvas");
+  await canvas.scrollIntoViewIfNeeded();
 
   const box = await canvas.boundingBox();
   expect(box).not.toBeNull();
