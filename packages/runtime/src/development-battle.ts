@@ -1,16 +1,16 @@
 import {
+  type ActorId,
   actorId,
+  type BattlefieldState,
   battlefieldReadModel,
   createBattlefieldState,
   deserializeActorIdentityState,
   findActorGroundPath,
+  type GroundTraversalRules,
   moveActorOnBattlefield,
   placeActorOnBattlefield,
   reachableActorGroundLocations,
   serializeActorId,
-  type ActorId,
-  type BattlefieldState,
-  type GroundTraversalRules,
 } from "@fantasia/game";
 
 export interface DevelopmentBattleActorView {
