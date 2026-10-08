@@ -69,7 +69,7 @@ export interface RestoredEncounterRuntime {
   readonly contentVersion: string;
 }
 
-function isRecord(value: JsonValue): value is { readonly [key: string]: JsonValue } {
+function isRecord(value: JsonValue | undefined): value is { readonly [key: string]: JsonValue } {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
