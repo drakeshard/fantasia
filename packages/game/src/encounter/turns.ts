@@ -124,7 +124,8 @@ export function createEncounterTurnState(
   rpg: ActorRpgState,
 ): EncounterTurnState {
   const living = livingParticipants(participants, rpg);
-  if (living.length === 0) throw new RangeError("Encounter requires at least one living participant");
+  if (living.length === 0)
+    throw new RangeError("Encounter requires at least one living participant");
   return activeTurn(1, rankedActorIds(living, rpg), participants);
 }
 

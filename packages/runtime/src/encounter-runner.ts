@@ -1,15 +1,18 @@
 import {
   type ActorId,
-  applyEncounterCommand,
+  type ActorIdentityState,
   type AttackResolutionRolls,
+  applyEncounterCommand,
   type DamagePolicy,
   type EncounterCommand,
   type EncounterCommandRejection,
   type EncounterDefinition,
   type EncounterState,
-  type ActorIdentityState,
 } from "@fantasia/game";
-import { FantasiaRuntimeSession, type FantasiaRuntimeSessionOptions } from "./foundation/session.js";
+import {
+  FantasiaRuntimeSession,
+  type FantasiaRuntimeSessionOptions,
+} from "./foundation/session.js";
 
 export type EncounterRuntimeInput =
   | Readonly<{

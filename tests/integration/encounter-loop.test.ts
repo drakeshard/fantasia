@@ -7,9 +7,9 @@ import {
   createActorRpgState,
   createBattlefieldState,
   createEncounterState,
+  type DirectAttackDefinition,
   deserializeActorIdentityState,
   developmentGrayboxDamagePolicy,
-  type DirectAttackDefinition,
   type EncounterDefinition,
   placeActorOnBattlefield,
   serializeActorId,
@@ -209,12 +209,27 @@ describe("GAME-I06 deterministic tactical-RPG encounter", () => {
   it("replays the same ordered inputs, RNG seed, ticks, and policy to an identical authoritative snapshot", () => {
     const inputs = [
       { kind: "move", actorId: scoutId, goal: { x: 1, y: 1 } },
-      { kind: "direct-attack", actorId: scoutId, defenderId: lancerId, attackReference: basicAttack.reference },
+      {
+        kind: "direct-attack",
+        actorId: scoutId,
+        defenderId: lancerId,
+        attackReference: basicAttack.reference,
+      },
       { kind: "end-turn", actorId: scoutId },
       { kind: "end-turn", actorId: heroId },
-      { kind: "direct-attack", actorId: lancerId, defenderId: scoutId, attackReference: basicAttack.reference },
+      {
+        kind: "direct-attack",
+        actorId: lancerId,
+        defenderId: scoutId,
+        attackReference: basicAttack.reference,
+      },
       { kind: "end-turn", actorId: lancerId },
-      { kind: "direct-attack", actorId: scoutId, defenderId: lancerId, attackReference: basicAttack.reference },
+      {
+        kind: "direct-attack",
+        actorId: scoutId,
+        defenderId: lancerId,
+        attackReference: basicAttack.reference,
+      },
     ] as const;
 
     function run() {

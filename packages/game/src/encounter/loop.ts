@@ -139,7 +139,9 @@ function validateDefinition(definition: EncounterDefinition, rpg: ActorRpgState)
 
   for (const participant of definition.participants) {
     if (actorRpgProfile(rpg, participant.actorId) === undefined) {
-      throw new RangeError(`Missing RPG state for encounter actor: ${serializeActorId(participant.actorId)}`);
+      throw new RangeError(
+        `Missing RPG state for encounter actor: ${serializeActorId(participant.actorId)}`,
+      );
     }
   }
 }
