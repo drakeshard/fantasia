@@ -1,5 +1,5 @@
 import { elevationAt } from "@drakeshard/tactical/elevation";
-import type { TacticalEntityId } from "@drakeshard/tactical/identity";
+import type { LocationId, TacticalEntityId } from "@drakeshard/tactical/identity";
 import {
   exclusiveOccupancyPolicy,
   locationsOf,
@@ -67,17 +67,16 @@ export interface BattlefieldPath {
   readonly cost: number;
 }
 
+export type ActorPathRejection =
+  | BattlefieldActorRejection
+  | { readonly kind: "invalid-traversal-rules" }
+  | { readonly kind: "unknown-destination"; readonly coord: SquareCoord }
+  | { readonly kind: "unreachable"; readonly coord: SquareCoord }
+  | { readonly kind: "invalid-transition-cost" };
+
 export type ActorPathResult =
   | { readonly kind: "path"; readonly path: BattlefieldPath }
-  | {
-      readonly kind: "rejected";
-      readonly reason:
-        | BattlefieldActorRejection
-        | { readonly kind: "invalid-traversal-rules" }
-        | { readonly kind: "unknown-destination"; readonly coord: SquareCoord }
-        | { readonly kind: "unreachable"; readonly coord: SquareCoord }
-        | { readonly kind: "invalid-transition-cost" };
-    };
+  | { readonly kind: "rejected"; readonly reason: ActorPathRejection };
 
 export type MoveActorResult =
   | {
@@ -85,12 +84,7 @@ export type MoveActorResult =
       readonly state: BattlefieldState;
       readonly path: BattlefieldPath;
     }
-  | {
-      readonly kind: "rejected";
-      readonly reason: ActorPathResult extends { readonly kind: "rejected"; readonly reason: infer T }
-        ? T
-        : never;
-    };
+  | { readonly kind: "rejected"; readonly reason: ActorPathRejection };
 
 function validRules(rules: GroundTraversalRules): boolean {
   return (
@@ -117,8 +111,8 @@ function isActorRejection(
   return typeof value !== "string";
 }
 
-function coordForLocation(location: string): SquareCoord {
-  const coord = parseSquareLocationId(location as Parameters<typeof parseSquareLocationId>[0]);
+function coordForLocation(location: LocationId): SquareCoord {
+  const coord = parseSquareLocationId(location);
   if (coord === undefined) {
     throw new Error(`Expected square battlefield location: ${location}`);
   }
