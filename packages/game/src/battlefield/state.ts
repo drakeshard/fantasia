@@ -77,7 +77,7 @@ function validateBlockedLocations(topology: Topology, locations: readonly Locati
 
 export function createBattlefieldState(
   bounds: SquareBounds,
-  blockedCoords: readonly SquareCoord[] = [],
+ blockedCoords: readonly SquareCoord[] = [],
   elevations: readonly BattlefieldElevationInput[] = [],
 ): BattlefieldState {
   const topology = battlefieldTopology(bounds);
@@ -137,8 +137,11 @@ export function deserializeBattlefieldState(
       locations,
       [exclusiveOccupancyPolicy],
     );
-    if (result.kind !== "placed") {
+    if (result.kind === "rejected") {
       throw new RangeError(`Invalid serialized battlefield placement: ${result.reason.kind}`);
+    }
+    if (result.kind !== "placed") {
+      throw new Error(`Unexpected Tactical placement result: ${result.kind}`);
     }
     placement = result.state;
   }
