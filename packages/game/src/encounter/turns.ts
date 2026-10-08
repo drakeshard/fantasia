@@ -91,6 +91,17 @@ export function createEncounterTurnState(
   };
 }
 
+export function spendEncounterMovement(
+  state: EncounterTurnState,
+  amount: number,
+): EncounterTurnState | undefined {
+  if (!Number.isSafeInteger(amount) || amount < 0 || amount > state.movementRemaining) {
+    return undefined;
+  }
+  if (amount === 0) return state;
+  return { ...state, movementRemaining: state.movementRemaining - amount };
+}
+
 export function consumeEncounterMainAct(state: EncounterTurnState): EncounterTurnState {
   if (!state.mainActAvailable) return state;
   return { ...state, mainActAvailable: false };
