@@ -1,8 +1,8 @@
 import {
   DevelopmentBattleSession,
+  type DevelopmentBattleView,
   FantasiaRuntimeSession,
   runtimeStatus,
-  type DevelopmentBattleView,
 } from "@fantasia/runtime";
 import { render } from "preact";
 import { useEffect, useMemo, useState } from "preact/hooks";
@@ -50,7 +50,10 @@ function App() {
   }
 
   function previewCell(x: number, y: number, reachable: boolean) {
-    if (!reachable) return;
+    if (!reachable) {
+      setView(battle.view());
+      return;
+    }
     setView(battle.view({ x, y }));
   }
 
@@ -131,10 +134,16 @@ function App() {
               <p class="section-kicker">Battlefield</p>
               <strong>GAME-I03 movement playground</strong>
             </div>
-            <div class="legend" aria-label="Battlefield legend">
-              <span><i class="legend-dot reachable" /> Reachable</span>
-              <span><i class="legend-dot elevated" /> Elevated</span>
-              <span><i class="legend-dot blocked" /> Blocked</span>
+            <div class="legend" role="group" aria-label="Battlefield legend">
+              <span>
+                <i class="legend-dot reachable" /> Reachable
+              </span>
+              <span>
+                <i class="legend-dot elevated" /> Elevated
+              </span>
+              <span>
+                <i class="legend-dot blocked" /> Blocked
+              </span>
             </div>
           </div>
 
@@ -142,7 +151,6 @@ function App() {
             <div
               class="battlefield-grid"
               style={{ gridTemplateColumns: `repeat(${columns}, minmax(54px, 1fr))` }}
-              onMouseLeave={clearPreview}
             >
               {view.cells.map((cell) => {
                 const actor = cell.occupantActorId
@@ -172,7 +180,9 @@ function App() {
                     disabled={cell.blocked}
                     aria-label={`Tile ${cell.x}, ${cell.y}${actor ? `, ${actor.name}` : ""}${cell.elevation > 0 ? `, elevation ${cell.elevation}` : ""}`}
                   >
-                    <span class="tile-coord">{cell.x},{cell.y}</span>
+                    <span class="tile-coord">
+                      {cell.x},{cell.y}
+                    </span>
                     {cell.elevation > 0 && <span class="elevation-badge">▲{cell.elevation}</span>}
                     {cell.reachableCost !== undefined && actor === undefined && (
                       <span class="move-cost">{cell.reachableCost}</span>
