@@ -24,15 +24,17 @@ jobs:
       - run: corepack enable
       - run: node scripts/prepare-shared-packages.mjs
       - run: pnpm install --frozen-lockfile
-      - name: Repair ARIA roles and format touched files
+      - name: Repair ARIA and format touched files
         run: |
           python3 - <<'PY'
           from pathlib import Path
           path = Path('apps/web/src/main.tsx')
           text = path.read_text()
           text = text.replace('class="turn-banner" aria-label={`Round ${view.round}, ${view.activeActorName}\'s turn`}', 'class="turn-banner"')
-          text = text.replace('class="turn-resources" aria-label="Current turn resources"', 'class="turn-resources" role="group" aria-label="Current turn resources"')
-          text = text.replace('class="field-legend" aria-label="Battlefield legend"', 'class="field-legend" role="group" aria-label="Battlefield legend"')
+          text = text.replace('class="turn-resources" aria-label="Current turn resources"', 'class="turn-resources"')
+          text = text.replace('class="turn-resources" role="group" aria-label="Current turn resources"', 'class="turn-resources"')
+          text = text.replace('class="field-legend" aria-label="Battlefield legend"', 'class="field-legend"')
+          text = text.replace('class="field-legend" role="group" aria-label="Battlefield legend"', 'class="field-legend"')
           path.write_text(text)
           PY
           pnpm exec biome format --write apps/web/src/main.tsx apps/web/src/battle-renderer.ts apps/web/src/production.css tests/e2e/bootstrap.spec.ts
