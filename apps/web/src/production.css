@@ -2,6 +2,11 @@
   grid-template-columns: minmax(180px, 220px) minmax(640px, 1fr) minmax(240px, 290px);
 }
 
+.production-layout > *,
+.unit-copy {
+  min-width: 0;
+}
+
 .production-battlefield-panel {
   display: flex;
   min-height: 620px;
@@ -104,7 +109,7 @@
   }
 
   .unit-list {
-    grid-template-columns: repeat(3, minmax(145px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -126,6 +131,7 @@
     min-height: 360px;
   }
 
+  .unit-list,
   .command-actions {
     grid-template-columns: 1fr;
   }
