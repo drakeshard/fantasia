@@ -9,6 +9,13 @@ export {
   type DevelopmentBattleView,
 } from "./development-battle.js";
 export {
+  type EncounterRuntimeEvent,
+  type EncounterRuntimeInput,
+  EncounterRuntimeRunner,
+  type EncounterRuntimeRunnerOptions,
+  type EncounterRuntimeSnapshot,
+} from "./encounter-runner.js";
+export {
   createFantasiaSaveService,
   FANTASIA_GAME_ID,
   FANTASIA_SAVE_FORMAT_VERSION,
