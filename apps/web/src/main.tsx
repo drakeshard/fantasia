@@ -9,6 +9,9 @@ import { ProductionBattleRenderer } from "./battle-renderer.js";
 import "./styles.css";
 import "./production.css";
 
+type ActionMode = "inspect" | "move" | "attack";
+type PreviewGoal = Readonly<{ x: number; y: number }>;
+
 function commandMessage(result: ReturnType<ProductionBattleSession["moveSelected"]>): string {
   if (result.kind === "rejected") return `Command rejected: ${result.reason}.`;
   if (result.event?.kind === "actor-moved") {
@@ -45,9 +48,19 @@ function hpPercent(current: number, capacity: number): number {
 function App() {
   const battle = useMemo(() => new ProductionBattleSession(), []);
   const [view, setView] = useState<ProductionBattleView>(() => battle.view());
-  const [message, setMessage] = useState("Choose a unit or a reachable tile.");
+  const [message, setMessage] = useState("Inspect a unit or choose an action.");
+  const [actionMode, setActionMode] = useState<ActionMode>("inspect");
+  const [previewGoal, setPreviewGoal] = useState<PreviewGoal>();
+  const [attackTargetId, setAttackTargetId] = useState<string>();
   const rendererHost = useRef<HTMLDivElement>(null);
   const renderer = useRef<ProductionBattleRenderer>();
+  const modeRef = useRef<ActionMode>(actionMode);
+  const viewRef = useRef<ProductionBattleView>(view);
+  const previewGoalRef = useRef<PreviewGoal | undefined>(previewGoal);
+
+  modeRef.current = actionMode;
+  viewRef.current = view;
+  previewGoalRef.current = previewGoal;
 
   useEffect(() => {
     const host = rendererHost.current;
@@ -55,26 +68,48 @@ function App() {
 
     const instance = new ProductionBattleRenderer(host, {
       onCellActivate: (cell) => {
-        if (cell.occupantActorId !== undefined) {
-          const selected = battle.selectActor(cell.occupantActorId);
-          if (selected) {
-            setView(selected);
-            setMessage(`${selected.selectedActorName} selected.`);
+        const current = viewRef.current;
+        const mode = modeRef.current;
+
+        if (mode === "attack" && cell.occupantActorId !== undefined) {
+          const target = current.actors.find((actor) => actor.id === cell.occupantActorId);
+          const active = current.actors.find((actor) => actor.id === current.activeActorId);
+          if (target && active && target.side !== active.side && !target.defeated) {
+            setAttackTargetId(target.id);
+            setMessage(
+              `${target.name} selected as the attack target. Confirm the attack to commit.`,
+            );
           }
           return;
         }
 
-        const current = battle.view();
-        if (!cell.reachable || current.selectedActorId !== current.activeActorId) {
-          setView(current);
-          setMessage(`Only ${current.activeActorName} can move to a reachable tile this turn.`);
+        if (mode === "move") {
+          if (cell.occupantActorId !== undefined || !cell.reachable) {
+            setMessage("Choose an empty reachable square for the move preview.");
+            return;
+          }
+          if (current.selectedActorId !== current.activeActorId) {
+            setMessage(`Only ${current.activeActorName} can move this turn.`);
+            return;
+          }
+          const goal = { x: cell.x, y: cell.y };
+          setPreviewGoal(goal);
+          const preview = battle.view(goal);
+          setView(preview);
+          setMessage(`Move preview: ${cell.x}, ${cell.y}. Confirm move to commit.`);
           return;
         }
-        const result = battle.moveSelected({ x: cell.x, y: cell.y });
-        setView(result.view);
-        setMessage(commandMessage(result));
+
+        if (cell.occupantActorId !== undefined) {
+          const selected = battle.selectActor(cell.occupantActorId);
+          if (selected) {
+            setView(selected);
+            setMessage(`${selected.selectedActorName} selected for inspection.`);
+          }
+        }
       },
       onCellPreview: (cell) => {
+        if (modeRef.current !== "move" || previewGoalRef.current !== undefined) return;
         setView(cell?.reachable ? battle.view({ x: cell.x, y: cell.y }) : battle.view());
       },
     });
@@ -92,264 +127,376 @@ function App() {
   }, [view]);
 
   const selectedActor = view.actors.find((actor) => actor.id === view.selectedActorId);
-  const attackTarget = view.actors.find(
-    (actor) => actor.side !== view.selectedActorSide && !actor.defeated,
-  );
+  const activeActor = view.actors.find((actor) => actor.id === view.activeActorId);
+  const attackTarget = view.actors.find((actor) => actor.id === attackTargetId);
   const selectedIsActive = view.selectedActorId === view.activeActorId;
   const encounterEnded = view.outcome !== "ongoing";
+  const enemyTargets = view.actors.filter(
+    (actor) => activeActor && actor.side !== activeActor.side && !actor.defeated,
+  );
+  const reachableCells = view.cells.filter(
+    (cell) => cell.reachable && !cell.blocked && cell.occupantActorId === undefined,
+  );
+
+  function resetPreview(nextMode: ActionMode = "inspect") {
+    setActionMode(nextMode);
+    setPreviewGoal(undefined);
+    setAttackTargetId(undefined);
+    setView(battle.view());
+  }
 
   function selectActor(id: string) {
     const next = battle.selectActor(id);
     if (!next) return;
+    setActionMode("inspect");
+    setPreviewGoal(undefined);
+    setAttackTargetId(undefined);
     setView(next);
     setMessage(
       next.selectedActorId === next.activeActorId
-        ? `${next.selectedActorName} is ready for orders.`
-        : `${next.selectedActorName} selected. ${next.activeActorName} has the turn.`,
+        ? `${next.selectedActorName} is active and ready for orders.`
+        : `${next.selectedActorName} selected for inspection. ${next.activeActorName} has the turn.`,
     );
   }
 
-  function attack() {
-    if (!attackTarget) return;
-    const result = battle.attackSelected(attackTarget.id);
+  function beginMove() {
+    if (!selectedIsActive || encounterEnded) {
+      setMessage(`Select ${view.activeActorName} before issuing a move.`);
+      return;
+    }
+    resetPreview("move");
+    setMessage("Move mode: choose a reachable square, then confirm the preview.");
+  }
+
+  function beginAttack() {
+    if (!selectedIsActive || encounterEnded || !view.mainActAvailable) {
+      setMessage(`Select ${view.activeActorName} with a ready Main Act before attacking.`);
+      return;
+    }
+    resetPreview("attack");
+    setMessage("Attack mode: choose an opposing unit, then confirm the attack.");
+  }
+
+  function previewMove(goal: PreviewGoal) {
+    setActionMode("move");
+    setPreviewGoal(goal);
+    setAttackTargetId(undefined);
+    setView(battle.view(goal));
+    setMessage(`Move preview: ${goal.x}, ${goal.y}. Confirm move to commit.`);
+  }
+
+  function previewAttack(targetId: string) {
+    const target = view.actors.find((actor) => actor.id === targetId);
+    if (!target) return;
+    setActionMode("attack");
+    setPreviewGoal(undefined);
+    setAttackTargetId(targetId);
+    setView(battle.view());
+    setMessage(`${target.name} selected as the attack target. Confirm the attack to commit.`);
+  }
+
+  function confirmMove() {
+    if (!previewGoal) return;
+    const result = battle.moveSelected(previewGoal);
+    setActionMode("inspect");
+    setPreviewGoal(undefined);
+    setAttackTargetId(undefined);
     setView(result.view);
     setMessage(commandMessage(result));
+  }
+
+  function confirmAttack() {
+    if (!attackTargetId) return;
+    const result = battle.attackSelected(attackTargetId);
+    setActionMode("inspect");
+    setPreviewGoal(undefined);
+    setAttackTargetId(undefined);
+    setView(result.view);
+    setMessage(commandMessage(result));
+  }
+
+  function cancelPreview() {
+    resetPreview("inspect");
+    setMessage("Preview cancelled. No authoritative action was changed.");
   }
 
   function endTurn() {
     const result = battle.endTurn();
+    setActionMode("inspect");
+    setPreviewGoal(undefined);
+    setAttackTargetId(undefined);
     setView(result.view);
     setMessage(commandMessage(result));
   }
 
+  const previewTitle =
+    actionMode === "move" && previewGoal
+      ? "Move to selected square"
+      : actionMode === "attack" && attackTarget
+        ? `Attack ${attackTarget.name}`
+        : actionMode === "move"
+          ? "Choose a destination"
+          : actionMode === "attack"
+            ? "Choose a target"
+            : "Inspecting battlefield";
+
   return (
-    <main class="fantasia-shell">
-      <header class="game-masthead">
-        <div class="wordmark-wrap">
-          <span class="wordmark-mark" aria-hidden="true">
-            F
-          </span>
-          <div>
-            <p class="masthead-kicker">Drakeshard Studios</p>
-            <h1>Fantasia</h1>
-          </div>
-        </div>
-        <div class="turn-banner">
-          <span class="turn-banner-label">Round {view.round}</span>
-          <strong>{view.activeActorName}&apos;s Turn</strong>
-        </div>
-      </header>
+    <main class="battle-screen">
+      <section class="battle-stage" aria-label="Fantasia tactical battle">
+        <div ref={rendererHost} class="pixi-battlefield" data-testid="production-battlefield" />
 
-      <section class="battle-brief" aria-label="Skirmish objective">
-        <div class="battle-brief-title">
-          <span class="battle-crest" aria-hidden="true">
-            ⚔
-          </span>
-          <div>
-            <p class="ui-kicker">Skirmish</p>
-            <h2>Hold the field</h2>
-            <p class="objective-copy">Objective · Defeat all enemies</p>
+        <header class="battle-statusbar">
+          <div class="battle-brand">
+            <strong>Fantasia</strong>
+            <span>Round {view.round}</span>
           </div>
-        </div>
-        <div class="turn-resources">
-          <span>
-            <small>Move</small>
-            <strong>{view.movementRemaining}</strong>
-          </span>
-          <span>
-            <small>Main Act</small>
-            <strong>{view.mainActAvailable ? "Ready" : "Spent"}</strong>
-          </span>
-          <span>
-            <small>Status</small>
-            <strong>{outcomeLabel(view.outcome)}</strong>
-          </span>
-        </div>
-      </section>
+          <div class="turn-status">
+            <strong>{view.activeActorName}&apos;s turn</strong>
+            <span class="objective-label">Objective</span>
+            <span>Defeat the opposing units</span>
+          </div>
+          <details class="battle-menu">
+            <summary>Menu</summary>
+            <div class="menu-sheet">
+              <p>
+                <strong>{outcomeLabel(view.outcome)}</strong>
+              </p>
+              <details class="debug-details">
+                <summary>Developer diagnostics</summary>
+                <p>{runtimeStatus()}</p>
+                <p>Pixi / WebGL · Runtime tick {view.runtimeTick}</p>
+              </details>
+            </div>
+          </details>
+        </header>
 
-      <section class="battle-layout fantasy-layout">
-        <aside class="party-panel" aria-label="Combatants">
-          <div class="panel-heading">
-            <p class="ui-kicker">Battle Order</p>
-            <span>{view.actors.filter((actor) => !actor.defeated).length} standing</span>
+        <aside class="hud-card active-unit-card" aria-label="Active unit">
+          <p class="hud-eyebrow">Active unit</p>
+          <div class="unit-title-row">
+            <span class={`unit-badge ${activeActor?.side ?? "player"}`} aria-hidden="true">
+              {activeActor?.shortLabel ?? "--"}
+            </span>
+            <div>
+              <h1>{activeActor?.name ?? view.activeActorName}</h1>
+              <p>{activeActor?.role ?? "Unit"}</p>
+            </div>
           </div>
-          <div class="unit-list">
-            {view.actors.map((actor) => (
-              <button
-                type="button"
-                class={`roster-entry ${actor.side}${actor.selected ? " is-selected" : ""}${actor.active ? " is-active" : ""}`}
-                onClick={() => selectActor(actor.id)}
-                aria-pressed={actor.selected}
-              >
-                <span class="unit-sigil" aria-hidden="true">
-                  {actor.shortLabel}
-                </span>
-                <span class="unit-copy">
-                  <strong>{actor.name}</strong>
-                  <small>{actor.role}</small>
-                  <span class="mini-hp" aria-hidden="true">
-                    <i style={{ width: `${hpPercent(actor.hpCurrent, actor.hpCapacity)}%` }} />
+          <div class="hp-row">
+            <span>HP</span>
+            <strong>
+              {activeActor?.hpCurrent ?? 0} / {activeActor?.hpCapacity ?? 0}
+            </strong>
+          </div>
+          <div class="hp-track" aria-hidden="true">
+            <i
+              style={{
+                width: `${hpPercent(activeActor?.hpCurrent ?? 0, activeActor?.hpCapacity ?? 0)}%`,
+              }}
+            />
+          </div>
+          <dl class="budget-grid">
+            <div>
+              <dt>Movement</dt>
+              <dd>{view.movementRemaining} remaining</dd>
+            </div>
+            <div>
+              <dt>Main action</dt>
+              <dd>{view.mainActAvailable ? "Ready" : "Spent"}</dd>
+            </div>
+          </dl>
+          {selectedActor && selectedActor.id !== view.activeActorId ? (
+            <p class="selected-note">Inspecting {selectedActor.name}</p>
+          ) : null}
+        </aside>
+
+        <aside class="hud-card turn-order-card" aria-label="Combatants and current turn">
+          <p class="hud-eyebrow">Battle order</p>
+          <div class="turn-order-list">
+            {view.actors
+              .filter((actor) => !actor.defeated)
+              .map((actor) => (
+                <button
+                  type="button"
+                  class={`turn-order-entry ${actor.side}${actor.active ? " is-active" : ""}${actor.selected ? " is-selected" : ""}`}
+                  onClick={() => selectActor(actor.id)}
+                  aria-pressed={actor.selected}
+                >
+                  <span class="order-mark" aria-hidden="true">
+                    {actor.shortLabel}
                   </span>
-                  <small>
-                    HP {actor.hpCurrent}/{actor.hpCapacity}
-                  </small>
-                </span>
-                <span class="unit-state">
-                  {actor.active
-                    ? "TURN"
-                    : actor.defeated
-                      ? "DOWN"
-                      : actor.side === "player"
-                        ? "ALLY"
-                        : "FOE"}
-                </span>
-              </button>
-            ))}
+                  <span>
+                    <strong>{actor.name}</strong>
+                    <small>
+                      {actor.active ? "Active turn" : actor.side === "player" ? "Ally" : "Opponent"}
+                    </small>
+                  </span>
+                </button>
+              ))}
           </div>
         </aside>
 
-        <section class="battlefield-frame" aria-label="Tactical battlefield">
-          <div class="battlefield-ribbon">
-            <div>
-              <p class="ui-kicker">Tactical Field</p>
-              <strong>
-                {selectedIsActive ? "Choose your ground" : `Watching ${view.selectedActorName}`}
-              </strong>
-            </div>
-            <div class="field-legend">
-              <span>
-                <i class="legend-mark reachable" /> Reachable
-              </span>
-              <span>
-                <i class="legend-mark path" /> Route
-              </span>
-              <span>
-                <i class="legend-mark blocked" /> Obstacle
-              </span>
-            </div>
+        <section class={`command-preview mode-${actionMode}`} aria-live="polite">
+          <div>
+            <p class="hud-eyebrow">{actionMode === "inspect" ? "Status" : "Action preview"}</p>
+            <h2>{previewTitle}</h2>
+            {actionMode === "move" && previewGoal ? (
+              <p>
+                Square {previewGoal.x}, {previewGoal.y} · Cost {view.pathCost ?? "—"} · Movement
+                after{" "}
+                {view.pathCost === undefined
+                  ? "—"
+                  : Math.max(0, view.movementRemaining - view.pathCost)}
+              </p>
+            ) : actionMode === "attack" && attackTarget ? (
+              <p>
+                Target {attackTarget.name} · {attackTarget.role} · HP {attackTarget.hpCurrent}/
+                {attackTarget.hpCapacity}
+              </p>
+            ) : (
+              <p>{message}</p>
+            )}
           </div>
-          <div ref={rendererHost} class="pixi-battlefield" data-testid="production-battlefield" />
-          <div class="battle-log" aria-live="polite">
-            <span class="battle-log-mark" aria-hidden="true">
-              ◆
-            </span>
-            <p>{message}</p>
+          <div class="preview-controls">
+            {actionMode !== "inspect" ? (
+              <button type="button" class="ui-button secondary" onClick={cancelPreview}>
+                Cancel
+              </button>
+            ) : null}
+            {actionMode === "move" && previewGoal ? (
+              <button type="button" class="ui-button primary" onClick={confirmMove}>
+                Confirm move
+              </button>
+            ) : null}
+            {actionMode === "attack" && attackTarget ? (
+              <button type="button" class="ui-button primary" onClick={confirmAttack}>
+                Confirm attack
+              </button>
+            ) : null}
           </div>
         </section>
 
-        <aside class="character-panel" aria-label="Selected unit details">
-          <div
-            class={`character-portrait-placeholder ${view.selectedActorSide}`}
-            aria-hidden="true"
+        <section class="battle-feedback" aria-live="polite">
+          <span aria-hidden="true">◆</span>
+          <p>{message}</p>
+        </section>
+
+        <nav class="battle-actionbar" aria-label="Battle actions">
+          <button
+            type="button"
+            class={`action-button${actionMode === "inspect" ? " is-active" : ""}`}
+            onClick={() => resetPreview("inspect")}
+            aria-pressed={actionMode === "inspect"}
           >
-            <span>{selectedActor?.shortLabel ?? "--"}</span>
-          </div>
-          <div class="character-heading">
-            <p class="ui-kicker">Selected Unit</p>
-            <h3>{view.selectedActorName}</h3>
-            <p>
-              {view.selectedActorRole} · {view.selectedActorSide === "player" ? "Ally" : "Enemy"}
-            </p>
-          </div>
+            Inspect
+          </button>
+          <button
+            type="button"
+            class={`action-button${actionMode === "move" ? " is-active" : ""}`}
+            onClick={beginMove}
+            disabled={encounterEnded || !selectedIsActive || view.movementRemaining <= 0}
+            aria-pressed={actionMode === "move"}
+          >
+            Move
+          </button>
+          <button
+            type="button"
+            class={`action-button${actionMode === "attack" ? " is-active" : ""}`}
+            onClick={beginAttack}
+            disabled={encounterEnded || !selectedIsActive || !view.mainActAvailable}
+            aria-pressed={actionMode === "attack"}
+          >
+            Attack
+          </button>
+          <button
+            type="button"
+            class="action-button end-turn"
+            onClick={endTurn}
+            disabled={encounterEnded}
+          >
+            End turn
+          </button>
+        </nav>
 
-          <section class="hp-block" aria-label="Selected unit health">
-            <div class="hp-line">
-              <span>HP</span>
-              <strong>
-                {view.selectedHpCurrent} / {view.selectedHpCapacity}
-              </strong>
-            </div>
-            <div class="hp-track">
-              <i
-                style={{ width: `${hpPercent(view.selectedHpCurrent, view.selectedHpCapacity)}%` }}
-              />
-            </div>
-          </section>
-
-          <div class="combat-summary">
-            <div>
-              <small>Physical</small>
-              <strong>{view.selectedAttributes.physicalPower}</strong>
-            </div>
-            <div>
-              <small>Defense</small>
-              <strong>{view.selectedAttributes.defense}</strong>
-            </div>
-            <div>
-              <small>Speed</small>
-              <strong>{view.selectedAttributes.speed}</strong>
-            </div>
-            <div>
-              <small>Stability</small>
-              <strong>{view.selectedAttributes.stability}</strong>
-            </div>
-          </div>
-
-          <details class="secondary-stats">
-            <summary>More stats</summary>
-            <dl>
+        <details class="unit-details-sheet">
+          <summary>Unit details</summary>
+          <div class="unit-details-content">
+            <div class="selected-unit-heading">
+              <span class={`unit-badge ${view.selectedActorSide}`} aria-hidden="true">
+                {selectedActor?.shortLabel ?? "--"}
+              </span>
               <div>
-                <dt>Magical Power</dt>
+                <strong>{view.selectedActorName}</strong>
+                <span>
+                  {view.selectedActorRole} ·{" "}
+                  {view.selectedActorSide === "player" ? "Ally" : "Opponent"}
+                </span>
+              </div>
+              <span>
+                HP {view.selectedHpCurrent}/{view.selectedHpCapacity}
+              </span>
+            </div>
+            <dl class="attribute-grid">
+              <div>
+                <dt>Physical</dt>
+                <dd>{view.selectedAttributes.physicalPower}</dd>
+              </div>
+              <div>
+                <dt>Magical</dt>
                 <dd>{view.selectedAttributes.magicalPower}</dd>
+              </div>
+              <div>
+                <dt>Defense</dt>
+                <dd>{view.selectedAttributes.defense}</dd>
               </div>
               <div>
                 <dt>Resistance</dt>
                 <dd>{view.selectedAttributes.resistance}</dd>
               </div>
               <div>
-                <dt>Movement</dt>
-                <dd>{selectedIsActive ? view.movementRemaining : "—"}</dd>
+                <dt>Speed</dt>
+                <dd>{view.selectedAttributes.speed}</dd>
               </div>
               <div>
-                <dt>Path cost</dt>
-                <dd>{view.pathCost ?? "—"}</dd>
+                <dt>Stability</dt>
+                <dd>{view.selectedAttributes.stability}</dd>
               </div>
             </dl>
-          </details>
 
-          <section class="command-panel" aria-label="Battle commands">
-            <p class="ui-kicker">Commands</p>
-            <button
-              type="button"
-              class="battle-command primary"
-              onClick={attack}
-              disabled={
-                encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget
-              }
-            >
-              <span class="command-icon" aria-hidden="true">
-                ⚔
-              </span>
-              <span>
-                <strong>Attack {attackTarget?.name ?? "—"}</strong>
-                <small>Basic attack</small>
-              </span>
-            </button>
-            <button
-              type="button"
-              class="battle-command secondary"
-              onClick={endTurn}
-              disabled={encounterEnded}
-            >
-              <span class="command-icon" aria-hidden="true">
-                ◇
-              </span>
-              <span>
-                <strong>End Turn</strong>
-                <small>Pass initiative</small>
-              </span>
-            </button>
-          </section>
+            {actionMode === "move" ? (
+              <div class="keyboard-choice-group">
+                <p>Reachable destinations</p>
+                <div class="choice-list">
+                  {reachableCells.map((cell) => (
+                    <button
+                      type="button"
+                      class="choice-button"
+                      onClick={() => previewMove({ x: cell.x, y: cell.y })}
+                    >
+                      {cell.x}, {cell.y} · cost {cell.reachableCost ?? "—"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
-          <details class="debug-details">
-            <summary>Developer diagnostics</summary>
-            <div class="debug-copy">
-              <p>{runtimeStatus()}</p>
-              <p>Pixi / WebGL · Runtime tick {view.runtimeTick}</p>
-              <p>Fixed oblique projection · square geometry · fixed camera</p>
-            </div>
-          </details>
-        </aside>
+            {actionMode === "attack" ? (
+              <div class="keyboard-choice-group">
+                <p>Opposing targets</p>
+                <div class="choice-list">
+                  {enemyTargets.map((actor) => (
+                    <button
+                      type="button"
+                      class={`choice-button${attackTargetId === actor.id ? " is-selected" : ""}`}
+                      onClick={() => previewAttack(actor.id)}
+                    >
+                      Target {actor.name} · HP {actor.hpCurrent}/{actor.hpCapacity}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </details>
       </section>
     </main>
   );

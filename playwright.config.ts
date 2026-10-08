@@ -19,6 +19,14 @@ export default defineConfig({
       name: "chromium-mobile",
       use: { ...devices["Pixel 5"] },
     },
+    {
+      name: "chromium-short-touch",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 844, height: 390 },
+        hasTouch: true,
+      },
+    },
   ],
   webServer: {
     command: "pnpm --filter @fantasia/web preview --host 127.0.0.1 --port 4173",
