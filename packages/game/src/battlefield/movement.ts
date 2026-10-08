@@ -161,7 +161,10 @@ export function placeActorOnBattlefield(
     [location],
     [exclusiveOccupancyPolicy],
   );
-  if (result.kind !== "placed") return { kind: "rejected", reason: result.reason };
+  if (result.kind === "rejected") return { kind: "rejected", reason: result.reason };
+  if (result.kind !== "placed") {
+    throw new Error(`Unexpected Tactical placement result: ${result.kind}`);
+  }
 
   return {
     kind: "placed",
