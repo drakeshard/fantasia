@@ -5,9 +5,9 @@ import {
   createActorRpgState,
   createBattlefieldState,
   createEncounterState,
+  type DirectAttackDefinition,
   deserializeActorIdentityState,
   developmentGrayboxDamagePolicy,
-  type DirectAttackDefinition,
   type EncounterDefinition,
   placeActorOnBattlefield,
   serializeActorId,
@@ -16,12 +16,12 @@ import {
 import {
   createFantasiaEncounterSavePayload,
   createFantasiaSaveService,
+  type EncounterRuntimeInput,
   EncounterRuntimeRunner,
   FANTASIA_DATA_SCHEMA_VERSION,
   FANTASIA_SAVE_FORMAT_VERSION,
   loadFantasiaEncounter,
   saveFantasiaEncounter,
-  type EncounterRuntimeInput,
 } from "../../packages/runtime/src/index.ts";
 
 class MemorySaveStorage {
@@ -252,13 +252,10 @@ describe("GAME-I07 aggregate persistence and compatibility", () => {
       now: () => "2026-10-08T10:10:00.000Z",
     });
     expect(
-      await saveFantasiaEncounter(
-        saves,
-        "encounter-a",
-        checkpoint,
-        reloadPath.identities,
-        { gameVersion, contentVersion },
-      ),
+      await saveFantasiaEncounter(saves, "encounter-a", checkpoint, reloadPath.identities, {
+        gameVersion,
+        contentVersion,
+      }),
     ).toEqual({ kind: "success", value: undefined });
 
     const rawEnvelope = JSON.parse(storage.records.get("encounter-a") ?? "{}") as Record<
@@ -289,7 +286,9 @@ describe("GAME-I07 aggregate persistence and compatibility", () => {
       throw new Error("Expected restored encounter runtime");
     }
 
-    expect(authoritativeSnapshot(loaded.value.runner)).toEqual(authoritativeSnapshot(reloadPath.runner));
+    expect(authoritativeSnapshot(loaded.value.runner)).toEqual(
+      authoritativeSnapshot(reloadPath.runner),
+    );
     expect(loaded.value.runner.snapshot().events).toEqual([]);
 
     runInputs(uninterrupted.runner, suffix);
