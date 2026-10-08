@@ -12,7 +12,7 @@ import "./styles.css";
 function App() {
   const battle = useMemo(() => new DevelopmentBattleSession(), []);
   const [view, setView] = useState<DevelopmentBattleView>(() => battle.view());
-  const [message, setMessage] = useState("Select a unit, then choose a highlighted destination.");
+  const [message, setMessage] = useState("The fastest unit is active. Move or use its Main Act.");
 
   useEffect(() => {
     const session = new FantasiaRuntimeSession({
@@ -40,13 +40,19 @@ function App() {
 
   const actorById = new Map(view.actors.map((actor) => [actor.id, actor]));
   const columns = view.bounds.maxX - view.bounds.minX + 1;
+  const attackTarget = view.actors.find((actor) => actor.side !== view.selectedActorSide);
+  const selectedIsActive = view.selectedActorId === view.activeActorId;
 
   function selectActor(id: string) {
     const next = battle.selectActor(id);
     if (next === undefined) return;
     setView(next);
     const actor = next.actors.find((candidate) => candidate.id === id);
-    setMessage(`${actor?.name ?? "Unit"} selected. Movement range refreshed.`);
+    setMessage(
+      actor?.active
+        ? `${actor.name} is active. Movement and Main Act commands are available.`
+        : `${actor?.name ?? "Unit"} selected for inspection. Only ${next.activeActorName} can act.`,
+    );
   }
 
   function previewCell(x: number, y: number, reachable: boolean) {
@@ -67,17 +73,55 @@ function App() {
       return;
     }
     if (!cell.reachable) {
-      setMessage("That destination is outside the selected unit's current movement range.");
+      setMessage(
+        selectedIsActive
+          ? "That destination is outside the active unit's remaining movement."
+          : `Only ${view.activeActorName} can move during this turn.`,
+      );
       return;
     }
 
     const result = battle.moveSelected({ x: cell.x, y: cell.y });
     if (result.kind === "moved") {
       setView(result.view);
-      setMessage(`${result.view.selectedActorName} moved to ${cell.x}, ${cell.y}.`);
+      setMessage(
+        `${result.view.selectedActorName} moved to ${cell.x}, ${cell.y}. ${result.view.movementRemaining} movement remains.`,
+      );
       return;
     }
-    setMessage("Movement was rejected by the authoritative battlefield rules.");
+    setMessage(
+      result.reason === "not-active-actor"
+        ? `Only ${view.activeActorName} can move during this turn.`
+        : "Movement was rejected by the authoritative battlefield rules.",
+    );
+  }
+
+  function attack() {
+    if (attackTarget === undefined) return;
+    const result = battle.attackSelected(attackTarget.id);
+    if (result.kind === "resolved") {
+      setView(result.view);
+      setMessage(
+        `${result.attackerName} hit ${result.defenderName} for ${result.damage} damage${result.critical ? " (critical)" : ""}.`,
+      );
+      return;
+    }
+    if (result.kind === "missed") {
+      setView(result.view);
+      setMessage(`${result.attackerName} missed ${result.defenderName}.`);
+      return;
+    }
+
+    const reasons: Record<typeof result.reason, string> = {
+      "unknown-actor": "The combat target no longer exists.",
+      "not-active-actor": `Only ${view.activeActorName} can use actions during this turn.`,
+      "main-act-spent": "The active unit has already spent its Main Act.",
+      "same-side-target": "The graybox basic attack cannot target an ally.",
+      "out-of-range": `${attackTarget.name} is outside the graybox basic attack range.`,
+      "out-of-elevation-reach": `${attackTarget.name} is outside the attack's elevation reach.`,
+      "invalid-attack": "The authoritative combat resolver rejected the attack.",
+    };
+    setMessage(reasons[result.reason]);
   }
 
   return (
@@ -100,15 +144,15 @@ function App() {
           <p>{view.subtitle}</p>
         </div>
         <div class="mission-meta">
-          <span>Four-direction grid</span>
-          <span>RPG core state</span>
-          <span>Renderer neutral</span>
+          <span>Turn: {view.activeActorName}</span>
+          <span>Move {view.movementRemaining}</span>
+          <span>Main Act {view.mainActAvailable ? "ready" : "spent"}</span>
         </div>
       </section>
 
       <section class="battle-layout">
         <aside class="unit-rail" aria-label="Available units">
-          <p class="section-kicker">Squad</p>
+          <p class="section-kicker">Combatants</p>
           <div class="unit-list">
             {view.actors.map((actor) => (
               <button
@@ -124,7 +168,7 @@ function App() {
                     {actor.role} · HP {actor.hpCurrent}/{actor.hpCapacity}
                   </small>
                 </span>
-                <span class="unit-move">MOV {actor.moveBudget}</span>
+                <span class="unit-move">{actor.active ? "ACTIVE" : `MOV ${actor.moveBudget}`}</span>
               </button>
             ))}
           </div>
@@ -134,7 +178,7 @@ function App() {
           <div class="battlefield-toolbar">
             <div>
               <p class="section-kicker">Battlefield</p>
-              <strong>GAME-I03 + GAME-I04 playground</strong>
+              <strong>GAME-I05 combat playground</strong>
             </div>
             <div class="legend">
               <span>
@@ -209,7 +253,10 @@ function App() {
             </span>
             <div>
               <h3>{view.selectedActorName}</h3>
-              <p>{view.selectedActorRole}</p>
+              <p>
+                {view.selectedActorRole} · {view.selectedActorSide}{" "}
+                {selectedIsActive ? "· Active" : ""}
+              </p>
             </div>
           </div>
 
@@ -222,7 +269,7 @@ function App() {
             </div>
             <div>
               <dt>Movement</dt>
-              <dd>{view.selectedMoveBudget}</dd>
+              <dd>{selectedIsActive ? view.movementRemaining : view.selectedMoveBudget}</dd>
             </div>
             <div>
               <dt>Physical Power</dt>
@@ -249,26 +296,35 @@ function App() {
               <dd>{view.selectedAttributes.stability}</dd>
             </div>
             <div>
-              <dt>Path cost</dt>
-              <dd>{view.pathCost ?? "—"}</dd>
+              <dt>Main Act</dt>
+              <dd>{selectedIsActive ? (view.mainActAvailable ? "Ready" : "Spent") : "—"}</dd>
             </div>
             <div>
-              <dt>Adjacency</dt>
-              <dd>4-way</dd>
+              <dt>Path cost</dt>
+              <dd>{view.pathCost ?? "—"}</dd>
             </div>
           </dl>
 
           <div class="command-box">
             <p class="section-kicker">Command</p>
-            <strong>Move</strong>
+            <strong>Move / Basic Attack</strong>
+            <button
+              type="button"
+              class="command-action"
+              onClick={attack}
+              disabled={!selectedIsActive || !view.mainActAvailable || attackTarget === undefined}
+            >
+              Attack {attackTarget?.name ?? "—"}
+            </button>
             <p>{message}</p>
           </div>
 
           <div class="dev-note">
-            <strong>Development UI</strong>
+            <strong>Development combat policy</strong>
             <p>
-              Class, HP, and core attributes mirror authoritative RPG state. Combat, turns, final
-              art, and production renderer selection remain outside this slice.
+              Matchup, targeting, turn, and HP transitions are authoritative. Final
+              Defense/Resistance mitigation math remains deliberately graybox and replaceable until
+              the combat formula is approved.
             </p>
           </div>
         </aside>
@@ -276,7 +332,7 @@ function App() {
 
       <footer class="statusbar">
         <span>{runtimeStatus()}</span>
-        <span>GAME-I04 · RPG roles + attributes + HP</span>
+        <span>GAME-I05 · deterministic combat + turn foundation</span>
       </footer>
     </main>
   );

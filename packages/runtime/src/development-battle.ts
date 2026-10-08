@@ -6,26 +6,36 @@ import {
   actorRpgProfile,
   type BattlefieldState,
   battlefieldReadModel,
+  type CombatSide,
+  consumeEncounterMainAct,
   createActorRpgState,
   createBattlefieldState,
+  createEncounterTurnState,
+  type DirectAttackDefinition,
   deserializeActorIdentityState,
+  developmentGrayboxDamagePolicy,
+  type EncounterTurnState,
   findActorGroundPath,
   type GroundTraversalRules,
   moveActorOnBattlefield,
   placeActorOnBattlefield,
   reachableActorGroundLocations,
+  resolveDirectAttack,
   serializeActorId,
+  spendEncounterMovement,
 } from "@fantasia/game";
 
 export interface DevelopmentBattleActorView {
   readonly id: string;
   readonly name: string;
   readonly role: string;
+  readonly side: CombatSide;
   readonly shortLabel: string;
   readonly moveBudget: number;
   readonly hpCurrent: number;
   readonly hpCapacity: number;
   readonly selected: boolean;
+  readonly active: boolean;
 }
 
 export interface DevelopmentBattleAttributeView {
@@ -54,9 +64,14 @@ export interface DevelopmentBattleView {
   readonly bounds: BattlefieldState["bounds"];
   readonly actors: readonly DevelopmentBattleActorView[];
   readonly cells: readonly DevelopmentBattleCellView[];
+  readonly activeActorId: string;
+  readonly activeActorName: string;
+  readonly movementRemaining: number;
+  readonly mainActAvailable: boolean;
   readonly selectedActorId: string;
   readonly selectedActorName: string;
   readonly selectedActorRole: string;
+  readonly selectedActorSide: CombatSide;
   readonly selectedMoveBudget: number;
   readonly selectedHpCurrent: number;
   readonly selectedHpCapacity: number;
@@ -66,12 +81,43 @@ export interface DevelopmentBattleView {
 
 export type DevelopmentBattleMoveResult =
   | { readonly kind: "moved"; readonly view: DevelopmentBattleView }
-  | { readonly kind: "rejected"; readonly reason: "unreachable" | "unknown-actor" };
+  | {
+      readonly kind: "rejected";
+      readonly reason: "unreachable" | "unknown-actor" | "not-active-actor";
+    };
+
+export type DevelopmentBattleAttackResult =
+  | Readonly<{
+      kind: "resolved";
+      view: DevelopmentBattleView;
+      attackerName: string;
+      defenderName: string;
+      damage: number;
+      critical: boolean;
+    }>
+  | Readonly<{
+      kind: "missed";
+      view: DevelopmentBattleView;
+      attackerName: string;
+      defenderName: string;
+    }>
+  | Readonly<{
+      kind: "rejected";
+      reason:
+        | "unknown-actor"
+        | "not-active-actor"
+        | "main-act-spent"
+        | "same-side-target"
+        | "out-of-range"
+        | "out-of-elevation-reach"
+        | "invalid-attack";
+    }>;
 
 interface DevelopmentActorDefinition {
   readonly id: ActorId;
   readonly tacticalEntityId: string;
   readonly name: string;
+  readonly side: CombatSide;
   readonly shortLabel: string;
   readonly moveBudget: number;
   readonly initialCoord: { readonly x: number; readonly y: number };
@@ -83,6 +129,7 @@ const actors: readonly DevelopmentActorDefinition[] = [
     id: actorId("dev:mc"),
     tacticalEntityId: "dev-tactical:mc",
     name: "MC",
+    side: "player",
     shortLabel: "MC",
     moveBudget: 4,
     initialCoord: { x: 1, y: 4 },
@@ -104,6 +151,7 @@ const actors: readonly DevelopmentActorDefinition[] = [
     id: actorId("dev:scout"),
     tacticalEntityId: "dev-tactical:scout",
     name: "Scout",
+    side: "player",
     shortLabel: "SC",
     moveBudget: 5,
     initialCoord: { x: 0, y: 5 },
@@ -125,6 +173,7 @@ const actors: readonly DevelopmentActorDefinition[] = [
     id: actorId("dev:lancer"),
     tacticalEntityId: "dev-tactical:lancer",
     name: "Lancer",
+    side: "enemy",
     shortLabel: "LN",
     moveBudget: 4,
     initialCoord: { x: 2, y: 5 },
@@ -150,6 +199,19 @@ const traversalRules: GroundTraversalRules = {
   maxDrop: 1,
 };
 
+const developmentBasicAttack: DirectAttackDefinition = {
+  reference: "development-basic-attack",
+  scaling: "physical-power",
+  coefficient: 2,
+  damageCategory: "physical",
+  horizontalRange: { min: 1, max: 2 },
+  horizontalRangeMetric: "manhattan",
+  elevationReach: { upward: 1, downward: 1 },
+  hitChance: 1,
+  criticalChance: 0,
+  criticalMultiplier: 1.5,
+};
+
 function coordKey(coord: { readonly x: number; readonly y: number }): string {
   return `${coord.x}:${coord.y}`;
 }
@@ -169,6 +231,19 @@ function profileForActor(rpg: ActorRpgState, actor: DevelopmentActorDefinition) 
     throw new Error(`Development RPG profile missing: ${serializeActorId(actor.id)}`);
   }
   return profile;
+}
+
+function encounterParticipants() {
+  return actors.map((actor, index) => ({
+    actorId: actor.id,
+    side: actor.side,
+    sameSideTiePriority: index,
+    movementAllowance: actor.moveBudget,
+  }));
+}
+
+function combatParticipants() {
+  return actors.map((actor) => ({ actorId: actor.id, side: actor.side }));
 }
 
 function buildInitialState() {
@@ -205,25 +280,28 @@ function buildInitialState() {
     battlefield = placed.state;
   }
 
-  return { identities, rpg, battlefield };
+  return {
+    identities,
+    rpg,
+    battlefield,
+    turn: createEncounterTurnState(encounterParticipants(), rpg),
+  };
 }
 
 export class DevelopmentBattleSession {
   readonly #identities: ReturnType<typeof buildInitialState>["identities"];
-  readonly #rpg: ReturnType<typeof buildInitialState>["rpg"];
+  #rpg: ActorRpgState;
   #battlefield: BattlefieldState;
+  #turn: EncounterTurnState;
   #selectedActorId: ActorId;
 
   constructor() {
     const initial = buildInitialState();
-    const initialActor = actors[0];
-    if (initialActor === undefined) {
-      throw new Error("Development battle requires at least one actor");
-    }
     this.#identities = initial.identities;
     this.#rpg = initial.rpg;
     this.#battlefield = initial.battlefield;
-    this.#selectedActorId = initialActor.id;
+    this.#turn = initial.turn;
+    this.#selectedActorId = initial.turn.activeActorId;
   }
 
   selectActor(id: string): DevelopmentBattleView | undefined {
@@ -236,14 +314,17 @@ export class DevelopmentBattleSession {
   view(previewGoal?: { readonly x: number; readonly y: number }): DevelopmentBattleView {
     const selected = definitionForId(this.#selectedActorId);
     if (selected === undefined) throw new Error("Development battle selected actor is missing");
+    const active = definitionForId(this.#turn.activeActorId);
+    if (active === undefined) throw new Error("Development battle active actor is missing");
     const selectedProfile = profileForActor(this.#rpg, selected);
+    const selectedIsActive = serializeActorId(selected.id) === serializeActorId(active.id);
 
     const battlefield = battlefieldReadModel(this.#battlefield, this.#identities);
     const reachableResult = reachableActorGroundLocations(
       this.#battlefield,
       this.#identities,
       selected.id,
-      selected.moveBudget,
+      selectedIsActive ? this.#turn.movementRemaining : 0,
       traversalRules,
     );
     const reachable =
@@ -269,7 +350,7 @@ export class DevelopmentBattleSession {
 
     return {
       title: "Development Battlefield",
-      subtitle: "GAME-I03 movement + GAME-I04 RPG core-state playground",
+      subtitle: "GAME-I05 deterministic combat foundation playground",
       bounds: battlefield.bounds,
       actors: actors.map((actor) => {
         const profile = profileForActor(this.#rpg, actor);
@@ -277,11 +358,13 @@ export class DevelopmentBattleSession {
           id: serializeActorId(actor.id),
           name: actor.name,
           role: profile.activeClass,
+          side: actor.side,
           shortLabel: actor.shortLabel,
           moveBudget: actor.moveBudget,
           hpCurrent: profile.hp.current,
           hpCapacity: profile.hp.capacity,
           selected: serializeActorId(actor.id) === serializeActorId(selected.id),
+          active: serializeActorId(actor.id) === serializeActorId(active.id),
         };
       }),
       cells: battlefield.cells.map((cell) => {
@@ -300,9 +383,14 @@ export class DevelopmentBattleSession {
             : { occupantActorId: serializeActorId(cell.actorId) }),
         };
       }),
+      activeActorId: serializeActorId(active.id),
+      activeActorName: active.name,
+      movementRemaining: this.#turn.movementRemaining,
+      mainActAvailable: this.#turn.mainActAvailable,
       selectedActorId: serializeActorId(selected.id),
       selectedActorName: selected.name,
       selectedActorRole: selectedProfile.activeClass,
+      selectedActorSide: selected.side,
       selectedMoveBudget: selected.moveBudget,
       selectedHpCurrent: selectedProfile.hp.current,
       selectedHpCapacity: selectedProfile.hp.capacity,
@@ -314,18 +402,18 @@ export class DevelopmentBattleSession {
   moveSelected(goal: { readonly x: number; readonly y: number }): DevelopmentBattleMoveResult {
     const selected = definitionForId(this.#selectedActorId);
     if (selected === undefined) return { kind: "rejected", reason: "unknown-actor" };
+    if (serializeActorId(selected.id) !== serializeActorId(this.#turn.activeActorId)) {
+      return { kind: "rejected", reason: "not-active-actor" };
+    }
 
-    const reachable = reachableActorGroundLocations(
+    const path = findActorGroundPath(
       this.#battlefield,
       this.#identities,
       selected.id,
-      selected.moveBudget,
+      goal,
       traversalRules,
     );
-    if (
-      reachable.kind !== "reachable" ||
-      !reachable.locations.some((entry) => entry.coord.x === goal.x && entry.coord.y === goal.y)
-    ) {
+    if (path.kind !== "path" || path.path.cost > this.#turn.movementRemaining) {
       return { kind: "rejected", reason: "unreachable" };
     }
 
@@ -338,7 +426,69 @@ export class DevelopmentBattleSession {
     );
     if (moved.kind !== "moved") return { kind: "rejected", reason: "unreachable" };
 
+    const turn = spendEncounterMovement(this.#turn, path.path.cost);
+    if (turn === undefined) return { kind: "rejected", reason: "unreachable" };
     this.#battlefield = moved.state;
+    this.#turn = turn;
     return { kind: "moved", view: this.view() };
+  }
+
+  attackSelected(targetId: string): DevelopmentBattleAttackResult {
+    const attacker = definitionForId(this.#selectedActorId);
+    const defender = actors.find((candidate) => serializeActorId(candidate.id) === targetId);
+    if (attacker === undefined || defender === undefined) {
+      return { kind: "rejected", reason: "unknown-actor" };
+    }
+    if (serializeActorId(attacker.id) !== serializeActorId(this.#turn.activeActorId)) {
+      return { kind: "rejected", reason: "not-active-actor" };
+    }
+    if (!this.#turn.mainActAvailable) {
+      return { kind: "rejected", reason: "main-act-spent" };
+    }
+
+    const outcome = resolveDirectAttack({
+      definition: developmentBasicAttack,
+      attackerId: attacker.id,
+      defenderId: defender.id,
+      participants: combatParticipants(),
+      rpg: this.#rpg,
+      battlefield: this.#battlefield,
+      identities: this.#identities,
+      rolls: { hit: 0.5, critical: 0.5 },
+      damagePolicy: developmentGrayboxDamagePolicy,
+    });
+
+    if (outcome.kind === "rejected") {
+      if (outcome.reason === "same-side-target") {
+        return { kind: "rejected", reason: "same-side-target" };
+      }
+      if (outcome.reason === "out-of-range") {
+        return { kind: "rejected", reason: "out-of-range" };
+      }
+      if (outcome.reason === "out-of-elevation-reach") {
+        return { kind: "rejected", reason: "out-of-elevation-reach" };
+      }
+      return { kind: "rejected", reason: "invalid-attack" };
+    }
+
+    this.#turn = consumeEncounterMainAct(this.#turn);
+    if (outcome.kind === "missed") {
+      return {
+        kind: "missed",
+        view: this.view(),
+        attackerName: attacker.name,
+        defenderName: defender.name,
+      };
+    }
+
+    this.#rpg = outcome.rpg;
+    return {
+      kind: "resolved",
+      view: this.view(),
+      attackerName: attacker.name,
+      defenderName: defender.name,
+      damage: outcome.event.appliedDamage,
+      critical: outcome.event.critical,
+    };
   }
 }

@@ -2,6 +2,7 @@ import { gameDomainStatus } from "@fantasia/game";
 
 export {
   type DevelopmentBattleActorView,
+  type DevelopmentBattleAttackResult,
   type DevelopmentBattleCellView,
   type DevelopmentBattleMoveResult,
   DevelopmentBattleSession,
