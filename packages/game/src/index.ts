@@ -1,4 +1,6 @@
 export * from "./actors/identity.js";
+export * from "./battlefield/movement.js";
+export * from "./battlefield/state.js";
 export * from "./composition/rpg/subject-association.js";
 export * from "./composition/tactical/actor-identity.js";
 
