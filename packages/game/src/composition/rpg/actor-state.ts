@@ -5,9 +5,9 @@ import {
   validateAttributeState,
 } from "@drakeshard/rpg/attributes";
 import {
+  initializeResource,
   type ResourceDefinition,
   type ResourceState,
-  initializeResource,
   validateResourceState,
 } from "@drakeshard/rpg/resources";
 import {
@@ -104,7 +104,9 @@ function attributeDefinition<Reference extends string>(
   return { reference, initialBase };
 }
 
-function hpDefinition(definition: ActorRpgDefinition): ResourceDefinition<typeof HP_RESOURCE_REFERENCE> {
+function hpDefinition(
+  definition: ActorRpgDefinition,
+): ResourceDefinition<typeof HP_RESOURCE_REFERENCE> {
   return {
     reference: HP_RESOURCE_REFERENCE,
     initialCurrent: definition.hp.current,
@@ -197,7 +199,10 @@ export function actorRpgSubject(
   return state.actors.find((entry) => actorIdsEqual(entry.actorId, actorId));
 }
 
-export function actorRpgProfile(state: ActorRpgState, actorId: ActorId): ActorRpgProfile | undefined {
+export function actorRpgProfile(
+  state: ActorRpgState,
+  actorId: ActorId,
+): ActorRpgProfile | undefined {
   const subject = actorRpgSubject(state, actorId);
   if (subject === undefined || subject.roles.active === null) return undefined;
 
@@ -242,16 +247,35 @@ function validateSerializedSubject(
   }
 
   const attributeEntries = [
-    [CORE_ATTRIBUTE_REFERENCES.physicalPower, definition.attributes.physicalPower, entry.attributes.physicalPower],
-    [CORE_ATTRIBUTE_REFERENCES.magicalPower, definition.attributes.magicalPower, entry.attributes.magicalPower],
+    [
+      CORE_ATTRIBUTE_REFERENCES.physicalPower,
+      definition.attributes.physicalPower,
+      entry.attributes.physicalPower,
+    ],
+    [
+      CORE_ATTRIBUTE_REFERENCES.magicalPower,
+      definition.attributes.magicalPower,
+      entry.attributes.magicalPower,
+    ],
     [CORE_ATTRIBUTE_REFERENCES.defense, definition.attributes.defense, entry.attributes.defense],
-    [CORE_ATTRIBUTE_REFERENCES.resistance, definition.attributes.resistance, entry.attributes.resistance],
+    [
+      CORE_ATTRIBUTE_REFERENCES.resistance,
+      definition.attributes.resistance,
+      entry.attributes.resistance,
+    ],
     [CORE_ATTRIBUTE_REFERENCES.speed, definition.attributes.speed, entry.attributes.speed],
-    [CORE_ATTRIBUTE_REFERENCES.stability, definition.attributes.stability, entry.attributes.stability],
+    [
+      CORE_ATTRIBUTE_REFERENCES.stability,
+      definition.attributes.stability,
+      entry.attributes.stability,
+    ],
   ] as const;
 
   for (const [reference, initialBase, attributeState] of attributeEntries) {
-    if (validateAttributeState(attributeDefinition(reference, initialBase), attributeState).kind !== "valid") {
+    if (
+      validateAttributeState(attributeDefinition(reference, initialBase), attributeState).kind !==
+      "valid"
+    ) {
       throw new RangeError(`Invalid RPG attribute state for actor: ${entry.actorId}`);
     }
   }
