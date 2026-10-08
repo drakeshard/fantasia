@@ -40,6 +40,14 @@ export {
   type RestoreEncounterRuntimeOptions,
   saveFantasiaEncounter,
 } from "./persistence/encounter-save.js";
+export {
+  type ProductionBattleActorView,
+  type ProductionBattleAttributeView,
+  type ProductionBattleCellView,
+  type ProductionBattleCommandResult,
+  ProductionBattleSession,
+  type ProductionBattleView,
+} from "./production-battle.js";
 
 export const runtimeStatus = (): string =>
   `${gameDomainStatus()} Foundation 0.1.2 runtime integration ready.`;

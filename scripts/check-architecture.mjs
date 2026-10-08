@@ -20,7 +20,7 @@ const rules = [
   {
     dir: join(root, "packages/game/src"),
     forbidden: [
-      /from\s+["'](?:preact|@preact\/signals|phaser|playcanvas)["']/,
+      /from\s+["'](?:preact|@preact\/signals|phaser|playcanvas|pixi\.js)["']/,
       /from\s+["']@drakeshard\/foundation(?:\/[^"']+)?["']/,
       /from\s+["'](?:\.\.\/)*apps\//,
       /\b(?:window|document|HTMLElement|HTMLCanvasElement)\b/,
@@ -31,7 +31,7 @@ const rules = [
   },
   {
     dir: join(root, "packages/runtime/src"),
-    forbidden: [/from\s+["'](?:phaser|playcanvas)["']/],
+    forbidden: [/from\s+["'](?:phaser|playcanvas|pixi\.js)["']/],
     message: "runtime must not own a production renderer implementation",
   },
 ];

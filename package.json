@@ -22,7 +22,7 @@
     "audit": "pnpm audit --audit-level moderate",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run --passWithNoTests",
-    "test:e2e": "playwright test --project=chromium",
+    "test:e2e": "playwright test",
     "build": "pnpm -r build",
     "verify": "pnpm audit && pnpm foundation:consumer && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
   },

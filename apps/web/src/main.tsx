@@ -1,157 +1,142 @@
 import {
-  DevelopmentBattleSession,
-  type DevelopmentBattleView,
-  FantasiaRuntimeSession,
+  ProductionBattleSession,
+  type ProductionBattleView,
   runtimeStatus,
 } from "@fantasia/runtime";
 import { render } from "preact";
-import { useEffect, useMemo, useState } from "preact/hooks";
-import { createBrowserInputBinding } from "./foundation-browser.js";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { ProductionBattleRenderer } from "./battle-renderer.js";
 import "./styles.css";
+import "./production.css";
+
+function commandMessage(result: ReturnType<ProductionBattleSession["moveSelected"]>): string {
+  if (result.kind === "rejected") return `Command rejected: ${result.reason}.`;
+  if (result.event?.kind === "actor-moved") {
+    return `Moved to ${result.event.goal.x}, ${result.event.goal.y}. ${result.event.movementRemaining} movement remains.`;
+  }
+  if (result.event?.kind === "direct-attack-resolved") {
+    return `Attack dealt ${result.event.appliedDamage} damage${result.event.critical ? " (critical)" : ""}.`;
+  }
+  if (result.event?.kind === "direct-attack-missed") return "The attack missed.";
+  if (result.event?.kind === "turn-ended") {
+    return `Turn ended. Round ${result.event.round}; next actor is active.`;
+  }
+  if (result.event?.kind === "encounter-ended") return `Encounter ended: ${result.event.outcome}.`;
+  return "Authoritative command applied.";
+}
 
 function App() {
-  const battle = useMemo(() => new DevelopmentBattleSession(), []);
-  const [view, setView] = useState<DevelopmentBattleView>(() => battle.view());
-  const [message, setMessage] = useState("The fastest unit is active. Move or use its Main Act.");
+  const battle = useMemo(() => new ProductionBattleSession(), []);
+  const [view, setView] = useState<ProductionBattleView>(() => battle.view());
+  const [message, setMessage] = useState(
+    "Select a unit or battlefield cell. The active unit may act.",
+  );
+  const rendererHost = useRef<HTMLDivElement>(null);
+  const renderer = useRef<ProductionBattleRenderer>();
 
   useEffect(() => {
-    const session = new FantasiaRuntimeSession({
-      fixedStep: {
-        stepMs: 50,
-        maxFrameDeltaMs: 250,
-        maxStepsPerFrame: 5,
+    const host = rendererHost.current;
+    if (!host) return;
+
+    const instance = new ProductionBattleRenderer(host, {
+      onCellActivate: (cell) => {
+        if (cell.occupantActorId !== undefined) {
+          const selected = battle.selectActor(cell.occupantActorId);
+          if (selected) {
+            setView(selected);
+            setMessage(`${selected.selectedActorName} selected for inspection.`);
+          }
+          return;
+        }
+
+        const current = battle.view();
+        if (!cell.reachable || current.selectedActorId !== current.activeActorId) {
+          setView(current);
+          setMessage(`Only ${current.activeActorName} can move to a reachable cell this turn.`);
+          return;
+        }
+        const result = battle.moveSelected({ x: cell.x, y: cell.y });
+        setView(result.view);
+        setMessage(commandMessage(result));
       },
-      random: { kind: "seed", seed: 0 },
-      bindings: [{ action: "shell.confirm", binding: { kind: "key", code: "Enter" } }],
-      contexts: [
-        {
-          id: "shell",
-          priority: 0,
-          actions: [{ action: "shell.confirm" }],
-        },
-      ],
-      activeContexts: ["shell"],
+      onCellPreview: (cell) => {
+        setView(cell?.reachable ? battle.view({ x: cell.x, y: cell.y }) : battle.view());
+      },
     });
-    const input = createBrowserInputBinding(session);
-    input.attach();
+    renderer.current = instance;
+    void instance.init().then(() => instance.update(battle.view()));
 
-    return () => input.detach();
-  }, []);
+    return () => {
+      renderer.current = undefined;
+      instance.destroy();
+    };
+  }, [battle]);
 
-  const actorById = new Map(view.actors.map((actor) => [actor.id, actor]));
-  const columns = view.bounds.maxX - view.bounds.minX + 1;
-  const attackTarget = view.actors.find((actor) => actor.side !== view.selectedActorSide);
+  useEffect(() => {
+    renderer.current?.update(view);
+  }, [view]);
+
+  const selectedActor = view.actors.find((actor) => actor.id === view.selectedActorId);
+  const attackTarget = view.actors.find(
+    (actor) => actor.side !== view.selectedActorSide && !actor.defeated,
+  );
   const selectedIsActive = view.selectedActorId === view.activeActorId;
+  const encounterEnded = view.outcome !== "ongoing";
 
   function selectActor(id: string) {
     const next = battle.selectActor(id);
-    if (next === undefined) return;
+    if (!next) return;
     setView(next);
-    const actor = next.actors.find((candidate) => candidate.id === id);
     setMessage(
-      actor?.active
-        ? `${actor.name} is active. Movement and Main Act commands are available.`
-        : `${actor?.name ?? "Unit"} selected for inspection. Only ${next.activeActorName} can act.`,
-    );
-  }
-
-  function previewCell(x: number, y: number, reachable: boolean) {
-    if (!reachable) {
-      setView(battle.view());
-      return;
-    }
-    setView(battle.view({ x, y }));
-  }
-
-  function clearPreview() {
-    setView(battle.view());
-  }
-
-  function activateCell(cell: DevelopmentBattleView["cells"][number]) {
-    if (cell.occupantActorId !== undefined) {
-      selectActor(cell.occupantActorId);
-      return;
-    }
-    if (!cell.reachable) {
-      setMessage(
-        selectedIsActive
-          ? "That destination is outside the active unit's remaining movement."
-          : `Only ${view.activeActorName} can move during this turn.`,
-      );
-      return;
-    }
-
-    const result = battle.moveSelected({ x: cell.x, y: cell.y });
-    if (result.kind === "moved") {
-      setView(result.view);
-      setMessage(
-        `${result.view.selectedActorName} moved to ${cell.x}, ${cell.y}. ${result.view.movementRemaining} movement remains.`,
-      );
-      return;
-    }
-    setMessage(
-      result.reason === "not-active-actor"
-        ? `Only ${view.activeActorName} can move during this turn.`
-        : "Movement was rejected by the authoritative battlefield rules.",
+      next.selectedActorId === next.activeActorId
+        ? `${next.selectedActorName} is active and can receive commands.`
+        : `${next.selectedActorName} selected for inspection. ${next.activeActorName} owns the turn.`,
     );
   }
 
   function attack() {
-    if (attackTarget === undefined) return;
+    if (!attackTarget) return;
     const result = battle.attackSelected(attackTarget.id);
-    if (result.kind === "resolved") {
-      setView(result.view);
-      setMessage(
-        `${result.attackerName} hit ${result.defenderName} for ${result.damage} damage${result.critical ? " (critical)" : ""}.`,
-      );
-      return;
-    }
-    if (result.kind === "missed") {
-      setView(result.view);
-      setMessage(`${result.attackerName} missed ${result.defenderName}.`);
-      return;
-    }
+    setView(result.view);
+    setMessage(commandMessage(result));
+  }
 
-    const reasons: Record<typeof result.reason, string> = {
-      "unknown-actor": "The combat target no longer exists.",
-      "not-active-actor": `Only ${view.activeActorName} can use actions during this turn.`,
-      "main-act-spent": "The active unit has already spent its Main Act.",
-      "same-side-target": "The graybox basic attack cannot target an ally.",
-      "out-of-range": `${attackTarget.name} is outside the graybox basic attack range.`,
-      "out-of-elevation-reach": `${attackTarget.name} is outside the attack's elevation reach.`,
-      "invalid-attack": "The authoritative combat resolver rejected the attack.",
-    };
-    setMessage(reasons[result.reason]);
+  function endTurn() {
+    const result = battle.endTurn();
+    setView(result.view);
+    setMessage(commandMessage(result));
   }
 
   return (
     <main class="app-shell">
       <header class="topbar">
         <div>
-          <p class="eyebrow">Drakeshard Studios / Development Build</p>
+          <p class="eyebrow">Drakeshard Studios / Production Renderer Slice</p>
           <h1>Fantasia</h1>
         </div>
         <div class="runtime-chip" title={runtimeStatus()}>
           <span class="runtime-dot" aria-hidden="true" />
-          Runtime online
+          Pixi / WebGL · Runtime tick {view.runtimeTick}
         </div>
       </header>
 
-      <section class="mission-strip" aria-label="Development mission">
+      <section class="mission-strip" aria-label="Production renderer scenario">
         <div>
-          <p class="section-kicker">Playtest Scenario</p>
+          <p class="section-kicker">GAME-I08 Vertical Slice</p>
           <h2>{view.title}</h2>
           <p>{view.subtitle}</p>
         </div>
         <div class="mission-meta">
+          <span>Round {view.round}</span>
           <span>Turn: {view.activeActorName}</span>
           <span>Move {view.movementRemaining}</span>
           <span>Main Act {view.mainActAvailable ? "ready" : "spent"}</span>
+          <span>Outcome {view.outcome}</span>
         </div>
       </section>
 
-      <section class="battle-layout">
-        <aside class="unit-rail" aria-label="Available units">
+      <section class="battle-layout production-layout">
+        <aside class="unit-rail" aria-label="Combatants">
           <p class="section-kicker">Combatants</p>
           <div class="unit-list">
             {view.actors.map((actor) => (
@@ -168,94 +153,51 @@ function App() {
                     {actor.role} · HP {actor.hpCurrent}/{actor.hpCapacity}
                   </small>
                 </span>
-                <span class="unit-move">{actor.active ? "ACTIVE" : `MOV ${actor.moveBudget}`}</span>
+                <span class="unit-move">
+                  {actor.active ? "ACTIVE" : actor.defeated ? "DOWN" : actor.side}
+                </span>
               </button>
             ))}
           </div>
         </aside>
 
-        <section class="battlefield-panel" aria-label="Tactical battlefield">
+        <section
+          class="battlefield-panel production-battlefield-panel"
+          aria-label="Production tactical battlefield"
+        >
           <div class="battlefield-toolbar">
             <div>
-              <p class="section-kicker">Battlefield</p>
-              <strong>GAME-I05 combat playground</strong>
+              <p class="section-kicker">Production Battlefield</p>
+              <strong>Fixed oblique 2.5D projection · authoritative square geometry</strong>
             </div>
             <div class="legend">
               <span>
                 <i class="legend-dot reachable" /> Reachable
               </span>
               <span>
-                <i class="legend-dot elevated" /> Elevated
+                <i class="legend-dot elevated" /> Elevation
               </span>
               <span>
                 <i class="legend-dot blocked" /> Blocked
               </span>
             </div>
           </div>
-
-          <div class="battlefield-wrap">
-            <div
-              class="battlefield-grid"
-              style={{ gridTemplateColumns: `repeat(${columns}, minmax(54px, 1fr))` }}
-            >
-              {view.cells.map((cell) => {
-                const actor = cell.occupantActorId
-                  ? actorById.get(cell.occupantActorId)
-                  : undefined;
-                const classes = [
-                  "battle-cell",
-                  cell.blocked ? "is-blocked" : "",
-                  cell.elevation > 0 ? `elevation-${Math.min(cell.elevation, 2)}` : "",
-                  cell.reachable && actor === undefined ? "is-reachable" : "",
-                  cell.path ? "is-path" : "",
-                  actor !== undefined ? "has-actor" : "",
-                  actor?.selected ? "has-selected-actor" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ");
-
-                return (
-                  <button
-                    type="button"
-                    class={classes}
-                    data-testid={`cell-${cell.x}-${cell.y}`}
-                    onMouseEnter={() => previewCell(cell.x, cell.y, cell.reachable)}
-                    onFocus={() => previewCell(cell.x, cell.y, cell.reachable)}
-                    onBlur={clearPreview}
-                    onClick={() => activateCell(cell)}
-                    disabled={cell.blocked}
-                    aria-label={`Tile ${cell.x}, ${cell.y}${actor ? `, ${actor.name}` : ""}${cell.elevation > 0 ? `, elevation ${cell.elevation}` : ""}`}
-                  >
-                    <span class="tile-coord">
-                      {cell.x},{cell.y}
-                    </span>
-                    {cell.elevation > 0 && <span class="elevation-badge">▲{cell.elevation}</span>}
-                    {cell.reachableCost !== undefined && actor === undefined && (
-                      <span class="move-cost">{cell.reachableCost}</span>
-                    )}
-                    {actor !== undefined && (
-                      <span class={`battle-token${actor.selected ? " is-selected" : ""}`}>
-                        {actor.shortLabel}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          <div ref={rendererHost} class="pixi-battlefield" data-testid="production-battlefield" />
+          <p class="renderer-note">
+            Placeholder unit markers are renderer-engineering visuals only. Final pixel sprites
+            remain a separate art-production approval.
+          </p>
         </section>
 
         <aside class="detail-panel" aria-label="Selected unit details">
           <p class="section-kicker">Selected Unit</p>
           <div class="selected-unit-heading">
-            <span class="selected-unit-avatar">
-              {view.actors.find((actor) => actor.selected)?.shortLabel ?? "--"}
-            </span>
+            <span class="selected-unit-avatar">{selectedActor?.shortLabel ?? "--"}</span>
             <div>
               <h3>{view.selectedActorName}</h3>
               <p>
-                {view.selectedActorRole} · {view.selectedActorSide}{" "}
-                {selectedIsActive ? "· Active" : ""}
+                {view.selectedActorRole} · {view.selectedActorSide}
+                {selectedIsActive ? " · Active" : ""}
               </p>
             </div>
           </div>
@@ -269,7 +211,7 @@ function App() {
             </div>
             <div>
               <dt>Movement</dt>
-              <dd>{selectedIsActive ? view.movementRemaining : view.selectedMoveBudget}</dd>
+              <dd>{selectedIsActive ? view.movementRemaining : "—"}</dd>
             </div>
             <div>
               <dt>Physical Power</dt>
@@ -306,25 +248,36 @@ function App() {
           </dl>
 
           <div class="command-box">
-            <p class="section-kicker">Command</p>
-            <strong>Move / Basic Attack</strong>
-            <button
-              type="button"
-              class="command-action"
-              onClick={attack}
-              disabled={!selectedIsActive || !view.mainActAvailable || attackTarget === undefined}
-            >
-              Attack {attackTarget?.name ?? "—"}
-            </button>
-            <p>{message}</p>
+            <p class="section-kicker">Commands</p>
+            <div class="command-actions">
+              <button
+                type="button"
+                class="command-action"
+                onClick={attack}
+                disabled={
+                  encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget
+                }
+              >
+                Attack {attackTarget?.name ?? "—"}
+              </button>
+              <button
+                type="button"
+                class="command-action secondary"
+                onClick={endTurn}
+                disabled={encounterEnded}
+              >
+                End turn
+              </button>
+            </div>
+            <p aria-live="polite">{message}</p>
           </div>
 
-          <div class="dev-note">
-            <strong>Development combat policy</strong>
+          <div class="dev-note production-note">
+            <strong>Authority boundary</strong>
             <p>
-              Matchup, targeting, turn, and HP transitions are authoritative. Final
-              Defense/Resistance mitigation math remains deliberately graybox and replaceable until
-              the combat formula is approved.
+              Pixi projects square coordinates and logical elevation into screen space. Movement
+              legality, occupancy, attacks, HP, turns, outcome, and RNG remain authoritative in the
+              encounter/runtime layers.
             </p>
           </div>
         </aside>
@@ -332,15 +285,12 @@ function App() {
 
       <footer class="statusbar">
         <span>{runtimeStatus()}</span>
-        <span>GAME-I05 · deterministic combat + turn foundation</span>
+        <span>GAME-I08 · PixiJS renderer + Preact HUD · fixed camera</span>
       </footer>
     </main>
   );
 }
 
 const root = document.getElementById("app");
-if (!root) {
-  throw new Error("Fantasia root element was not found.");
-}
-
+if (!root) throw new Error("Fantasia root element was not found.");
 render(<App />, root);
