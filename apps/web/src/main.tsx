@@ -101,7 +101,7 @@ function App() {
         </div>
         <div class="mission-meta">
           <span>Four-direction grid</span>
-          <span>Movement only</span>
+          <span>RPG core state</span>
           <span>Renderer neutral</span>
         </div>
       </section>
@@ -120,7 +120,9 @@ function App() {
                 <span class="unit-avatar">{actor.shortLabel}</span>
                 <span class="unit-copy">
                   <strong>{actor.name}</strong>
-                  <small>{actor.role}</small>
+                  <small>
+                    {actor.role} · HP {actor.hpCurrent}/{actor.hpCapacity}
+                  </small>
                 </span>
                 <span class="unit-move">MOV {actor.moveBudget}</span>
               </button>
@@ -132,7 +134,7 @@ function App() {
           <div class="battlefield-toolbar">
             <div>
               <p class="section-kicker">Battlefield</p>
-              <strong>GAME-I03 movement playground</strong>
+              <strong>GAME-I03 + GAME-I04 playground</strong>
             </div>
             <div class="legend">
               <span>
@@ -211,10 +213,40 @@ function App() {
             </div>
           </div>
 
-          <dl class="stat-grid">
+          <dl class="stat-grid" aria-label="Selected unit RPG stats">
+            <div>
+              <dt>HP</dt>
+              <dd>
+                {view.selectedHpCurrent}/{view.selectedHpCapacity}
+              </dd>
+            </div>
             <div>
               <dt>Movement</dt>
               <dd>{view.selectedMoveBudget}</dd>
+            </div>
+            <div>
+              <dt>Physical Power</dt>
+              <dd>{view.selectedAttributes.physicalPower}</dd>
+            </div>
+            <div>
+              <dt>Magical Power</dt>
+              <dd>{view.selectedAttributes.magicalPower}</dd>
+            </div>
+            <div>
+              <dt>Defense</dt>
+              <dd>{view.selectedAttributes.defense}</dd>
+            </div>
+            <div>
+              <dt>Resistance</dt>
+              <dd>{view.selectedAttributes.resistance}</dd>
+            </div>
+            <div>
+              <dt>Speed</dt>
+              <dd>{view.selectedAttributes.speed}</dd>
+            </div>
+            <div>
+              <dt>Stability</dt>
+              <dd>{view.selectedAttributes.stability}</dd>
             </div>
             <div>
               <dt>Path cost</dt>
@@ -223,10 +255,6 @@ function App() {
             <div>
               <dt>Adjacency</dt>
               <dd>4-way</dd>
-            </div>
-            <div>
-              <dt>Mode</dt>
-              <dd>Move</dd>
             </div>
           </dl>
 
@@ -239,8 +267,8 @@ function App() {
           <div class="dev-note">
             <strong>Development UI</strong>
             <p>
-              Presentation mirrors authoritative state. Combat, turns, final art, and production
-              renderer selection remain intentionally outside this slice.
+              Class, HP, and core attributes mirror authoritative RPG state. Combat, turns, final
+              art, and production renderer selection remain outside this slice.
             </p>
           </div>
         </aside>
@@ -248,7 +276,7 @@ function App() {
 
       <footer class="statusbar">
         <span>{runtimeStatus()}</span>
-        <span>GAME-UI01 · HTML/CSS + Preact presentation</span>
+        <span>GAME-I04 · RPG roles + attributes + HP</span>
       </footer>
     </main>
   );

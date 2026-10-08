@@ -1,8 +1,12 @@
 import {
   type ActorId,
+  type ActorRpgDefinition,
+  type ActorRpgState,
   actorId,
+  actorRpgProfile,
   type BattlefieldState,
   battlefieldReadModel,
+  createActorRpgState,
   createBattlefieldState,
   deserializeActorIdentityState,
   findActorGroundPath,
@@ -19,7 +23,18 @@ export interface DevelopmentBattleActorView {
   readonly role: string;
   readonly shortLabel: string;
   readonly moveBudget: number;
+  readonly hpCurrent: number;
+  readonly hpCapacity: number;
   readonly selected: boolean;
+}
+
+export interface DevelopmentBattleAttributeView {
+  readonly physicalPower: number;
+  readonly magicalPower: number;
+  readonly defense: number;
+  readonly resistance: number;
+  readonly speed: number;
+  readonly stability: number;
 }
 
 export interface DevelopmentBattleCellView {
@@ -43,6 +58,9 @@ export interface DevelopmentBattleView {
   readonly selectedActorName: string;
   readonly selectedActorRole: string;
   readonly selectedMoveBudget: number;
+  readonly selectedHpCurrent: number;
+  readonly selectedHpCapacity: number;
+  readonly selectedAttributes: DevelopmentBattleAttributeView;
   readonly pathCost?: number;
 }
 
@@ -54,10 +72,10 @@ interface DevelopmentActorDefinition {
   readonly id: ActorId;
   readonly tacticalEntityId: string;
   readonly name: string;
-  readonly role: string;
   readonly shortLabel: string;
   readonly moveBudget: number;
   readonly initialCoord: { readonly x: number; readonly y: number };
+  readonly rpg: Omit<ActorRpgDefinition, "actorId">;
 }
 
 const actors: readonly DevelopmentActorDefinition[] = [
@@ -65,28 +83,64 @@ const actors: readonly DevelopmentActorDefinition[] = [
     id: actorId("dev:mc"),
     tacticalEntityId: "dev-tactical:mc",
     name: "MC",
-    role: "Infantry",
     shortLabel: "MC",
     moveBudget: 4,
     initialCoord: { x: 1, y: 4 },
+    rpg: {
+      classes: ["Infantry"],
+      initialClass: "Infantry",
+      attributes: {
+        physicalPower: 12,
+        magicalPower: 5,
+        defense: 10,
+        resistance: 7,
+        speed: 8,
+        stability: 10,
+      },
+      hp: { current: 100, capacity: 100 },
+    },
   },
   {
     id: actorId("dev:scout"),
     tacticalEntityId: "dev-tactical:scout",
     name: "Scout",
-    role: "Archer",
     shortLabel: "SC",
     moveBudget: 5,
     initialCoord: { x: 0, y: 5 },
+    rpg: {
+      classes: ["Archer"],
+      initialClass: "Archer",
+      attributes: {
+        physicalPower: 10,
+        magicalPower: 6,
+        defense: 6,
+        resistance: 7,
+        speed: 12,
+        stability: 7,
+      },
+      hp: { current: 80, capacity: 80 },
+    },
   },
   {
     id: actorId("dev:lancer"),
     tacticalEntityId: "dev-tactical:lancer",
     name: "Lancer",
-    role: "Lancer",
     shortLabel: "LN",
     moveBudget: 4,
     initialCoord: { x: 2, y: 5 },
+    rpg: {
+      classes: ["Lancer"],
+      initialClass: "Lancer",
+      attributes: {
+        physicalPower: 13,
+        magicalPower: 4,
+        defense: 11,
+        resistance: 6,
+        speed: 7,
+        stability: 12,
+      },
+      hp: { current: 110, capacity: 110 },
+    },
   },
 ];
 
@@ -105,6 +159,18 @@ function definitionForId(id: ActorId): DevelopmentActorDefinition | undefined {
   return actors.find((actor) => serializeActorId(actor.id) === serialized);
 }
 
+function rpgDefinitions(): readonly ActorRpgDefinition[] {
+  return actors.map((actor) => ({ actorId: actor.id, ...actor.rpg }));
+}
+
+function profileForActor(rpg: ActorRpgState, actor: DevelopmentActorDefinition) {
+  const profile = actorRpgProfile(rpg, actor.id);
+  if (profile === undefined) {
+    throw new Error(`Development RPG profile missing: ${serializeActorId(actor.id)}`);
+  }
+  return profile;
+}
+
 function buildInitialState() {
   const identities = deserializeActorIdentityState({
     associations: actors.map((actor) => ({
@@ -112,6 +178,7 @@ function buildInitialState() {
       tacticalEntityId: actor.tacticalEntityId,
     })),
   });
+  const rpg = createActorRpgState(rpgDefinitions());
 
   let battlefield = createBattlefieldState(
     { minX: 0, maxX: 7, minY: 0, maxY: 5 },
@@ -138,11 +205,12 @@ function buildInitialState() {
     battlefield = placed.state;
   }
 
-  return { identities, battlefield };
+  return { identities, rpg, battlefield };
 }
 
 export class DevelopmentBattleSession {
   readonly #identities: ReturnType<typeof buildInitialState>["identities"];
+  readonly #rpg: ReturnType<typeof buildInitialState>["rpg"];
   #battlefield: BattlefieldState;
   #selectedActorId: ActorId;
 
@@ -153,6 +221,7 @@ export class DevelopmentBattleSession {
       throw new Error("Development battle requires at least one actor");
     }
     this.#identities = initial.identities;
+    this.#rpg = initial.rpg;
     this.#battlefield = initial.battlefield;
     this.#selectedActorId = initialActor.id;
   }
@@ -167,6 +236,7 @@ export class DevelopmentBattleSession {
   view(previewGoal?: { readonly x: number; readonly y: number }): DevelopmentBattleView {
     const selected = definitionForId(this.#selectedActorId);
     if (selected === undefined) throw new Error("Development battle selected actor is missing");
+    const selectedProfile = profileForActor(this.#rpg, selected);
 
     const battlefield = battlefieldReadModel(this.#battlefield, this.#identities);
     const reachableResult = reachableActorGroundLocations(
@@ -199,16 +269,21 @@ export class DevelopmentBattleSession {
 
     return {
       title: "Development Battlefield",
-      subtitle: "Renderer-neutral GAME-I03 movement playground",
+      subtitle: "GAME-I03 movement + GAME-I04 RPG core-state playground",
       bounds: battlefield.bounds,
-      actors: actors.map((actor) => ({
-        id: serializeActorId(actor.id),
-        name: actor.name,
-        role: actor.role,
-        shortLabel: actor.shortLabel,
-        moveBudget: actor.moveBudget,
-        selected: serializeActorId(actor.id) === serializeActorId(selected.id),
-      })),
+      actors: actors.map((actor) => {
+        const profile = profileForActor(this.#rpg, actor);
+        return {
+          id: serializeActorId(actor.id),
+          name: actor.name,
+          role: profile.activeClass,
+          shortLabel: actor.shortLabel,
+          moveBudget: actor.moveBudget,
+          hpCurrent: profile.hp.current,
+          hpCapacity: profile.hp.capacity,
+          selected: serializeActorId(actor.id) === serializeActorId(selected.id),
+        };
+      }),
       cells: battlefield.cells.map((cell) => {
         const key = coordKey(cell.coord);
         const cost = reachable.get(key);
@@ -227,8 +302,11 @@ export class DevelopmentBattleSession {
       }),
       selectedActorId: serializeActorId(selected.id),
       selectedActorName: selected.name,
-      selectedActorRole: selected.role,
+      selectedActorRole: selectedProfile.activeClass,
       selectedMoveBudget: selected.moveBudget,
+      selectedHpCurrent: selectedProfile.hp.current,
+      selectedHpCapacity: selectedProfile.hp.capacity,
+      selectedAttributes: { ...selectedProfile.attributes },
       ...(pathCost === undefined ? {} : { pathCost }),
     };
   }
