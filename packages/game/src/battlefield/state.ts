@@ -1,26 +1,26 @@
 import {
-  deserializeLocationId,
-  deserializeTacticalEntityId,
-  serializeLocationId,
-  serializeTacticalEntityId,
-  type LocationId,
-} from "@drakeshard/tactical/identity";
-import {
+  type ElevationState,
   emptyElevationState,
   setElevation,
-  type ElevationState,
 } from "@drakeshard/tactical/elevation";
+import {
+  deserializeLocationId,
+  deserializeTacticalEntityId,
+  type LocationId,
+  serializeLocationId,
+  serializeTacticalEntityId,
+} from "@drakeshard/tactical/identity";
 import {
   emptyPlacementState,
   exclusiveOccupancyPolicy,
-  placeEntity,
   type PlacementState,
+  placeEntity,
 } from "@drakeshard/tactical/placement";
 import {
   createSquareTopology,
-  squareLocationId,
   type SquareBounds,
   type SquareCoord,
+  squareLocationId,
 } from "@drakeshard/tactical/square";
 import type { Topology } from "@drakeshard/tactical/topology";
 
