@@ -148,9 +148,13 @@ export class DevelopmentBattleSession {
 
   constructor() {
     const initial = buildInitialState();
+    const initialActor = actors[0];
+    if (initialActor === undefined) {
+      throw new Error("Development battle requires at least one actor");
+    }
     this.#identities = initial.identities;
     this.#battlefield = initial.battlefield;
-    this.#selectedActorId = actors[0].id;
+    this.#selectedActorId = initialActor.id;
   }
 
   selectActor(id: string): DevelopmentBattleView | undefined {
