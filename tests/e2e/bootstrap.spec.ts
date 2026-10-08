@@ -74,7 +74,9 @@ test("standardized Fantasia Battle HUD previews before authoritative commands", 
   await expect(page.getByText("5 remaining", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Confirm move", exact: true }).click();
-  await expect(preview.getByText("Moved to 1, 5. 4 movement remains.", { exact: true })).toBeVisible();
+  await expect(
+    preview.getByText("Moved to 1, 5. 4 movement remains.", { exact: true }),
+  ).toBeVisible();
   await expect(page.getByText("4 remaining", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Attack", exact: true }).click();
