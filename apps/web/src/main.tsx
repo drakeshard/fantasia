@@ -134,7 +134,7 @@ function App() {
               <p class="section-kicker">Battlefield</p>
               <strong>GAME-I03 movement playground</strong>
             </div>
-            <div class="legend" role="group" aria-label="Battlefield legend">
+            <div class="legend">
               <span>
                 <i class="legend-dot reachable" /> Reachable
               </span>
