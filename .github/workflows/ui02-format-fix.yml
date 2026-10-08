@@ -1,0 +1,46 @@
+name: GAME-UI02 Formatting Repair
+
+on:
+  push:
+    branches:
+      - game-ui02/fantasy-battle-presentation
+    paths:
+      - .github/workflows/ui02-format-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: game-ui02/fantasy-battle-presentation
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+          check-latest: false
+      - run: corepack enable
+      - run: node scripts/prepare-shared-packages.mjs
+      - run: pnpm install --frozen-lockfile
+      - name: Repair ARIA roles and format touched files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('apps/web/src/main.tsx')
+          text = path.read_text()
+          text = text.replace('class="turn-banner" aria-label={`Round ${view.round}, ${view.activeActorName}\'s turn`}', 'class="turn-banner"')
+          text = text.replace('class="turn-resources" aria-label="Current turn resources"', 'class="turn-resources" role="group" aria-label="Current turn resources"')
+          text = text.replace('class="field-legend" aria-label="Battlefield legend"', 'class="field-legend" role="group" aria-label="Battlefield legend"')
+          path.write_text(text)
+          PY
+          pnpm exec biome format --write apps/web/src/main.tsx apps/web/src/battle-renderer.ts apps/web/src/production.css tests/e2e/bootstrap.spec.ts
+          pnpm exec biome check apps/web/src/main.tsx apps/web/src/battle-renderer.ts apps/web/src/production.css tests/e2e/bootstrap.spec.ts
+      - name: Commit repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/src/main.tsx apps/web/src/battle-renderer.ts apps/web/src/production.css tests/e2e/bootstrap.spec.ts
+          git commit -m "GAME-UI02 apply repository formatting" || exit 0
+          git push origin HEAD:game-ui02/fantasy-battle-presentation
