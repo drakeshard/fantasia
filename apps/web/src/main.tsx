@@ -76,7 +76,9 @@ function App() {
           const active = current.actors.find((actor) => actor.id === current.activeActorId);
           if (target && active && target.side !== active.side && !target.defeated) {
             setAttackTargetId(target.id);
-            setMessage(`${target.name} selected as the attack target. Confirm the attack to commit.`);
+            setMessage(
+              `${target.name} selected as the attack target. Confirm the attack to commit.`,
+            );
           }
           return;
         }
@@ -324,7 +326,9 @@ function App() {
                   </span>
                   <span>
                     <strong>{actor.name}</strong>
-                    <small>{actor.active ? "Active turn" : actor.side === "player" ? "Ally" : "Opponent"}</small>
+                    <small>
+                      {actor.active ? "Active turn" : actor.side === "player" ? "Ally" : "Opponent"}
+                    </small>
                   </span>
                 </button>
               ))}
@@ -337,7 +341,8 @@ function App() {
             <h2>{previewTitle}</h2>
             {actionMode === "move" && previewGoal ? (
               <p>
-                Square {previewGoal.x}, {previewGoal.y} · Cost {view.pathCost ?? "—"} · Movement after{" "}
+                Square {previewGoal.x}, {previewGoal.y} · Cost {view.pathCost ?? "—"} · Movement
+                after{" "}
                 {view.pathCost === undefined
                   ? "—"
                   : Math.max(0, view.movementRemaining - view.pathCost)}
@@ -422,7 +427,8 @@ function App() {
               <div>
                 <strong>{view.selectedActorName}</strong>
                 <span>
-                  {view.selectedActorRole} · {view.selectedActorSide === "player" ? "Ally" : "Opponent"}
+                  {view.selectedActorRole} ·{" "}
+                  {view.selectedActorSide === "player" ? "Ally" : "Opponent"}
                 </span>
               </div>
               <span>
