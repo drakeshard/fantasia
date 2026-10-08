@@ -50,7 +50,13 @@ test("Fantasia production renderer drives the authoritative encounter", async ({
   expect(box).not.toBeNull();
   if (!box) return;
   const destination = projectedCellPoint(box.width, box.height, 1, 5);
-  await page.mouse.click(box.x + destination.x, box.y + destination.y);
+  const destinationX = box.x + destination.x;
+  const destinationY = box.y + destination.y;
+  if (testInfo.project.name === "chromium-mobile") {
+    await page.touchscreen.tap(destinationX, destinationY);
+  } else {
+    await page.mouse.click(destinationX, destinationY);
+  }
   await expect(page.getByText("Moved to 1, 5. 4 movement remains.", { exact: true })).toBeVisible();
   await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 1/)).toBeVisible();
   await expect(page.getByText("Move 4", { exact: true })).toBeVisible();
