@@ -14,10 +14,10 @@ test("Fantasia development tactical UI renders RPG state and moves a unit", asyn
   const details = page.getByLabel("Selected unit details");
   await expect(details.getByText("Infantry", { exact: true })).toBeVisible();
   await expect(details.getByText("100/100", { exact: true })).toBeVisible();
-  await expect(details.getByText("Physical Power", { exact: true })).toBeVisible();
-  await expect(details.getByText("12", { exact: true })).toBeVisible();
-  await expect(details.getByText("Stability", { exact: true })).toBeVisible();
-  await expect(details.getByText("10", { exact: true })).toBeVisible();
+  const physicalPower = details.getByText("Physical Power", { exact: true }).locator("..");
+  await expect(physicalPower.getByText("12", { exact: true })).toBeVisible();
+  const stability = details.getByText("Stability", { exact: true }).locator("..");
+  await expect(stability.getByText("10", { exact: true })).toBeVisible();
 
   const destination = page.getByTestId("cell-1-2");
   await destination.hover();
