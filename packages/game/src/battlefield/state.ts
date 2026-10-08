@@ -125,11 +125,16 @@ export function deserializeBattlefieldState(
 
   let placement = emptyPlacementState();
   for (const entry of serialized.placements) {
+    const locations = entry.locations.map(deserializeLocationId);
+    if (locations.some((location) => blockedLocations.includes(location))) {
+      throw new RangeError("Serialized battlefield placement occupies blocked structure");
+    }
+
     const result = placeEntity(
       placement,
       topology,
       deserializeTacticalEntityId(entry.entity),
-      entry.locations.map(deserializeLocationId),
+      locations,
       [exclusiveOccupancyPolicy],
     );
     if (result.kind !== "placed") {
