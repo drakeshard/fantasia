@@ -4,3 +4,6 @@ packages:
 
 minimumReleaseAge: 1440
 blockExoticSubdeps: true
+
+patchedDependencies:
+  pixi.js@8.22.0: patches/pixi.js@8.22.0.patch
