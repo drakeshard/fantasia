@@ -1,10 +1,10 @@
 import { gameDomainStatus } from "@fantasia/game";
 
 export {
-  DevelopmentBattleSession,
   type DevelopmentBattleActorView,
   type DevelopmentBattleCellView,
   type DevelopmentBattleMoveResult,
+  DevelopmentBattleSession,
   type DevelopmentBattleView,
 } from "./development-battle.js";
 export {
