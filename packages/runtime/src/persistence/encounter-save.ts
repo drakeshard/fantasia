@@ -1,29 +1,26 @@
-import type { FixedStepConfig } from "@drakeshard/foundation/time";
+import type { DeterministicRngState } from "@drakeshard/foundation/random";
 import type {
   JsonValue,
   PersistenceFailure,
   SaveService,
   SaveSlotId,
 } from "@drakeshard/foundation/storage";
+import type { FixedStepConfig } from "@drakeshard/foundation/time";
 import {
   type ActorIdentityState,
   type ActorRpgDefinition,
   battlefieldReadModel,
+  type DamagePolicy,
   deserializeActorIdentityState,
   deserializeEncounterState,
-  type DamagePolicy,
   type EncounterDefinition,
   type SerializedActorIdentityState,
   type SerializedEncounterState,
-  serializeActorIdentityState,
   serializeActorId,
+  serializeActorIdentityState,
   serializeEncounterState,
 } from "@fantasia/game";
-import type { DeterministicRngState } from "@drakeshard/foundation/random";
-import {
-  EncounterRuntimeRunner,
-  type EncounterRuntimeSnapshot,
-} from "../encounter-runner.js";
+import { EncounterRuntimeRunner, type EncounterRuntimeSnapshot } from "../encounter-runner.js";
 
 export const FANTASIA_DATA_SCHEMA_VERSION = 1 as const;
 
@@ -84,7 +81,9 @@ function asString(value: JsonValue | undefined): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-function decodeRuntimeSnapshot(value: JsonValue | undefined): FantasiaEncounterSavePayload["runtime"] {
+function decodeRuntimeSnapshot(
+  value: JsonValue | undefined,
+): FantasiaEncounterSavePayload["runtime"] {
   if (value === undefined || !isRecord(value)) throw new RangeError("runtime must be an object");
   const tick = asNonNegativeSafeInteger(value.tick);
   if (tick === undefined) throw new RangeError("runtime.tick must be a non-negative safe integer");
@@ -97,10 +96,7 @@ function decodeRuntimeSnapshot(value: JsonValue | undefined): FantasiaEncounterS
     rawState.length !== 4 ||
     rawState.some(
       (entry) =>
-        typeof entry !== "number" ||
-        !Number.isInteger(entry) ||
-        entry < 0 ||
-        entry > 0xffff_ffff,
+        typeof entry !== "number" || !Number.isInteger(entry) || entry < 0 || entry > 0xffff_ffff,
     )
   ) {
     throw new RangeError("runtime.random is invalid");
@@ -170,7 +166,11 @@ function decodePayload(
   }
   const producerGameVersion = asString(raw.producerGameVersion);
   const contentVersion = asString(raw.contentVersion);
-  if (producerGameVersion === undefined || producerGameVersion.length === 0 || contentVersion === undefined) {
+  if (
+    producerGameVersion === undefined ||
+    producerGameVersion.length === 0 ||
+    contentVersion === undefined
+  ) {
     return { kind: "rejected", reason: "invalid-payload" };
   }
   if (contentVersion !== options.contentVersion) {
@@ -194,7 +194,11 @@ function decodePayload(
     const battlefield = battlefieldReadModel(state.battlefield, identities);
     for (const participant of options.definition.participants) {
       const id = serializeActorId(participant.actorId);
-      if (!battlefield.cells.some((cell) => cell.actorId !== undefined && serializeActorId(cell.actorId) === id)) {
+      if (
+        !battlefield.cells.some(
+          (cell) => cell.actorId !== undefined && serializeActorId(cell.actorId) === id,
+        )
+      ) {
         throw new RangeError(`Encounter participant is not placed on restored battlefield: ${id}`);
       }
     }
@@ -218,7 +222,8 @@ function decodePayload(
     return {
       kind: "rejected",
       reason: "invalid-payload",
-      diagnostic: error instanceof Error ? error.message : "Unknown aggregate save validation error",
+      diagnostic:
+        error instanceof Error ? error.message : "Unknown aggregate save validation error",
     };
   }
 }
