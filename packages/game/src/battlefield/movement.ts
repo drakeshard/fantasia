@@ -1,27 +1,27 @@
 import { elevationAt } from "@drakeshard/tactical/elevation";
 import type { LocationId, TacticalEntityId } from "@drakeshard/tactical/identity";
+import { lowestCostPath } from "@drakeshard/tactical/pathfinding";
 import {
   exclusiveOccupancyPolicy,
   locationsOf,
   occupantsAt,
+  type PlacementRejected,
   placeEntity,
   relocateEntity,
-  type PlacementRejected,
 } from "@drakeshard/tactical/placement";
-import { lowestCostPath } from "@drakeshard/tactical/pathfinding";
 import { reachableLocations } from "@drakeshard/tactical/reachability";
 import {
   parseSquareLocationId,
-  squareLocationId,
   type SquareCoord,
+  squareLocationId,
 } from "@drakeshard/tactical/square";
 import type { TraversalPolicy } from "@drakeshard/tactical/traversal";
 import type { ActorId } from "../actors/identity.js";
 import {
-  tacticalEntityForActor,
   type ActorIdentityState,
+  tacticalEntityForActor,
 } from "../composition/tactical/actor-identity.js";
-import { battlefieldTopology, type BattlefieldState } from "./state.js";
+import { type BattlefieldState, battlefieldTopology } from "./state.js";
 
 export interface GroundTraversalRules {
   readonly moveCost: number;
@@ -154,7 +154,13 @@ export function placeActorOnBattlefield(
   }
 
   const topology = battlefieldTopology(state.bounds);
-  const result = placeEntity(state.placement, topology, entity, [location], [exclusiveOccupancyPolicy]);
+  const result = placeEntity(
+    state.placement,
+    topology,
+    entity,
+    [location],
+    [exclusiveOccupancyPolicy],
+  );
   if (result.kind !== "placed") return { kind: "rejected", reason: result.reason };
 
   return {
