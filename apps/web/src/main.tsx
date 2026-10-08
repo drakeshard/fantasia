@@ -22,15 +22,30 @@ function commandMessage(result: ReturnType<ProductionBattleSession["moveSelected
     return `Turn ended. Round ${result.event.round}; next actor is active.`;
   }
   if (result.event?.kind === "encounter-ended") return `Encounter ended: ${result.event.outcome}.`;
-  return "Authoritative command applied.";
+  return "Command applied.";
+}
+
+function outcomeLabel(outcome: ProductionBattleView["outcome"]): string {
+  switch (outcome) {
+    case "player-victory":
+      return "Victory";
+    case "enemy-victory":
+      return "Defeat";
+    case "draw":
+      return "Draw";
+    default:
+      return "Battle in progress";
+  }
+}
+
+function hpPercent(current: number, capacity: number): number {
+  return capacity <= 0 ? 0 : Math.max(0, Math.min(100, (current / capacity) * 100));
 }
 
 function App() {
   const battle = useMemo(() => new ProductionBattleSession(), []);
   const [view, setView] = useState<ProductionBattleView>(() => battle.view());
-  const [message, setMessage] = useState(
-    "Select a unit or battlefield cell. The active unit may act.",
-  );
+  const [message, setMessage] = useState("Choose a unit or a reachable tile.");
   const rendererHost = useRef<HTMLDivElement>(null);
   const renderer = useRef<ProductionBattleRenderer>();
 
@@ -44,7 +59,7 @@ function App() {
           const selected = battle.selectActor(cell.occupantActorId);
           if (selected) {
             setView(selected);
-            setMessage(`${selected.selectedActorName} selected for inspection.`);
+            setMessage(`${selected.selectedActorName} selected.`);
           }
           return;
         }
@@ -52,7 +67,7 @@ function App() {
         const current = battle.view();
         if (!cell.reachable || current.selectedActorId !== current.activeActorId) {
           setView(current);
-          setMessage(`Only ${current.activeActorName} can move to a reachable cell this turn.`);
+          setMessage(`Only ${current.activeActorName} can move to a reachable tile this turn.`);
           return;
         }
         const result = battle.moveSelected({ x: cell.x, y: cell.y });
@@ -89,8 +104,8 @@ function App() {
     setView(next);
     setMessage(
       next.selectedActorId === next.activeActorId
-        ? `${next.selectedActorName} is active and can receive commands.`
-        : `${next.selectedActorName} selected for inspection. ${next.activeActorName} owns the turn.`,
+        ? `${next.selectedActorName} is ready for orders.`
+        : `${next.selectedActorName} selected. ${next.activeActorName} has the turn.`,
     );
   }
 
@@ -108,185 +123,154 @@ function App() {
   }
 
   return (
-    <main class="app-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Drakeshard Studios / Production Renderer Slice</p>
-          <h1>Fantasia</h1>
+    <main class="fantasia-shell">
+      <header class="game-masthead">
+        <div class="wordmark-wrap">
+          <span class="wordmark-mark" aria-hidden="true">F</span>
+          <div>
+            <p class="masthead-kicker">Drakeshard Studios</p>
+            <h1>Fantasia</h1>
+          </div>
         </div>
-        <div class="runtime-chip" title={runtimeStatus()}>
-          <span class="runtime-dot" aria-hidden="true" />
-          Pixi / WebGL · Runtime tick {view.runtimeTick}
+        <div class="turn-banner" aria-label={`Round ${view.round}, ${view.activeActorName}'s turn`}>
+          <span class="turn-banner-label">Round {view.round}</span>
+          <strong>{view.activeActorName}&apos;s Turn</strong>
         </div>
       </header>
 
-      <section class="mission-strip" aria-label="Production renderer scenario">
-        <div>
-          <p class="section-kicker">GAME-I08 Vertical Slice</p>
-          <h2>{view.title}</h2>
-          <p>{view.subtitle}</p>
+      <section class="battle-brief" aria-label="Skirmish objective">
+        <div class="battle-brief-title">
+          <span class="battle-crest" aria-hidden="true">⚔</span>
+          <div>
+            <p class="ui-kicker">Skirmish</p>
+            <h2>Hold the field</h2>
+            <p class="objective-copy">Objective · Defeat all enemies</p>
+          </div>
         </div>
-        <div class="mission-meta">
-          <span>Round {view.round}</span>
-          <span>Turn: {view.activeActorName}</span>
-          <span>Move {view.movementRemaining}</span>
-          <span>Main Act {view.mainActAvailable ? "ready" : "spent"}</span>
-          <span>Outcome {view.outcome}</span>
+        <div class="turn-resources" aria-label="Current turn resources">
+          <span><small>Move</small><strong>{view.movementRemaining}</strong></span>
+          <span><small>Main Act</small><strong>{view.mainActAvailable ? "Ready" : "Spent"}</strong></span>
+          <span><small>Status</small><strong>{outcomeLabel(view.outcome)}</strong></span>
         </div>
       </section>
 
-      <section class="battle-layout production-layout">
-        <aside class="unit-rail" aria-label="Combatants">
-          <p class="section-kicker">Combatants</p>
+      <section class="battle-layout fantasy-layout">
+        <aside class="party-panel" aria-label="Combatants">
+          <div class="panel-heading">
+            <p class="ui-kicker">Battle Order</p>
+            <span>{view.actors.filter((actor) => !actor.defeated).length} standing</span>
+          </div>
           <div class="unit-list">
             {view.actors.map((actor) => (
               <button
                 type="button"
-                class={`unit-card${actor.selected ? " is-selected" : ""}`}
+                class={`roster-entry ${actor.side}${actor.selected ? " is-selected" : ""}${actor.active ? " is-active" : ""}`}
                 onClick={() => selectActor(actor.id)}
                 aria-pressed={actor.selected}
               >
-                <span class="unit-avatar">{actor.shortLabel}</span>
+                <span class="unit-sigil" aria-hidden="true">{actor.shortLabel}</span>
                 <span class="unit-copy">
                   <strong>{actor.name}</strong>
-                  <small>
-                    {actor.role} · HP {actor.hpCurrent}/{actor.hpCapacity}
-                  </small>
+                  <small>{actor.role}</small>
+                  <span class="mini-hp" aria-hidden="true">
+                    <i style={{ width: `${hpPercent(actor.hpCurrent, actor.hpCapacity)}%` }} />
+                  </span>
+                  <small>HP {actor.hpCurrent}/{actor.hpCapacity}</small>
                 </span>
-                <span class="unit-move">
-                  {actor.active ? "ACTIVE" : actor.defeated ? "DOWN" : actor.side}
+                <span class="unit-state">
+                  {actor.active ? "TURN" : actor.defeated ? "DOWN" : actor.side === "player" ? "ALLY" : "FOE"}
                 </span>
               </button>
             ))}
           </div>
         </aside>
 
-        <section
-          class="battlefield-panel production-battlefield-panel"
-          aria-label="Production tactical battlefield"
-        >
-          <div class="battlefield-toolbar">
+        <section class="battlefield-frame" aria-label="Tactical battlefield">
+          <div class="battlefield-ribbon">
             <div>
-              <p class="section-kicker">Production Battlefield</p>
-              <strong>Fixed oblique 2.5D projection · authoritative square geometry</strong>
+              <p class="ui-kicker">Tactical Field</p>
+              <strong>{selectedIsActive ? "Choose your ground" : `Watching ${view.selectedActorName}`}</strong>
             </div>
-            <div class="legend">
-              <span>
-                <i class="legend-dot reachable" /> Reachable
-              </span>
-              <span>
-                <i class="legend-dot elevated" /> Elevation
-              </span>
-              <span>
-                <i class="legend-dot blocked" /> Blocked
-              </span>
+            <div class="field-legend" aria-label="Battlefield legend">
+              <span><i class="legend-mark reachable" /> Reachable</span>
+              <span><i class="legend-mark path" /> Route</span>
+              <span><i class="legend-mark blocked" /> Obstacle</span>
             </div>
           </div>
           <div ref={rendererHost} class="pixi-battlefield" data-testid="production-battlefield" />
-          <p class="renderer-note">
-            Placeholder unit markers are renderer-engineering visuals only. Final pixel sprites
-            remain a separate art-production approval.
-          </p>
+          <div class="battle-log" aria-live="polite">
+            <span class="battle-log-mark" aria-hidden="true">◆</span>
+            <p>{message}</p>
+          </div>
         </section>
 
-        <aside class="detail-panel" aria-label="Selected unit details">
-          <p class="section-kicker">Selected Unit</p>
-          <div class="selected-unit-heading">
-            <span class="selected-unit-avatar">{selectedActor?.shortLabel ?? "--"}</span>
-            <div>
-              <h3>{view.selectedActorName}</h3>
-              <p>
-                {view.selectedActorRole} · {view.selectedActorSide}
-                {selectedIsActive ? " · Active" : ""}
-              </p>
-            </div>
+        <aside class="character-panel" aria-label="Selected unit details">
+          <div class={`character-portrait-placeholder ${view.selectedActorSide}`} aria-hidden="true">
+            <span>{selectedActor?.shortLabel ?? "--"}</span>
+          </div>
+          <div class="character-heading">
+            <p class="ui-kicker">Selected Unit</p>
+            <h3>{view.selectedActorName}</h3>
+            <p>{view.selectedActorRole} · {view.selectedActorSide === "player" ? "Ally" : "Enemy"}</p>
           </div>
 
-          <dl class="stat-grid" aria-label="Selected unit RPG stats">
-            <div>
-              <dt>HP</dt>
-              <dd>
-                {view.selectedHpCurrent}/{view.selectedHpCapacity}
-              </dd>
+          <section class="hp-block" aria-label="Selected unit health">
+            <div class="hp-line">
+              <span>HP</span>
+              <strong>{view.selectedHpCurrent} / {view.selectedHpCapacity}</strong>
             </div>
-            <div>
-              <dt>Movement</dt>
-              <dd>{selectedIsActive ? view.movementRemaining : "—"}</dd>
-            </div>
-            <div>
-              <dt>Physical Power</dt>
-              <dd>{view.selectedAttributes.physicalPower}</dd>
-            </div>
-            <div>
-              <dt>Magical Power</dt>
-              <dd>{view.selectedAttributes.magicalPower}</dd>
-            </div>
-            <div>
-              <dt>Defense</dt>
-              <dd>{view.selectedAttributes.defense}</dd>
-            </div>
-            <div>
-              <dt>Resistance</dt>
-              <dd>{view.selectedAttributes.resistance}</dd>
-            </div>
-            <div>
-              <dt>Speed</dt>
-              <dd>{view.selectedAttributes.speed}</dd>
-            </div>
-            <div>
-              <dt>Stability</dt>
-              <dd>{view.selectedAttributes.stability}</dd>
-            </div>
-            <div>
-              <dt>Main Act</dt>
-              <dd>{selectedIsActive ? (view.mainActAvailable ? "Ready" : "Spent") : "—"}</dd>
-            </div>
-            <div>
-              <dt>Path cost</dt>
-              <dd>{view.pathCost ?? "—"}</dd>
-            </div>
-          </dl>
+            <div class="hp-track"><i style={{ width: `${hpPercent(view.selectedHpCurrent, view.selectedHpCapacity)}%` }} /></div>
+          </section>
 
-          <div class="command-box">
-            <p class="section-kicker">Commands</p>
-            <div class="command-actions">
-              <button
-                type="button"
-                class="command-action"
-                onClick={attack}
-                disabled={
-                  encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget
-                }
-              >
-                Attack {attackTarget?.name ?? "—"}
-              </button>
-              <button
-                type="button"
-                class="command-action secondary"
-                onClick={endTurn}
-                disabled={encounterEnded}
-              >
-                End turn
-              </button>
-            </div>
-            <p aria-live="polite">{message}</p>
+          <div class="combat-summary">
+            <div><small>Physical</small><strong>{view.selectedAttributes.physicalPower}</strong></div>
+            <div><small>Defense</small><strong>{view.selectedAttributes.defense}</strong></div>
+            <div><small>Speed</small><strong>{view.selectedAttributes.speed}</strong></div>
+            <div><small>Stability</small><strong>{view.selectedAttributes.stability}</strong></div>
           </div>
 
-          <div class="dev-note production-note">
-            <strong>Authority boundary</strong>
-            <p>
-              Pixi projects square coordinates and logical elevation into screen space. Movement
-              legality, occupancy, attacks, HP, turns, outcome, and RNG remain authoritative in the
-              encounter/runtime layers.
-            </p>
-          </div>
+          <details class="secondary-stats">
+            <summary>More stats</summary>
+            <dl>
+              <div><dt>Magical Power</dt><dd>{view.selectedAttributes.magicalPower}</dd></div>
+              <div><dt>Resistance</dt><dd>{view.selectedAttributes.resistance}</dd></div>
+              <div><dt>Movement</dt><dd>{selectedIsActive ? view.movementRemaining : "—"}</dd></div>
+              <div><dt>Path cost</dt><dd>{view.pathCost ?? "—"}</dd></div>
+            </dl>
+          </details>
+
+          <section class="command-panel" aria-label="Battle commands">
+            <p class="ui-kicker">Commands</p>
+            <button
+              type="button"
+              class="battle-command primary"
+              onClick={attack}
+              disabled={encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget}
+            >
+              <span class="command-icon" aria-hidden="true">⚔</span>
+              <span><strong>Attack {attackTarget?.name ?? "—"}</strong><small>Basic attack</small></span>
+            </button>
+            <button
+              type="button"
+              class="battle-command secondary"
+              onClick={endTurn}
+              disabled={encounterEnded}
+            >
+              <span class="command-icon" aria-hidden="true">◇</span>
+              <span><strong>End Turn</strong><small>Pass initiative</small></span>
+            </button>
+          </section>
+
+          <details class="debug-details">
+            <summary>Developer diagnostics</summary>
+            <div class="debug-copy">
+              <p>{runtimeStatus()}</p>
+              <p>Pixi / WebGL · Runtime tick {view.runtimeTick}</p>
+              <p>Fixed oblique projection · square geometry · fixed camera</p>
+            </div>
+          </details>
         </aside>
       </section>
-
-      <footer class="statusbar">
-        <span>{runtimeStatus()}</span>
-        <span>GAME-I08 · PixiJS renderer + Preact HUD · fixed camera</span>
-      </footer>
     </main>
   );
 }
