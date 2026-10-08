@@ -1,5 +1,5 @@
 import type { ActorId } from "../actors/identity.js";
-import { serializeActorId } from "../actors/identity.js";
+import { actorIdsEqual, serializeActorId } from "../actors/identity.js";
 import type { CombatSide } from "../combat/foundation.js";
 import { type ActorRpgState, actorRpgProfile } from "../composition/rpg/actor-state.js";
 
@@ -70,26 +70,80 @@ function validateParticipants(
   return ranked;
 }
 
+function livingParticipants(
+  participants: readonly EncounterTurnParticipant[],
+  rpg: ActorRpgState,
+): readonly EncounterTurnParticipant[] {
+  return participants.filter((participant) => {
+    const profile = actorRpgProfile(rpg, participant.actorId);
+    return profile !== undefined && profile.hp.current > 0;
+  });
+}
+
+function rankedActorIds(
+  participants: readonly EncounterTurnParticipant[],
+  rpg: ActorRpgState,
+): readonly ActorId[] {
+  return [...validateParticipants(participants, rpg)]
+    .sort((left, right) => {
+      if (left.speed !== right.speed) return right.speed - left.speed;
+      if (left.side !== right.side) return left.side === "player" ? -1 : 1;
+      return left.sameSideTiePriority - right.sameSideTiePriority;
+    })
+    .map((participant) => participant.actorId);
+}
+
+function participantFor(
+  participants: readonly EncounterTurnParticipant[],
+  actorId: ActorId,
+): EncounterTurnParticipant | undefined {
+  return participants.find((participant) => actorIdsEqual(participant.actorId, actorId));
+}
+
+function activeTurn(
+  round: number,
+  queue: readonly ActorId[],
+  participants: readonly EncounterTurnParticipant[],
+): EncounterTurnState {
+  const activeActorId = queue[0];
+  if (activeActorId === undefined) throw new RangeError("Encounter turn queue cannot be empty");
+  const active = participantFor(participants, activeActorId);
+  if (active === undefined) throw new Error("Encounter queue references unknown participant");
+
+  return {
+    round,
+    pendingActorIds: queue,
+    activeActorId,
+    movementRemaining: active.movementAllowance,
+    mainActAvailable: true,
+  };
+}
+
 export function createEncounterTurnState(
   participants: readonly EncounterTurnParticipant[],
   rpg: ActorRpgState,
 ): EncounterTurnState {
-  const ranked = [...validateParticipants(participants, rpg)].sort((left, right) => {
-    if (left.speed !== right.speed) return right.speed - left.speed;
-    if (left.side !== right.side) return left.side === "player" ? -1 : 1;
-    return left.sameSideTiePriority - right.sameSideTiePriority;
-  });
+  const living = livingParticipants(participants, rpg);
+  if (living.length === 0) throw new RangeError("Encounter requires at least one living participant");
+  return activeTurn(1, rankedActorIds(living, rpg), participants);
+}
 
-  const active = ranked[0];
-  if (active === undefined) throw new Error("Validated encounter unexpectedly has no active actor");
+export function advanceEncounterTurnState(
+  state: EncounterTurnState,
+  participants: readonly EncounterTurnParticipant[],
+  rpg: ActorRpgState,
+): EncounterTurnState {
+  const living = livingParticipants(participants, rpg);
+  if (living.length === 0) throw new RangeError("Encounter has no living participants to advance");
 
-  return {
-    round: 1,
-    pendingActorIds: ranked.map((participant) => participant.actorId),
-    activeActorId: active.actorId,
-    movementRemaining: active.movementAllowance,
-    mainActAvailable: true,
-  };
+  const remaining = state.pendingActorIds
+    .slice(1)
+    .filter((actorId) => living.some((participant) => actorIdsEqual(participant.actorId, actorId)));
+  if (remaining.length > 0) {
+    return activeTurn(state.round, remaining, participants);
+  }
+
+  return activeTurn(state.round + 1, rankedActorIds(living, rpg), participants);
 }
 
 export function spendEncounterMovement(
