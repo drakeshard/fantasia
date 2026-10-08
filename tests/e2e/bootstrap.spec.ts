@@ -26,19 +26,24 @@ function projectedCellPoint(width: number, height: number, x: number, y: number)
   };
 }
 
-test("Fantasia production renderer drives the authoritative encounter", async ({
+test("Fantasia battle presentation drives the authoritative encounter", async ({
   page,
 }, testInfo) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Fantasia", exact: true })).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Fantasia Production Battlefield" }),
-  ).toBeVisible();
-  await expect(page.getByText(/Foundation 0\.1\.2 runtime integration ready/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hold the field" })).toBeVisible();
+  await expect(page.getByText("Objective · Defeat all enemies", { exact: true })).toBeVisible();
   await expect(page.getByText("Round 1", { exact: true })).toBeVisible();
-  await expect(page.getByText("Turn: Scout", { exact: true })).toBeVisible();
-  await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 0/)).toBeVisible();
+  await expect(page.getByText("Scout's Turn", { exact: true })).toBeVisible();
+  await expect(page.getByText("GAME-I08 Vertical Slice", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Production Battlefield", { exact: true })).toHaveCount(0);
+
+  if (testInfo.project.name === "chromium-desktop") {
+    await page.getByText("Developer diagnostics", { exact: true }).click();
+    await expect(page.getByText(/Foundation 0\.1\.2 runtime integration ready/)).toBeVisible();
+    await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 0/)).toBeVisible();
+  }
 
   const host = page.getByTestId("production-battlefield");
   await expect(host).toBeVisible();
@@ -59,17 +64,23 @@ test("Fantasia production renderer drives the authoritative encounter", async ({
     await page.mouse.click(destinationX, destinationY);
   }
   await expect(page.getByText("Moved to 1, 5. 4 movement remains.", { exact: true })).toBeVisible();
-  await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 1/)).toBeVisible();
-  await expect(page.getByText("Move 4", { exact: true })).toBeVisible();
+  await expect(page.getByText("4", { exact: true }).first()).toBeVisible();
+  if (testInfo.project.name === "chromium-desktop") {
+    await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 1/)).toBeVisible();
+  }
 
-  await page.getByRole("button", { name: "Attack Lancer" }).click();
+  await page.getByRole("button", { name: /Attack Lancer/ }).click();
   await expect(page.getByText("Attack dealt 9 damage.", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Lancer Lancer.*HP 101\/110/i })).toBeVisible();
-  await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 2/)).toBeVisible();
+  if (testInfo.project.name === "chromium-desktop") {
+    await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 2/)).toBeVisible();
+  }
 
-  await page.getByRole("button", { name: "End turn" }).click();
-  await expect(page.getByText("Turn: MC", { exact: true })).toBeVisible();
-  await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 3/)).toBeVisible();
+  await page.getByRole("button", { name: /End Turn/ }).click();
+  await expect(page.getByText("MC's Turn", { exact: true })).toBeVisible();
+  if (testInfo.project.name === "chromium-desktop") {
+    await expect(page.getByText(/Pixi \/ WebGL · Runtime tick 3/)).toBeVisible();
+  }
 
   const viewportWidth = page.viewportSize()?.width ?? 0;
   const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
@@ -96,7 +107,7 @@ test("Fantasia production renderer drives the authoritative encounter", async ({
       }),
   );
   console.log(
-    `[GAME-I08 ${testInfo.project.name}] rAF observation median=${sample.medianMs.toFixed(2)}ms p95=${sample.p95Ms.toFixed(2)}ms max=${sample.maxMs.toFixed(2)}ms`,
+    `[GAME-UI02 ${testInfo.project.name}] rAF observation median=${sample.medianMs.toFixed(2)}ms p95=${sample.p95Ms.toFixed(2)}ms max=${sample.maxMs.toFixed(2)}ms`,
   );
   expect(sample.maxMs).toBeLessThan(500);
 });
