@@ -126,13 +126,15 @@ function App() {
     <main class="fantasia-shell">
       <header class="game-masthead">
         <div class="wordmark-wrap">
-          <span class="wordmark-mark" aria-hidden="true">F</span>
+          <span class="wordmark-mark" aria-hidden="true">
+            F
+          </span>
           <div>
             <p class="masthead-kicker">Drakeshard Studios</p>
             <h1>Fantasia</h1>
           </div>
         </div>
-        <div class="turn-banner" aria-label={`Round ${view.round}, ${view.activeActorName}'s turn`}>
+        <div class="turn-banner">
           <span class="turn-banner-label">Round {view.round}</span>
           <strong>{view.activeActorName}&apos;s Turn</strong>
         </div>
@@ -140,17 +142,28 @@ function App() {
 
       <section class="battle-brief" aria-label="Skirmish objective">
         <div class="battle-brief-title">
-          <span class="battle-crest" aria-hidden="true">⚔</span>
+          <span class="battle-crest" aria-hidden="true">
+            ⚔
+          </span>
           <div>
             <p class="ui-kicker">Skirmish</p>
             <h2>Hold the field</h2>
             <p class="objective-copy">Objective · Defeat all enemies</p>
           </div>
         </div>
-        <div class="turn-resources" aria-label="Current turn resources">
-          <span><small>Move</small><strong>{view.movementRemaining}</strong></span>
-          <span><small>Main Act</small><strong>{view.mainActAvailable ? "Ready" : "Spent"}</strong></span>
-          <span><small>Status</small><strong>{outcomeLabel(view.outcome)}</strong></span>
+        <div class="turn-resources">
+          <span>
+            <small>Move</small>
+            <strong>{view.movementRemaining}</strong>
+          </span>
+          <span>
+            <small>Main Act</small>
+            <strong>{view.mainActAvailable ? "Ready" : "Spent"}</strong>
+          </span>
+          <span>
+            <small>Status</small>
+            <strong>{outcomeLabel(view.outcome)}</strong>
+          </span>
         </div>
       </section>
 
@@ -168,17 +181,27 @@ function App() {
                 onClick={() => selectActor(actor.id)}
                 aria-pressed={actor.selected}
               >
-                <span class="unit-sigil" aria-hidden="true">{actor.shortLabel}</span>
+                <span class="unit-sigil" aria-hidden="true">
+                  {actor.shortLabel}
+                </span>
                 <span class="unit-copy">
                   <strong>{actor.name}</strong>
                   <small>{actor.role}</small>
                   <span class="mini-hp" aria-hidden="true">
                     <i style={{ width: `${hpPercent(actor.hpCurrent, actor.hpCapacity)}%` }} />
                   </span>
-                  <small>HP {actor.hpCurrent}/{actor.hpCapacity}</small>
+                  <small>
+                    HP {actor.hpCurrent}/{actor.hpCapacity}
+                  </small>
                 </span>
                 <span class="unit-state">
-                  {actor.active ? "TURN" : actor.defeated ? "DOWN" : actor.side === "player" ? "ALLY" : "FOE"}
+                  {actor.active
+                    ? "TURN"
+                    : actor.defeated
+                      ? "DOWN"
+                      : actor.side === "player"
+                        ? "ALLY"
+                        : "FOE"}
                 </span>
               </button>
             ))}
@@ -189,53 +212,98 @@ function App() {
           <div class="battlefield-ribbon">
             <div>
               <p class="ui-kicker">Tactical Field</p>
-              <strong>{selectedIsActive ? "Choose your ground" : `Watching ${view.selectedActorName}`}</strong>
+              <strong>
+                {selectedIsActive ? "Choose your ground" : `Watching ${view.selectedActorName}`}
+              </strong>
             </div>
-            <div class="field-legend" aria-label="Battlefield legend">
-              <span><i class="legend-mark reachable" /> Reachable</span>
-              <span><i class="legend-mark path" /> Route</span>
-              <span><i class="legend-mark blocked" /> Obstacle</span>
+            <div class="field-legend">
+              <span>
+                <i class="legend-mark reachable" /> Reachable
+              </span>
+              <span>
+                <i class="legend-mark path" /> Route
+              </span>
+              <span>
+                <i class="legend-mark blocked" /> Obstacle
+              </span>
             </div>
           </div>
           <div ref={rendererHost} class="pixi-battlefield" data-testid="production-battlefield" />
           <div class="battle-log" aria-live="polite">
-            <span class="battle-log-mark" aria-hidden="true">◆</span>
+            <span class="battle-log-mark" aria-hidden="true">
+              ◆
+            </span>
             <p>{message}</p>
           </div>
         </section>
 
         <aside class="character-panel" aria-label="Selected unit details">
-          <div class={`character-portrait-placeholder ${view.selectedActorSide}`} aria-hidden="true">
+          <div
+            class={`character-portrait-placeholder ${view.selectedActorSide}`}
+            aria-hidden="true"
+          >
             <span>{selectedActor?.shortLabel ?? "--"}</span>
           </div>
           <div class="character-heading">
             <p class="ui-kicker">Selected Unit</p>
             <h3>{view.selectedActorName}</h3>
-            <p>{view.selectedActorRole} · {view.selectedActorSide === "player" ? "Ally" : "Enemy"}</p>
+            <p>
+              {view.selectedActorRole} · {view.selectedActorSide === "player" ? "Ally" : "Enemy"}
+            </p>
           </div>
 
           <section class="hp-block" aria-label="Selected unit health">
             <div class="hp-line">
               <span>HP</span>
-              <strong>{view.selectedHpCurrent} / {view.selectedHpCapacity}</strong>
+              <strong>
+                {view.selectedHpCurrent} / {view.selectedHpCapacity}
+              </strong>
             </div>
-            <div class="hp-track"><i style={{ width: `${hpPercent(view.selectedHpCurrent, view.selectedHpCapacity)}%` }} /></div>
+            <div class="hp-track">
+              <i
+                style={{ width: `${hpPercent(view.selectedHpCurrent, view.selectedHpCapacity)}%` }}
+              />
+            </div>
           </section>
 
           <div class="combat-summary">
-            <div><small>Physical</small><strong>{view.selectedAttributes.physicalPower}</strong></div>
-            <div><small>Defense</small><strong>{view.selectedAttributes.defense}</strong></div>
-            <div><small>Speed</small><strong>{view.selectedAttributes.speed}</strong></div>
-            <div><small>Stability</small><strong>{view.selectedAttributes.stability}</strong></div>
+            <div>
+              <small>Physical</small>
+              <strong>{view.selectedAttributes.physicalPower}</strong>
+            </div>
+            <div>
+              <small>Defense</small>
+              <strong>{view.selectedAttributes.defense}</strong>
+            </div>
+            <div>
+              <small>Speed</small>
+              <strong>{view.selectedAttributes.speed}</strong>
+            </div>
+            <div>
+              <small>Stability</small>
+              <strong>{view.selectedAttributes.stability}</strong>
+            </div>
           </div>
 
           <details class="secondary-stats">
             <summary>More stats</summary>
             <dl>
-              <div><dt>Magical Power</dt><dd>{view.selectedAttributes.magicalPower}</dd></div>
-              <div><dt>Resistance</dt><dd>{view.selectedAttributes.resistance}</dd></div>
-              <div><dt>Movement</dt><dd>{selectedIsActive ? view.movementRemaining : "—"}</dd></div>
-              <div><dt>Path cost</dt><dd>{view.pathCost ?? "—"}</dd></div>
+              <div>
+                <dt>Magical Power</dt>
+                <dd>{view.selectedAttributes.magicalPower}</dd>
+              </div>
+              <div>
+                <dt>Resistance</dt>
+                <dd>{view.selectedAttributes.resistance}</dd>
+              </div>
+              <div>
+                <dt>Movement</dt>
+                <dd>{selectedIsActive ? view.movementRemaining : "—"}</dd>
+              </div>
+              <div>
+                <dt>Path cost</dt>
+                <dd>{view.pathCost ?? "—"}</dd>
+              </div>
             </dl>
           </details>
 
@@ -245,10 +313,17 @@ function App() {
               type="button"
               class="battle-command primary"
               onClick={attack}
-              disabled={encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget}
+              disabled={
+                encounterEnded || !selectedIsActive || !view.mainActAvailable || !attackTarget
+              }
             >
-              <span class="command-icon" aria-hidden="true">⚔</span>
-              <span><strong>Attack {attackTarget?.name ?? "—"}</strong><small>Basic attack</small></span>
+              <span class="command-icon" aria-hidden="true">
+                ⚔
+              </span>
+              <span>
+                <strong>Attack {attackTarget?.name ?? "—"}</strong>
+                <small>Basic attack</small>
+              </span>
             </button>
             <button
               type="button"
@@ -256,8 +331,13 @@ function App() {
               onClick={endTurn}
               disabled={encounterEnded}
             >
-              <span class="command-icon" aria-hidden="true">◇</span>
-              <span><strong>End Turn</strong><small>Pass initiative</small></span>
+              <span class="command-icon" aria-hidden="true">
+                ◇
+              </span>
+              <span>
+                <strong>End Turn</strong>
+                <small>Pass initiative</small>
+              </span>
             </button>
           </section>
 

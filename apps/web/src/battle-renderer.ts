@@ -111,20 +111,7 @@ function drawUnitMarker(
   }
 
   const banner = new Graphics()
-    .poly([
-      -17,
-      -20,
-      0,
-      -26,
-      17,
-      -20,
-      15,
-      13,
-      0,
-      23,
-      -15,
-      13,
-    ])
+    .poly([-17, -20, 0, -26, 17, -20, 15, 13, 0, 23, -15, 13])
     .fill({ color: colors.fill, alpha: actor.defeated ? 0.48 : 1 })
     .stroke({ color: colors.stroke, width: actor.selected ? 2.5 : 1.7 });
   banner.position.set(point.x, anchorY);
@@ -139,9 +126,7 @@ function drawUnitMarker(
   world.addChild(cloth);
 
   if (actor.active && !actor.defeated) {
-    const turnMark = new Graphics()
-      .poly([-6, 0, 0, -7, 6, 0, 0, -3])
-      .fill(0xe5ca82);
+    const turnMark = new Graphics().poly([-6, 0, 0, -7, 6, 0, 0, -3]).fill(0xe5ca82);
     turnMark.position.set(point.x, anchorY - 32);
     world.addChild(turnMark);
   }

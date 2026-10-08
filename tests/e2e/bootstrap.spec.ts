@@ -26,7 +26,9 @@ function projectedCellPoint(width: number, height: number, x: number, y: number)
   };
 }
 
-test("Fantasia battle presentation drives the authoritative encounter", async ({ page }, testInfo) => {
+test("Fantasia battle presentation drives the authoritative encounter", async ({
+  page,
+}, testInfo) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Fantasia", exact: true })).toBeVisible();
