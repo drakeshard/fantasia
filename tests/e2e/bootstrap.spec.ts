@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 interface FrameSample {
   readonly medianMs: number;
@@ -26,12 +26,7 @@ function projectedCellPoint(width: number, height: number, x: number, y: number)
   };
 }
 
-async function activateCanvasPoint(
-  page: Parameters<typeof test>[0] extends never ? never : import("@playwright/test").Page,
-  x: number,
-  y: number,
-  touch: boolean,
-) {
+async function activateCanvasPoint(page: Page, x: number, y: number, touch: boolean) {
   const canvas = page.getByTestId("production-battlefield-canvas");
   await canvas.scrollIntoViewIfNeeded();
   const box = await canvas.boundingBox();
