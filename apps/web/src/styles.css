@@ -1,9 +1,29 @@
 :root {
-  font-family: Georgia, "Times New Roman", ui-serif, serif;
-  color: #f1e4c6;
-  background: #17140f;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #f4f0e7;
+  background: #101923;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  --ui-bg: #101923;
+  --ui-surface: #192736;
+  --ui-raised: #243749;
+  --ui-text: #f4f0e7;
+  --ui-text-muted: #bbc6d2;
+  --ui-border: #718394;
+  --ui-accent: #e2be78;
+  --ui-accent-text: #18202a;
+  --ui-complete: #82cfbd;
+  --ui-danger: #f59c9c;
+  --ui-focus: #9acbff;
+  --ui-s1: 4px;
+  --ui-s2: 8px;
+  --ui-s3: 12px;
+  --ui-s4: 16px;
+  --ui-s5: 24px;
+  --ui-s6: 32px;
+  --ui-s7: 48px;
+  --ui-radius: 4px;
+  --ui-min-target: 44px;
 }
 
 * {
@@ -13,30 +33,17 @@
 html,
 body,
 #app {
+  width: 100%;
   min-width: 100%;
   min-height: 100%;
   margin: 0;
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
-  background:
-    radial-gradient(circle at 50% -20%, rgb(164 126 67 / 18%), transparent 42%),
-    linear-gradient(180deg, #272016 0%, #15120e 46%, #0c0b09 100%);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.22;
-  background-image:
-    linear-gradient(90deg, rgb(255 255 255 / 2%) 1px, transparent 1px),
-    linear-gradient(rgb(255 255 255 / 1.5%) 1px, transparent 1px);
-  background-size: 96px 96px;
-  mask-image: radial-gradient(circle at center, #000, transparent 85%);
+  background: var(--ui-bg);
+  color: var(--ui-text);
 }
 
 button,
@@ -48,6 +55,21 @@ button {
   color: inherit;
 }
 
+button,
+summary,
+select,
+input {
+  min-height: var(--ui-min-target);
+}
+
+button:focus-visible,
+summary:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 2px;
+}
+
 h1,
 h2,
 h3,
@@ -57,129 +79,76 @@ dd {
   margin-top: 0;
 }
 
-button:focus-visible,
-summary:focus-visible {
-  outline: 2px solid #e7c476;
-  outline-offset: 3px;
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
-.fantasia-shell {
-  width: min(1600px, 100%);
-  min-height: 100vh;
-  margin: 0 auto;
-  padding: 18px clamp(12px, 2vw, 30px) 22px;
-}
-
-.game-masthead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 22px;
-  margin: 0 2px 14px;
-}
-
-.wordmark-wrap {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
-
-.wordmark-mark {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 48px;
-  border: 1px solid #b79250;
-  clip-path: polygon(50% 0, 96% 18%, 87% 78%, 50% 100%, 13% 78%, 4% 18%);
-  color: #f0d694;
-  background: linear-gradient(160deg, #6d5128, #241a0f 66%);
-  text-shadow: 0 2px 2px #000;
-  font-size: 1.45rem;
-  font-weight: 800;
-}
-
-.masthead-kicker,
-.ui-kicker {
-  margin: 0;
-  color: #bca879;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-}
-
-.game-masthead h1 {
-  margin: 1px 0 0;
-  color: #f5e7c7;
-  font-size: clamp(2rem, 4vw, 3.6rem);
-  font-weight: 500;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-  text-shadow: 0 3px 16px rgb(0 0 0 / 60%);
-}
-
-.turn-banner {
-  position: relative;
-  min-width: 190px;
-  padding: 9px 18px 10px 28px;
-  border: 1px solid #685233;
-  color: #ead8b6;
+.battle-screen {
+  width: 100%;
+  min-height: 100dvh;
+  padding: var(--ui-s2);
   background:
-    linear-gradient(90deg, rgb(128 91 43 / 16%), transparent 55%),
-    linear-gradient(180deg, #282016, #17120d);
-  box-shadow: 0 7px 20px rgb(0 0 0 / 32%);
-  text-align: right;
+    radial-gradient(circle at 50% 0%, rgb(52 78 101 / 30%), transparent 42%),
+    var(--ui-bg);
 }
 
-.turn-banner::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: -12px;
-  width: 22px;
-  height: 22px;
-  border: 1px solid #80683d;
-  background: #2b2114;
-  transform: translateY(-50%) rotate(45deg);
+.ui-button,
+.action-button,
+.choice-button,
+.turn-order-entry {
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  cursor: pointer;
 }
 
-.turn-banner-label {
-  display: block;
-  color: #9d8b6a;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.62rem;
+.ui-button:hover:not(:disabled),
+.action-button:hover:not(:disabled),
+.choice-button:hover:not(:disabled),
+.turn-order-entry:hover:not(:disabled) {
+  border-color: var(--ui-accent);
+  background: var(--ui-raised);
+}
+
+.ui-button:disabled,
+.action-button:disabled,
+.choice-button:disabled,
+.turn-order-entry:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.ui-button.primary {
+  border-color: var(--ui-accent);
+  color: var(--ui-accent-text);
+  background: var(--ui-accent);
   font-weight: 800;
-  letter-spacing: 0.12em;
+}
+
+.ui-button.secondary {
+  background: var(--ui-raised);
+}
+
+.hud-eyebrow {
+  margin: 0 0 var(--ui-s2);
+  color: var(--ui-accent);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.25rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
-.turn-banner strong {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-@media (max-width: 680px) {
-  .fantasia-shell {
-    padding: 12px 10px 18px;
-  }
-
-  .game-masthead {
-    align-items: flex-start;
-  }
-
-  .wordmark-mark {
-    width: 34px;
-    height: 39px;
-    font-size: 1.15rem;
-  }
-
-  .turn-banner {
-    min-width: 0;
-    padding: 7px 10px 8px 18px;
-  }
-
-  .turn-banner strong {
-    font-size: 0.82rem;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
