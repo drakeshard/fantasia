@@ -111,6 +111,13 @@
   .unit-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .statusbar span:first-child {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 520px) {
