@@ -1,6 +1,13 @@
 import { gameDomainStatus } from "@fantasia/game";
 
 export {
+  DevelopmentBattleSession,
+  type DevelopmentBattleActorView,
+  type DevelopmentBattleCellView,
+  type DevelopmentBattleMoveResult,
+  type DevelopmentBattleView,
+} from "./development-battle.js";
+export {
   createFantasiaSaveService,
   FANTASIA_GAME_ID,
   FANTASIA_SAVE_FORMAT_VERSION,
