@@ -1,5 +1,4 @@
 import {
-  type ProductionBattleCellView,
   ProductionBattleSession,
   type ProductionBattleView,
   runtimeStatus,
@@ -8,6 +7,7 @@ import { render } from "preact";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { ProductionBattleRenderer } from "./battle-renderer.js";
 import "./styles.css";
+import "./production.css";
 
 function commandMessage(result: ReturnType<ProductionBattleSession["moveSelected"]>): string {
   if (result.kind === "rejected") return `Command rejected: ${result.reason}.`;
