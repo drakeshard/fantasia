@@ -279,11 +279,6 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
     if (!viewport) return;
     if (pointers.current.size === 0) suppressClick.current = false;
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    try {
-      viewport.setPointerCapture(event.pointerId);
-    } catch {
-      // Synthetic/browser-specific pointer capture failure does not invalidate map input.
-    }
 
     if (pointers.current.size === 1) {
       dragState.current = {
@@ -351,6 +346,13 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
     const deltaY = event.clientY - drag.startY;
     if (!drag.moved && Math.hypot(deltaX, deltaY) < DRAG_THRESHOLD) return;
     event.preventDefault();
+    if (!drag.moved) {
+      try {
+        viewport.setPointerCapture(event.pointerId);
+      } catch {
+        // Synthetic/browser-specific pointer capture failure does not invalidate map input.
+      }
+    }
     drag.moved = true;
     setPanning(true);
     viewport.scrollLeft = drag.startLeft - deltaX;
