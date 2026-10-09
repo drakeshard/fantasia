@@ -42,17 +42,79 @@ async function activateCanvasPoint(page: Page, x: number, y: number, touch: bool
   }
 }
 
-test("standardized Fantasia Battle HUD previews before authoritative commands", async ({
+async function openBattleSandbox(page: Page) {
+  await page.getByRole("button", { name: "Back", exact: true }).click();
+  await page.getByRole("button", { name: "Development battle sandbox", exact: true }).click();
+  await expect(page.getByText("Defeat the opposing units", { exact: true })).toBeVisible();
+}
+
+test("campaign shell exposes chapter and stage navigation without faking canonical entry", async ({
   page,
 }, testInfo) => {
   await page.goto("/");
+
+  await expect(page.getByText("A Stranger in France", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("LOIRE APPROACHES", { exact: true })).toBeVisible();
+  await expect(page.locator(".campaign-node")).toHaveCount(6);
+  await expect(page.locator(".stage-list-entry")).toHaveCount(6);
+
+  await page
+    .locator(".stage-list-entry")
+    .filter({ hasText: "Strangers on the Road" })
+    .click();
+  const inspector = page.locator(".campaign-inspector");
+  await expect(inspector.getByText("Strangers on the Road", { exact: true })).toBeVisible();
+  await expect(inspector.getByText("Escort civilians and the supply cart to safety.")).toBeVisible();
+  await expect(inspector.getByRole("button", { name: "Enter battle", exact: true })).toBeVisible();
+
+  await inspector.getByRole("button", { name: "Enter battle", exact: true }).click();
+  await expect(
+    page.getByText(
+      "Canonical story and battle execution is not implemented in the current production slice.",
+      { exact: true },
+    ).last(),
+  ).toBeVisible();
+  await expect(page.getByText("Defeat the opposing units", { exact: true })).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Back", exact: true }).click();
+  await expect(page.getByText("Choose a chapter", { exact: true })).toBeVisible();
+  await expect(page.getByText("The Siege of Orléans", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: /The Siege of Orléans/ }).click();
+  await expect(page.getByText("No stage selected", { exact: true })).toBeVisible();
+  await expect(page.locator(".campaign-node")).toHaveCount(0);
+
+  const viewportWidth = page.viewportSize()?.width ?? 0;
+  const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
+  expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 1);
+
+  const primaryControls = [
+    page.getByRole("button", { name: "Back", exact: true }),
+    page.getByRole("button", { name: "Fit", exact: true }),
+  ];
+  for (const control of primaryControls) {
+    if (await control.isVisible()) {
+      const box = await control.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+    }
+  }
+
+  if (testInfo.project.name === "chromium-short-touch") {
+    expect(page.viewportSize()).toEqual({ width: 844, height: 390 });
+  }
+});
+
+test("standardized Fantasia Battle HUD remains reachable through the non-canonical sandbox", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/");
+  await openBattleSandbox(page);
 
   if (testInfo.project.name === "chromium-desktop") {
     await expect(page.getByText("Fantasia", { exact: true })).toBeVisible();
   }
   await expect(page.getByText("Round 1", { exact: true })).toBeVisible();
   await expect(page.getByText("Scout's turn", { exact: true })).toBeVisible();
-  await expect(page.getByText("Defeat the opposing units", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Move", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Attack", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "End turn", exact: true })).toBeVisible();
@@ -127,12 +189,12 @@ test("standardized Fantasia Battle HUD previews before authoritative commands", 
       }),
   );
   console.log(
-    `[GAME-UI03 ${testInfo.project.name}] rAF observation median=${sample.medianMs.toFixed(2)}ms p95=${sample.p95Ms.toFixed(2)}ms max=${sample.maxMs.toFixed(2)}ms`,
+    `[GAME-UI04 ${testInfo.project.name}] rAF observation median=${sample.medianMs.toFixed(2)}ms p95=${sample.p95Ms.toFixed(2)}ms max=${sample.maxMs.toFixed(2)}ms`,
   );
   expect(sample.maxMs).toBeLessThan(500);
 });
 
-test("Battle HUD keeps primary actions reachable at 200 percent interface text", async ({
+test("campaign and battle primary actions remain reachable at 200 percent interface text", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium-desktop", "Desktop text-scale proof only");
@@ -141,10 +203,17 @@ test("Battle HUD keeps primary actions reachable at 200 percent interface text",
     document.documentElement.style.fontSize = "200%";
   });
 
+  await expect(page.getByRole("button", { name: "Back", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Fit", exact: true })).toBeVisible();
+  let viewportWidth = page.viewportSize()?.width ?? 0;
+  let bodyWidth = await page.evaluate(() => document.body.scrollWidth);
+  expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 1);
+
+  await openBattleSandbox(page);
   for (const name of ["Inspect", "Move", "Attack", "End turn"]) {
     await expect(page.getByRole("button", { name, exact: true })).toBeVisible();
   }
-  const viewportWidth = page.viewportSize()?.width ?? 0;
-  const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
+  viewportWidth = page.viewportSize()?.width ?? 0;
+  bodyWidth = await page.evaluate(() => document.body.scrollWidth);
   expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 1);
 });
