@@ -258,7 +258,11 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
               <p>
                 <strong>{outcomeLabel(view.outcome)}</strong>
               </p>
-              <button type="button" class="ui-button secondary battle-return" onClick={onReturnCampaign}>
+              <button
+                type="button"
+                class="ui-button secondary battle-return"
+                onClick={onReturnCampaign}
+              >
                 Return to campaign
               </button>
               <details class="debug-details">
@@ -341,8 +345,11 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
             <h2>{previewTitle}</h2>
             {actionMode === "move" && previewGoal ? (
               <p>
-                Square {previewGoal.x}, {previewGoal.y} · Cost {view.pathCost ?? "—"} · Movement after{" "}
-                {view.pathCost === undefined ? "—" : Math.max(0, view.movementRemaining - view.pathCost)}
+                Square {previewGoal.x}, {previewGoal.y} · Cost {view.pathCost ?? "—"} · Movement
+                after{" "}
+                {view.pathCost === undefined
+                  ? "—"
+                  : Math.max(0, view.movementRemaining - view.pathCost)}
               </p>
             ) : actionMode === "attack" && attackTarget ? (
               <p>
@@ -424,7 +431,8 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
               <div>
                 <strong>{view.selectedActorName}</strong>
                 <span>
-                  {view.selectedActorRole} · {view.selectedActorSide === "player" ? "Ally" : "Opponent"}
+                  {view.selectedActorRole} ·{" "}
+                  {view.selectedActorSide === "player" ? "Ally" : "Opponent"}
                 </span>
               </div>
               <span>

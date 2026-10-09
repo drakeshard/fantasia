@@ -1,8 +1,4 @@
-import {
-  CampaignSession,
-  type CampaignStageView,
-  type CampaignView,
-} from "@fantasia/runtime";
+import { CampaignSession, type CampaignStageView, type CampaignView } from "@fantasia/runtime";
 import { useMemo, useState } from "preact/hooks";
 import "./campaign.css";
 
@@ -163,7 +159,11 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
             <p class="hud-eyebrow">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
             <h2>{view.sagaTitle}</h2>
             <p>{view.sagaSynopsis}</p>
-            <button type="button" class="ui-button primary continue-button" onClick={continueCurrent}>
+            <button
+              type="button"
+              class="ui-button primary continue-button"
+              onClick={continueCurrent}
+            >
               Continue chapter
             </button>
             <span>Resume your current journey</span>
@@ -213,7 +213,8 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
           </button>
           <div class="campaign-title-block">
             <span>
-              {view.sagaTitle.toUpperCase()} / CHAPTER {String(view.selectedChapterSequence).padStart(2, "0")}
+              {view.sagaTitle.toUpperCase()} / CHAPTER{" "}
+              {String(view.selectedChapterSequence).padStart(2, "0")}
             </span>
             <h1>{view.selectedChapterTitle}</h1>
           </div>
@@ -251,7 +252,9 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
                 <button
                   type="button"
                   aria-label="Zoom in"
-                  onClick={() => setZoom((value) => Math.min(2.5, Number((value + 0.25).toFixed(2))))}
+                  onClick={() =>
+                    setZoom((value) => Math.min(2.5, Number((value + 0.25).toFixed(2))))
+                  }
                   disabled={zoom >= 2.5}
                 >
                   +
@@ -269,10 +272,19 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
               <div class="campaign-map-art" style={{ transform: `scale(${zoom})` }}>
                 <span class="map-river river-one" aria-hidden="true" />
                 <span class="map-river river-two" aria-hidden="true" />
-                <span class="map-landmark landmark-one" aria-hidden="true">✦</span>
-                <span class="map-landmark landmark-two" aria-hidden="true">♜</span>
-                <svg class="campaign-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                  {view.stages.slice(1).map((stage, index) => {
+                <span class="map-landmark landmark-one" aria-hidden="true">
+                  ✦
+                </span>
+                <span class="map-landmark landmark-two" aria-hidden="true">
+                  ♜
+                </span>
+                <svg
+                  class="campaign-routes"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  {view.stages.slice(1).map((_stage, index) => {
                     const from = stageAnchors[index];
                     const to = stageAnchors[index + 1];
                     if (!from || !to) return null;
@@ -331,7 +343,9 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
                     <span>{String(stage.sequence).padStart(2, "0")}</span>
                     <span>
                       <strong>{stage.title}</strong>
-                      <small>{stageKindLabel(stage)} · {stageStateLabel(stage)}</small>
+                      <small>
+                        {stageKindLabel(stage)} · {stageStateLabel(stage)}
+                      </small>
                     </span>
                   </button>
                 ))}

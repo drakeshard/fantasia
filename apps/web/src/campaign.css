@@ -2,8 +2,7 @@
   min-height: 100dvh;
   padding: var(--ui-s2);
   background:
-    radial-gradient(circle at 52% -10%, rgb(73 89 103 / 34%), transparent 42%),
-    var(--ui-bg);
+    radial-gradient(circle at 52% -10%, rgb(73 89 103 / 34%), transparent 42%), var(--ui-bg);
 }
 
 .campaign-shell {
@@ -450,8 +449,7 @@
 .saga-overview-card {
   padding: clamp(24px, 5vw, 56px);
   background:
-    radial-gradient(circle at 84% 10%, rgb(226 190 120 / 10%), transparent 32%),
-    var(--ui-surface);
+    radial-gradient(circle at 84% 10%, rgb(226 190 120 / 10%), transparent 32%), var(--ui-surface);
 }
 
 .saga-overview-card h2 {

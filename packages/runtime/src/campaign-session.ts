@@ -1,11 +1,11 @@
 import {
-  campaignChapter,
-  campaignStage,
   type CampaignAccess,
   type CampaignChapterDefinition,
   type CampaignCompletion,
   type CampaignEntry,
   type CampaignStageKind,
+  campaignChapter,
+  campaignStage,
   fantasiaCampaignFixture,
   visibleCampaignChapters,
   visibleCampaignStages,
@@ -143,7 +143,11 @@ export class CampaignSession {
         ? undefined
         : campaignStage(chapter, this.#selectedStageId);
     if (stage === undefined) {
-      return { kind: "rejected", reason: "Select an available stage before entry.", view: this.view() };
+      return {
+        kind: "rejected",
+        reason: "Select an available stage before entry.",
+        view: this.view(),
+      };
     }
     if (stage.access.kind === "locked") {
       return { kind: "rejected", reason: stage.access.reason, view: this.view() };

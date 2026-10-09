@@ -69,7 +69,8 @@ const chapterOneStages: readonly CampaignStageDefinition[] = [
     title: "Strangers on the Road",
     synopsis: "Armed foragers threaten civilians and a supply cart on the road.",
     objective: "Escort civilians and the supply cart to safety.",
-    condition: "The protagonist is injured and carries a broken sword. Normal attacks are unavailable.",
+    condition:
+      "The protagonist is injured and carries a broken sword. Normal attacks are unavailable.",
     access: { kind: "available" },
     completion: "not-cleared",
     entry: { kind: "unavailable", reason: stageExecutionUnavailable },

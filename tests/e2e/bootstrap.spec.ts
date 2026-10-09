@@ -58,21 +58,22 @@ test("campaign shell exposes chapter and stage navigation without faking canonic
   await expect(page.locator(".campaign-node")).toHaveCount(6);
   await expect(page.locator(".stage-list-entry")).toHaveCount(6);
 
-  await page
-    .locator(".stage-list-entry")
-    .filter({ hasText: "Strangers on the Road" })
-    .click();
+  await page.locator(".stage-list-entry").filter({ hasText: "Strangers on the Road" }).click();
   const inspector = page.locator(".campaign-inspector");
   await expect(inspector.getByText("Strangers on the Road", { exact: true })).toBeVisible();
-  await expect(inspector.getByText("Escort civilians and the supply cart to safety.")).toBeVisible();
+  await expect(
+    inspector.getByText("Escort civilians and the supply cart to safety."),
+  ).toBeVisible();
   await expect(inspector.getByRole("button", { name: "Enter battle", exact: true })).toBeVisible();
 
   await inspector.getByRole("button", { name: "Enter battle", exact: true }).click();
   await expect(
-    page.getByText(
-      "Canonical story and battle execution is not implemented in the current production slice.",
-      { exact: true },
-    ).last(),
+    page
+      .getByText(
+        "Canonical story and battle execution is not implemented in the current production slice.",
+        { exact: true },
+      )
+      .last(),
   ).toBeVisible();
   await expect(page.getByText("Defeat the opposing units", { exact: true })).toHaveCount(0);
 
