@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import {
+  type CampaignChapterDefinition,
+  visibleCampaignStages,
+} from "../../packages/game/src/index.ts";
 import { CampaignSession } from "../../packages/runtime/src/index.ts";
 
 describe("GAME-UI04 campaign presentation session", () => {
@@ -22,6 +26,41 @@ describe("GAME-UI04 campaign presentation session", () => {
       "The Maid Is Coming",
     ]);
     expect(first.stages.every((stage) => stage.access.kind === "available")).toBe(true);
+  });
+
+  it("filters hidden stages before they can become presentation targets", () => {
+    const chapter: CampaignChapterDefinition = {
+      id: "test-chapter",
+      sequence: 1,
+      title: "Test chapter",
+      visibility: "revealed",
+      stages: [
+        {
+          id: "visible-stage",
+          sequence: 1,
+          kind: "story",
+          visibility: "revealed",
+          title: "Visible stage",
+          access: { kind: "available" },
+          completion: "not-cleared",
+          entry: { kind: "unavailable", reason: "Test fixture" },
+        },
+        {
+          id: "hidden-stage",
+          sequence: 2,
+          kind: "story",
+          visibility: "hidden",
+          title: "Secret title",
+          access: { kind: "available" },
+          completion: "not-cleared",
+          entry: { kind: "unavailable", reason: "Test fixture" },
+        },
+      ],
+    };
+
+    const visible = visibleCampaignStages(chapter);
+    expect(visible.map((stage) => stage.id)).toEqual(["visible-stage"]);
+    expect(visible.some((stage) => stage.title === "Secret title")).toBe(false);
   });
 
   it("keeps selection transient and makes canonical entry explicit and truthful", () => {
