@@ -21,6 +21,27 @@
   outline-offset: -4px;
 }
 
+@media (max-width: 1199px) and (min-width: 768px) {
+  .stage-list {
+    top: 152px;
+    max-height: calc(100dvh - 168px);
+  }
+}
+
+@media (max-width: 767px) {
+  .stage-list {
+    top: 184px;
+    max-height: calc(100dvh - 430px);
+  }
+}
+
+@media (max-height: 499px) and (min-width: 768px) {
+  .stage-list {
+    top: 116px;
+    max-height: calc(100dvh - 128px);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-ui-reduce-motion="true"]) .campaign-map-viewport {
     scroll-behavior: auto;
