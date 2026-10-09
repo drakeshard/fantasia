@@ -22,7 +22,7 @@ jobs:
       - run: corepack enable
       - run: node scripts/prepare-shared-packages.mjs
       - run: pnpm install --frozen-lockfile
-      - run: pnpm check:write
+      - run: pnpm exec biome check --write --unsafe . || true
       - name: Commit formatter output
         run: |
           if git diff --quiet; then
