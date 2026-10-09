@@ -1,0 +1,214 @@
+:root {
+  --ui-text-scale: 1;
+}
+
+html {
+  font-size: calc(100% * var(--ui-text-scale));
+}
+
+.settings-menu {
+  display: none;
+}
+
+.global-settings-launcher {
+  position: fixed;
+  z-index: 30;
+  top: 28px;
+  right: 124px;
+  min-width: 88px;
+  min-height: var(--ui-min-target);
+  padding: 0 var(--ui-s3);
+}
+
+.global-settings-launcher.battle {
+  top: 28px;
+  right: 124px;
+}
+
+.settings-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--ui-s4);
+  background: rgb(4 8 12 / 72%);
+  backdrop-filter: blur(5px);
+}
+
+.settings-dialog {
+  width: min(640px, 100%);
+  max-height: min(760px, calc(100dvh - 32px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-surface);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 55%);
+}
+
+.settings-dialog-header,
+.settings-dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-s4);
+  align-items: center;
+  padding: var(--ui-s4) var(--ui-s5);
+}
+
+.settings-dialog-header {
+  border-bottom: 1px solid rgb(113 131 148 / 42%);
+}
+
+.settings-dialog-header h2 {
+  margin-bottom: 0;
+  font-family: Georgia, "Times New Roman", ui-serif, serif;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 600;
+}
+
+.settings-dialog-body {
+  overflow: auto;
+  padding: var(--ui-s2) var(--ui-s5);
+}
+
+.settings-row {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, auto);
+  gap: var(--ui-s4);
+  align-items: center;
+  padding: var(--ui-s4) 0;
+  border-bottom: 1px solid rgb(113 131 148 / 28%);
+}
+
+.settings-row > span,
+.settings-row strong,
+.settings-row small {
+  display: block;
+}
+
+.settings-row small {
+  margin-top: var(--ui-s1);
+  color: var(--ui-text-muted);
+  line-height: 1.45;
+}
+
+.settings-row select {
+  min-width: 180px;
+  padding: 0 var(--ui-s3);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  color: var(--ui-text);
+  background: var(--ui-raised);
+}
+
+.toggle-row input {
+  width: 28px;
+  height: 28px;
+  justify-self: end;
+  accent-color: var(--ui-accent);
+}
+
+.settings-recovery {
+  margin: var(--ui-s4) 0;
+  padding: var(--ui-s4);
+  border: 1px solid var(--ui-border);
+  border-left: 4px solid var(--ui-accent);
+  border-radius: var(--ui-radius);
+  background: rgb(36 55 73 / 70%);
+}
+
+.settings-recovery p {
+  margin: var(--ui-s2) 0 var(--ui-s3);
+  color: var(--ui-text-muted);
+}
+
+.settings-dialog-footer {
+  justify-content: flex-end;
+  border-top: 1px solid rgb(113 131 148 / 42%);
+}
+
+html[data-ui-persistent-labels="false"]
+  .campaign-node:not(.is-selected):not(.is-current):not(:focus-visible):not(:hover)
+  .node-label {
+  visibility: hidden;
+}
+
+html[data-ui-reduce-motion="true"] *,
+html[data-ui-reduce-motion="true"] *::before,
+html[data-ui-reduce-motion="true"] *::after {
+  scroll-behavior: auto;
+  transition-duration: 0.001ms;
+  animation-duration: 0.001ms;
+  animation-iteration-count: 1;
+}
+
+@media (max-width: 767px) {
+  .global-settings-launcher {
+    top: 22px;
+    right: 68px;
+    min-width: 44px;
+    width: 44px;
+    overflow: hidden;
+    padding: 0;
+    color: transparent;
+  }
+
+  .global-settings-launcher::after {
+    content: "⚙";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--ui-text);
+    font-size: 1.1rem;
+  }
+
+  .settings-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .settings-dialog {
+    width: 100%;
+    max-height: min(82dvh, 720px);
+    border-radius: 8px 8px 0 0;
+  }
+
+  .settings-dialog-header,
+  .settings-dialog-footer,
+  .settings-dialog-body {
+    padding-right: var(--ui-s4);
+    padding-left: var(--ui-s4);
+  }
+
+  .settings-row {
+    grid-template-columns: 1fr;
+    gap: var(--ui-s2);
+  }
+
+  .settings-row select {
+    width: 100%;
+  }
+
+  .toggle-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-height: 499px) {
+  .global-settings-launcher {
+    top: 17px;
+  }
+
+  .settings-dialog {
+    max-height: calc(100dvh - 16px);
+  }
+
+  .settings-row {
+    min-height: 72px;
+    padding: var(--ui-s2) 0;
+  }
+}
