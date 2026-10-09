@@ -84,7 +84,7 @@ function App() {
       <SettingsDialog
         open={settingsOpen}
         preferences={preferences}
-        storageMessage={storageMessage}
+        {...(storageMessage === undefined ? {} : { storageMessage })}
         onChange={changePreferences}
         onReset={resetPreferences}
         onRetryStorage={retryPreferenceStorage}
