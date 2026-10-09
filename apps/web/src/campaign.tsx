@@ -277,6 +277,7 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
   function beginPointer(event: PointerEvent) {
     const viewport = viewportRef.current;
     if (!viewport) return;
+    if (pointers.current.size === 0) suppressClick.current = false;
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     try {
       viewport.setPointerCapture(event.pointerId);
@@ -362,9 +363,6 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
     const drag = dragState.current;
     if (drag?.pointerId === event.pointerId && drag.moved) {
       suppressClick.current = true;
-      setTimeout(() => {
-        suppressClick.current = false;
-      }, 0);
     }
     pointers.current.delete(event.pointerId);
     if (viewport) {
