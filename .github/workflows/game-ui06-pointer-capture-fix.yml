@@ -1,0 +1,95 @@
+name: GAME-UI06 pointer capture fix
+
+on:
+  push:
+    branches:
+      - game-ui06/campaign-map-input
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: game-ui06/campaign-map-input
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: node scripts/prepare-shared-packages.mjs
+      - run: pnpm install --frozen-lockfile
+      - name: Capture pointers only after a pan or pinch is established
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("apps/web/src/campaign.tsx")
+          text = path.read_text()
+          text = text.replace(
+              '''    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+              try {
+                viewport.setPointerCapture(event.pointerId);
+              } catch {
+                // Synthetic/browser-specific pointer capture failure does not invalidate map input.
+              }
+
+              if (pointers.current.size === 1) {''',
+              '''    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+              if (pointers.current.size === 1) {''',
+              1,
+          )
+          text = text.replace(
+              '''      dragState.current = undefined;
+              setPanning(true);
+            }
+          }
+
+          function movePointer''',
+              '''      dragState.current = undefined;
+              for (const pointerId of pointers.current.keys()) {
+                try {
+                  viewport.setPointerCapture(pointerId);
+                } catch {
+                  // Synthetic/browser-specific pointer capture failure does not invalidate map input.
+                }
+              }
+              setPanning(true);
+            }
+          }
+
+          function movePointer''',
+              1,
+          )
+          text = text.replace(
+              '''    event.preventDefault();
+              drag.moved = true;
+              setPanning(true);''',
+              '''    event.preventDefault();
+              if (!drag.moved) {
+                try {
+                  viewport.setPointerCapture(event.pointerId);
+                } catch {
+                  // Synthetic/browser-specific pointer capture failure does not invalidate map input.
+                }
+              }
+              drag.moved = true;
+              setPanning(true);''',
+              1,
+          )
+          path.write_text(text)
+          PY
+      - run: pnpm exec biome check --write --unsafe apps/web/src/campaign.tsx
+      - name: Commit fix
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add apps/web/src/campaign.tsx
+          git commit -m "fix: defer map pointer capture until gesture intent"
+          git push origin HEAD:game-ui06/campaign-map-input
