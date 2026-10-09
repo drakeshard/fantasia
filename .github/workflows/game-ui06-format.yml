@@ -1,0 +1,92 @@
+name: GAME-UI06 format
+
+on:
+  push:
+    branches:
+      - game-ui06/campaign-map-input
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: game-ui06/campaign-map-input
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: node scripts/prepare-shared-packages.mjs
+      - run: pnpm install --frozen-lockfile
+      - name: Preserve valid chapter selection when returning from overview
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("apps/web/src/campaign.tsx")
+          text = path.read_text()
+          old = '''  function selectChapter(chapterId: string) {
+            rememberCamera();
+            const next = session.selectChapter(chapterId);
+            if (!next) return;
+            setView(next);
+            requestCameraRestore(
+              camerasByChapter.current.get(next.selectedChapterId) ?? {
+                zoom: MIN_MAP_ZOOM,
+                left: 0,
+                top: 0,
+              },
+            );
+            setScreen("chapter");
+            setMessage(
+              next.stages.length > 0
+                ? `${next.selectedChapterTitle} opened. Select a stage to inspect it.`
+                : `${next.selectedChapterTitle} is known, but production stage content is not implemented yet.`,
+            );
+          }
+          '''
+          new = '''  function selectChapter(chapterId: string) {
+            rememberCamera();
+            if (chapterId === view.selectedChapterId) {
+              requestCameraRestore(camerasByChapter.current.get(chapterId) ?? cameraRef.current);
+              setScreen("chapter");
+              setMessage(`${view.selectedChapterTitle} reopened with the previous map context.`);
+              return;
+            }
+
+            const next = session.selectChapter(chapterId);
+            if (!next) return;
+            setView(next);
+            requestCameraRestore(
+              camerasByChapter.current.get(next.selectedChapterId) ?? {
+                zoom: MIN_MAP_ZOOM,
+                left: 0,
+                top: 0,
+              },
+            );
+            setScreen("chapter");
+            setMessage(
+              next.stages.length > 0
+                ? `${next.selectedChapterTitle} opened. Select a stage to inspect it.`
+                : `${next.selectedChapterTitle} is known, but production stage content is not implemented yet.`,
+            );
+          }
+          '''
+          if old not in text:
+              raise SystemExit("selectChapter block did not match")
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - run: pnpm exec biome check --write --unsafe . || true
+      - name: Commit formatter output
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add apps/web/src/campaign.tsx apps/web/src/campaign-camera.css tests/e2e/campaign-camera.spec.ts
+          git commit -m "chore: finalize GAME-UI06 campaign camera"
+          git push origin HEAD:game-ui06/campaign-map-input
