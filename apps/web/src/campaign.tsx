@@ -240,7 +240,7 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
                 <p class="hud-eyebrow">Loire approaches</p>
                 <p>{view.stages.length} permitted stages</p>
               </div>
-              <div class="map-toolbar" aria-label="Map controls">
+              <div class="map-toolbar" role="toolbar" aria-label="Map controls">
                 <button
                   type="button"
                   aria-label="Zoom out"

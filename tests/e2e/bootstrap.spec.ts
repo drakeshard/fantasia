@@ -54,7 +54,7 @@ test("campaign shell exposes chapter and stage navigation without faking canonic
   await page.goto("/");
 
   await expect(page.getByText("A Stranger in France", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("LOIRE APPROACHES", { exact: true })).toBeVisible();
+  await expect(page.getByText("Loire approaches", { exact: true })).toBeVisible();
   await expect(page.locator(".campaign-node")).toHaveCount(6);
   await expect(page.locator(".stage-list-entry")).toHaveCount(6);
 
