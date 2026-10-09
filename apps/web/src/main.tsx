@@ -70,22 +70,17 @@ function App() {
   return (
     <>
       {screen === "battle" ? (
-        <>
-          <BattleApp onReturnCampaign={() => setScreen("campaign")} />
-          <button
-            type="button"
-            class="global-battle-settings ui-button secondary"
-            onClick={(event) => openSettings(event.currentTarget)}
-          >
-            Settings
-          </button>
-        </>
+        <BattleApp onReturnCampaign={() => setScreen("campaign")} />
       ) : (
-        <CampaignApp
-          onOpenBattle={() => setScreen("battle")}
-          onOpenSettings={openSettings}
-        />
+        <CampaignApp onOpenBattle={() => setScreen("battle")} />
       )}
+      <button
+        type="button"
+        class={`global-settings-launcher ui-button secondary ${screen}`}
+        onClick={(event) => openSettings(event.currentTarget)}
+      >
+        Settings
+      </button>
       <SettingsDialog
         open={settingsOpen}
         preferences={preferences}
