@@ -43,6 +43,13 @@ function isUiPreferences(value: unknown): value is UiPreferences {
   );
 }
 
+const unreadableSavedPreferences = (fallback: UiPreferences): UiPreferencesLoadResult => ({
+  preferences: fallback,
+  storageAvailable: true,
+  message:
+    "Saved interface preferences could not be read. Defaults are in use until you save or reset them.",
+});
+
 export function loadUiPreferences(storage: Storage | undefined): UiPreferencesLoadResult {
   const fallback = defaultUiPreferences();
   if (storage === undefined) {
@@ -54,17 +61,9 @@ export function loadUiPreferences(storage: Storage | undefined): UiPreferencesLo
     };
   }
 
+  let stored: string | null;
   try {
-    const stored = storage.getItem(UI_PREFERENCES_STORAGE_KEY);
-    if (stored === null) return { preferences: fallback, storageAvailable: true };
-    const parsed: unknown = JSON.parse(stored);
-    if (isUiPreferences(parsed)) return { preferences: parsed, storageAvailable: true };
-    return {
-      preferences: fallback,
-      storageAvailable: true,
-      message:
-        "Saved interface preferences could not be read. Defaults are in use until you save or reset them.",
-    };
+    stored = storage.getItem(UI_PREFERENCES_STORAGE_KEY);
   } catch {
     return {
       preferences: fallback,
@@ -72,6 +71,18 @@ export function loadUiPreferences(storage: Storage | undefined): UiPreferencesLo
       message: "Interface preferences could not be read from browser storage. Defaults are in use.",
     };
   }
+
+  if (stored === null) return { preferences: fallback, storageAvailable: true };
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(stored);
+  } catch {
+    return unreadableSavedPreferences(fallback);
+  }
+
+  if (isUiPreferences(parsed)) return { preferences: parsed, storageAvailable: true };
+  return unreadableSavedPreferences(fallback);
 }
 
 export function saveUiPreferences(
