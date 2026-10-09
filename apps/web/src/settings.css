@@ -14,7 +14,7 @@ html {
   position: fixed;
   z-index: 30;
   top: 28px;
-  right: 32px;
+  right: 124px;
   min-width: 88px;
   min-height: var(--ui-min-target);
   padding: 0 var(--ui-s3);
@@ -22,7 +22,7 @@ html {
 
 .global-settings-launcher.battle {
   top: 28px;
-  right: 32px;
+  right: 124px;
 }
 
 .settings-backdrop {
@@ -148,7 +148,7 @@ html[data-ui-reduce-motion="true"] *::after {
 @media (max-width: 767px) {
   .global-settings-launcher {
     top: 22px;
-    right: 16px;
+    right: 68px;
     min-width: 44px;
     width: 44px;
     overflow: hidden;
