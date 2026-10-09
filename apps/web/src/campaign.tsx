@@ -1,8 +1,41 @@
 import { CampaignSession, type CampaignStageView, type CampaignView } from "@fantasia/runtime";
-import { useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import "./campaign.css";
+import "./campaign-camera.css";
 
 type CampaignScreen = "overview" | "chapter";
+
+type CameraSnapshot = Readonly<{
+  zoom: number;
+  left: number;
+  top: number;
+}>;
+
+type PointerPoint = Readonly<{ x: number; y: number }>;
+
+type DragState = {
+  pointerId: number;
+  startX: number;
+  startY: number;
+  startLeft: number;
+  startTop: number;
+  moved: boolean;
+};
+
+type PinchState = Readonly<{
+  distance: number;
+  zoom: number;
+  left: number;
+  top: number;
+  focalX: number;
+  focalY: number;
+}>;
+
+const MIN_MAP_ZOOM = 1;
+const MAX_MAP_ZOOM = 2.5;
+const MAP_ZOOM_STEP = 0.25;
+const MAP_WHEEL_STEP = 0.1;
+const DRAG_THRESHOLD = 7;
 
 const stageAnchors = [
   { left: 14, top: 70 },
@@ -12,6 +45,18 @@ const stageAnchors = [
   { left: 72, top: 51 },
   { left: 85, top: 32 },
 ] as const;
+
+function clampZoom(value: number): number {
+  return Math.max(MIN_MAP_ZOOM, Math.min(MAX_MAP_ZOOM, Number(value.toFixed(2))));
+}
+
+function pointerDistance(first: PointerPoint, second: PointerPoint): number {
+  return Math.hypot(second.x - first.x, second.y - first.y);
+}
+
+function pointerMidpoint(first: PointerPoint, second: PointerPoint): PointerPoint {
+  return { x: (first.x + second.x) / 2, y: (first.y + second.y) / 2 };
+}
 
 function stageKindLabel(stage: CampaignStageView): string {
   return stage.kind === "battle" ? "Battle" : "Story";
@@ -83,13 +128,93 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
   const [screen, setScreen] = useState<CampaignScreen>("chapter");
   const [message, setMessage] = useState("Select a stage to inspect it before entry.");
   const [stageListOpen, setStageListOpen] = useState(true);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(MIN_MAP_ZOOM);
+  const [panning, setPanning] = useState(false);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const cameraRef = useRef<CameraSnapshot>({ zoom: MIN_MAP_ZOOM, left: 0, top: 0 });
+  const camerasByChapter = useRef(new Map<string, CameraSnapshot>());
+  const pendingRestore = useRef(false);
+  const pointers = useRef(new Map<number, PointerPoint>());
+  const dragState = useRef<DragState>();
+  const pinchState = useRef<PinchState>();
+  const suppressClick = useRef(false);
   const selectedStage = view.stages.find((stage) => stage.id === view.selectedStageId);
 
+  function rememberCamera(chapterId = view.selectedChapterId) {
+    const viewport = viewportRef.current;
+    const snapshot = viewport
+      ? { zoom, left: viewport.scrollLeft, top: viewport.scrollTop }
+      : cameraRef.current;
+    cameraRef.current = snapshot;
+    camerasByChapter.current.set(chapterId, snapshot);
+  }
+
+  function requestCameraRestore(snapshot: CameraSnapshot) {
+    cameraRef.current = snapshot;
+    pendingRestore.current = true;
+    setZoom(snapshot.zoom);
+  }
+
+  useEffect(() => {
+    if (screen !== "chapter" || !pendingRestore.current) return;
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const snapshot = cameraRef.current;
+    const frame = requestAnimationFrame(() => {
+      viewport.scrollLeft = snapshot.left;
+      viewport.scrollTop = snapshot.top;
+      pendingRestore.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [screen, view.selectedChapterId, zoom]);
+
+  function zoomAt(nextZoom: number, focalX?: number, focalY?: number) {
+    const targetZoom = clampZoom(nextZoom);
+    if (targetZoom === zoom) return;
+    const viewport = viewportRef.current;
+    if (!viewport) {
+      setZoom(targetZoom);
+      cameraRef.current = { ...cameraRef.current, zoom: targetZoom };
+      return;
+    }
+
+    const pointX = focalX ?? viewport.clientWidth / 2;
+    const pointY = focalY ?? viewport.clientHeight / 2;
+    const contentX = (viewport.scrollLeft + pointX) / zoom;
+    const contentY = (viewport.scrollTop + pointY) / zoom;
+    const nextLeft = Math.max(0, contentX * targetZoom - pointX);
+    const nextTop = Math.max(0, contentY * targetZoom - pointY);
+    const snapshot = { zoom: targetZoom, left: nextLeft, top: nextTop };
+    cameraRef.current = snapshot;
+    camerasByChapter.current.set(view.selectedChapterId, snapshot);
+    setZoom(targetZoom);
+    requestAnimationFrame(() => {
+      const current = viewportRef.current;
+      if (!current) return;
+      current.scrollLeft = nextLeft;
+      current.scrollTop = nextTop;
+    });
+  }
+
   function selectChapter(chapterId: string) {
+    rememberCamera();
+    if (chapterId === view.selectedChapterId) {
+      requestCameraRestore(camerasByChapter.current.get(chapterId) ?? cameraRef.current);
+      setScreen("chapter");
+      setMessage(`${view.selectedChapterTitle} reopened with the previous map context.`);
+      return;
+    }
+
     const next = session.selectChapter(chapterId);
     if (!next) return;
     setView(next);
+    requestCameraRestore(
+      camerasByChapter.current.get(next.selectedChapterId) ?? {
+        zoom: MIN_MAP_ZOOM,
+        left: 0,
+        top: 0,
+      },
+    );
     setScreen("chapter");
     setMessage(
       next.stages.length > 0
@@ -106,9 +231,21 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
     setMessage(stage ? `${stage.title} selected for inspection.` : "Stage selected.");
   }
 
+  function showOverview() {
+    rememberCamera();
+    setScreen("overview");
+  }
+
   function continueCurrent() {
     const next = session.continueCurrent();
     setView(next);
+    requestCameraRestore(
+      camerasByChapter.current.get(next.selectedChapterId) ?? {
+        zoom: MIN_MAP_ZOOM,
+        left: 0,
+        top: 0,
+      },
+    );
     setScreen("chapter");
     setMessage(`Continue restored ${next.selectedChapterTitle} and its current stage.`);
   }
@@ -124,8 +261,126 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
   }
 
   function fitMap() {
-    setZoom(1);
+    const snapshot = { zoom: MIN_MAP_ZOOM, left: 0, top: 0 };
+    cameraRef.current = snapshot;
+    camerasByChapter.current.set(view.selectedChapterId, snapshot);
+    setZoom(MIN_MAP_ZOOM);
+    requestAnimationFrame(() => {
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+      viewport.scrollLeft = 0;
+      viewport.scrollTop = 0;
+    });
     setMessage("Map fitted to the available campaign area.");
+  }
+
+  function beginPointer(event: PointerEvent) {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    if (pointers.current.size === 0) suppressClick.current = false;
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (pointers.current.size === 1) {
+      dragState.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        startLeft: viewport.scrollLeft,
+        startTop: viewport.scrollTop,
+        moved: false,
+      };
+      pinchState.current = undefined;
+      return;
+    }
+
+    if (pointers.current.size === 2) {
+      const [first, second] = [...pointers.current.values()];
+      if (!first || !second) return;
+      const rect = viewport.getBoundingClientRect();
+      const midpoint = pointerMidpoint(first, second);
+      pinchState.current = {
+        distance: Math.max(1, pointerDistance(first, second)),
+        zoom,
+        left: viewport.scrollLeft,
+        top: viewport.scrollTop,
+        focalX: midpoint.x - rect.left,
+        focalY: midpoint.y - rect.top,
+      };
+      dragState.current = undefined;
+      setPanning(true);
+    }
+  }
+
+  function movePointer(event: PointerEvent) {
+    const viewport = viewportRef.current;
+    if (!viewport || !pointers.current.has(event.pointerId)) return;
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (pointers.current.size >= 2 && pinchState.current) {
+      const [first, second] = [...pointers.current.values()];
+      if (!first || !second) return;
+      event.preventDefault();
+      const pinch = pinchState.current;
+      const distance = Math.max(1, pointerDistance(first, second));
+      const targetZoom = clampZoom(pinch.zoom * (distance / pinch.distance));
+      const contentX = (pinch.left + pinch.focalX) / pinch.zoom;
+      const contentY = (pinch.top + pinch.focalY) / pinch.zoom;
+      const nextLeft = Math.max(0, contentX * targetZoom - pinch.focalX);
+      const nextTop = Math.max(0, contentY * targetZoom - pinch.focalY);
+      const snapshot = { zoom: targetZoom, left: nextLeft, top: nextTop };
+      cameraRef.current = snapshot;
+      camerasByChapter.current.set(view.selectedChapterId, snapshot);
+      setZoom(targetZoom);
+      requestAnimationFrame(() => {
+        const current = viewportRef.current;
+        if (!current) return;
+        current.scrollLeft = nextLeft;
+        current.scrollTop = nextTop;
+      });
+      return;
+    }
+
+    const drag = dragState.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+    if (!drag.moved && Math.hypot(deltaX, deltaY) < DRAG_THRESHOLD) return;
+    event.preventDefault();
+    if (!drag.moved) {
+      try {
+        viewport.setPointerCapture(event.pointerId);
+      } catch {
+        // Synthetic/browser-specific pointer capture failure does not invalidate map input.
+      }
+    }
+    drag.moved = true;
+    setPanning(true);
+    viewport.scrollLeft = drag.startLeft - deltaX;
+    viewport.scrollTop = drag.startTop - deltaY;
+    cameraRef.current = { zoom, left: viewport.scrollLeft, top: viewport.scrollTop };
+  }
+
+  function endPointer(event: PointerEvent) {
+    const viewport = viewportRef.current;
+    const drag = dragState.current;
+    if (drag?.pointerId === event.pointerId && drag.moved) {
+      suppressClick.current = true;
+    }
+    pointers.current.delete(event.pointerId);
+    if (viewport) {
+      cameraRef.current = { zoom, left: viewport.scrollLeft, top: viewport.scrollTop };
+      camerasByChapter.current.set(view.selectedChapterId, cameraRef.current);
+      try {
+        viewport.releasePointerCapture(event.pointerId);
+      } catch {
+        // Pointer capture may already be released by the browser.
+      }
+    }
+    if (pointers.current.size < 2) pinchState.current = undefined;
+    if (pointers.current.size === 0) {
+      dragState.current = undefined;
+      setPanning(false);
+    }
   }
 
   if (screen === "overview") {
@@ -144,14 +399,6 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
               <button type="button" class="nav-button" onClick={continueCurrent}>
                 Home
               </button>
-              <details class="settings-menu">
-                <summary>Settings</summary>
-                <div class="settings-sheet">
-                  <strong>Interface preferences</strong>
-                  <p>System reduced-motion preference is respected.</p>
-                  <p>Additional game preferences are not implemented in this slice.</p>
-                </div>
-              </details>
             </div>
           </header>
 
@@ -208,7 +455,7 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
     <main class="campaign-screen">
       <section class="campaign-shell">
         <header class="campaign-header">
-          <button type="button" class="nav-button" onClick={() => setScreen("overview")}>
+          <button type="button" class="nav-button" onClick={showOverview}>
             Back
           </button>
           <div class="campaign-title-block">
@@ -219,17 +466,9 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
             <h1>{view.selectedChapterTitle}</h1>
           </div>
           <div class="campaign-header-actions">
-            <button type="button" class="nav-button" onClick={() => setScreen("overview")}>
+            <button type="button" class="nav-button" onClick={showOverview}>
               Home
             </button>
-            <details class="settings-menu">
-              <summary>Settings</summary>
-              <div class="settings-sheet">
-                <strong>Interface preferences</strong>
-                <p>System reduced-motion preference is respected.</p>
-                <p>Additional game preferences are not implemented in this slice.</p>
-              </div>
-            </details>
           </div>
         </header>
 
@@ -244,18 +483,16 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
                 <button
                   type="button"
                   aria-label="Zoom out"
-                  onClick={() => setZoom((value) => Math.max(1, Number((value - 0.25).toFixed(2))))}
-                  disabled={zoom <= 1}
+                  onClick={() => zoomAt(zoom - MAP_ZOOM_STEP)}
+                  disabled={zoom <= MIN_MAP_ZOOM}
                 >
                   −
                 </button>
                 <button
                   type="button"
                   aria-label="Zoom in"
-                  onClick={() =>
-                    setZoom((value) => Math.min(2.5, Number((value + 0.25).toFixed(2))))
-                  }
-                  disabled={zoom >= 2.5}
+                  onClick={() => zoomAt(zoom + MAP_ZOOM_STEP)}
+                  disabled={zoom >= MAX_MAP_ZOOM}
                 >
                   +
                 </button>
@@ -268,8 +505,46 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
               </div>
             </div>
 
-            <div class="campaign-map-viewport">
-              <div class="campaign-map-art" style={{ transform: `scale(${zoom})` }}>
+            <div
+              ref={viewportRef}
+              class={`campaign-map-viewport${panning ? " is-panning" : ""}`}
+              data-testid="campaign-map-viewport"
+              onScroll={(event) => {
+                const target = event.currentTarget;
+                const snapshot = { zoom, left: target.scrollLeft, top: target.scrollTop };
+                cameraRef.current = snapshot;
+                camerasByChapter.current.set(view.selectedChapterId, snapshot);
+              }}
+              onWheel={(event) => {
+                event.preventDefault();
+                const rect = event.currentTarget.getBoundingClientRect();
+                zoomAt(
+                  zoom + (event.deltaY < 0 ? MAP_WHEEL_STEP : -MAP_WHEEL_STEP),
+                  event.clientX - rect.left,
+                  event.clientY - rect.top,
+                );
+              }}
+              onPointerDown={(event) => beginPointer(event)}
+              onPointerMove={(event) => movePointer(event)}
+              onPointerUp={(event) => endPointer(event)}
+              onPointerCancel={(event) => endPointer(event)}
+              onClickCapture={(event) => {
+                if (!suppressClick.current) return;
+                event.preventDefault();
+                event.stopPropagation();
+                suppressClick.current = false;
+              }}
+            >
+              <div
+                class="campaign-map-art"
+                data-testid="campaign-map-art"
+                style={{
+                  width: `${zoom * 100}%`,
+                  minWidth: `${760 * zoom}px`,
+                  height: `${zoom * 100}%`,
+                  minHeight: `${520 * zoom}px`,
+                }}
+              >
                 <span class="map-river river-one" aria-hidden="true" />
                 <span class="map-river river-two" aria-hidden="true" />
                 <span class="map-landmark landmark-one" aria-hidden="true">
