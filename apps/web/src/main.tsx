@@ -76,6 +76,7 @@ function App() {
       )}
       <button
         type="button"
+        aria-label="Settings"
         class={`global-settings-launcher ui-button secondary ${screen}`}
         onClick={(event) => openSettings(event.currentTarget)}
       >
