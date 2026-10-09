@@ -198,6 +198,13 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
 
   function selectChapter(chapterId: string) {
     rememberCamera();
+    if (chapterId === view.selectedChapterId) {
+      requestCameraRestore(camerasByChapter.current.get(chapterId) ?? cameraRef.current);
+      setScreen("chapter");
+      setMessage(`${view.selectedChapterTitle} reopened with the previous map context.`);
+      return;
+    }
+
     const next = session.selectChapter(chapterId);
     if (!next) return;
     setView(next);

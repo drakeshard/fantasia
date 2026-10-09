@@ -93,7 +93,10 @@ test("dragging the campaign map does not activate a stage while a click still se
 });
 
 test("wheel and pinch zoom are map-scoped and bounded", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "chromium-desktop", "Pointer synthesis is validated on desktop Chromium");
+  test.skip(
+    testInfo.project.name !== "chromium-desktop",
+    "Pointer synthesis is validated on desktop Chromium",
+  );
   await page.goto("/");
 
   const viewport = page.getByTestId("campaign-map-viewport");
@@ -101,7 +104,10 @@ test("wheel and pinch zoom are map-scoped and bounded", async ({ page }, testInf
   expect(viewportBox).not.toBeNull();
   if (!viewportBox) return;
 
-  await page.mouse.move(viewportBox.x + viewportBox.width / 2, viewportBox.y + viewportBox.height / 2);
+  await page.mouse.move(
+    viewportBox.x + viewportBox.width / 2,
+    viewportBox.y + viewportBox.height / 2,
+  );
   await page.mouse.wheel(0, -240);
   await expect(await zoomLabel(page)).not.toHaveText("Zoom 1.00×");
   const afterWheel = await (await zoomLabel(page)).textContent();
@@ -169,8 +175,8 @@ test("wheel and pinch zoom are map-scoped and bounded", async ({ page }, testInf
   await expect(await zoomLabel(page)).toHaveText("Zoom 2.50×");
   await expect(page.getByRole("button", { name: "Zoom in", exact: true })).toBeDisabled();
 
-  const textScale = await page.locator("html").evaluate((element) =>
-    getComputedStyle(element).getPropertyValue("--ui-text-scale").trim(),
-  );
+  const textScale = await page
+    .locator("html")
+    .evaluate((element) => getComputedStyle(element).getPropertyValue("--ui-text-scale").trim());
   expect(textScale).toBe("1");
 });
