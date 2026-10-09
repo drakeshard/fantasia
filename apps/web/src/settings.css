@@ -130,17 +130,19 @@ html {
   border-top: 1px solid rgb(113 131 148 / 42%);
 }
 
-html[data-ui-persistent-labels="false"] .campaign-node:not(.is-selected):not(.is-current):not(:focus-visible):not(:hover) .node-label {
+html[data-ui-persistent-labels="false"]
+  .campaign-node:not(.is-selected):not(.is-current):not(:focus-visible):not(:hover)
+  .node-label {
   visibility: hidden;
 }
 
 html[data-ui-reduce-motion="true"] *,
 html[data-ui-reduce-motion="true"] *::before,
 html[data-ui-reduce-motion="true"] *::after {
-  scroll-behavior: auto !important;
-  transition-duration: 0.001ms !important;
-  animation-duration: 0.001ms !important;
-  animation-iteration-count: 1 !important;
+  scroll-behavior: auto;
+  transition-duration: 0.001ms;
+  animation-duration: 0.001ms;
+  animation-iteration-count: 1;
 }
 
 @media (max-width: 767px) {

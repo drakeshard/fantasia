@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "preact/hooks";
 import {
+  defaultUiPreferences,
   type InterfaceTextScale,
   type UiPreferences,
-  defaultUiPreferences,
 } from "./preferences.js";
 
 interface SettingsDialogProps {
@@ -104,7 +104,9 @@ export function SettingsDialog({
               id="interface-text-scale"
               value={String(preferences.interfaceTextScale)}
               onChange={(event) =>
-                update({ interfaceTextScale: Number(event.currentTarget.value) as InterfaceTextScale })
+                update({
+                  interfaceTextScale: Number(event.currentTarget.value) as InterfaceTextScale,
+                })
               }
             >
               {textScaleOptions.map((option) => (
@@ -116,7 +118,10 @@ export function SettingsDialog({
           <label class="settings-row toggle-row">
             <span>
               <strong>Reduce motion</strong>
-              <small>Removes interface travel and scale animation. System reduced-motion is always honored.</small>
+              <small>
+                Removes interface travel and scale animation. System reduced-motion is always
+                honored.
+              </small>
             </span>
             <input
               type="checkbox"
@@ -128,7 +133,10 @@ export function SettingsDialog({
           <label class="settings-row toggle-row">
             <span>
               <strong>Persistent map labels</strong>
-              <small>Keep campaign stage labels visible at rest. Selected, current, focused and listed stages remain named either way.</small>
+              <small>
+                Keep campaign stage labels visible at rest. Selected, current, focused and listed
+                stages remain named either way.
+              </small>
             </span>
             <input
               type="checkbox"

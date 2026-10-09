@@ -48,7 +48,9 @@ test("D08 recovers truthfully from malformed stored preferences", async ({ page 
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Settings" });
   await expect(
-    dialog.getByText("Saved interface preferences could not be read. Defaults are in use until you save or reset them."),
+    dialog.getByText(
+      "Saved interface preferences could not be read. Defaults are in use until you save or reset them.",
+    ),
   ).toBeVisible();
   await dialog.getByRole("button", { name: "Retry storage", exact: true }).click();
   await expect(dialog.getByText("Interface preferences are saved in this browser.")).toBeVisible();

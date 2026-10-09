@@ -49,7 +49,8 @@ export function loadUiPreferences(storage: Storage | undefined): UiPreferencesLo
     return {
       preferences: fallback,
       storageAvailable: false,
-      message: "Interface preferences cannot be saved in this browser session. Defaults are in use.",
+      message:
+        "Interface preferences cannot be saved in this browser session. Defaults are in use.",
     };
   }
 
@@ -61,7 +62,8 @@ export function loadUiPreferences(storage: Storage | undefined): UiPreferencesLo
     return {
       preferences: fallback,
       storageAvailable: true,
-      message: "Saved interface preferences could not be read. Defaults are in use until you save or reset them.",
+      message:
+        "Saved interface preferences could not be read. Defaults are in use until you save or reset them.",
     };
   } catch {
     return {
@@ -79,7 +81,8 @@ export function saveUiPreferences(
   if (storage === undefined) {
     return {
       storageAvailable: false,
-      message: "Interface preferences cannot be saved in this browser session. Changes apply only until reload.",
+      message:
+        "Interface preferences cannot be saved in this browser session. Changes apply only until reload.",
     };
   }
 
