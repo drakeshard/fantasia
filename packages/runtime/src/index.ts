@@ -1,6 +1,13 @@
 import { gameDomainStatus } from "@fantasia/game";
 
 export {
+  type CampaignChapterView,
+  type CampaignEntryResult,
+  CampaignSession,
+  type CampaignStageView,
+  type CampaignView,
+} from "./campaign-session.js";
+export {
   type DevelopmentBattleActorView,
   type DevelopmentBattleAttackResult,
   type DevelopmentBattleCellView,
