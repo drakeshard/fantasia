@@ -1,0 +1,28 @@
+.campaign-map-viewport {
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  touch-action: none;
+  cursor: grab;
+}
+
+.campaign-map-viewport.is-panning {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.campaign-map-art {
+  transform: none;
+  transform-origin: initial;
+  transition: none;
+}
+
+.campaign-map-viewport:focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: -4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-ui-reduce-motion="true"]) .campaign-map-viewport {
+    scroll-behavior: auto;
+  }
+}
