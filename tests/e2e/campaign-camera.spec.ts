@@ -71,11 +71,11 @@ test("dragging the campaign map does not activate a stage while a click still se
   const inspector = page.locator(".campaign-inspector");
   await expect(inspector.getByText("The Other Side", { exact: true })).toBeVisible();
 
-  const target = page.getByRole("button", {
+  const draggedTarget = page.getByRole("button", {
     name: "Strangers on the Road, Battle, Available",
     exact: true,
   });
-  const box = await target.boundingBox();
+  const box = await draggedTarget.boundingBox();
   expect(box).not.toBeNull();
   if (!box) return;
 
@@ -87,9 +87,15 @@ test("dragging the campaign map does not activate a stage while a click still se
   await page.mouse.up();
 
   await expect(inspector.getByText("The Other Side", { exact: true })).toBeVisible();
+  await page.waitForTimeout(100);
 
-  await target.click();
-  await expect(inspector.getByText("Strangers on the Road", { exact: true })).toBeVisible();
+  await page
+    .getByRole("button", {
+      name: "Shelter Before Nightfall, Story, Available",
+      exact: true,
+    })
+    .click();
+  await expect(inspector.getByText("Shelter Before Nightfall", { exact: true })).toBeVisible();
 });
 
 test("wheel and pinch zoom are map-scoped and bounded", async ({ page }, testInfo) => {
