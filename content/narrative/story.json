@@ -29,7 +29,9 @@
                   "order": 1,
                   "title": "Fracture Arrival",
                   "presentation": "cinematic",
-                  "characters": ["MC"],
+                  "characters": [
+                    "MC"
+                  ],
                   "screenAction": "MC crashes into unfamiliar wooded farmland while still injured from the failed-chimera encounter. The broken starting sword remains with MC. The small Fracture collapses and leaves no obvious trace.",
                   "dialogueIntent": "Short reaction to pain, disorientation, and unfamiliar surroundings. No cosmology explanation.",
                   "playerControl": "none",
@@ -38,13 +40,47 @@
                   "next": "CH01-N01-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L010","type":"action","text":"A sharp shimmer folds in on itself behind MC and vanishes."},
-                    {"id":"S01-CH01-N01-L020","type":"action","text":"MC hits the ground hard, rolls onto one shoulder, and lies still for a moment."},
-                    {"id":"S01-CH01-N01-L030","type":"dialogue","text":"...Ow.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L040","type":"action","text":"MC pushes up, notices blood on one arm, then looks at the broken sword still in hand."},
-                    {"id":"S01-CH01-N01-L050","type":"dialogue","text":"Still broken. Great.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L060","type":"action","text":"MC looks back. There is only grass, trees, and empty air."},
-                    {"id":"S01-CH01-N01-L070","type":"dialogue","text":"Where... did I fall to?","speaker":"MC","displayLabel":"MC"}
+                    {
+                      "id": "S01-CH01-N01-L010",
+                      "type": "action",
+                      "text": "A sharp shimmer folds in on itself behind MC and vanishes."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L020",
+                      "type": "action",
+                      "text": "MC hits the ground hard, rolls onto one shoulder, and lies still for a moment."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L030",
+                      "type": "dialogue",
+                      "text": "...Ow.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L040",
+                      "type": "action",
+                      "text": "MC pushes up, notices blood on one arm, then looks at the broken sword still in hand."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L050",
+                      "type": "dialogue",
+                      "text": "Still broken. Great.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L060",
+                      "type": "action",
+                      "text": "MC looks back. There is only grass, trees, and empty air."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L070",
+                      "type": "dialogue",
+                      "text": "Where... did I fall to?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    }
                   ]
                 },
                 {
@@ -52,7 +88,9 @@
                   "order": 2,
                   "title": "Toward the Road",
                   "presentation": "exploration",
-                  "characters": ["MC"],
+                  "characters": [
+                    "MC"
+                  ],
                   "screenAction": "MC gets bearings, checks the unusable broken sword, and moves toward the nearby road.",
                   "dialogueIntent": "MC still assumes the fall or passage led somewhere unfamiliar within the home world.",
                   "playerControl": "short movement segment",
@@ -61,11 +99,35 @@
                   "next": "CH01-N01-BEAT-03",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L080","type":"control","text":"Player regains movement control. MC can move but cannot use a normal attack."},
-                    {"id":"S01-CH01-N01-L090","type":"dialogue","text":"No trail back... Maybe I came down farther than I thought.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L100","type":"action","text":"A cart wheel creaks somewhere beyond the trees."},
-                    {"id":"S01-CH01-N01-L110","type":"dialogue","text":"People?","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L120","type":"action","text":"MC heads toward the road, favoring the injured arm."}
+                    {
+                      "id": "S01-CH01-N01-L080",
+                      "type": "control",
+                      "text": "Player regains movement control. MC can move but cannot use a normal attack."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L090",
+                      "type": "dialogue",
+                      "text": "No trail back... Maybe I came down farther than I thought.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L100",
+                      "type": "action",
+                      "text": "A cart wheel creaks somewhere beyond the trees."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L110",
+                      "type": "dialogue",
+                      "text": "People?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L120",
+                      "type": "action",
+                      "text": "MC heads toward the road, favoring the injured arm."
+                    }
                   ]
                 },
                 {
@@ -73,7 +135,12 @@
                   "order": 3,
                   "title": "The Group Finds MC",
                   "presentation": "story-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "A small traveling group of displaced civilians and local militia/courier escorts discovers MC. Julie is already traveling with them.",
                   "dialogueIntent": "The escorts are cautious about an unknown injured stranger. Julie notices MC's condition.",
                   "playerControl": "dialogue advance",
@@ -82,14 +149,56 @@
                   "next": "CH01-N01-BEAT-04",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L130","type":"action","text":"The cart slows. One escort steps forward while the civilians keep their distance."},
-                    {"id":"S01-CH01-N01-L140","type":"dialogue","text":"Stop there.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L150","type":"dialogue","text":"I'm not looking for trouble.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L160","type":"dialogue","text":"Then put the sword down.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L170","type":"action","text":"MC looks at the broken blade, then lowers it to the ground."},
-                    {"id":"S01-CH01-N01-L180","type":"dialogue","text":"It's not much of a sword anymore.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L190","type":"action","text":"A young woman traveling with the group notices the blood on MC's sleeve and forehead."},
-                    {"id":"S01-CH01-N01-L200","type":"dialogue","text":"They're hurt.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"}
+                    {
+                      "id": "S01-CH01-N01-L130",
+                      "type": "action",
+                      "text": "The cart slows. One escort steps forward while the civilians keep their distance."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L140",
+                      "type": "dialogue",
+                      "text": "Stop there.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L150",
+                      "type": "dialogue",
+                      "text": "I'm not looking for trouble.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L160",
+                      "type": "dialogue",
+                      "text": "Then put the sword down.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L170",
+                      "type": "action",
+                      "text": "MC looks at the broken blade, then lowers it to the ground."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L180",
+                      "type": "dialogue",
+                      "text": "It's not much of a sword anymore.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L190",
+                      "type": "action",
+                      "text": "A young woman traveling with the group notices the blood on MC's sleeve and forehead."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L200",
+                      "type": "dialogue",
+                      "text": "They're hurt.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    }
                   ]
                 },
                 {
@@ -97,7 +206,11 @@
                   "order": 4,
                   "title": "Julie Helps",
                   "presentation": "character-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Local escorts"
+                  ],
                   "screenAction": "Julie approaches the injured MC, checks the wounds, provides or directs immediate aid, and makes clear the group should not abandon an injured stranger simply because the stranger is unknown.",
                   "dialogueIntent": "Practical compassion rather than a dramatic rescue speech. Julie remains independent, not a formal French-army representative.",
                   "playerControl": "dialogue advance",
@@ -106,18 +219,84 @@
                   "next": "CH01-N01-BEAT-05",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L210","type":"action","text":"The young woman steps past the escort and kneels beside MC."},
-                    {"id":"S01-CH01-N01-L220","type":"dialogue","text":"Can you move your fingers?","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L230","type":"dialogue","text":"Yeah. It hurts, but... yeah.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L240","type":"action","text":"She checks the cut on MC's arm without pulling at it."},
-                    {"id":"S01-CH01-N01-L250","type":"dialogue","text":"Keep it still.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L260","type":"dialogue","text":"We don't know who this is.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L270","type":"dialogue","text":"We know they're bleeding.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L280","type":"dialogue","text":"That isn't the same thing.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L290","type":"dialogue","text":"No. It's the part that matters first.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L300","type":"action","text":"She motions for cloth and water from the cart."},
-                    {"id":"S01-CH01-N01-L310","type":"dialogue","text":"Thank you.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L320","type":"dialogue","text":"Save that until you can stand without swaying.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"}
+                    {
+                      "id": "S01-CH01-N01-L210",
+                      "type": "action",
+                      "text": "The young woman steps past the escort and kneels beside MC."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L220",
+                      "type": "dialogue",
+                      "text": "Can you move your fingers?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L230",
+                      "type": "dialogue",
+                      "text": "Yeah. It hurts, but... yeah.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L240",
+                      "type": "action",
+                      "text": "She checks the cut on MC's arm without pulling at it."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L250",
+                      "type": "dialogue",
+                      "text": "Keep it still.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L260",
+                      "type": "dialogue",
+                      "text": "We don't know who this is.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L270",
+                      "type": "dialogue",
+                      "text": "We know they're bleeding.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L280",
+                      "type": "dialogue",
+                      "text": "That isn't the same thing.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L290",
+                      "type": "dialogue",
+                      "text": "No. It's the part that matters first.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L300",
+                      "type": "action",
+                      "text": "She motions for cloth and water from the cart."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L310",
+                      "type": "dialogue",
+                      "text": "Thank you.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L320",
+                      "type": "dialogue",
+                      "text": "Save that until you can stand without swaying.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    }
                   ]
                 },
                 {
@@ -125,7 +304,12 @@
                   "order": 5,
                   "title": "Foreign Words",
                   "presentation": "dialogue",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "Conversation continues while MC notices the group's speech sounds foreign even though the meaning is understood. MC answers in their own language and is understood in return.",
                   "dialogueIntent": "Confirm the spoken-language anomaly naturally. Nobody explains its cause.",
                   "playerControl": "dialogue advance",
@@ -134,16 +318,72 @@
                   "next": "CH01-N01-BEAT-06",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L330","type":"dialogue","text":"Can you understand me?","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L340","type":"dialogue","text":"I... can.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L350","type":"action","text":"MC hesitates, listening more carefully to her voice."},
-                    {"id":"S01-CH01-N01-L360","type":"dialogue","text":"But your words sound wrong.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L370","type":"dialogue","text":"Wrong?","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L380","type":"dialogue","text":"Foreign. I shouldn't understand them.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L390","type":"dialogue","text":"You're speaking strangely too.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L400","type":"dialogue","text":"But you understand me?","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L410","type":"dialogue","text":"Well enough.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L420","type":"action","text":"MC looks from one face to another, more unsettled than before."}
+                    {
+                      "id": "S01-CH01-N01-L330",
+                      "type": "dialogue",
+                      "text": "Can you understand me?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L340",
+                      "type": "dialogue",
+                      "text": "I... can.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L350",
+                      "type": "action",
+                      "text": "MC hesitates, listening more carefully to her voice."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L360",
+                      "type": "dialogue",
+                      "text": "But your words sound wrong.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L370",
+                      "type": "dialogue",
+                      "text": "Wrong?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L380",
+                      "type": "dialogue",
+                      "text": "Foreign. I shouldn't understand them.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L390",
+                      "type": "dialogue",
+                      "text": "You're speaking strangely too.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L400",
+                      "type": "dialogue",
+                      "text": "But you understand me?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L410",
+                      "type": "dialogue",
+                      "text": "Well enough.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L420",
+                      "type": "action",
+                      "text": "MC looks from one face to another, more unsettled than before."
+                    }
                   ]
                 },
                 {
@@ -151,7 +391,12 @@
                   "order": 6,
                   "title": "Primora and Vaelkrath",
                   "presentation": "dialogue",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "MC gives their player-selected name and identifies Primora Village and Vaelkrath as home references. Nobody in the group recognizes either name.",
                   "dialogueIntent": "The locals are genuinely unfamiliar with the names; Julie does not ridicule or accuse MC.",
                   "playerControl": "dialogue advance",
@@ -160,18 +405,92 @@
                   "next": "CH01-N01-BEAT-07",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L430","type":"dialogue","text":"What's your name?","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L440","type":"dialogue","text":"{{MC_NAME}}.","speaker":"MC","displayLabel":"MC","tokenized":true},
-                    {"id":"S01-CH01-N01-L450","type":"dialogue","text":"And where are you from, {{MC_NAME}}?","speaker":"Julie d’Aubigny","displayLabel":"Young Woman","tokenized":true},
-                    {"id":"S01-CH01-N01-L460","type":"dialogue","text":"Primora Village. In Vaelkrath.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L470","type":"dialogue","text":"Primora?","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L480","type":"dialogue","text":"Never heard of it.","speaker":"Civilian","displayLabel":"Civilian"},
-                    {"id":"S01-CH01-N01-L490","type":"dialogue","text":"Nor Vaelkrath.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L500","type":"dialogue","text":"It's south of the mountain road. Forest on one side, jungle farther down. There's a guild post—","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L510","type":"dialogue","text":"Easy. I'm not saying you're lying.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L520","type":"dialogue","text":"Then where am I?","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L530","type":"dialogue","text":"East of Orléans.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L540","type":"dialogue","text":"...Orléans?","speaker":"MC","displayLabel":"MC"}
+                    {
+                      "id": "S01-CH01-N01-L430",
+                      "type": "dialogue",
+                      "text": "What's your name?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L440",
+                      "type": "dialogue",
+                      "text": "{{MC_NAME}}.",
+                      "speaker": "MC",
+                      "displayLabel": "MC",
+                      "tokenized": true
+                    },
+                    {
+                      "id": "S01-CH01-N01-L450",
+                      "type": "dialogue",
+                      "text": "And where are you from, {{MC_NAME}}?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman",
+                      "tokenized": true
+                    },
+                    {
+                      "id": "S01-CH01-N01-L460",
+                      "type": "dialogue",
+                      "text": "Primora Village. In Vaelkrath.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L470",
+                      "type": "dialogue",
+                      "text": "Primora?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L480",
+                      "type": "dialogue",
+                      "text": "Never heard of it.",
+                      "speaker": "Civilian",
+                      "displayLabel": "Civilian"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L490",
+                      "type": "dialogue",
+                      "text": "Nor Vaelkrath.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L500",
+                      "type": "dialogue",
+                      "text": "It's south of the mountain road. Forest on one side, jungle farther down. There's a guild post—",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L510",
+                      "type": "dialogue",
+                      "text": "Easy. I'm not saying you're lying.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L520",
+                      "type": "dialogue",
+                      "text": "Then where am I?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L530",
+                      "type": "dialogue",
+                      "text": "East of Orléans.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L540",
+                      "type": "dialogue",
+                      "text": "...Orléans?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    }
                   ]
                 },
                 {
@@ -179,7 +498,12 @@
                   "order": 7,
                   "title": "Orléans",
                   "presentation": "travel-dialogue",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "The group continues along the road with MC included. Conversation naturally introduces Orléans, the English siege, and Charles/the Dauphin within the Loire-war context.",
                   "dialogueIntent": "Give enough historical context for player recognition to precede MC recognition without turning the scene into an exposition lecture.",
                   "playerControl": "short travel / dialogue advance",
@@ -188,20 +512,100 @@
                   "next": "CH01-N01-BEAT-08",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L550","type":"action","text":"The group starts moving again. MC walks beside the cart while the young woman keeps pace nearby."},
-                    {"id":"S01-CH01-N01-L560","type":"dialogue","text":"You really don't know Orléans?","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L570","type":"dialogue","text":"No.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L580","type":"dialogue","text":"Then you've chosen a poor time to get lost near it.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L590","type":"dialogue","text":"The English still have the city under siege.","speaker":"Civilian","displayLabel":"Civilian"},
-                    {"id":"S01-CH01-N01-L600","type":"dialogue","text":"English?","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L610","type":"dialogue","text":"You've heard of them, at least?","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L620","type":"dialogue","text":"The name. Not... like this.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L630","type":"dialogue","text":"Everyone has names for the men trying to take what isn't theirs.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L640","type":"dialogue","text":"And this Charles? The Dauphin?","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L650","type":"dialogue","text":"The man who should be king, if France ever manages to put a crown on his head.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L660","type":"action","text":"MC goes quiet, trying to fit the names together."},
-                    {"id":"S01-CH01-N01-L670","type":"dialogue","text":"You look as if that made things worse.","speaker":"Julie d’Aubigny","displayLabel":"Young Woman"},
-                    {"id":"S01-CH01-N01-L680","type":"dialogue","text":"I'm starting to think I'm very far from home.","speaker":"MC","displayLabel":"MC"}
+                    {
+                      "id": "S01-CH01-N01-L550",
+                      "type": "action",
+                      "text": "The group starts moving again. MC walks beside the cart while the young woman keeps pace nearby."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L560",
+                      "type": "dialogue",
+                      "text": "You really don't know Orléans?",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L570",
+                      "type": "dialogue",
+                      "text": "No.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L580",
+                      "type": "dialogue",
+                      "text": "Then you've chosen a poor time to get lost near it.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L590",
+                      "type": "dialogue",
+                      "text": "The English still have the city under siege.",
+                      "speaker": "Civilian",
+                      "displayLabel": "Civilian"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L600",
+                      "type": "dialogue",
+                      "text": "English?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L610",
+                      "type": "dialogue",
+                      "text": "You've heard of them, at least?",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L620",
+                      "type": "dialogue",
+                      "text": "The name. Not... like this.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L630",
+                      "type": "dialogue",
+                      "text": "Everyone has names for the men trying to take what isn't theirs.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L640",
+                      "type": "dialogue",
+                      "text": "And this Charles? The Dauphin?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L650",
+                      "type": "dialogue",
+                      "text": "The man who should be king, if France ever manages to put a crown on his head.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L660",
+                      "type": "action",
+                      "text": "MC goes quiet, trying to fit the names together."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L670",
+                      "type": "dialogue",
+                      "text": "You look as if that made things worse.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Young Woman"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L680",
+                      "type": "dialogue",
+                      "text": "I'm starting to think I'm very far from home.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    }
                   ]
                 },
                 {
@@ -209,7 +613,10 @@
                   "order": 8,
                   "title": "Stay With Us",
                   "presentation": "character-scene",
-                  "characters": ["MC", "Julie d’Aubigny"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny"
+                  ],
                   "screenAction": "Julie makes it clear that wandering off alone while injured is unsafe and supports keeping MC with the traveling group until treatment and information are available.",
                   "dialogueIntent": "MC accepts for treatment, safety, information, and a route toward answers about home—not because of allegiance to France.",
                   "playerControl": "dialogue advance",
@@ -218,17 +625,84 @@
                   "next": "CH01-N01-BEAT-09",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L690","type":"dialogue","text":"I'm Julie, by the way. Julie d'Aubigny.","speaker":"Julie d’Aubigny","displayLabel":"Julie"},
-                    {"id":"S01-CH01-N01-L700","type":"dialogue","text":"{{MC_NAME}}. Again, I suppose.","speaker":"MC","displayLabel":"MC","tokenized":true},
-                    {"id":"S01-CH01-N01-L710","type":"dialogue","text":"I remembered.","speaker":"Julie d’Aubigny","displayLabel":"Julie"},
-                    {"id":"S01-CH01-N01-L720","type":"dialogue","text":"I need to find a way back to Primora.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L730","type":"dialogue","text":"Maybe. First you need somewhere to sit down before you fall down.","speaker":"Julie d’Aubigny","displayLabel":"Julie"},
-                    {"id":"S01-CH01-N01-L740","type":"dialogue","text":"I can walk.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L750","type":"dialogue","text":"Good. Walk with us.","speaker":"Julie d’Aubigny","displayLabel":"Julie"},
-                    {"id":"S01-CH01-N01-L760","type":"dialogue","text":"You don't even know me.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L770","type":"dialogue","text":"I know you're injured, lost, and carrying half a sword. That's enough for one afternoon.","speaker":"Julie d’Aubigny","displayLabel":"Julie"},
-                    {"id":"S01-CH01-N01-L780","type":"dialogue","text":"...All right. Until I can figure out where I am.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L790","type":"dialogue","text":"That sounds sensible enough.","speaker":"Julie d’Aubigny","displayLabel":"Julie"}
+                    {
+                      "id": "S01-CH01-N01-L690",
+                      "type": "dialogue",
+                      "text": "I'm Julie, by the way. Julie d'Aubigny.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L700",
+                      "type": "dialogue",
+                      "text": "{{MC_NAME}}. Again, I suppose.",
+                      "speaker": "MC",
+                      "displayLabel": "MC",
+                      "tokenized": true
+                    },
+                    {
+                      "id": "S01-CH01-N01-L710",
+                      "type": "dialogue",
+                      "text": "I remembered.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L720",
+                      "type": "dialogue",
+                      "text": "I need to find a way back to Primora.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L730",
+                      "type": "dialogue",
+                      "text": "Maybe. First you need somewhere to sit down before you fall down.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L740",
+                      "type": "dialogue",
+                      "text": "I can walk.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L750",
+                      "type": "dialogue",
+                      "text": "Good. Walk with us.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L760",
+                      "type": "dialogue",
+                      "text": "You don't even know me.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L770",
+                      "type": "dialogue",
+                      "text": "I know you're injured, lost, and carrying half a sword. That's enough for one afternoon.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L780",
+                      "type": "dialogue",
+                      "text": "...All right. Until I can figure out where I am.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L790",
+                      "type": "dialogue",
+                      "text": "That sounds sensible enough.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    }
                   ]
                 },
                 {
@@ -236,7 +710,12 @@
                   "order": 9,
                   "title": "Trouble Ahead",
                   "presentation": "transition",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "The traveling group detects armed trouble on the road ahead and the journey is interrupted.",
                   "dialogueIntent": "Keep the escalation immediate and practical; this is the handoff into the first mandatory France battle.",
                   "playerControl": "none",
@@ -245,15 +724,62 @@
                   "next": "CH01-B01",
                   "scriptStatus": "draft",
                   "script": [
-                    {"id":"S01-CH01-N01-L800","type":"action","text":"The lead escort suddenly raises a hand. The cart creaks to a stop."},
-                    {"id":"S01-CH01-N01-L810","type":"dialogue","text":"Hold.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L820","type":"action","text":"Voices carry from beyond the bend. More than one. Armed men."},
-                    {"id":"S01-CH01-N01-L830","type":"dialogue","text":"Everyone behind the cart.","speaker":"Local escort","displayLabel":"Local Escort"},
-                    {"id":"S01-CH01-N01-L840","type":"action","text":"Julie shifts closer to the civilians and reaches for her sword."},
-                    {"id":"S01-CH01-N01-L850","type":"dialogue","text":"Stay close, {{MC_NAME}}.","speaker":"Julie d’Aubigny","displayLabel":"Julie","tokenized":true},
-                    {"id":"S01-CH01-N01-L860","type":"dialogue","text":"I thought I was the injured one.","speaker":"MC","displayLabel":"MC"},
-                    {"id":"S01-CH01-N01-L870","type":"dialogue","text":"You are. Try not to become the dead one.","speaker":"Julie d’Aubigny","displayLabel":"Julie"},
-                    {"id":"S01-CH01-N01-L880","type":"transition","text":"CH01-B01 — Strangers on the Road."}
+                    {
+                      "id": "S01-CH01-N01-L800",
+                      "type": "action",
+                      "text": "The lead escort suddenly raises a hand. The cart creaks to a stop."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L810",
+                      "type": "dialogue",
+                      "text": "Hold.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L820",
+                      "type": "action",
+                      "text": "Voices carry from beyond the bend. More than one. Armed men."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L830",
+                      "type": "dialogue",
+                      "text": "Everyone behind the cart.",
+                      "speaker": "Local escort",
+                      "displayLabel": "Local Escort"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L840",
+                      "type": "action",
+                      "text": "Julie shifts closer to the civilians and reaches for her sword."
+                    },
+                    {
+                      "id": "S01-CH01-N01-L850",
+                      "type": "dialogue",
+                      "text": "Stay close, {{MC_NAME}}.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie",
+                      "tokenized": true
+                    },
+                    {
+                      "id": "S01-CH01-N01-L860",
+                      "type": "dialogue",
+                      "text": "I thought I was the injured one.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L870",
+                      "type": "dialogue",
+                      "text": "You are. Try not to become the dead one.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH01-N01-L880",
+                      "type": "transition",
+                      "text": "CH01-B01 — Strangers on the Road."
+                    }
                   ]
                 }
               ]
