@@ -78,12 +78,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
           <span aria-hidden="true">▤</span>
           <strong>Campaign</strong>
         </button>
-        <button
-          type="button"
-          aria-label="Summon"
-          disabled
-          title="Summon is not implemented yet"
-        >
+        <button type="button" aria-label="Summon" disabled title="Summon is not implemented yet">
           <span aria-hidden="true">✦</span>
           <strong>Summon</strong>
           <small>Coming later</small>
