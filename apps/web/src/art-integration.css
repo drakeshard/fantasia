@@ -25,7 +25,13 @@
   z-index: -3;
   inset: 0;
   background:
-    linear-gradient(90deg, rgb(4 10 16 / 96%) 0%, rgb(4 10 16 / 88%) 31%, rgb(4 10 16 / 54%) 58%, rgb(4 10 16 / 68%) 100%),
+    linear-gradient(
+      90deg,
+      rgb(4 10 16 / 96%) 0%,
+      rgb(4 10 16 / 88%) 31%,
+      rgb(4 10 16 / 54%) 58%,
+      rgb(4 10 16 / 68%) 100%
+    ),
     linear-gradient(180deg, rgb(5 11 17 / 28%) 0%, rgb(5 11 17 / 8%) 47%, rgb(5 11 17 / 90%) 100%),
     url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center / cover no-repeat;
   content: "";
@@ -177,8 +183,7 @@
   overflow: hidden;
   border-color: rgb(146 162 177 / 24%);
   border-left-color: rgb(227 189 114 / 34%);
-  background:
-    linear-gradient(90deg, rgb(24 43 59 / 94%), rgb(7 17 26 / 82%));
+  background: linear-gradient(90deg, rgb(24 43 59 / 94%), rgb(7 17 26 / 82%));
   box-shadow: inset 0 1px rgb(255 255 255 / 3%);
 }
 
@@ -243,13 +248,19 @@
 .saga-reference-screen::before {
   background:
     repeating-linear-gradient(118deg, transparent 0 86px, rgb(227 189 114 / 2%) 87px 88px),
-    radial-gradient(circle at 67% 52%, transparent 0 160px, rgb(227 189 114 / 4%) 161px 162px, transparent 163px 225px, rgb(227 189 114 / 2%) 226px 227px, transparent 228px);
+    radial-gradient(
+      circle at 67% 52%,
+      transparent 0 160px,
+      rgb(227 189 114 / 4%) 161px 162px,
+      transparent 163px 225px,
+      rgb(227 189 114 / 2%) 226px 227px,
+      transparent 228px
+    );
 }
 
 .saga-reference-rail {
   border-right-color: rgb(227 189 114 / 24%);
-  background:
-    linear-gradient(180deg, rgb(13 29 43 / 97%), rgb(6 15 24 / 96%));
+  background: linear-gradient(180deg, rgb(13 29 43 / 97%), rgb(6 15 24 / 96%));
   box-shadow: 18px 0 52px rgb(0 0 0 / 24%);
 }
 
@@ -486,7 +497,12 @@
 @media (max-width: 767px) {
   .home-screen::before {
     background:
-      linear-gradient(180deg, rgb(4 10 16 / 68%) 0%, rgb(4 10 16 / 77%) 38%, rgb(4 10 16 / 97%) 100%),
+      linear-gradient(
+        180deg,
+        rgb(4 10 16 / 68%) 0%,
+        rgb(4 10 16 / 77%) 38%,
+        rgb(4 10 16 / 97%) 100%
+      ),
       url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") 66% center / auto 100% no-repeat,
       #071019;
   }
@@ -514,7 +530,13 @@
 @media (max-height: 499px) and (min-width: 700px) {
   .home-screen::before {
     background:
-      linear-gradient(90deg, rgb(4 10 16 / 94%) 0%, rgb(4 10 16 / 80%) 45%, rgb(4 10 16 / 58%) 76%, rgb(4 10 16 / 70%) 100%),
+      linear-gradient(
+        90deg,
+        rgb(4 10 16 / 94%) 0%,
+        rgb(4 10 16 / 80%) 45%,
+        rgb(4 10 16 / 58%) 76%,
+        rgb(4 10 16 / 70%) 100%
+      ),
       url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center / cover no-repeat;
   }
 
