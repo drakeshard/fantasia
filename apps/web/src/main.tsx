@@ -18,6 +18,7 @@ import "./production.css";
 import "./settings.css";
 import "./root-shell.css";
 import "./detail-polish.css";
+import "./detail-polish-fixes.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
