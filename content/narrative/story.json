@@ -29,9 +29,7 @@
                   "order": 1,
                   "title": "Fracture Arrival",
                   "presentation": "cinematic",
-                  "characters": [
-                    "MC"
-                  ],
+                  "characters": ["MC"],
                   "screenAction": "MC crashes into unfamiliar wooded farmland while still injured from the failed-chimera encounter. The broken starting sword remains with MC. The small Fracture collapses and leaves no obvious trace.",
                   "dialogueIntent": "Short reaction to pain, disorientation, and unfamiliar surroundings. No cosmology explanation.",
                   "playerControl": "none",
@@ -88,9 +86,7 @@
                   "order": 2,
                   "title": "Toward the Road",
                   "presentation": "exploration",
-                  "characters": [
-                    "MC"
-                  ],
+                  "characters": ["MC"],
                   "screenAction": "MC gets bearings, checks the unusable broken sword, and moves toward the nearby road.",
                   "dialogueIntent": "MC still assumes the fall or passage led somewhere unfamiliar within the home world.",
                   "playerControl": "short movement segment",
@@ -135,12 +131,7 @@
                   "order": 3,
                   "title": "The Group Finds MC",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "A small traveling group of displaced civilians and local militia/courier escorts discovers MC. Julie is already traveling with them.",
                   "dialogueIntent": "The escorts are cautious about an unknown injured stranger. Julie notices MC's condition.",
                   "playerControl": "dialogue advance",
@@ -206,11 +197,7 @@
                   "order": 4,
                   "title": "Julie Helps",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Local escorts"],
                   "screenAction": "Julie approaches the injured MC, checks the wounds, provides or directs immediate aid, and makes clear the group should not abandon an injured stranger simply because the stranger is unknown.",
                   "dialogueIntent": "Practical compassion rather than a dramatic rescue speech. Julie remains independent, not a formal French-army representative.",
                   "playerControl": "dialogue advance",
@@ -304,12 +291,7 @@
                   "order": 5,
                   "title": "Foreign Words",
                   "presentation": "dialogue",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "Conversation continues while MC notices the group's speech sounds foreign even though the meaning is understood. MC answers in their own language and is understood in return.",
                   "dialogueIntent": "Confirm the spoken-language anomaly naturally. Nobody explains its cause.",
                   "playerControl": "dialogue advance",
@@ -391,12 +373,7 @@
                   "order": 6,
                   "title": "Primora and Vaelkrath",
                   "presentation": "dialogue",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "MC gives their player-selected name and identifies Primora Village and Vaelkrath as home references. Nobody in the group recognizes either name.",
                   "dialogueIntent": "The locals are genuinely unfamiliar with the names; Julie does not ridicule or accuse MC.",
                   "playerControl": "dialogue advance",
@@ -498,12 +475,7 @@
                   "order": 7,
                   "title": "Orléans",
                   "presentation": "travel-dialogue",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "The group continues along the road with MC included. Conversation naturally introduces Orléans, the English siege, and Charles/the Dauphin within the Loire-war context.",
                   "dialogueIntent": "Give enough historical context for player recognition to precede MC recognition without turning the scene into an exposition lecture.",
                   "playerControl": "short travel / dialogue advance",
@@ -613,10 +585,7 @@
                   "order": 8,
                   "title": "Stay With Us",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny"],
                   "screenAction": "Julie makes it clear that wandering off alone while injured is unsafe and supports keeping MC with the traveling group until treatment and information are available.",
                   "dialogueIntent": "MC accepts for treatment, safety, information, and a route toward answers about home—not because of allegiance to France.",
                   "playerControl": "dialogue advance",
@@ -710,12 +679,7 @@
                   "order": 9,
                   "title": "Trouble Ahead",
                   "presentation": "transition",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "The traveling group detects armed trouble on the road ahead and the journey is interrupted.",
                   "dialogueIntent": "Keep the escalation immediate and practical; this is the handoff into the first mandatory France battle.",
                   "playerControl": "none",
