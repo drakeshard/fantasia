@@ -82,7 +82,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
           </div>
 
           <nav class="home-primary-nav" aria-label="Primary navigation">
-            <button type="button" onClick={onCampaign}>
+            <button type="button" aria-label="Campaign" onClick={onCampaign}>
               <span aria-hidden="true">▤</span>
               <span class="home-nav-copy">
                 <strong>Campaign</strong>
@@ -107,7 +107,11 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
                 —
               </span>
             </button>
-            <button type="button" onClick={(event) => onSettings(event.currentTarget)}>
+            <button
+              type="button"
+              aria-label="Settings"
+              onClick={(event) => onSettings(event.currentTarget)}
+            >
               <span aria-hidden="true">⚙</span>
               <span class="home-nav-copy">
                 <strong>Settings</strong>
