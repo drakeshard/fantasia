@@ -32,7 +32,9 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                 <button
                   type="button"
                   class={`saga-chapter-row${current ? " is-current" : ""}`}
-                  onClick={current ? onContinue : undefined}
+                  onClick={() => {
+                    if (current) onContinue();
+                  }}
                   disabled={!current}
                   aria-label={`${chapter.title}${current ? ", current chapter" : ", not implemented"}`}
                 >
