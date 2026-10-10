@@ -29,7 +29,10 @@
                   "order": 1,
                   "title": "A Small Request",
                   "presentation": "story-scene",
-                  "characters": ["MC", "Guild Clerk"],
+                  "characters": [
+                    "MC",
+                    "Guild Clerk"
+                  ],
                   "screenAction": "MC accepts a low-risk wild-boar request at Primora's guild post before leaving for the nearby forest.",
                   "dialogueIntent": "Establish MC's hero aspiration lightly and quickly; keep village life ordinary.",
                   "playerControl": "dialogue advance",
@@ -105,7 +108,10 @@
                   "order": 1,
                   "title": "Routine Work",
                   "presentation": "battle-preview",
-                  "characters": ["MC", "Wild Boar"],
+                  "characters": [
+                    "MC",
+                    "Wild Boar"
+                  ],
                   "screenAction": "MC handles the expected low-threat target until a much heavier presence enters the area.",
                   "dialogueIntent": "Keep the first fight simple and ordinary so the later chimera feels genuinely wrong.",
                   "playerControl": "battle tutorial",
@@ -177,7 +183,10 @@
                   "order": 1,
                   "title": "The Wrong Target",
                   "presentation": "battle-preview",
-                  "characters": ["MC", "Failed Chimera"],
+                  "characters": [
+                    "MC",
+                    "Failed Chimera"
+                  ],
                   "screenAction": "The anomalous chimera appears. MC attacks, the creature intercepts the strike, breaks the sword, and throws MC back.",
                   "dialogueIntent": "Destroy MC's confidence quickly; the creature behaves as a dangerous physical threat, not a speaking villain.",
                   "playerControl": "brief combat control",
@@ -239,7 +248,10 @@
                   "order": 2,
                   "title": "Escape",
                   "presentation": "escape-gameplay",
-                  "characters": ["MC", "Failed Chimera"],
+                  "characters": [
+                    "MC",
+                    "Failed Chimera"
+                  ],
                   "screenAction": "MC flees through the forest while injured and attack-limited, then tumbles through a visible refractive Fracture by accident.",
                   "dialogueIntent": "Keep the escape immediate. Do not explain the Fracture, chimera origin, or destination selection.",
                   "playerControl": "escape movement / route interaction",
@@ -316,7 +328,9 @@
                   "order": 1,
                   "title": "Fracture Arrival",
                   "presentation": "cinematic",
-                  "characters": ["MC"],
+                  "characters": [
+                    "MC"
+                  ],
                   "screenAction": "MC crashes into unfamiliar wooded farmland, still injured and carrying the broken starting sword. The small Fracture collapses without obvious trace.",
                   "dialogueIntent": "Pain and disorientation only; no cosmology explanation.",
                   "playerControl": "none",
@@ -361,7 +375,9 @@
                   "order": 2,
                   "title": "Toward the Road",
                   "presentation": "exploration",
-                  "characters": ["MC"],
+                  "characters": [
+                    "MC"
+                  ],
                   "screenAction": "MC moves toward a nearby road after hearing a cart beyond the trees.",
                   "dialogueIntent": "MC assumes this is some unfamiliar region reached during the fall, not another world.",
                   "playerControl": "short movement segment",
@@ -399,7 +415,12 @@
                   "order": 3,
                   "title": "The Group Finds MC",
                   "presentation": "story-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "A small civilian/local-escort group finds MC. Julie is already traveling with them and notices the injuries.",
                   "dialogueIntent": "Caution from the escort; Julie's attention goes immediately to the visible injury.",
                   "playerControl": "dialogue advance",
@@ -465,7 +486,11 @@
                   "order": 4,
                   "title": "Julie Helps",
                   "presentation": "character-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Local escorts"
+                  ],
                   "screenAction": "Julie steps past the escort, checks MC's arm, and directs immediate aid before asking for an explanation.",
                   "dialogueIntent": "Practical compassion with restrained humor; no dramatic rescue speech.",
                   "playerControl": "dialogue advance",
@@ -556,7 +581,11 @@
                   "order": 5,
                   "title": "Foreign Words",
                   "presentation": "dialogue",
-                  "characters": ["MC", "Julie d’Aubigny", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Local escorts"
+                  ],
                   "screenAction": "The introduction itself reveals that the group's speech sounds foreign even though its meaning reaches MC clearly.",
                   "dialogueIntent": "Show the language anomaly with one sharp contradiction rather than a long explanation.",
                   "playerControl": "dialogue advance",
@@ -613,7 +642,12 @@
                   "order": 6,
                   "title": "Primora and Vaelkrath",
                   "presentation": "dialogue",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "MC names Primora and Vaelkrath; nobody recognizes either place.",
                   "dialogueIntent": "The locals are genuinely unfamiliar; Julie does not ridicule or accuse MC.",
                   "playerControl": "dialogue advance",
@@ -671,7 +705,12 @@
                   "order": 7,
                   "title": "Orléans",
                   "presentation": "travel-dialogue",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "The group resumes travel. Orléans and the siege are introduced only as practical local context.",
                   "dialogueIntent": "Give the player recognizable historical clues while keeping MC focused on location and survival.",
                   "playerControl": "short travel / dialogue advance",
@@ -718,7 +757,10 @@
                   "order": 8,
                   "title": "Stay With Us",
                   "presentation": "character-scene",
-                  "characters": ["MC", "Julie d’Aubigny"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny"
+                  ],
                   "screenAction": "Julie gives her name and tells MC to stay with the group rather than wander off injured.",
                   "dialogueIntent": "Create a direct personal bond and a practical reason to travel together, not political allegiance.",
                   "playerControl": "dialogue advance",
@@ -791,7 +833,12 @@
                   "order": 9,
                   "title": "Trouble Ahead",
                   "presentation": "transition",
-                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Civilians",
+                    "Local escorts"
+                  ],
                   "screenAction": "The lead escort detects armed movement ahead and halts the group.",
                   "dialogueIntent": "Immediate practical escalation into B01.",
                   "playerControl": "none",
@@ -1139,7 +1186,12 @@
                   "order": 1,
                   "title": "Food, Water, Bandages",
                   "presentation": "character-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire"
+                  ],
                   "screenAction": "At a rough shelter, Julie properly cleans and binds MC's injuries while the group eats and settles.",
                   "dialogueIntent": "Use recovery to let personalities breathe after the battle.",
                   "playerControl": "dialogue advance",
@@ -1193,7 +1245,11 @@
                   "order": 2,
                   "title": "Not the Only Stranger",
                   "presentation": "dialogue",
-                  "characters": ["MC", "Hangaku Gozen", "Julie d’Aubigny"],
+                  "characters": [
+                    "MC",
+                    "Hangaku Gozen",
+                    "Julie d’Aubigny"
+                  ],
                   "screenAction": "MC asks Hangaku where she comes from and realizes another exceptional traveler may also be far from home.",
                   "dialogueIntent": "Hint at broader displacement without explaining Story Worlds or Fracture cosmology.",
                   "playerControl": "dialogue advance",
@@ -1242,7 +1298,11 @@
                   "order": 3,
                   "title": "A Usable Sword",
                   "presentation": "story-scene",
-                  "characters": ["MC", "La Hire", "Julie d’Aubigny"],
+                  "characters": [
+                    "MC",
+                    "La Hire",
+                    "Julie d’Aubigny"
+                  ],
                   "screenAction": "La Hire notices the broken sword and points MC toward a cheap replacement among available gear.",
                   "dialogueIntent": "The replacement is ordinary and practical; it matters because MC can carry a complete sword again, not because it is special.",
                   "playerControl": "dialogue advance",
@@ -1316,7 +1376,12 @@
                   "order": 1,
                   "title": "France",
                   "presentation": "dialogue",
-                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire"
+                  ],
                   "screenAction": "Simple conversation names France, England, Orléans, and Charles/the Dauphin. None of them belong in MC's known world.",
                   "dialogueIntent": "Turn necessary context into a growing contradiction, not a history lecture.",
                   "playerControl": "dialogue advance",
@@ -1379,7 +1444,11 @@
                   "order": 2,
                   "title": "Where Is Vaelkrath?",
                   "presentation": "character-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen"
+                  ],
                   "screenAction": "Julie asks the question plainly: where is Vaelkrath supposed to be? MC realizes there is no map direction that can answer.",
                   "dialogueIntent": "Let MC reach fear and uncertainty before reaching a formal another-world conclusion.",
                   "playerControl": "dialogue advance",
@@ -1442,7 +1511,12 @@
                   "order": 3,
                   "title": "Leave at First Light",
                   "presentation": "transition",
-                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire"
+                  ],
                   "screenAction": "The group prepares to continue toward Orléans with the civilians and supplies.",
                   "dialogueIntent": "End recovery cleanly and move back into danger.",
                   "playerControl": "none",
@@ -1644,7 +1718,11 @@
                   "order": 4,
                   "title": "Draw the Sword",
                   "presentation": "battle-event",
-                  "characters": ["MC", "Julie d’Aubigny", "English Soldier"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "English Soldier"
+                  ],
                   "screenAction": "An attacker slips through toward Julie while she is covering the retreat. MC reacts before thinking and finally draws the replacement sword.",
                   "dialogueIntent": "Pay off Julie helping MC in N01. The action is protective and instinctive, not a sudden cure for fear.",
                   "playerControl": "battle control",
@@ -1697,7 +1775,13 @@
                   "order": 5,
                   "title": "Breakthrough",
                   "presentation": "battle-preview",
-                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire", "Civilians"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire",
+                    "Civilians"
+                  ],
                   "screenAction": "The party and civilians complete the breakthrough before reinforcements can trap them.",
                   "dialogueIntent": "End on escape and survival, not annihilation of the English detachment.",
                   "playerControl": "battle control",
@@ -1748,7 +1832,10 @@
                   "order": 1,
                   "title": "After the Road",
                   "presentation": "character-scene",
-                  "characters": ["MC", "Julie d’Aubigny"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny"
+                  ],
                   "screenAction": "After the escape, Julie notices that MC finally used the replacement sword.",
                   "dialogueIntent": "Give the prologue defeat a small emotional echo without dumping backstory.",
                   "playerControl": "dialogue advance",
@@ -1807,7 +1894,12 @@
                   "order": 2,
                   "title": "The Maid",
                   "presentation": "story-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "Travelers", "Civilians"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Travelers",
+                    "Civilians"
+                  ],
                   "screenAction": "Passing travelers trade conflicting rumors about a young woman called the Maid who is expected toward Orléans.",
                   "dialogueIntent": "Jeanne remains offscreen. Present hope, doubt, and uncertainty rather than authoritative prophecy.",
                   "playerControl": "dialogue advance",
@@ -1865,7 +1957,12 @@
                   "order": 3,
                   "title": "Toward Orléans",
                   "presentation": "chapter-end",
-                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire"
+                  ],
                   "screenAction": "The group continues toward Orléans. MC still wants answers and a route home; the Maid rumor becomes the next major story hook.",
                   "dialogueIntent": "Close the chapter quietly and keep MC's motivation personal rather than political.",
                   "playerControl": "none",
@@ -2004,12 +2101,12 @@
               "scriptStatus": "draft",
               "location": "Orléans",
               "time": "29 April 1429 — evening",
-              "summary": "Jeanne enters Orléans as a distant public symbol. MC sees the city's hope gather around a tired young woman but does not meet her personally.",
+              "summary": "Jeanne enters Orléans as a distant public symbol. MC sees the city's hope gather around a tired young woman, then returns to ordinary siege work. Three local missions become available; any two may be completed in any order before higher command pays real attention.",
               "beats": [
                 {
                   "id": "CH02-N02-BEAT-01",
                   "order": 1,
-                  "title": "The Maid",
+                  "title": "The Maid in the Crowd",
                   "presentation": "cinematic",
                   "characters": [
                     "MC",
@@ -2018,12 +2115,12 @@
                     "Jeanne d’Arc",
                     "Civilians"
                   ],
-                  "screenAction": "Crowds gather around Jeanne's entry. MC catches only fragments of her through banners and people.",
+                  "screenAction": "Crowds gather around Jeanne's entry. MC catches only fragments of her through banners and people and never reaches her.",
                   "dialogueIntent": "Keep Jeanne distant, human, and burdened by public hope. No private protagonist access yet.",
                   "playerControl": "dialogue advance",
                   "trigger": "maid_arrival",
                   "result": "MC understands why the Maid rumor mattered, but Jeanne remains someone seen from the crowd.",
-                  "next": "CH02-B00",
+                  "next": "CH02-N02-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
@@ -2063,7 +2160,28 @@
                       "text": "That is a dangerous amount of hope to put on one person.",
                       "speaker": "Hangaku Gozen",
                       "displayLabel": "Hangaku Gozen"
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-N02-BEAT-02",
+                  "order": 2,
+                  "title": "Back to Ordinary Work",
+                  "presentation": "story-scene",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Quartermaster"
+                  ],
+                  "screenAction": "The crowd disperses and MC's group is sent back to the unglamorous work of a besieged city. Three unrelated local problems are posted at once.",
+                  "dialogueIntent": "Turn the chapter from spectacle back to earned credibility. The party chooses where to help first rather than being summoned upward.",
+                  "playerControl": "mission selection / dialogue advance",
+                  "trigger": "maid_entry_ends",
+                  "result": "The three free-order reputation missions unlock. Any two are sufficient to continue; the third remains optional.",
+                  "next": "CH02-REP-01",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-N02-L070",
                       "type": "action",
@@ -2071,8 +2189,34 @@
                     },
                     {
                       "id": "S01-CH02-N02-L080",
-                      "type": "transition",
-                      "text": "A day later, ordinary siege work produces a much less ceremonial problem outside the gates."
+                      "type": "action",
+                      "text": "By the time MC reaches the quartermaster yard again, nobody there cares about banners. Three different problems are waiting."
+                    },
+                    {
+                      "id": "S01-CH02-N02-L090",
+                      "type": "dialogue",
+                      "text": "Couriers cut off east of the gate. A supply run under pressure. And an outer watch that stopped answering.",
+                      "speaker": "Quartermaster",
+                      "displayLabel": "Quartermaster"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L100",
+                      "type": "dialogue",
+                      "text": "Which one first?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L110",
+                      "type": "dialogue",
+                      "text": "Whichever keeps people alive. We can argue about the rest after.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L120",
+                      "type": "control",
+                      "text": "Reputation missions unlocked: complete any 2 of 3 in any order. The remaining mission is optional after the threshold is reached."
                     }
                   ]
                 }
@@ -2086,12 +2230,12 @@
               "scriptStatus": "draft",
               "location": "Outer approach near Orléans",
               "time": "1–2 May 1429",
-              "summary": "A small local sortie, not a major historical battle: returning couriers and wounded soldiers are cut off on an outer approach. MC's group volunteers to bring them back before English screen troops close the route.",
+              "summary": "Free-order reputation mission 1/3. Returning couriers and wounded soldiers are cut off on an outer approach. MC's group must reach them, cover the withdrawal, and return the dispatches. This is a Fantasia local siege incident, not a claimed historical battle.",
               "beats": [
                 {
                   "id": "CH02-B00-BEAT-01",
                   "order": 1,
-                  "title": "Bring Them Home",
+                  "title": "Find the Cut-Off Party",
                   "presentation": "battle-preview",
                   "characters": [
                     "MC",
@@ -2100,18 +2244,18 @@
                     "Orléans Couriers",
                     "English screen troops"
                   ],
-                  "screenAction": "MC's group reaches stranded couriers and wounded soldiers, then must reopen a route back toward the city before reinforcements arrive.",
-                  "dialogueIntent": "Give MC a concrete achievement witnessed by locals: practical judgment, holding under pressure, and protecting a withdrawal rather than winning a grand battle.",
+                  "screenAction": "The obvious road is watched. MC identifies a lower farm track and guides the group toward the stranded couriers.",
+                  "dialogueIntent": "First achievement should show judgment and initiative, not protagonist-level battlefield command.",
                   "playerControl": "battle control",
-                  "trigger": "outer_party_cut_off",
-                  "result": "The stranded party and dispatches return to Orléans; witnesses can credibly report what MC's group did.",
-                  "next": "CH02-N02A",
+                  "trigger": "mission_CH02-B00_selected",
+                  "result": "The party reaches the stranded couriers before the English screen closes around them.",
+                  "next": "CH02-B00-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH02-B00-L010",
                       "type": "control",
-                      "text": "Objective: reach the stranded party, secure the dispatches, and return before the outer screen closes the road."
+                      "text": "Objective: reach the stranded party and secure the dispatch carrier."
                     },
                     {
                       "id": "S01-CH02-B00-L020",
@@ -2131,7 +2275,29 @@
                       "text": "Ugly is useful. Move.",
                       "speaker": "Hangaku Gozen",
                       "displayLabel": "Hangaku Gozen"
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B00-BEAT-02",
+                  "order": 2,
+                  "title": "Hold the Return Lane",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Orléans Couriers",
+                    "English screen troops"
+                  ],
+                  "screenAction": "English screen troops close from the main road while the wounded are moved. The party must hold a narrow return lane instead of chasing a victory.",
+                  "dialogueIntent": "Make protection and discipline the achievement. The mission succeeds because people and dispatches escape.",
+                  "playerControl": "battle control",
+                  "trigger": "couriers_reached",
+                  "result": "The wounded and dispatch carrier start moving while MC's group holds the pursuit back.",
+                  "next": "CH02-B00-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-B00-L050",
                       "type": "action",
@@ -2153,11 +2319,355 @@
                       "id": "S01-CH02-B00-L080",
                       "type": "action",
                       "text": "MC holds the narrow return lane long enough for the last courier to clear it."
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B00-BEAT-03",
+                  "order": 3,
+                  "title": "Witnesses at the Gate",
+                  "presentation": "post-battle",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Orléans Couriers",
+                    "Gate Guards"
+                  ],
+                  "screenAction": "The recovered party returns through the gate with people and dispatches intact. Local witnesses now have a concrete story about MC's group.",
+                  "dialogueIntent": "Close on reportable service rather than celebration. This is one independent reputation source, not enough by itself for command access.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "withdrawal_complete",
+                  "result": "Reputation mission 1 is recorded. Another independent mission is still required for mandatory progression.",
+                  "next": "CH02-REP-01",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-B00-L090",
                       "type": "transition",
                       "text": "The party reaches the gate with people and dispatches intact."
+                    },
+                    {
+                      "id": "S01-CH02-B00-L100",
+                      "type": "dialogue",
+                      "text": "We would have lost the dispatches without them.",
+                      "speaker": "Orléans Courier",
+                      "displayLabel": "Orléans Courier"
+                    },
+                    {
+                      "id": "S01-CH02-B00-L110",
+                      "type": "dialogue",
+                      "text": "Tell the quartermaster what happened. Not a better version of it.",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
+                    },
+                    {
+                      "id": "S01-CH02-B00-L120",
+                      "type": "control",
+                      "text": "Reputation progress: 1 independent mission completed. Complete one more of the three to unlock the mandatory route."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-B00B",
+              "title": "Supplies Under Fire",
+              "type": "battle",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Supply approach outside Orléans",
+              "time": "1–3 May 1429",
+              "summary": "Free-order reputation mission 2/3. A supply train carrying food, bandages, and arrows is scattered under pressure. MC's group recovers the useful loads and escorts survivors back. This is a Fantasia local siege incident, not a claimed historical battle.",
+              "beats": [
+                {
+                  "id": "CH02-B00B-BEAT-01",
+                  "order": 1,
+                  "title": "Find What Still Moves",
+                  "presentation": "battle-preview",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Supply Drivers",
+                    "English skirmishers"
+                  ],
+                  "screenAction": "A damaged supply train is spread across a dangerous approach. The party must identify surviving drivers and salvageable loads before choosing a return route.",
+                  "dialogueIntent": "Achievement two tests prioritization under pressure: save people and useful supplies instead of treating every enemy as the objective.",
+                  "playerControl": "battle control",
+                  "trigger": "mission_CH02-B00B_selected",
+                  "result": "Survivors and the most important loads are identified before the enemy closes.",
+                  "next": "CH02-B00B-BEAT-02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B00B-L010",
+                      "type": "control",
+                      "text": "Objective: locate surviving drivers and mark the food, bandage, and arrow carts that can still move."
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L020",
+                      "type": "action",
+                      "text": "Broken crates and frightened horses make the road look worse than the enemy numbers actually are."
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L030",
+                      "type": "dialogue",
+                      "text": "We cannot take everything.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L040",
+                      "type": "dialogue",
+                      "text": "Then we take what the city cannot replace first.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B00B-BEAT-02",
+                  "order": 2,
+                  "title": "Move the Loads",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Supply Drivers",
+                    "English skirmishers"
+                  ],
+                  "screenAction": "The party forms a moving escort around the recovered wagons while skirmishers pressure the rear and flank.",
+                  "dialogueIntent": "Make the second report about reliability: MC keeps the route moving rather than breaking formation for kills.",
+                  "playerControl": "battle control",
+                  "trigger": "supplies_prioritized",
+                  "result": "The essential wagons and surviving drivers reach the safer lane toward Orléans.",
+                  "next": "CH02-B00B-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B00B-L050",
+                      "type": "control",
+                      "text": "Objective update: escort the marked wagons and surviving drivers to the gate route."
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L060",
+                      "type": "action",
+                      "text": "A driver freezes when arrows strike the road ahead. MC takes the bridle and keeps the wagon moving."
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L070",
+                      "type": "dialogue",
+                      "text": "Do not stop for me. Keep the line moving!",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L080",
+                      "type": "action",
+                      "text": "The group refuses the easier chase and keeps the escort intact."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B00B-BEAT-03",
+                  "order": 3,
+                  "title": "The Quartermaster Counts",
+                  "presentation": "post-battle",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Quartermaster",
+                    "Supply Drivers"
+                  ],
+                  "screenAction": "Back inside Orléans, the quartermaster counts recovered food, bandages, arrows, and living drivers rather than enemy bodies.",
+                  "dialogueIntent": "Create an independent civilian/logistics report of competence. This can satisfy the second mandatory reputation source.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "supply_escort_complete",
+                  "result": "Reputation mission 2 is recorded; if any other reputation mission is already complete, A Name Passed Upward unlocks.",
+                  "next": "CH02-REP-01",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B00B-L090",
+                      "type": "action",
+                      "text": "The quartermaster checks the wagons twice before looking at the party."
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L100",
+                      "type": "dialogue",
+                      "text": "Food, bandages, arrows, four drivers. Better than I expected.",
+                      "speaker": "Quartermaster",
+                      "displayLabel": "Quartermaster"
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L110",
+                      "type": "dialogue",
+                      "text": "That sounded almost like praise.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L120",
+                      "type": "dialogue",
+                      "text": "Do not get used to it.",
+                      "speaker": "Quartermaster",
+                      "displayLabel": "Quartermaster"
+                    },
+                    {
+                      "id": "S01-CH02-B00B-L130",
+                      "type": "control",
+                      "text": "Reputation progress updated. Mandatory route unlocks after any 2 of the 3 independent missions are complete."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-B00C",
+              "title": "The Outer Watch",
+              "type": "battle",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Outer watch position near Orléans",
+              "time": "1–3 May 1429",
+              "summary": "Free-order reputation mission 3/3. A local watch position stops answering after an English probe. MC's group reinforces the surviving watch, prevents a collapse, and creates a route back. This is a Fantasia local siege incident, not a claimed historical battle.",
+              "beats": [
+                {
+                  "id": "CH02-B00C-BEAT-01",
+                  "order": 1,
+                  "title": "A Silent Post",
+                  "presentation": "battle-preview",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Orléans Watch",
+                    "English probe"
+                  ],
+                  "screenAction": "The party reaches a damaged watch position and finds a handful of defenders pinned rather than destroyed.",
+                  "dialogueIntent": "Achievement three tests reading a bad situation quickly. The goal is to stabilize local defenders, not replace them as heroes.",
+                  "playerControl": "battle control",
+                  "trigger": "mission_CH02-B00C_selected",
+                  "result": "The surviving watch is contacted and a defensible route is identified.",
+                  "next": "CH02-B00C-BEAT-02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B00C-L010",
+                      "type": "control",
+                      "text": "Objective: reach the silent watch and locate surviving defenders."
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L020",
+                      "type": "action",
+                      "text": "The position looks abandoned until a hand rises behind a broken wall."
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L030",
+                      "type": "dialogue",
+                      "text": "Five of us. Two hurt. They are waiting for us to run.",
+                      "speaker": "Watch Sergeant",
+                      "displayLabel": "Watch Sergeant"
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L040",
+                      "type": "dialogue",
+                      "text": "Then we make the running part happen on our terms.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B00C-BEAT-02",
+                  "order": 2,
+                  "title": "Hold, Then Break",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Orléans Watch",
+                    "English probe"
+                  ],
+                  "screenAction": "The party helps the watch hold just long enough to move the wounded and then breaks contact through a safer route.",
+                  "dialogueIntent": "Show restraint and coordination. MC's party enables the local soldiers to survive rather than taking over their post permanently.",
+                  "playerControl": "battle control",
+                  "trigger": "watch_contacted",
+                  "result": "The defenders withdraw in order instead of being routed or trapped.",
+                  "next": "CH02-B00C-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B00C-L050",
+                      "type": "control",
+                      "text": "Objective update: hold until the wounded move, then break contact through the orchard lane."
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L060",
+                      "type": "dialogue",
+                      "text": "Thirty breaths. Then we leave.",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L070",
+                      "type": "action",
+                      "text": "MC counts the retreat by people rather than by defeated enemies."
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L080",
+                      "type": "dialogue",
+                      "text": "Last one is moving. Go!",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B00C-BEAT-03",
+                  "order": 3,
+                  "title": "A Sergeant's Report",
+                  "presentation": "post-battle",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Watch Sergeant",
+                    "La Hire"
+                  ],
+                  "screenAction": "The watch sergeant reports that the outsiders reinforced the post, moved the wounded, and withdrew cleanly. La Hire hears the report separately from the other missions.",
+                  "dialogueIntent": "This is a military witness independent of the courier and quartermaster accounts. If it is the second completed mission, the party has enough credibility to reach Dunois.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "watch_withdrawal_complete",
+                  "result": "Reputation mission 3 is recorded; if any other reputation mission is already complete, A Name Passed Upward unlocks.",
+                  "next": "CH02-REP-01",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B00C-L090",
+                      "type": "dialogue",
+                      "text": "They did not save the post. They saved the people in it.",
+                      "speaker": "Watch Sergeant",
+                      "displayLabel": "Watch Sergeant"
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L100",
+                      "type": "dialogue",
+                      "text": "Good. Posts can be rebuilt.",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L110",
+                      "type": "action",
+                      "text": "La Hire looks toward MC's group, then back to the sergeant instead of making a ceremony of it."
+                    },
+                    {
+                      "id": "S01-CH02-B00C-L120",
+                      "type": "control",
+                      "text": "Reputation progress updated. Mandatory route unlocks after any 2 of the 3 independent missions are complete."
                     }
                   ]
                 }
@@ -2171,33 +2681,39 @@
               "scriptStatus": "draft",
               "location": "Orléans",
               "time": "Early May 1429",
-              "summary": "The Cut Road gives MC's group something they did not have before: witnesses. La Hire confirms the report, and Dunois begins treating them as useful irregulars rather than extra mouths.",
+              "summary": "After any two of the three local reputation missions, multiple independent reports reach higher command. La Hire confirms his own firsthand experience, and Dunois finally treats MC's party as useful irregulars worth assigning to Saint-Loup.",
               "beats": [
                 {
                   "id": "CH02-N02A-BEAT-01",
                   "order": 1,
-                  "title": "The Report",
+                  "title": "Two Reports, Same Names",
                   "presentation": "story-scene",
-                  "characters": ["MC", "Julie d’Aubigny", "La Hire", "Jean de Dunois"],
-                  "screenAction": "A courier reports the successful recovery while La Hire confirms the group has already survived the eastern road fighting.",
-                  "dialogueIntent": "Recognition must be earned but modest. Dunois offers work, not rank; Jeanne hears of the group because their actions matter to the defense.",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "La Hire",
+                    "Jean de Dunois",
+                    "Orléans Messengers"
+                  ],
+                  "screenAction": "Reports from at least two unrelated local groups reach Dunois: couriers, quartermasters, or watch soldiers depending on the missions completed. La Hire confirms he already saw the party hold together on the eastern road.",
+                  "dialogueIntent": "Recognition must come from repeated evidence. The exact completed mission pair may vary, but the common fact is that independent witnesses describe the same reliable group.",
                   "playerControl": "dialogue advance",
-                  "trigger": "couriers_returned",
-                  "result": "Dunois remembers MC's group and assigns them a real supporting place in the coming Saint-Loup operation.",
-                  "next": "CH02-N03",
+                  "trigger": "reputation_cluster_CH02-REP-01_complete_2_of_3",
+                  "result": "Dunois now remembers the party as a proven irregular group rather than extra hands from La Hire's road column.",
+                  "next": "CH02-N02A-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH02-N02A-L010",
                       "type": "action",
-                      "text": "A mud-stained courier finishes the report while Dunois marks another problem on his map."
+                      "text": "Two separate reports bearing the same unfamiliar names land on Dunois's table before La Hire enters."
                     },
                     {
                       "id": "S01-CH02-N02A-L020",
                       "type": "dialogue",
-                      "text": "They came back because these people opened the lane for us.",
-                      "speaker": "Orléans Courier",
-                      "displayLabel": "Orléans Courier"
+                      "text": "Couriers, supply hands, the outer watch. Different problems. Same group keeps appearing in the reports.",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
                     },
                     {
                       "id": "S01-CH02-N02A-L030",
@@ -2209,8 +2725,29 @@
                     {
                       "id": "S01-CH02-N02A-L040",
                       "type": "action",
-                      "text": "Dunois finally looks at MC long enough to remember the face."
-                    },
+                      "text": "Dunois finally looks at MC long enough to match the name to the face."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-N02A-BEAT-02",
+                  "order": 2,
+                  "title": "Work, Not Rank",
+                  "presentation": "story-scene",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "La Hire",
+                    "Jean de Dunois"
+                  ],
+                  "screenAction": "Dunois assigns the party to the supporting line for Saint-Loup. The offer is practical work and responsibility, not a title or privileged place in command.",
+                  "dialogueIntent": "Make the promotion social rather than formal: the party has become useful enough to receive real work and to be included in an operational briefing.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "dunois_accepts_reports",
+                  "result": "MC's group earns a supporting assignment for Saint-Loup and is called to the crowded briefing where Jeanne is present.",
+                  "next": "CH02-N03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-N02A-L050",
                       "type": "dialogue",
@@ -2235,7 +2772,7 @@
                     {
                       "id": "S01-CH02-N02A-L080",
                       "type": "transition",
-                      "text": "The group is called to a briefing because it has now earned a place in the operation."
+                      "text": "The group is called to a crowded operational briefing because repeated service has earned it a place in the supporting line."
                     }
                   ]
                 }
@@ -2249,69 +2786,97 @@
               "scriptStatus": "draft",
               "location": "Orléans operational quarters",
               "time": "3 May 1429",
-              "summary": "MC meets Jeanne directly only after The Cut Road and Dunois's recognition. The meeting is brief and practical: the group has been attached to the Saint-Loup assault as useful irregulars, not elevated into command.",
+              "summary": "MC reaches Jeanne directly only after at least two independent local achievements, multiple reports, La Hire's confirmation, and Dunois's assignment. The meeting happens inside a crowded Saint-Loup briefing, not as a private audience or personal recruitment.",
               "beats": [
                 {
                   "id": "CH02-N03-BEAT-01",
                   "order": 1,
-                  "title": "Jeanne the Person",
-                  "presentation": "character-scene",
-                  "characters": ["MC", "Jeanne d’Arc", "Jean de Dunois", "Bradamante", "La Hire"],
-                  "screenAction": "During an operational briefing, Jeanne thanks several groups that will join the assault. MC's group is one of them. Bradamante is introduced among the assigned fighters.",
-                  "dialogueIntent": "Make the direct meeting a consequence of service. Jeanne is tired, direct, and human; MC is still socially junior.",
+                  "title": "A Place at the Edge of the Room",
+                  "presentation": "pre-battle",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Jean de Dunois",
+                    "La Hire",
+                    "Bradamante",
+                    "Jeanne d’Arc"
+                  ],
+                  "screenAction": "The party stands with other supporting groups at the edge of a crowded Saint-Loup briefing. Dunois names responsibilities; nobody treats MC as command staff.",
+                  "dialogueIntent": "Show access as operational necessity. The party is present because Dunois assigned them after repeated reports.",
                   "playerControl": "dialogue advance",
                   "trigger": "assigned_to_saint_loup",
-                  "result": "MC and Jeanne meet before fighting in the same operation; Bradamante is established for Saint-Loup.",
-                  "next": "CH02-B01",
+                  "result": "MC's party understands its limited supporting role and sees Jeanne working as one participant among commanders, messengers, and fighters.",
+                  "next": "CH02-N03-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH02-N03-L010",
                       "type": "action",
-                      "text": "The room is crowded with messengers and fighters, not a private audience. Dunois points out the groups assigned to Saint-Loup."
+                      "text": "The room is crowded with messengers and fighters, not arranged for a private audience. MC's group stands near the door with other supporting units."
                     },
                     {
                       "id": "S01-CH02-N03-L020",
                       "type": "dialogue",
-                      "text": "The road group recovered our couriers. They are with the supporting line.",
+                      "text": "The irregulars with the repeated local reports are with the supporting line. They answer to the field orders like everyone else.",
                       "speaker": "Jean de Dunois",
                       "displayLabel": "Dunois"
                     },
                     {
                       "id": "S01-CH02-N03-L030",
                       "type": "action",
-                      "text": "Jeanne turns from the map and recognizes MC from the description before the face."
-                    },
+                      "text": "Bradamante checks her lance while Jeanne moves from one cluster of fighters to another instead of holding court."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-N03-BEAT-02",
+                  "order": 2,
+                  "title": "Jeanne the Person",
+                  "presentation": "character-scene",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Bradamante",
+                    "Jean de Dunois"
+                  ],
+                  "screenAction": "Jeanne briefly speaks to MC's group while confirming the supporting line. She knows them from the reports, not because fate singled MC out.",
+                  "dialogueIntent": "Make the first direct exchange practical and short. Jeanne is tired, direct, and human; MC remains socially junior.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "briefing_support_groups_confirmed",
+                  "result": "MC and Jeanne finally meet before fighting in the same operation; Bradamante is established for Saint-Loup.",
+                  "next": "CH02-B01",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-N03-L040",
                       "type": "dialogue",
-                      "text": "You are the one from the cut road.",
+                      "text": "You are the group from the road reports.",
                       "speaker": "Jeanne d’Arc",
                       "displayLabel": "Jeanne"
                     },
                     {
                       "id": "S01-CH02-N03-L050",
                       "type": "dialogue",
-                      "text": "One of them.",
+                      "text": "Two of them, at least. Apparently that was enough to get us into this room.",
                       "speaker": "MC",
                       "displayLabel": "MC"
                     },
                     {
                       "id": "S01-CH02-N03-L060",
                       "type": "dialogue",
-                      "text": "Good. I need people who remember there are people behind every order.",
+                      "text": "Enough to trust you with work. That matters more than the room.",
                       "speaker": "Jeanne d’Arc",
                       "displayLabel": "Jeanne"
                     },
                     {
                       "id": "S01-CH02-N03-L070",
                       "type": "action",
-                      "text": "An armored lancer sets a helm beside the table."
+                      "text": "She is pulled away by another messenger before the exchange can become anything grander."
                     },
                     {
                       "id": "S01-CH02-N03-L080",
                       "type": "dialogue",
-                      "text": "Bradamante. Tell me where you need the line held.",
+                      "text": "Bradamante. Stay near my lane at Saint-Loup and we will both have fewer surprises.",
                       "speaker": "Bradamante",
                       "displayLabel": "Bradamante"
                     },
@@ -2337,28 +2902,29 @@
                 {
                   "id": "CH02-B01-BEAT-01",
                   "order": 1,
-                  "title": "Take the Bastille",
+                  "title": "Under the Arrows",
                   "presentation": "battle-preview",
                   "characters": [
                     "MC",
                     "Jeanne d’Arc",
+                    "Jean de Dunois",
                     "La Hire",
                     "Bradamante",
                     "French soldiers",
                     "English defenders"
                   ],
-                  "screenAction": "French forces assault Saint-Loup under missile pressure and fortified resistance. MC works with the supporting line rather than receiving command authority.",
-                  "dialogueIntent": "Escalate from the small Cut Road action to a real siege assault. Breach and secure, not annihilate.",
+                  "screenAction": "The Saint-Loup assault begins under missile pressure. MC's group works from the supporting line while established commanders direct the larger attack.",
+                  "dialogueIntent": "Escalate clearly from local missions to a major siege assault without promoting MC into command.",
                   "playerControl": "battle control",
                   "trigger": "saint_loup_assault",
-                  "result": "Saint-Loup is secured; MC's group is now known to soldiers beyond La Hire's immediate circle.",
-                  "next": "CH02-N05",
+                  "result": "The supporting line crosses the exposed approach without bunching or collapsing.",
+                  "next": "CH02-B01-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH02-B01-L010",
                       "type": "control",
-                      "text": "Objective: breach the Saint-Loup defenses and secure the inner position."
+                      "text": "Objective: cross the exposed approach and keep the supporting line intact."
                     },
                     {
                       "id": "S01-CH02-B01-L020",
@@ -2370,8 +2936,30 @@
                     {
                       "id": "S01-CH02-B01-L030",
                       "type": "action",
-                      "text": "La Hire draws pressure across the approach while Bradamante opens a safer lane for the supporting line."
-                    },
+                      "text": "La Hire draws pressure across the approach while Bradamante watches for a safer lane."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B01-BEAT-02",
+                  "order": 2,
+                  "title": "The Breach Lane",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "Bradamante",
+                    "La Hire",
+                    "French soldiers",
+                    "English defenders"
+                  ],
+                  "screenAction": "Bradamante identifies a gap. MC's group helps widen and hold it long enough for more of the assault to pass.",
+                  "dialogueIntent": "Give MC a meaningful contribution inside a larger battle: recognize and exploit an opening without becoming the person who wins Saint-Loup alone.",
+                  "playerControl": "battle control",
+                  "trigger": "saint_loup_gap_opens",
+                  "result": "The supporting force reaches the inner position and the English defense begins to fold.",
+                  "next": "CH02-B01-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-B01-L040",
                       "type": "dialogue",
@@ -2392,12 +2980,46 @@
                       "text": "MC advances with the assault instead of being protected by it."
                     },
                     {
+                      "id": "S01-CH02-B01-L065",
+                      "type": "control",
+                      "text": "Objective update: hold the breach lane until the supporting line passes through."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B01-BEAT-03",
+                  "order": 3,
+                  "title": "After the Position Breaks",
+                  "presentation": "post-battle",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Jeanne d’Arc",
+                    "French soldiers",
+                    "Wounded"
+                  ],
+                  "screenAction": "Saint-Loup falls. Cheers begin, but the wounded immediately turn victory into work.",
+                  "dialogueIntent": "Make this the battle that spreads MC's reputation beyond the local witnesses while immediately complicating the idea of glory.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "saint_loup_secured",
+                  "result": "Saint-Loup is secured; soldiers beyond La Hire's immediate circle now recognize MC's group, and the aftermath leads into The Cost of Hope.",
+                  "next": "CH02-N05",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
                       "id": "S01-CH02-B01-L070",
                       "type": "action",
                       "text": "The position finally breaks. Cheers are cut short by the wounded being carried out."
                     },
                     {
                       "id": "S01-CH02-B01-L080",
+                      "type": "dialogue",
+                      "text": "Help them first. Celebrate when there is room.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L090",
                       "type": "transition",
                       "text": "CH02-N05 — The Cost of Hope."
                     }
@@ -2417,14 +3039,19 @@
                   "id": "CH02-N05-BEAT-01",
                   "order": 1,
                   "title": "After the Cheering",
-                  "presentation": "character-scene",
-                  "characters": ["MC", "Jeanne d’Arc", "Julie d’Aubigny"],
-                  "screenAction": "MC carries water and supplies among casualties while Jeanne briefly joins after another round of officers and civilians demanding answers.",
-                  "dialogueIntent": "Use aftermath and fatigue. Build connection through shared work, not destiny or instant friendship.",
+                  "presentation": "aftermath",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "French soldiers",
+                    "Wounded"
+                  ],
+                  "screenAction": "MC carries water and supplies among casualties while soldiers who now recognize the party ask for help without ceremony.",
+                  "dialogueIntent": "Recognition should feel like responsibility before it feels like prestige.",
                   "playerControl": "dialogue advance",
                   "trigger": "after_saint_loup",
-                  "result": "Jeanne and MC understand each other slightly better; the next operation feels chosen rather than automatic.",
-                  "next": "CH02-B02",
+                  "result": "MC feels the weight of becoming someone others expect to be useful.",
+                  "next": "CH02-N05-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
@@ -2445,7 +3072,27 @@
                       "text": "I liked it better when they did not.",
                       "speaker": "MC",
                       "displayLabel": "MC"
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-N05-BEAT-02",
+                  "order": 2,
+                  "title": "Hope Still Has a Cost",
+                  "presentation": "character-scene",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Julie d’Aubigny"
+                  ],
+                  "screenAction": "Jeanne briefly joins the casualty work after escaping another round of officers and civilians demanding certainty.",
+                  "dialogueIntent": "Build connection through shared labor and fatigue, not destiny or instant friendship.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "casualty_work_continues",
+                  "result": "Jeanne and MC understand each other slightly better; the next operation feels chosen rather than automatic.",
+                  "next": "CH02-B02",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-N05-L040",
                       "type": "action",
@@ -2506,7 +3153,7 @@
                 {
                   "id": "CH02-B02-BEAT-01",
                   "order": 1,
-                  "title": "Across the River",
+                  "title": "Establish the Crossing",
                   "presentation": "battle-preview",
                   "characters": [
                     "MC",
@@ -2516,18 +3163,18 @@
                     "Bradamante",
                     "French soldiers"
                   ],
-                  "screenAction": "The force establishes and protects a crossing under pressure, then drives on the Augustins.",
-                  "dialogueIntent": "Escalate coordination and separated fronts; show trust earned through prior actions.",
+                  "screenAction": "The force begins crossing under pressure. MC's group is trusted with keeping one practical route open, not commanding the operation.",
+                  "dialogueIntent": "Escalate from breach work to maintaining a vulnerable link between separated fronts.",
                   "playerControl": "battle control",
                   "trigger": "loire_crossing",
-                  "result": "The Augustins position falls, but exhaustion and casualties make an immediate clean transition to Tourelles impossible.",
-                  "next": "CH02-N06",
+                  "result": "The first crossing lane remains usable long enough for the operation to spread across the river.",
+                  "next": "CH02-B02-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH02-B02-L010",
                       "type": "control",
-                      "text": "Objective: establish the crossing, protect the route, and open the approach to the Augustins."
+                      "text": "Objective: establish the crossing and keep the first route open."
                     },
                     {
                       "id": "S01-CH02-B02-L020",
@@ -2542,12 +3189,67 @@
                       "text": "Then we keep it open.",
                       "speaker": "MC",
                       "displayLabel": "MC"
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B02-BEAT-02",
+                  "order": 2,
+                  "title": "Separated Fronts",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "La Hire",
+                    "Hangaku Gozen",
+                    "French soldiers",
+                    "English defenders"
+                  ],
+                  "screenAction": "Pressure rises on both sides of the crossing. La Hire carries orders while MC's group absorbs pressure and keeps movement possible.",
+                  "dialogueIntent": "Make coordination, not raw victory, the middle turn of the battle.",
+                  "playerControl": "battle control",
+                  "trigger": "crossing_established",
+                  "result": "The French maintain enough connection between fronts to push toward the Augustins.",
+                  "next": "CH02-B02-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-B02-L040",
                       "type": "action",
                       "text": "La Hire carries orders between separated fronts while the supporting line absorbs pressure at the crossing."
                     },
+                    {
+                      "id": "S01-CH02-B02-L045",
+                      "type": "control",
+                      "text": "Objective update: keep both fronts connected while the assault shifts toward the Augustins."
+                    },
+                    {
+                      "id": "S01-CH02-B02-L048",
+                      "type": "dialogue",
+                      "text": "Do not chase. If the route breaks, we all pay for it.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B02-BEAT-03",
+                  "order": 3,
+                  "title": "The Augustins Falls",
+                  "presentation": "post-battle",
+                  "characters": [
+                    "MC",
+                    "Bradamante",
+                    "Julie d’Aubigny",
+                    "French soldiers"
+                  ],
+                  "screenAction": "After sustained fighting the Augustins position gives way, but the force is exhausted and cannot pretend the next assault will be easy.",
+                  "dialogueIntent": "End with physical cost and the need for recovery before Tourelles rather than a clean victory montage.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "augustins_position_breaks",
+                  "result": "The Augustins falls. Exhaustion and casualties force a recovery beat before Tourelles.",
+                  "next": "CH02-N06",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-B02-L050",
                       "type": "action",
@@ -2598,12 +3300,12 @@
                     "Jeanne d’Arc",
                     "La Hire"
                   ],
-                  "screenAction": "Weapons are repaired, bandages changed, and orders revised. Jeanne wants to continue; others openly acknowledge the force is exhausted.",
-                  "dialogueIntent": "Create friction and recovery before Tourelles. Nobody is fearless, and MC is not simply following because Jeanne says so.",
+                  "screenAction": "Weapons are repaired, bandages changed, and people sleep wherever they can. Jeanne wants to continue while others openly acknowledge exhaustion.",
+                  "dialogueIntent": "Create friction and recovery before Tourelles. Nobody is fearless and no one gets to call exhaustion weakness.",
                   "playerControl": "dialogue advance",
                   "trigger": "augustins_aftermath",
-                  "result": "MC chooses to return to the line despite understanding the danger; the group enters Tourelles with tension rather than automatic momentum.",
-                  "next": "CH02-B03",
+                  "result": "The group admits both the necessity and the cost of another assault.",
+                  "next": "CH02-N06-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
@@ -2636,7 +3338,27 @@
                       "id": "S01-CH02-N06-L050",
                       "type": "action",
                       "text": "Nobody answers for a moment."
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-N06-BEAT-02",
+                  "order": 2,
+                  "title": "Tomorrow Is My Choice",
+                  "presentation": "character-scene",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Jeanne d’Arc"
+                  ],
+                  "screenAction": "MC separates personal choice from political allegiance and chooses to return to the line because people will be left behind otherwise.",
+                  "dialogueIntent": "Keep MC's reason personal and consistent with the story so far; helping here does not mean swearing their life to France.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "night_before_tourelles",
+                  "result": "MC chooses to fight at Tourelles while retaining the larger goal of answers and a route home.",
+                  "next": "CH02-B03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-N06-L060",
                       "type": "dialogue",
@@ -2693,7 +3415,7 @@
                   "dialogueIntent": "Treat the wound as dangerous and frightening. No miraculous healing.",
                   "playerControl": "battle control",
                   "trigger": "tourelles_assault_midpoint",
-                  "result": "The objective changes from assault to hold/protect/reorganize while Jeanne is treated.",
+                  "result": "The objective shifts from assault to hold/protect/reorganize while Jeanne is treated.",
                   "next": "CH02-B03-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
@@ -2720,26 +3442,53 @@
                       "text": "Get her back! Now!",
                       "speaker": "Julie d’Aubigny",
                       "displayLabel": "Julie"
-                    },
-                    {
-                      "id": "S01-CH02-B03-L050",
-                      "type": "control",
-                      "text": "Objective changes: HOLD THE LINE. Protect the wounded, prevent a rout, and keep the assault route from collapsing."
-                    },
-                    {
-                      "id": "S01-CH02-B03-L060",
-                      "type": "dialogue",
-                      "text": "Nobody runs. Not one step!",
-                      "speaker": "La Hire",
-                      "displayLabel": "La Hire"
                     }
                   ]
                 },
                 {
                   "id": "CH02-B03-BEAT-02",
                   "order": 2,
-                  "title": "Return to the Line",
-                  "presentation": "battle-preview",
+                  "title": "Hold Without Her",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "La Hire",
+                    "French soldiers",
+                    "Wounded"
+                  ],
+                  "screenAction": "With Jeanne behind the line, the immediate goal becomes preventing collapse, protecting the treatment area, and keeping a route open.",
+                  "dialogueIntent": "Make the objective shift mechanically and emotionally honest. MC does not replace Jeanne as commander or symbol.",
+                  "playerControl": "battle control",
+                  "trigger": "jeanne_removed_for_treatment",
+                  "result": "The French line survives the shock long enough to reorganize instead of collapsing.",
+                  "next": "CH02-B03-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B03-L050",
+                      "type": "control",
+                      "text": "Objective update: hold the line, protect the wounded, and prevent the assault from collapsing."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L060",
+                      "type": "dialogue",
+                      "text": "Nobody chases. Nobody panics. Hold what we have!",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L070",
+                      "type": "action",
+                      "text": "MC helps close a gap near the withdrawal route while Julie keeps the treatment lane clear."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B03-BEAT-03",
+                  "order": 3,
+                  "title": "Bandaged Return",
+                  "presentation": "battle-climax",
                   "characters": [
                     "MC",
                     "Jeanne d’Arc",
@@ -2747,52 +3496,47 @@
                     "La Hire",
                     "French soldiers"
                   ],
-                  "screenAction": "After the line stabilizes, Jeanne returns visibly bandaged. Her return restores morale because people see her standing again, not because the wound disappears.",
-                  "dialogueIntent": "The final push belongs to the whole force. Jeanne restores morale; the player completes the tactical objective.",
+                  "screenAction": "Jeanne later returns visibly bandaged. Her return restores morale enough for the final assault to resume; the battle is completed by the whole force.",
+                  "dialogueIntent": "Preserve the approved wound → hold/protect → bandaged return flow without supernatural recovery or solo-protagonist replacement.",
                   "playerControl": "battle control",
-                  "trigger": "line_stabilized",
-                  "result": "The final assault succeeds and the siege position collapses.",
+                  "trigger": "line_reorganized_and_jeanne_returns",
+                  "result": "The Tourelles falls and the siege reaches its breaking point.",
                   "next": "CH02-N08",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH02-B03-L080",
                       "type": "action",
-                      "text": "The line holds long enough for panic to stop spreading."
+                      "text": "A shout travels from the rear. Jeanne returns, pale and visibly bandaged, moving carefully but upright."
                     },
                     {
                       "id": "S01-CH02-B03-L090",
-                      "type": "action",
-                      "text": "Jeanne returns with the wound bound tightly, pale but standing."
-                    },
-                    {
-                      "id": "S01-CH02-B03-L100",
                       "type": "dialogue",
-                      "text": "You should be lying down.",
+                      "text": "You are supposed to be lying down.",
                       "speaker": "MC",
                       "displayLabel": "MC"
                     },
                     {
-                      "id": "S01-CH02-B03-L110",
+                      "id": "S01-CH02-B03-L100",
                       "type": "dialogue",
                       "text": "Later.",
                       "speaker": "Jeanne d’Arc",
                       "displayLabel": "Jeanne"
                     },
                     {
-                      "id": "S01-CH02-B03-L120",
+                      "id": "S01-CH02-B03-L110",
                       "type": "control",
                       "text": "Objective update: resume the final assault and secure the Tourelles."
                     },
                     {
-                      "id": "S01-CH02-B03-L130",
+                      "id": "S01-CH02-B03-L120",
                       "type": "action",
-                      "text": "The French line surges forward again."
+                      "text": "The renewed assault finally breaks the position."
                     },
                     {
-                      "id": "S01-CH02-B03-L140",
+                      "id": "S01-CH02-B03-L130",
                       "type": "transition",
-                      "text": "The Tourelles position falls. CH02-N08 — The Siege Is Lifted."
+                      "text": "CH02-N08 — The Siege Is Lifted."
                     }
                   ]
                 }
@@ -2811,93 +3555,114 @@
                 {
                   "id": "CH02-N08-BEAT-01",
                   "order": 1,
-                  "title": "Eight Days of May",
-                  "presentation": "chapter-end",
+                  "title": "The English Leave",
+                  "presentation": "aftermath",
                   "characters": [
                     "MC",
                     "Julie d’Aubigny",
-                    "Hangaku Gozen",
                     "Jeanne d’Arc",
-                    "Jean de Dunois"
+                    "La Hire",
+                    "Civilians"
                   ],
-                  "screenAction": "Orléans wakes to the English withdrawal and exhausted celebration. Dunois acknowledges the irregular group as proven fighters without absorbing them into a formal rank structure.",
-                  "dialogueIntent": "End on earned belonging and an unresolved home-world goal, not instant national loyalty.",
+                  "screenAction": "On 8 May the English withdrawal becomes visible. The city reacts with exhausted relief rather than a clean heroic tableau.",
+                  "dialogueIntent": "Resolve the siege historically while keeping the human cost present.",
                   "playerControl": "dialogue advance",
-                  "trigger": "siege_lifted",
-                  "result": "Chapter 2 ends with the siege lifted and MC choosing to remain with the people they now know as the Loire campaign begins.",
-                  "next": "CH03",
+                  "trigger": "english_withdrawal_visible",
+                  "result": "Orléans is no longer under the same siege pressure and the chapter's military objective is achieved.",
+                  "next": "CH02-N08-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH02-N08-L010",
                       "type": "action",
-                      "text": "Church bells answer each other across Orléans. Streets that were defensive positions fill with exhausted celebration."
+                      "text": "By morning the English positions are emptying. People climb walls and roofs just to be certain."
                     },
                     {
                       "id": "S01-CH02-N08-L020",
                       "type": "dialogue",
-                      "text": "The English are withdrawing. The siege is over.",
-                      "speaker": "Jean de Dunois",
-                      "displayLabel": "Dunois"
+                      "text": "They're leaving.",
+                      "speaker": "Civilian",
+                      "displayLabel": "Civilian"
                     },
                     {
                       "id": "S01-CH02-N08-L030",
-                      "type": "action",
-                      "text": "Dunois looks over MC's group before turning back to another stack of reports."
-                    },
+                      "type": "dialogue",
+                      "text": "Then let them leave before someone invents one more fight for today.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-N08-BEAT-02",
+                  "order": 2,
+                  "title": "Useful Does Not Mean Finished",
+                  "presentation": "chapter-end",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Jeanne d’Arc",
+                    "Hangaku Gozen",
+                    "La Hire"
+                  ],
+                  "screenAction": "MC's party is now genuinely recognized after repeated local service and the major siege battles, but MC still has no formal rank and still wants answers about home.",
+                  "dialogueIntent": "Close the chapter with earned reputation and an open personal goal rather than instant belonging.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "siege_lifted",
+                  "result": "Chapter 2 ends with the party recognized as proven irregulars and the road toward the post-Orléans campaign opening.",
+                  "next": "CH03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH02-N08-L040",
                       "type": "dialogue",
-                      "text": "You arrived as strangers. You leave this siege as people I would trust on a bad road.",
-                      "speaker": "Jean de Dunois",
-                      "displayLabel": "Dunois"
+                      "text": "People know us now. That still feels strange.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
                     },
                     {
                       "id": "S01-CH02-N08-L050",
                       "type": "dialogue",
-                      "text": "Still no rank?",
-                      "speaker": "MC",
-                      "displayLabel": "MC"
+                      "text": "They know what you did. That is different from knowing you.",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
                     },
                     {
                       "id": "S01-CH02-N08-L060",
                       "type": "dialogue",
-                      "text": "Be grateful.",
-                      "speaker": "Julie d’Aubigny",
-                      "displayLabel": "Julie"
-                    },
-                    {
-                      "id": "S01-CH02-N08-L070",
-                      "type": "dialogue",
-                      "text": "I still do not know how to get home.",
+                      "text": "Good. I still have questions they cannot answer for me.",
                       "speaker": "MC",
                       "displayLabel": "MC"
                     },
                     {
-                      "id": "S01-CH02-N08-L080",
-                      "type": "dialogue",
-                      "text": "I know. But now staying is a choice too.",
-                      "speaker": "Julie d’Aubigny",
-                      "displayLabel": "Julie"
-                    },
-                    {
-                      "id": "S01-CH02-N08-L090",
-                      "type": "action",
-                      "text": "MC looks toward the road beyond the city, then toward the people preparing to move again."
-                    },
-                    {
-                      "id": "S01-CH02-N08-L100",
+                      "id": "S01-CH02-N08-L070",
                       "type": "narration",
                       "text": "CHAPTER 2 COMPLETE"
                     },
                     {
-                      "id": "S01-CH02-N08-L110",
+                      "id": "S01-CH02-N08-L080",
                       "type": "transition",
                       "text": "Next: Chapter 3 — The Road to the Crown."
                     }
                   ]
                 }
               ]
+            }
+          ],
+          "routeClusters": [
+            {
+              "id": "CH02-REP-01",
+              "title": "Proof Before Rank",
+              "mode": "complete-any",
+              "requiredCount": 2,
+              "nodeIds": [
+                "CH02-B00",
+                "CH02-B00B",
+                "CH02-B00C"
+              ],
+              "reconvergesAt": "CH02-N02A",
+              "optionalAfterThreshold": true,
+              "summary": "Three small local siege incidents are available in free order. Completing any two gives MC's party enough independent witnesses for Dunois to recognize them as useful irregulars; the third remains optional before the route reconverges."
             }
           ]
         },
@@ -3005,7 +3770,7 @@
                 {
                   "id": "CH03-B01-BEAT-01",
                   "order": 1,
-                  "title": "Break Jargeau",
+                  "title": "Approach Jargeau",
                   "presentation": "battle-preview",
                   "characters": [
                     "MC",
@@ -3014,18 +3779,18 @@
                     "William de la Pole, Earl of Suffolk",
                     "French soldiers"
                   ],
-                  "screenAction": "The French assault Jargeau in disciplined waves against determined resistance under Suffolk.",
-                  "dialogueIntent": "Escalate from Orléans into campaign warfare; Suffolk is a commander, not a disposable villain.",
+                  "screenAction": "The assault begins against a prepared English defense. Alençon keeps the advance controlled while Suffolk tries to break French momentum.",
+                  "dialogueIntent": "Establish Jargeau as a real campaign battle with command structure on both sides.",
                   "playerControl": "battle control",
                   "trigger": "jargeau_assault",
-                  "result": "Jargeau falls and Suffolk is captured; the victory leaves casualties, prisoners, and political momentum to manage.",
-                  "next": "CH03-N02",
+                  "result": "The French reach the main defenses without turning the opening into a reckless rush.",
+                  "next": "CH03-B01-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH03-B01-L010",
                       "type": "control",
-                      "text": "Objective: breach Jargeau and force the garrison to surrender or collapse."
+                      "text": "Objective: reach the main defenses while keeping the assault line coherent."
                     },
                     {
                       "id": "S01-CH03-B01-L020",
@@ -3037,8 +3802,30 @@
                     {
                       "id": "S01-CH03-B01-L030",
                       "type": "action",
-                      "text": "The French push through the defenses in successive waves rather than a single rush."
-                    },
+                      "text": "The French push through the outer defenses in successive waves rather than a single rush."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH03-B01-BEAT-02",
+                  "order": 2,
+                  "title": "Inside the Pressure",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Jean II d’Alençon",
+                    "French soldiers",
+                    "English soldiers"
+                  ],
+                  "screenAction": "The assault becomes a sustained contest over breaches and streets. MC operates as one proven fighter among the forward groups.",
+                  "dialogueIntent": "Avoid collapsing a whole siege assault into one line. Reputation now means dependable placement, not special command.",
+                  "playerControl": "battle control",
+                  "trigger": "jargeau_outer_defense_breached",
+                  "result": "French pressure reaches the point where organized English resistance can no longer hold every approach.",
+                  "next": "CH03-B01-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH03-B01-L040",
                       "type": "dialogue",
@@ -3047,9 +3834,47 @@
                       "displayLabel": "Alençon"
                     },
                     {
+                      "id": "S01-CH03-B01-L045",
+                      "type": "control",
+                      "text": "Objective update: secure the breach and prevent the forward line from fragmenting."
+                    },
+                    {
+                      "id": "S01-CH03-B01-L048",
+                      "type": "action",
+                      "text": "MC's group rotates wounded fighters out while fresh soldiers press through the same opening."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH03-B01-BEAT-03",
+                  "order": 3,
+                  "title": "Suffolk Captured",
+                  "presentation": "post-battle",
+                  "characters": [
+                    "MC",
+                    "William de la Pole, Earl of Suffolk",
+                    "Jean II d’Alençon",
+                    "French soldiers"
+                  ],
+                  "screenAction": "Organized resistance collapses and Suffolk is captured. Victory immediately creates prisoners, wounded, and the next campaign problem.",
+                  "dialogueIntent": "End the battle on consequences instead of treating capture as a boss trophy.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "jargeau_resistance_collapses",
+                  "result": "Jargeau falls; Suffolk is captured; the campaign pauses long enough to process the result.",
+                  "next": "CH03-N02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
                       "id": "S01-CH03-B01-L050",
                       "type": "action",
                       "text": "By the battle's end organized resistance collapses and Suffolk is taken prisoner."
+                    },
+                    {
+                      "id": "S01-CH03-B01-L055",
+                      "type": "dialogue",
+                      "text": "Secure the prisoners. Find the wounded before the cheering gets in the way.",
+                      "speaker": "Jean II d’Alençon",
+                      "displayLabel": "Alençon"
                     },
                     {
                       "id": "S01-CH03-B01-L060",
@@ -3076,16 +3901,16 @@
                   "characters": [
                     "MC",
                     "Julie d’Aubigny",
-                    "Jean II d’Alençon",
-                    "Jeanne d’Arc",
-                    "French soldiers"
+                    "French soldiers",
+                    "Wounded",
+                    "Prisoners"
                   ],
-                  "screenAction": "MC helps after the battle while Alençon begins addressing the group without needing La Hire to identify them.",
-                  "dialogueIntent": "Turn recognition into responsibility rather than protagonist privilege. Add recovery and a small disagreement about pace.",
+                  "screenAction": "The field after Jargeau becomes lists, wounded, prisoners, supplies, and repairs. Recognition mostly means more people ask MC's group for help.",
+                  "dialogueIntent": "Turn recognition into responsibility rather than protagonist privilege.",
                   "playerControl": "dialogue advance",
                   "trigger": "jargeau_won",
-                  "result": "Alençon now personally knows MC's group through shared campaign work; Jeanne and MC disagree mildly about how quickly the army can keep pushing.",
-                  "next": "CH03-N03",
+                  "result": "MC sees reputation becoming ordinary work and expectation.",
+                  "next": "CH03-N02-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
@@ -3127,7 +3952,28 @@
                       "text": "You survived enough reports to earn that inconvenience.",
                       "speaker": "Jean II d’Alençon",
                       "displayLabel": "Alençon"
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH03-N02-BEAT-02",
+                  "order": 2,
+                  "title": "Forward Column Tomorrow",
+                  "presentation": "character-scene",
+                  "characters": [
+                    "MC",
+                    "Jean II d’Alençon",
+                    "Jeanne d’Arc",
+                    "Julie d’Aubigny"
+                  ],
+                  "screenAction": "Alençon now addresses the party without La Hire introducing them. A small disagreement over campaign pace follows while wounded are still being moved.",
+                  "dialogueIntent": "Recognition is now believable because Orléans and Jargeau produced repeated firsthand evidence.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "jargeau_aftermath_work",
+                  "result": "Alençon personally knows the group and keeps them with the forward column; the next campaign leg begins with unresolved fatigue.",
+                  "next": "CH03-N03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH03-N02-L070",
                       "type": "action",
@@ -3171,7 +4017,12 @@
                   "order": 1,
                   "title": "Pressure Without a Parade",
                   "presentation": "field-sequence",
-                  "characters": ["MC", "La Hire", "Hangaku Gozen", "French soldiers"],
+                  "characters": [
+                    "MC",
+                    "La Hire",
+                    "Hangaku Gozen",
+                    "French soldiers"
+                  ],
                   "screenAction": "The column pressures crossings, screens roads, moves supplies, and watches English positions around Meung and Beaugency without turning every contact into a full mandatory battle.",
                   "dialogueIntent": "Show campaign labor, scouting uncertainty, and smaller clashes between major set pieces.",
                   "playerControl": "limited field control / dialogue advance",
@@ -3206,7 +4057,12 @@
                   "order": 2,
                   "title": "An Ally Nobody Invited",
                   "presentation": "story-scene",
-                  "characters": ["MC", "Arthur de Richemont", "Jean II d’Alençon", "La Hire"],
+                  "characters": [
+                    "MC",
+                    "Arthur de Richemont",
+                    "Jean II d’Alençon",
+                    "La Hire"
+                  ],
                   "screenAction": "Richemont arrives with Breton strength. Officers react with distrust even while the campaign needs his soldiers.",
                   "dialogueIntent": "Make internal French politics visible through practical tension, not a lecture.",
                   "playerControl": "dialogue advance",
@@ -3270,15 +4126,21 @@
                 {
                   "id": "CH03-N04-BEAT-01",
                   "order": 1,
-                  "title": "Before the Line Sets",
+                  "title": "Bad Information",
                   "presentation": "pre-battle",
-                  "characters": ["MC", "La Hire", "Jean II d’Alençon", "Jeanne d’Arc"],
-                  "screenAction": "Reports suggest the English are withdrawing and trying to form a defensive line. The French must decide whether to press immediately.",
-                  "dialogueIntent": "Create uncertainty and causality before Patay. History is not felt as guaranteed by the characters.",
+                  "characters": [
+                    "MC",
+                    "La Hire",
+                    "Jean II d’Alençon",
+                    "Jeanne d’Arc",
+                    "Scouts"
+                  ],
+                  "screenAction": "Scouts bring conflicting positions for the withdrawing English. Nobody knows yet that Patay will become a famous victory.",
+                  "dialogueIntent": "Create uncertainty before the decision to press.",
                   "playerControl": "dialogue advance",
                   "trigger": "english_withdrawal_reported",
-                  "result": "La Hire's vanguard moves to make contact before the English position stabilizes.",
-                  "next": "CH03-B02",
+                  "result": "The commanders understand they have a narrow opportunity but incomplete information.",
+                  "next": "CH03-N04-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
@@ -3306,7 +4168,28 @@
                       "text": "So what do we actually know?",
                       "speaker": "MC",
                       "displayLabel": "MC"
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH03-N04-BEAT-02",
+                  "order": 2,
+                  "title": "Before the Line Sets",
+                  "presentation": "pre-battle",
+                  "characters": [
+                    "MC",
+                    "La Hire",
+                    "Jean II d’Alençon",
+                    "Jeanne d’Arc"
+                  ],
+                  "screenAction": "La Hire argues that waiting guarantees a prepared English line. The vanguard moves to make contact while the rest follows cautiously.",
+                  "dialogueIntent": "Make Patay causality explicit: the opportunity exists because the French catch the withdrawal before deployment stabilizes.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "patay_opportunity_identified",
+                  "result": "La Hire's vanguard moves to make contact before the English position stabilizes.",
+                  "next": "CH03-B02",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH03-N04-L050",
                       "type": "dialogue",
@@ -3341,7 +4224,7 @@
                 {
                   "id": "CH03-B02-BEAT-01",
                   "order": 1,
-                  "title": "Before the Line Sets",
+                  "title": "Contact Before Deployment",
                   "presentation": "battle-preview",
                   "characters": [
                     "MC",
@@ -3351,18 +4234,18 @@
                     "French soldiers",
                     "English soldiers"
                   ],
-                  "screenAction": "The vanguard strikes before the English deployment stabilizes.",
-                  "dialogueIntent": "Fast, dangerous, opportunity-driven. Talbot is serious; the English are caught at the wrong moment.",
+                  "screenAction": "The French vanguard catches the retreating English before their field line is fully established.",
+                  "dialogueIntent": "Patay begins as an opportunity created by timing, not as a guaranteed scripted victory.",
                   "playerControl": "battle control",
                   "trigger": "patay_contact",
-                  "result": "The English field position collapses and Talbot is captured.",
-                  "next": "CH03-N05",
+                  "result": "The French reach the incomplete position before Talbot can fully organize it.",
+                  "next": "CH03-B02-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-CH03-B02-L010",
                       "type": "control",
-                      "text": "Objective: strike before the English line fully forms; prevent an organized withdrawal."
+                      "text": "Objective: strike before the English line fully forms."
                     },
                     {
                       "id": "S01-CH03-B02-L020",
@@ -3375,7 +4258,29 @@
                       "id": "S01-CH03-B02-L030",
                       "type": "action",
                       "text": "Mounted French forces surge toward the incomplete position."
-                    },
+                    }
+                  ]
+                },
+                {
+                  "id": "CH03-B02-BEAT-02",
+                  "order": 2,
+                  "title": "The Line Breaks",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "La Hire",
+                    "John Talbot",
+                    "French soldiers",
+                    "English soldiers"
+                  ],
+                  "screenAction": "Talbot tries to stabilize the defense while French pressure hits before the formation is ready.",
+                  "dialogueIntent": "Keep Talbot formidable even while circumstances turn sharply against him.",
+                  "playerControl": "battle control",
+                  "trigger": "patay_line_contested",
+                  "result": "The incomplete English formation breaks and the battle turns into collapse and capture.",
+                  "next": "CH03-B02-BEAT-03",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH03-B02-L040",
                       "type": "dialogue",
@@ -3388,6 +4293,32 @@
                       "type": "action",
                       "text": "The formation breaks before it can become the defense Talbot wanted."
                     },
+                    {
+                      "id": "S01-CH03-B02-L055",
+                      "type": "control",
+                      "text": "Objective update: prevent an organized withdrawal while preserving the French advance."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH03-B02-BEAT-03",
+                  "order": 3,
+                  "title": "Talbot Under Guard",
+                  "presentation": "post-battle",
+                  "characters": [
+                    "MC",
+                    "John Talbot",
+                    "La Hire",
+                    "Jean II d’Alençon"
+                  ],
+                  "screenAction": "Talbot is captured. He remains composed enough to warn that one badly timed defeat does not end the war.",
+                  "dialogueIntent": "Give the battle an aftermath beat and preserve Talbot's weight as a future threat rather than a disposable boss.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "talbot_captured",
+                  "result": "Patay ends with Talbot captured and the French campaign politically transformed, but not complete.",
+                  "next": "CH03-N05",
+                  "scriptStatus": "draft",
+                  "script": [
                     {
                       "id": "S01-CH03-B02-L060",
                       "type": "action",
@@ -3431,7 +4362,12 @@
                   "order": 1,
                   "title": "After Patay",
                   "presentation": "aftermath",
-                  "characters": ["MC", "Julie d’Aubigny", "Jeanne d’Arc", "French soldiers"],
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Jeanne d’Arc",
+                    "French soldiers"
+                  ],
                   "screenAction": "The army counts the cost of Patay and prepares to move again. MC's growing reputation is visible but not glamorous.",
                   "dialogueIntent": "Give another breath before the political road; show success creating expectation rather than privilege.",
                   "playerControl": "dialogue advance",
@@ -3473,7 +4409,12 @@
                   "order": 2,
                   "title": "The King Before the Crown",
                   "presentation": "travel-dialogue",
-                  "characters": ["MC", "Charles VII", "Jean II d’Alençon", "Jeanne d’Arc"],
+                  "characters": [
+                    "MC",
+                    "Charles VII",
+                    "Jean II d’Alençon",
+                    "Jeanne d’Arc"
+                  ],
                   "screenAction": "During a group campaign halt, Alençon identifies veterans whose reports Charles has been reading. MC is one name among them, not the recipient of a private royal audience.",
                   "dialogueIntent": "Keep Charles cautious and human. His awareness of MC is earned through reports and repeated service.",
                   "playerControl": "dialogue advance",
@@ -3558,7 +4499,12 @@
                   "order": 1,
                   "title": "The Crown",
                   "presentation": "chapter-end",
-                  "characters": ["MC", "Jeanne d’Arc", "Julie d’Aubigny", "Charles VII"],
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Julie d’Aubigny",
+                    "Charles VII"
+                  ],
                   "screenAction": "The coronation unfolds amid heat, armor, cloth, incense, and accumulated campaign fatigue. MC is present with the campaign, not centered by the ceremony.",
                   "dialogueIntent": "Let the historical milestone land, then add one subtle Fracture-like visual clue without explanation.",
                   "playerControl": "dialogue advance",

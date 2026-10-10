@@ -66,6 +66,17 @@ function currentBeat() {
   return currentNode()?.beats.find((beat) => beat.id === state.beatId) ?? null;
 }
 
+function currentRouteCluster() {
+  const chapter = currentChapter();
+  const node = currentNode();
+  if (!chapter || !node || !Array.isArray(chapter.routeClusters)) return null;
+  return (
+    chapter.routeClusters.find(
+      (cluster) => cluster.nodeIds?.includes(node.id) || cluster.reconvergesAt === node.id,
+    ) ?? null
+  );
+}
+
 function productionForBeat(beat) {
   if (!beat) return null;
   return state.production?.beats?.[beat.id] ?? null;
@@ -258,6 +269,19 @@ function renderNodeHeader() {
   if (!saga || !chapter || !node) return;
 
   const metadata = [node.location, node.time, nodeTimingLabel(node)].filter(Boolean);
+  const cluster = currentRouteCluster();
+  const clusterPanel = cluster
+    ? `<div class="route-cluster-panel">
+        <span class="section-label">Free-order route · ${escapeHtml(cluster.id)}</span>
+        <strong>${escapeHtml(cluster.title ?? "Route cluster")}</strong>
+        <p>${escapeHtml(cluster.summary ?? "")}</p>
+        <div class="tag-list">
+          <span class="tag">Complete any ${escapeHtml(cluster.requiredCount)} of ${escapeHtml(cluster.nodeIds.length)}</span>
+          <span class="tag">Reconverges: ${escapeHtml(cluster.reconvergesAt)}</span>
+          ${cluster.optionalAfterThreshold ? `<span class="tag">Remaining mission optional after threshold</span>` : ""}
+        </div>
+      </div>`
+    : "";
   const scriptBadge = node.scriptStatus
     ? `<span class="status-pill script-status">${escapeHtml(statusLabel(node.scriptStatus))} script</span>`
     : "";
@@ -275,6 +299,7 @@ function renderNodeHeader() {
     </div>
     <div class="node-meta mono">${metadata.map(escapeHtml).join(" · ")}</div>
     <p class="node-summary">${escapeHtml(node.summary)}</p>
+    ${clusterPanel}
   `;
   playNodeButton.disabled = node.beats.length === 0;
 }

@@ -38,6 +38,21 @@ for (const saga of story.sagas) {
   for (const chapter of saga.chapters) {
     assert(typeof chapter.id === "string" && chapter.id, "every chapter needs an id");
     assert(Array.isArray(chapter.nodes), `${chapter.id} nodes must be an array`);
+    const chapterNodeIds = new Set(chapter.nodes.map((node) => node.id));
+    if (chapter.routeClusters !== undefined) {
+      assert(Array.isArray(chapter.routeClusters), `${chapter.id}.routeClusters must be an array`);
+      for (const cluster of chapter.routeClusters) {
+        assert(typeof cluster.id === "string" && cluster.id, `${chapter.id} route cluster needs an id`);
+        assert(cluster.mode === "complete-any", `${cluster.id}.mode must be complete-any`);
+        assert(Array.isArray(cluster.nodeIds) && cluster.nodeIds.length > 0, `${cluster.id}.nodeIds must be non-empty`);
+        assert(Number.isInteger(cluster.requiredCount) && cluster.requiredCount > 0 && cluster.requiredCount <= cluster.nodeIds.length, `${cluster.id}.requiredCount is invalid`);
+        assert(typeof cluster.reconvergesAt === "string" && cluster.reconvergesAt, `${cluster.id}.reconvergesAt is required`);
+        for (const routeNodeId of cluster.nodeIds) {
+          assert(chapterNodeIds.has(routeNodeId), `${cluster.id} references unknown node: ${routeNodeId}`);
+        }
+        assert(chapterNodeIds.has(cluster.reconvergesAt), `${cluster.id} reconverges at unknown node: ${cluster.reconvergesAt}`);
+      }
+    }
     for (const node of chapter.nodes) {
       assert(typeof node.id === "string" && node.id, "every node needs an id");
       assert(!seenIds.has(node.id), `duplicate narrative id: ${node.id}`);
