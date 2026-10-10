@@ -1,0 +1,81 @@
+import { CampaignSession } from "@fantasia/runtime";
+import { useMemo } from "preact/hooks";
+import "./saga.css";
+
+interface SagaAppProps {
+  readonly onHome: () => void;
+  readonly onContinue: () => void;
+  readonly onSettings: (trigger: HTMLElement) => void;
+}
+
+export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
+  const session = useMemo(() => new CampaignSession(), []);
+  const view = session.view();
+
+  return (
+    <main class="campaign-screen saga-campaign-screen">
+      <section class="campaign-shell overview-shell saga-reference-screen">
+        <aside class="saga-reference-rail" aria-label="Saga chapters">
+          <div class="saga-brand-row">
+            <span class="saga-banner-mark" aria-hidden="true">⚜</span>
+            <div>
+              <p class="hud-eyebrow">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
+              <h1>{view.sagaTitle}</h1>
+              <p>{view.sagaSynopsis}</p>
+            </div>
+          </div>
+
+          <div class="saga-chapter-list">
+            {view.chapters.map((chapter) => {
+              const current = chapter.current;
+              return (
+                <button
+                  type="button"
+                  class={`saga-chapter-row${current ? " is-current" : ""}`}
+                  onClick={current ? onContinue : undefined}
+                  disabled={!current}
+                  aria-label={`${chapter.title}${current ? ", current chapter" : ", not implemented"}`}
+                >
+                  <span class="saga-chapter-number">Ch.{chapter.sequence}</span>
+                  <span class="saga-chapter-copy">
+                    <strong>{chapter.title}</strong>
+                    <small>
+                      {current
+                        ? "Current chapter"
+                        : chapter.stageCount > 0
+                          ? `${chapter.stageCount} stages available`
+                          : "Production stages not implemented"}
+                    </small>
+                  </span>
+                  <span class="saga-chapter-arrow" aria-hidden="true">{current ? "›" : "—"}</span>
+                </button>
+              );
+            })}
+          </div>
+        </aside>
+
+        <div class="saga-season-badge" aria-label="Saga timeframe">
+          <span aria-hidden="true">☀</span>
+          <div>
+            <strong>Spring</strong>
+            <small>Year 1429</small>
+          </div>
+        </div>
+
+        <nav class="saga-bottom-nav" aria-label="Saga navigation">
+          <button type="button" onClick={onHome}>Home</button>
+          <button type="button" onClick={onContinue}>Campaign</button>
+          <button type="button" onClick={(event) => onSettings(event.currentTarget)}>Settings</button>
+        </nav>
+
+        <button type="button" class="saga-next-objective" onClick={onContinue}>
+          <span>
+            <small>Next objective</small>
+            <strong>{view.selectedChapterTitle}</strong>
+          </span>
+          <span aria-hidden="true">›</span>
+        </button>
+      </section>
+    </main>
+  );
+}
