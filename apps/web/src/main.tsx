@@ -16,6 +16,7 @@ import { SettingsDialog } from "./settings-dialog.js";
 import "./styles.css";
 import "./production.css";
 import "./settings.css";
+import "./root-shell.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
