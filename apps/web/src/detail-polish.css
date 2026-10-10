@@ -246,8 +246,7 @@
   border: 1px solid var(--fantasia-line);
   border-left: 3px solid var(--ui-accent);
   background:
-    linear-gradient(110deg, rgb(20 39 55 / 94%), rgb(11 22 32 / 93%)),
-    var(--fantasia-ink-2);
+    linear-gradient(110deg, rgb(20 39 55 / 94%), rgb(11 22 32 / 93%)), var(--fantasia-ink-2);
   box-shadow: 0 18px 44px rgb(0 0 0 / 24%);
 }
 
