@@ -27,7 +27,8 @@ const state = {
   nodeId: null,
   beatId: null,
   compact: false,
-  playerIndex: 0,
+  playerBeatIndex: 0,
+  playerEventIndex: 0,
 };
 
 function escapeHtml(value) {
@@ -37,6 +38,14 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function resolveTokens(value) {
+  return String(value ?? "").replaceAll("{{MC_NAME}}", "[MC Name]");
+}
+
+function displayText(value) {
+  return escapeHtml(resolveTokens(value));
 }
 
 function currentSaga() {
@@ -60,8 +69,14 @@ function productionForBeat(beat) {
   return state.production?.beats?.[beat.id] ?? null;
 }
 
+function scriptForBeat(beat) {
+  return Array.isArray(beat?.script) ? beat.script : [];
+}
+
 function statusLabel(value) {
-  return value === "approved-structure" ? "Approved structure" : value;
+  if (value === "approved-structure") return "Approved structure";
+  if (value === "draft") return "Draft";
+  return value;
 }
 
 function timingLabel(beat) {
@@ -76,26 +91,26 @@ function timingLabel(beat) {
 }
 
 function nodeTimingLabel(node) {
-  let fixed = 0;
   let min = 0;
   let max = 0;
+  let hasTiming = false;
   let hasPlayerRange = false;
   for (const beat of node.beats) {
     const timing = productionForBeat(beat)?.timing;
     if (!timing) continue;
+    hasTiming = true;
     if (timing.mode === "player") {
       hasPlayerRange = true;
       min += Number(timing.minSeconds ?? 0);
       max += Number(timing.maxSeconds ?? timing.minSeconds ?? 0);
     } else if (Number.isFinite(timing.estimatedSeconds)) {
-      fixed += timing.estimatedSeconds;
       min += timing.estimatedSeconds;
       max += timing.estimatedSeconds;
     }
   }
-  if (max === 0) return null;
+  if (!hasTiming) return null;
   if (hasPlayerRange) return `Estimated ${formatSeconds(min)}–${formatSeconds(max)}`;
-  return `Estimated ${formatSeconds(fixed)}`;
+  return `Estimated ${formatSeconds(max)}`;
 }
 
 function formatSeconds(total) {
@@ -151,13 +166,19 @@ function renderNode() {
   if (!saga || !chapter || !node) return;
 
   const metadata = [node.location, node.time, nodeTimingLabel(node)].filter(Boolean);
+  const scriptBadge = node.scriptStatus
+    ? `<span class="status-pill">${escapeHtml(statusLabel(node.scriptStatus))} script</span>`
+    : "";
   nodeHeader.innerHTML = `
     <div class="node-title-row">
       <div>
         <p class="eyebrow">${escapeHtml(saga.id)} · ${escapeHtml(chapter.id)} · ${escapeHtml(node.type)}</p>
         <h2>${escapeHtml(node.title)}</h2>
       </div>
-      <span class="status-pill">${escapeHtml(statusLabel(node.status))}</span>
+      <div class="tag-list">
+        <span class="status-pill">${escapeHtml(statusLabel(node.status))}</span>
+        ${scriptBadge}
+      </div>
     </div>
     <div class="node-meta mono">${metadata.map(escapeHtml).join(" · ")}</div>
     <p class="node-summary">${escapeHtml(node.summary)}</p>
@@ -181,23 +202,44 @@ function renderTimeline() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `timeline-beat ${beat.id === state.beatId ? "active" : ""}`;
+    const lineCount = scriptForBeat(beat).length;
     button.innerHTML = `
       <span class="timeline-order mono">${String(beat.order).padStart(2, "0")}</span>
-      <span class="timeline-copy"><strong>${escapeHtml(beat.title)}</strong><small>${escapeHtml(timingLabel(beat))}</small></span>
+      <span class="timeline-copy">
+        <strong>${escapeHtml(beat.title)}</strong>
+        <small>${escapeHtml(timingLabel(beat))}${lineCount ? ` · ${lineCount} script events` : ""}</small>
+      </span>
     `;
     button.addEventListener("click", () => selectBeat(beat.id));
     beatTimeline.append(button);
   }
 }
 
-function renderCharacterSlot(slotName, slot) {
+function speakerDisplayForCharacter(beat, character) {
+  const event = scriptForBeat(beat).find(
+    (item) => item.speaker === character && typeof item.displayLabel === "string",
+  );
+  return event?.displayLabel ?? character;
+}
+
+function renderCharacterSlot(slotName, slot, beat = currentBeat()) {
   if (!slot) {
     return `<div class="character-slot empty"><span>${escapeHtml(slotName)}</span><small>Empty</small></div>`;
   }
+  const label = speakerDisplayForCharacter(beat, slot.character);
+  const shortLabel =
+    slot.shortLabel && label === slot.character
+      ? slot.shortLabel
+      : label
+          .split(/\s+/)
+          .map((part) => part[0])
+          .join("")
+          .slice(0, 3)
+          .toUpperCase();
   return `
     <div class="character-slot">
-      <div class="portrait-placeholder" aria-hidden="true">${escapeHtml(slot.shortLabel ?? slot.character?.slice(0, 2)?.toUpperCase() ?? "??")}</div>
-      <strong>${escapeHtml(slot.character)}</strong>
+      <div class="portrait-placeholder" aria-hidden="true">${escapeHtml(shortLabel || "??")}</div>
+      <strong>${escapeHtml(label)}</strong>
       <small>${escapeHtml(slot.pose ?? slot.expression ?? slotName)}</small>
     </div>
   `;
@@ -215,8 +257,14 @@ function renderScenePreview() {
   const slots = staging.slots ?? {};
   scenePreview.innerHTML = `
     <div class="scene-preview-head">
-      <div><span class="section-label">Scene preview</span><strong>${escapeHtml(beat.title)}</strong></div>
-      <span class="presentation-chip">${escapeHtml(beat.presentation)}</span>
+      <div>
+        <span class="section-label">Scene preview</span>
+        <strong>${escapeHtml(beat.title)}</strong>
+      </div>
+      <div class="tag-list">
+        <span class="presentation-chip">${escapeHtml(beat.presentation)}</span>
+        ${beat.scriptStatus ? `<span class="status-pill">${escapeHtml(statusLabel(beat.scriptStatus))} script</span>` : ""}
+      </div>
     </div>
     <div class="stage-canvas">
       <div class="stage-background">
@@ -225,11 +273,11 @@ function renderScenePreview() {
         <small>${escapeHtml(staging.camera ?? "Camera framing not assigned")}</small>
       </div>
       <div class="character-row">
-        ${renderCharacterSlot("Left", slots.left)}
-        ${renderCharacterSlot("Center", slots.center)}
-        ${renderCharacterSlot("Right", slots.right)}
+        ${renderCharacterSlot("Left", slots.left, beat)}
+        ${renderCharacterSlot("Center", slots.center, beat)}
+        ${renderCharacterSlot("Right", slots.right, beat)}
       </div>
-      <div class="stage-caption">${escapeHtml(beat.screenAction)}</div>
+      <div class="stage-caption">${displayText(beat.screenAction)}</div>
     </div>
   `;
 }
@@ -239,6 +287,7 @@ function eventIcon(type) {
     {
       action: "⚡",
       dialogue: "💬",
+      thought: "◌",
       reaction: "🙂",
       camera: "🎬",
       control: "🎮",
@@ -252,7 +301,11 @@ function renderEvents() {
   const beat = currentBeat();
   eventList.innerHTML = "";
   if (!beat) return;
-  const events = productionForBeat(beat)?.events ?? [];
+  const script = scriptForBeat(beat);
+  const fallbackEvents = productionForBeat(beat)?.events ?? [];
+  const events = script.length ? script : fallbackEvents;
+  const isScript = script.length > 0;
+
   if (events.length === 0) {
     eventList.innerHTML = `<div class="event-empty"><span class="section-label">Event sequence</span><p>No ordered sub-events authored yet. Beat-level action and dialogue intent remain available in the inspector.</p></div>`;
     return;
@@ -260,19 +313,24 @@ function renderEvents() {
 
   const heading = document.createElement("div");
   heading.className = "event-heading";
-  heading.innerHTML = `<span class="section-label">Event sequence</span><span class="mono muted">${events.length} events</span>`;
+  heading.innerHTML = `<span class="section-label">${isScript ? "Playable script" : "Production event sequence"}</span><span class="mono muted">${events.length} events</span>`;
   eventList.append(heading);
 
   for (const [index, event] of events.entries()) {
     const row = document.createElement("article");
     row.className = `event-row ${event.type ?? "action"}`;
+    const speaker = event.displayLabel ?? event.speaker;
     row.innerHTML = `
       <div class="event-index mono">${String(index + 1).padStart(2, "0")}</div>
       <div class="event-icon" aria-hidden="true">${eventIcon(event.type)}</div>
       <div class="event-copy">
-        <div class="event-meta"><span>${escapeHtml(event.type ?? "action")}</span>${event.speaker ? `<strong>${escapeHtml(event.speaker)}</strong>` : ""}</div>
-        <p>${escapeHtml(event.text)}</p>
-        ${event.note ? `<small>${escapeHtml(event.note)}</small>` : ""}
+        <div class="event-meta">
+          <span>${escapeHtml(event.type ?? "action")}</span>
+          ${speaker ? `<strong>${escapeHtml(speaker)}</strong>` : ""}
+          ${event.id ? `<span class="mono muted">${escapeHtml(event.id)}</span>` : ""}
+        </div>
+        <p>${displayText(event.text)}</p>
+        ${event.note ? `<small>${displayText(event.note)}</small>` : ""}
       </div>
     `;
     eventList.append(row);
@@ -286,18 +344,21 @@ function renderInspector() {
     return;
   }
 
+  const script = scriptForBeat(beat);
+  const dialogueCount = script.filter((event) => event.type === "dialogue").length;
   selectionId.textContent = beat.id;
   inspector.classList.remove("empty-state");
   inspector.innerHTML = `
-    <section class="inspector-section primary-detail"><span class="section-label">Player sees</span><p>${escapeHtml(beat.screenAction)}</p></section>
+    <section class="inspector-section primary-detail"><span class="section-label">Player sees</span><p>${displayText(beat.screenAction)}</p></section>
     <section class="inspector-section"><span class="section-label">Timing</span><p>${escapeHtml(timingLabel(beat))}</p></section>
     <section class="inspector-section"><span class="section-label">Characters present</span><div class="tag-list">${beat.characters.map((character) => `<span class="tag">${escapeHtml(character)}</span>`).join("")}</div></section>
-    <section class="inspector-section"><span class="section-label">Dialogue intent</span><p>${escapeHtml(beat.dialogueIntent)}</p></section>
+    <section class="inspector-section"><span class="section-label">Script</span><p>${script.length ? `${escapeHtml(statusLabel(beat.scriptStatus ?? "draft"))} · ${script.length} events · ${dialogueCount} spoken lines` : "No exact script authored yet."}</p></section>
+    <section class="inspector-section"><span class="section-label">Dialogue intent</span><p>${displayText(beat.dialogueIntent)}</p></section>
     <div class="detail-grid">
-      <section class="inspector-section"><span class="section-label">Player control</span><p>${escapeHtml(beat.playerControl)}</p></section>
+      <section class="inspector-section"><span class="section-label">Player control</span><p>${displayText(beat.playerControl)}</p></section>
       <section class="inspector-section"><span class="section-label">Trigger</span><p class="mono">${escapeHtml(beat.trigger)}</p></section>
     </div>
-    <section class="inspector-section result-panel"><span class="section-label">Resulting state</span><p>${escapeHtml(beat.result)}</p></section>
+    <section class="inspector-section result-panel"><span class="section-label">Resulting state</span><p>${displayText(beat.result)}</p></section>
     <section class="inspector-section next-panel"><span class="section-label">Next</span><p class="mono">${escapeHtml(beat.next ?? "—")}</p></section>
   `;
 }
@@ -347,36 +408,84 @@ function exportStory() {
   URL.revokeObjectURL(url);
 }
 
+function playerBeat() {
+  return currentNode()?.beats[state.playerBeatIndex] ?? null;
+}
+
+function playerEvents() {
+  const beat = playerBeat();
+  if (!beat) return [];
+  const script = scriptForBeat(beat);
+  if (script.length) return script;
+  return productionForBeat(beat)?.events ?? [];
+}
+
+function currentPlayerEvent() {
+  return playerEvents()[state.playerEventIndex] ?? null;
+}
+
+function playerSpeaker(event, beat) {
+  if (event?.displayLabel) return event.displayLabel;
+  if (event?.speaker) return event.speaker;
+  if (event?.type === "action") return "Action";
+  if (event?.type === "control") return "Player";
+  if (event?.type === "transition") return "Transition";
+  return beat?.presentation ?? "Scene";
+}
+
 function renderPlayer() {
   const node = currentNode();
-  if (!node || node.beats.length === 0) return;
-  const beat = node.beats[state.playerIndex];
+  const beat = playerBeat();
+  if (!node || !beat) return;
   const production = productionForBeat(beat);
   const staging = production?.staging ?? {};
   const slots = staging.slots ?? {};
+  const events = playerEvents();
+  const event = currentPlayerEvent();
+
   playerTitle.textContent = `${node.title} — ${beat.title}`;
   playerStage.innerHTML = `
     <div class="player-background"><span>${escapeHtml(staging.background ?? node.location ?? "Scene")}</span></div>
     <div class="player-characters">
-      ${renderCharacterSlot("Left", slots.left)}
-      ${renderCharacterSlot("Center", slots.center)}
-      ${renderCharacterSlot("Right", slots.right)}
+      ${renderCharacterSlot("Left", slots.left, beat)}
+      ${renderCharacterSlot("Center", slots.center, beat)}
+      ${renderCharacterSlot("Right", slots.right, beat)}
     </div>
   `;
-  const firstDialogue = (production?.events ?? []).find((event) => event.type === "dialogue");
-  playerCopy.innerHTML = firstDialogue
-    ? `<span class="player-speaker">${escapeHtml(firstDialogue.speaker ?? "Dialogue")}</span><p>${escapeHtml(firstDialogue.text)}</p>`
-    : `<span class="player-speaker">${escapeHtml(beat.presentation)}</span><p>${escapeHtml(beat.dialogueIntent || beat.screenAction)}</p>`;
-  playerProgress.textContent = `${state.playerIndex + 1} / ${node.beats.length} · ${timingLabel(beat)}`;
-  playerPrev.disabled = state.playerIndex === 0;
-  playerNext.textContent = state.playerIndex === node.beats.length - 1 ? "Finish" : "Next →";
+
+  if (event) {
+    const label = playerSpeaker(event, beat);
+    playerCopy.innerHTML = `<span class="player-speaker">${escapeHtml(label)}</span><p>${displayText(event.text)}</p>`;
+  } else {
+    playerCopy.innerHTML = `<span class="player-speaker">${escapeHtml(beat.presentation)}</span><p>${displayText(beat.dialogueIntent || beat.screenAction)}</p>`;
+  }
+
+  const totalNodeEvents = node.beats.reduce((sum, item) => {
+    const script = scriptForBeat(item);
+    return sum + (script.length || (productionForBeat(item)?.events?.length ?? 1));
+  }, 0);
+  let absoluteIndex = 0;
+  for (let index = 0; index < state.playerBeatIndex; index += 1) {
+    const priorBeat = node.beats[index];
+    absoluteIndex +=
+      scriptForBeat(priorBeat).length || (productionForBeat(priorBeat)?.events?.length ?? 1);
+  }
+  absoluteIndex += state.playerEventIndex + 1;
+
+  playerProgress.textContent = `${absoluteIndex} / ${totalNodeEvents} · Beat ${state.playerBeatIndex + 1}/${node.beats.length}`;
+  playerPrev.disabled = state.playerBeatIndex === 0 && state.playerEventIndex === 0;
+
+  const lastBeat = state.playerBeatIndex === node.beats.length - 1;
+  const lastEvent = state.playerEventIndex >= Math.max(0, events.length - 1);
+  playerNext.textContent = lastBeat && lastEvent ? "Finish" : "Next →";
 }
 
 function openPlayer() {
   const node = currentNode();
   if (!node || node.beats.length === 0) return;
   const selectedIndex = node.beats.findIndex((beat) => beat.id === state.beatId);
-  state.playerIndex = selectedIndex >= 0 ? selectedIndex : 0;
+  state.playerBeatIndex = selectedIndex >= 0 ? selectedIndex : 0;
+  state.playerEventIndex = 0;
   playerOverlay.hidden = false;
   document.body.classList.add("player-open");
   renderPlayer();
@@ -389,20 +498,43 @@ function closePlayer() {
   playNodeButton.focus();
 }
 
-function stepPlayer(delta) {
-  const node = currentNode();
-  if (!node) return;
-  if (delta > 0 && state.playerIndex === node.beats.length - 1) {
-    closePlayer();
-    return;
-  }
-  state.playerIndex = Math.max(0, Math.min(node.beats.length - 1, state.playerIndex + delta));
-  state.beatId = node.beats[state.playerIndex].id;
-  renderPlayer();
+function syncPlayerSelection() {
+  const beat = playerBeat();
+  if (!beat) return;
+  state.beatId = beat.id;
   renderTimeline();
   renderScenePreview();
   renderEvents();
   renderInspector();
+}
+
+function stepPlayer(delta) {
+  const node = currentNode();
+  if (!node) return;
+
+  if (delta > 0) {
+    const events = playerEvents();
+    if (state.playerEventIndex < Math.max(0, events.length - 1)) {
+      state.playerEventIndex += 1;
+    } else if (state.playerBeatIndex < node.beats.length - 1) {
+      state.playerBeatIndex += 1;
+      state.playerEventIndex = 0;
+      syncPlayerSelection();
+    } else {
+      closePlayer();
+      return;
+    }
+  } else if (delta < 0) {
+    if (state.playerEventIndex > 0) {
+      state.playerEventIndex -= 1;
+    } else if (state.playerBeatIndex > 0) {
+      state.playerBeatIndex -= 1;
+      const previousEvents = playerEvents();
+      state.playerEventIndex = Math.max(0, previousEvents.length - 1);
+      syncPlayerSelection();
+    }
+  }
+  renderPlayer();
 }
 
 async function init() {
@@ -458,4 +590,5 @@ document.addEventListener("keydown", (event) => {
   if (!playerOverlay.hidden && event.key === "ArrowRight") stepPlayer(1);
   if (!playerOverlay.hidden && event.key === "ArrowLeft") stepPlayer(-1);
 });
+
 init();

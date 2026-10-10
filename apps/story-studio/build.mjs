@@ -22,6 +22,16 @@ assert(production.schemaVersion === 1, "production.schemaVersion must be 1");
 assert(production.beats && typeof production.beats === "object", "production.beats is required");
 
 const seenIds = new Set();
+const scriptEventIds = new Set();
+const allowedScriptTypes = new Set([
+  "action",
+  "dialogue",
+  "thought",
+  "narration",
+  "control",
+  "transition",
+]);
+
 for (const saga of story.sagas) {
   assert(typeof saga.id === "string" && saga.id, "every saga needs an id");
   assert(Array.isArray(saga.chapters), `${saga.id} chapters must be an array`);
@@ -33,6 +43,12 @@ for (const saga of story.sagas) {
       assert(!seenIds.has(node.id), `duplicate narrative id: ${node.id}`);
       seenIds.add(node.id);
       assert(Array.isArray(node.beats), `${node.id} beats must be an array`);
+      if (node.scriptStatus !== undefined) {
+        assert(
+          ["draft", "proposed", "approved", "production-ready"].includes(node.scriptStatus),
+          `${node.id}.scriptStatus is invalid`,
+        );
+      }
       let previousOrder = 0;
       for (const beat of node.beats) {
         assert(typeof beat.id === "string" && beat.id, `${node.id} beat needs an id`);
@@ -56,6 +72,41 @@ for (const saga of story.sagas) {
             typeof beat[field] === "string" && beat[field].trim(),
             `${beat.id}.${field} is required`,
           );
+        }
+
+        if (beat.script !== undefined) {
+          assert(Array.isArray(beat.script), `${beat.id}.script must be an array`);
+          assert(beat.script.length > 0, `${beat.id}.script must not be empty`);
+          assert(
+            ["draft", "proposed", "approved", "production-ready"].includes(beat.scriptStatus),
+            `${beat.id}.scriptStatus is required when script exists`,
+          );
+          for (const [index, event] of beat.script.entries()) {
+            assert(
+              typeof event.id === "string" && event.id.trim(),
+              `${beat.id}.script[${index}].id is required`,
+            );
+            assert(!scriptEventIds.has(event.id), `duplicate script event id: ${event.id}`);
+            scriptEventIds.add(event.id);
+            assert(
+              allowedScriptTypes.has(event.type),
+              `${beat.id}.script[${index}].type is invalid`,
+            );
+            assert(
+              typeof event.text === "string" && event.text.trim(),
+              `${beat.id}.script[${index}].text is required`,
+            );
+            if (event.type === "dialogue" || event.type === "thought") {
+              assert(
+                typeof event.speaker === "string" && event.speaker.trim(),
+                `${beat.id}.script[${index}].speaker is required`,
+              );
+              assert(
+                typeof event.displayLabel === "string" && event.displayLabel.trim(),
+                `${beat.id}.script[${index}].displayLabel is required`,
+              );
+            }
+          }
         }
       }
     }
@@ -108,4 +159,6 @@ mkdirSync(dist, { recursive: true });
 cpSync(source, dist, { recursive: true });
 writeFileSync(resolve(dist, "story.json"), `${JSON.stringify(story, null, 2)}\n`);
 writeFileSync(resolve(dist, "story-production.json"), `${JSON.stringify(production, null, 2)}\n`);
-console.log(`Story Studio build complete: ${seenIds.size} narrative IDs validated.`);
+console.log(
+  `Story Studio build complete: ${seenIds.size} narrative IDs and ${scriptEventIds.size} script events validated.`,
+);
