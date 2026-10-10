@@ -19,6 +19,7 @@ import "./settings.css";
 import "./root-shell.css";
 import "./detail-polish.css";
 import "./detail-polish-fixes.css";
+import "./art-integration.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
