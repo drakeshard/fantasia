@@ -1,0 +1,66 @@
+.saga-reference-screen {
+  position: relative;
+  min-height: calc(100dvh - 16px);
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgb(8 17 29 / 88%) 0 27%, transparent 45%),
+    url("/assets/saga-overview-reference.webp") center / cover no-repeat,
+    #101923;
+}
+.saga-reference-screen::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgb(6 13 22 / 82%) 0 10%, transparent 28%); }
+.saga-reference-rail { position: absolute; z-index: 2; top: 0; bottom: 0; left: 0; width: min(29vw, 460px); min-width: 360px; padding: clamp(22px, 2.4vw, 42px); background: linear-gradient(90deg, rgb(7 17 31 / 96%) 0 78%, rgb(7 17 31 / 72%) 90%, transparent); }
+.saga-brand-row { display: grid; grid-template-columns: 64px 1fr; gap: 18px; align-items: start; padding-bottom: 28px; border-bottom: 1px solid rgb(226 190 120 / 26%); }
+.saga-banner-mark { width: 58px; height: 86px; display: grid; place-items: center; border: 1px solid var(--ui-accent); color: var(--ui-accent); background: #0a3063; font-size: 2rem; }
+.saga-brand-row .hud-eyebrow { margin: 0; color: var(--ui-accent); }
+.saga-brand-row h1 { margin: 2px 0 8px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 3.2vw, 3.4rem); line-height: .98; font-weight: 500; }
+.saga-brand-row p:last-child { margin: 0; color: var(--ui-text-muted); line-height: 1.35; }
+.saga-chapter-list { display: grid; margin-top: 24px; }
+.saga-chapter-row { min-height: 84px; display: grid; grid-template-columns: 52px minmax(0, 1fr) 32px; gap: 10px; align-items: center; padding: 10px 4px; border: 0; border-bottom: 1px solid rgb(226 190 120 / 16%); color: var(--ui-text); text-align: left; background: transparent; cursor: pointer; }
+.saga-chapter-row:hover, .saga-chapter-row.is-current { background: linear-gradient(90deg, rgb(226 190 120 / 12%), transparent); }
+.saga-chapter-number { color: var(--ui-accent); font-weight: 800; }
+.saga-chapter-copy strong, .saga-chapter-copy small { display: block; }
+.saga-chapter-copy strong { font-family: Georgia, "Times New Roman", serif; font-size: 1.12rem; font-weight: 500; }
+.saga-chapter-copy small { margin-top: 3px; color: var(--ui-text-muted); }
+.saga-chapter-arrow { color: var(--ui-accent); font-size: 1.8rem; }
+.saga-season-badge { position: absolute; z-index: 2; top: 26px; right: 30px; min-width: 174px; min-height: 60px; display: grid; grid-template-columns: 38px 1fr; align-items: center; padding: 8px 16px; border: 1px solid rgb(226 190 120 / 55%); background: rgb(8 16 26 / 90%); box-shadow: 0 10px 24px rgb(0 0 0 / 30%); }
+.saga-season-badge span { color: var(--ui-accent); font-size: 1.5rem; }
+.saga-season-badge strong, .saga-season-badge small { display: block; }
+.saga-season-badge small { color: var(--ui-text-muted); }
+.saga-bottom-nav { position: absolute; z-index: 3; left: 18px; bottom: 16px; display: flex; border: 1px solid rgb(226 190 120 / 38%); background: rgb(6 13 22 / 90%); }
+.saga-bottom-nav button { min-width: 112px; min-height: 60px; border: 0; border-right: 1px solid rgb(226 190 120 / 20%); color: var(--ui-text); background: transparent; cursor: pointer; }
+.saga-bottom-nav button:last-child { border-right: 0; }
+.saga-bottom-nav button:hover { background: rgb(226 190 120 / 10%); }
+.saga-next-objective { position: absolute; z-index: 3; right: 20px; bottom: 16px; width: min(360px, 34vw); min-height: 92px; display: grid; grid-template-columns: minmax(0, 1fr) 46px; align-items: center; padding: 14px 14px 14px 20px; border: 1px solid rgb(226 190 120 / 52%); color: var(--ui-text); text-align: left; background: rgb(6 13 22 / 92%); cursor: pointer; }
+.saga-next-objective small, .saga-next-objective strong { display: block; }
+.saga-next-objective small { color: var(--ui-accent); }
+.saga-next-objective strong { margin-top: 4px; font-family: Georgia, "Times New Roman", serif; font-size: 1.2rem; font-weight: 500; }
+.saga-next-objective span { color: var(--ui-accent); font-size: 2rem; text-align: center; }
+@media (max-width: 900px) {
+  .saga-reference-screen { background-position: 62% center; }
+  .saga-reference-rail { width: min(78vw, 430px); min-width: 0; }
+  .saga-season-badge { display: none; }
+  .saga-next-objective { right: 12px; width: min(360px, calc(100% - 24px)); bottom: 84px; }
+  .saga-bottom-nav { left: 12px; right: 12px; bottom: 12px; }
+  .saga-bottom-nav button { flex: 1; min-width: 0; }
+}
+@media (max-width: 600px) {
+  .saga-reference-rail { width: 100%; padding: 18px 16px 190px; background: linear-gradient(90deg, rgb(7 17 31 / 95%), rgb(7 17 31 / 80%)); }
+  .saga-brand-row { grid-template-columns: 52px 1fr; }
+  .saga-banner-mark { width: 48px; height: 70px; }
+  .saga-brand-row h1 { font-size: 2rem; }
+  .saga-chapter-row { min-height: 74px; }
+  .saga-next-objective { bottom: 82px; min-height: 80px; }
+}
+@media (max-height: 499px) and (min-width: 700px) {
+  .saga-reference-rail { width: min(46vw, 420px); padding: 12px 18px 86px; overflow: auto; }
+  .saga-brand-row { padding-bottom: 10px; grid-template-columns: 46px 1fr; }
+  .saga-banner-mark { width: 42px; height: 58px; }
+  .saga-brand-row h1 { font-size: 1.6rem; }
+  .saga-brand-row p:last-child { display: none; }
+  .saga-chapter-list { margin-top: 8px; }
+  .saga-chapter-row { min-height: 58px; grid-template-columns: 44px minmax(0,1fr) 24px; }
+  .saga-season-badge { display: none; }
+  .saga-next-objective { min-height: 66px; bottom: 10px; }
+  .saga-bottom-nav { bottom: 10px; }
+  .saga-bottom-nav button { min-height: 52px; }
+}
