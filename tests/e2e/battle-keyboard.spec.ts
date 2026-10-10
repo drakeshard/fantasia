@@ -5,7 +5,9 @@ async function pressFocused(locator: Locator) {
   await locator.press("Enter");
 }
 
-test("battle supports logical-cell keyboard navigation without pointer input", async ({ page }, testInfo) => {
+test("battle supports logical-cell keyboard navigation without pointer input", async ({
+  page,
+}, testInfo) => {
   test.skip(
     testInfo.project.name !== "chromium-desktop",
     "Keyboard spatial-navigation proof is desktop scoped",

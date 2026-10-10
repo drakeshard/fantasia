@@ -29,17 +29,13 @@ function browserStorage(): Storage | undefined {
 }
 
 function initialScreen(): AppScreen {
-  return new URLSearchParams(window.location.search).get("dev") === "battle"
-    ? "battle"
-    : "home";
+  return new URLSearchParams(window.location.search).get("dev") === "battle" ? "battle" : "home";
 }
 
 function App() {
   const initialPreferences = loadUiPreferences(browserStorage());
   const [screen, setScreen] = useState<AppScreen>(() => initialScreen());
-  const [preferences, setPreferences] = useState<UiPreferences>(
-    initialPreferences.preferences,
-  );
+  const [preferences, setPreferences] = useState<UiPreferences>(initialPreferences.preferences);
   const [storageMessage, setStorageMessage] = useState<string | undefined>(
     initialPreferences.message,
   );
@@ -111,9 +107,7 @@ function App() {
         </nav>
       </div>
 
-      {screen === "battle" ? (
-        <BattleApp onReturnCampaign={() => setScreen("campaign")} />
-      ) : null}
+      {screen === "battle" ? <BattleApp onReturnCampaign={() => setScreen("campaign")} /> : null}
 
       {screen === "battle" ? (
         <button

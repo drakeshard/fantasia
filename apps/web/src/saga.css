@@ -25,12 +25,7 @@
   width: min(29vw, 460px);
   min-width: 360px;
   padding: clamp(22px, 2.4vw, 42px);
-  background: linear-gradient(
-    90deg,
-    rgb(7 17 31 / 96%) 0 78%,
-    rgb(7 17 31 / 72%) 90%,
-    transparent
-  );
+  background: linear-gradient(90deg, rgb(7 17 31 / 96%) 0 78%, rgb(7 17 31 / 72%) 90%, transparent);
 }
 
 .saga-brand-row {

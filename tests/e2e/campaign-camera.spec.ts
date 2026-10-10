@@ -10,7 +10,9 @@ async function openCurrentChapter(page: import("@playwright/test").Page) {
   await expect(page.getByText("Loire approaches", { exact: true })).toBeVisible();
 }
 
-test("campaign camera keeps stage markers screen-sized and restores context through Saga Back", async ({ page }) => {
+test("campaign camera keeps stage markers screen-sized and restores context through Saga Back", async ({
+  page,
+}) => {
   await openCurrentChapter(page);
   await page.locator(".stage-list-entry").filter({ hasText: "Strangers on the Road" }).click();
   const inspector = page.locator(".campaign-inspector");
@@ -31,7 +33,10 @@ test("campaign camera keeps stage markers screen-sized and restores context thro
     element.scrollTop = 90;
     element.dispatchEvent(new Event("scroll", { bubbles: true }));
   });
-  const beforeBack = await viewport.evaluate((element) => ({ left: element.scrollLeft, top: element.scrollTop }));
+  const beforeBack = await viewport.evaluate((element) => ({
+    left: element.scrollLeft,
+    top: element.scrollTop,
+  }));
   expect(beforeBack.left).toBeGreaterThan(0);
 
   await page.getByRole("button", { name: "Back", exact: true }).click();
@@ -39,13 +44,19 @@ test("campaign camera keeps stage markers screen-sized and restores context thro
   await page.getByRole("button", { name: /A Stranger in France/ }).click();
   await expect(inspector.getByText("Strangers on the Road", { exact: true })).toBeVisible();
   await expect(await zoomLabel(page)).toHaveText("Zoom 1.50×");
-  await expect.poll(() => viewport.evaluate((element) => ({ left: element.scrollLeft, top: element.scrollTop }))).toEqual(beforeBack);
+  await expect
+    .poll(() =>
+      viewport.evaluate((element) => ({ left: element.scrollLeft, top: element.scrollTop })),
+    )
+    .toEqual(beforeBack);
 
   await page.getByRole("button", { name: "Fit", exact: true }).click();
   await expect(await zoomLabel(page)).toHaveText("Zoom 1.00×");
 });
 
-test("dragging the campaign map does not activate a stage while a click still selects", async ({ page }, testInfo) => {
+test("dragging the campaign map does not activate a stage while a click still selects", async ({
+  page,
+}, testInfo) => {
   test.skip(testInfo.project.name !== "chromium-desktop", "Mouse drag semantics use desktop input");
   await openCurrentChapter(page);
   await page.getByRole("button", { name: "Zoom in", exact: true }).click();
@@ -67,18 +78,26 @@ test("dragging the campaign map does not activate a stage while a click still se
   await page.mouse.move(startX - 16, startY, { steps: 3 });
   await page.mouse.up();
   await expect(inspector.getByText("The Other Side", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Shelter Before Nightfall, Story, Available", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Shelter Before Nightfall, Story, Available", exact: true })
+    .click();
   await expect(inspector.getByText("Shelter Before Nightfall", { exact: true })).toBeVisible();
 });
 
 test("wheel and pinch zoom are map-scoped and bounded", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "chromium-desktop", "Pointer synthesis is validated on desktop Chromium");
+  test.skip(
+    testInfo.project.name !== "chromium-desktop",
+    "Pointer synthesis is validated on desktop Chromium",
+  );
   await openCurrentChapter(page);
   const viewport = page.getByTestId("campaign-map-viewport");
   const viewportBox = await viewport.boundingBox();
   expect(viewportBox).not.toBeNull();
   if (!viewportBox) return;
-  await page.mouse.move(viewportBox.x + viewportBox.width / 2, viewportBox.y + viewportBox.height / 2);
+  await page.mouse.move(
+    viewportBox.x + viewportBox.width / 2,
+    viewportBox.y + viewportBox.height / 2,
+  );
   await page.mouse.wheel(0, -240);
   await expect(await zoomLabel(page)).not.toHaveText("Zoom 1.00×");
   const afterWheel = await (await zoomLabel(page)).textContent();
@@ -91,11 +110,51 @@ test("wheel and pinch zoom are map-scoped and bounded", async ({ page }, testInf
     const rect = element.getBoundingClientRect();
     const first = { x: rect.left + 120, y: rect.top + 120 };
     const second = { x: rect.left + 220, y: rect.top + 120 };
-    element.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerId: 41, pointerType: "touch", clientX: first.x, clientY: first.y }));
-    element.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerId: 42, pointerType: "touch", clientX: second.x, clientY: second.y }));
-    element.dispatchEvent(new PointerEvent("pointermove", { bubbles: true, pointerId: 42, pointerType: "touch", clientX: second.x + 80, clientY: second.y }));
-    element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, pointerId: 42, pointerType: "touch", clientX: second.x + 80, clientY: second.y }));
-    element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, pointerId: 41, pointerType: "touch", clientX: first.x, clientY: first.y }));
+    element.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        pointerId: 41,
+        pointerType: "touch",
+        clientX: first.x,
+        clientY: first.y,
+      }),
+    );
+    element.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        pointerId: 42,
+        pointerType: "touch",
+        clientX: second.x,
+        clientY: second.y,
+      }),
+    );
+    element.dispatchEvent(
+      new PointerEvent("pointermove", {
+        bubbles: true,
+        pointerId: 42,
+        pointerType: "touch",
+        clientX: second.x + 80,
+        clientY: second.y,
+      }),
+    );
+    element.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        pointerId: 42,
+        pointerType: "touch",
+        clientX: second.x + 80,
+        clientY: second.y,
+      }),
+    );
+    element.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        pointerId: 41,
+        pointerType: "touch",
+        clientX: first.x,
+        clientY: first.y,
+      }),
+    );
   });
   await expect(await zoomLabel(page)).not.toHaveText("Zoom 1.00×");
 

@@ -14,7 +14,10 @@ function projectedCellPoint(width: number, height: number, x: number, y: number)
   const minY = -57;
   const contentWidth = 676;
   const contentHeight = 418;
-  const scale = Math.min(1.35, Math.max(0.52, Math.min(width / contentWidth, height / contentHeight)));
+  const scale = Math.min(
+    1.35,
+    Math.max(0.52, Math.min(width / contentWidth, height / contentHeight)),
+  );
   const worldX = (width - contentWidth * scale) / 2 + (padding - minX) * scale;
   const worldY = (height - contentHeight * scale) / 2 + (padding - minY) * scale;
   return {
@@ -41,10 +44,14 @@ async function openBattleSandbox(page: Page) {
   await expect(page.getByText("Defeat the opposing units", { exact: true })).toBeVisible();
 }
 
-test("home, saga and chapter navigation preserve truthful campaign entry", async ({ page }, testInfo) => {
+test("home, saga and chapter navigation preserve truthful campaign entry", async ({
+  page,
+}, testInfo) => {
   await page.goto("/");
   await expect(page.getByRole("main", { name: "Fantasia home" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Continue current story", exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Continue current story", exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: "Campaign", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Summon", exact: true })).toBeDisabled();
 
@@ -61,7 +68,9 @@ test("home, saga and chapter navigation preserve truthful campaign entry", async
   await page.locator(".stage-list-entry").filter({ hasText: "Strangers on the Road" }).click();
   const inspector = page.locator(".campaign-inspector");
   await expect(inspector.getByText("Strangers on the Road", { exact: true })).toBeVisible();
-  await expect(inspector.getByText("Escort civilians and the supply cart to safety.")).toBeVisible();
+  await expect(
+    inspector.getByText("Escort civilians and the supply cart to safety."),
+  ).toBeVisible();
   await inspector.getByRole("button", { name: "Enter battle", exact: true }).click();
   await expect(
     page
@@ -85,7 +94,9 @@ test("home, saga and chapter navigation preserve truthful campaign entry", async
   }
 });
 
-test("standardized Fantasia Battle HUD remains reachable through development query", async ({ page }, testInfo) => {
+test("standardized Fantasia Battle HUD remains reachable through development query", async ({
+  page,
+}, testInfo) => {
   await openBattleSandbox(page);
   if (testInfo.project.name === "chromium-desktop") {
     await expect(page.getByText("Fantasia", { exact: true })).toBeVisible();
@@ -98,7 +109,10 @@ test("standardized Fantasia Battle HUD remains reachable through development que
 
   const host = page.getByTestId("production-battlefield");
   await expect(host).toBeVisible();
-  await expect(host.locator("canvas")).toHaveAttribute("data-testid", "production-battlefield-canvas");
+  await expect(host.locator("canvas")).toHaveAttribute(
+    "data-testid",
+    "production-battlefield-canvas",
+  );
 
   const touch = testInfo.project.name !== "chromium-desktop";
   const preview = page.locator(".command-preview");
@@ -123,9 +137,7 @@ test("standardized Fantasia Battle HUD remains reachable through development que
         const collect = (time: number) => {
           stamps.push(time);
           if (stamps.length < 31) return requestAnimationFrame(collect);
-          const intervals = stamps
-            .slice(1)
-            .map((stamp, index) => stamp - (stamps[index] ?? stamp));
+          const intervals = stamps.slice(1).map((stamp, index) => stamp - (stamps[index] ?? stamp));
           const sorted = [...intervals].sort((left, right) => left - right);
           resolve({
             medianMs: sorted[Math.floor(sorted.length / 2)] ?? 0,
@@ -139,7 +151,9 @@ test("standardized Fantasia Battle HUD remains reachable through development que
   expect(sample.maxMs).toBeLessThan(500);
 });
 
-test("home, campaign and battle primary actions remain reachable at 200 percent interface text", async ({ page }, testInfo) => {
+test("home, campaign and battle primary actions remain reachable at 200 percent interface text", async ({
+  page,
+}, testInfo) => {
   test.skip(testInfo.project.name !== "chromium-desktop", "Desktop text-scale proof only");
   await page.goto("/");
   await page.evaluate(() => {
