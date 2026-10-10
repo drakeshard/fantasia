@@ -1,0 +1,18 @@
+/* Keep the existing compact campaign interaction geometry after the detail-polish layer. */
+
+@media (max-width: 1199px) {
+  .campaign-body {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 350px);
+  }
+}
+
+@media (max-height: 499px) and (min-width: 768px) {
+  .campaign-body {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+  .campaign-map-heading {
+    min-height: 54px;
+    padding: var(--ui-s1) var(--ui-s3);
+  }
+}
