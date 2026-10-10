@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Fantasia Story Studio</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Fantasia Narrative Tool</p>
+          <h1>Story Studio</h1>
+        </div>
+        <div class="topbar-actions">
+          <button id="toggle-density" type="button" class="secondary-button">Compact</button>
+          <button id="export-json" type="button" class="secondary-button">Export JSON</button>
+        </div>
+      </header>
+
+      <main class="workspace" aria-live="polite">
+        <aside class="rail" aria-label="Story navigation">
+          <div class="rail-heading">
+            <span class="section-label">Story</span>
+            <span id="story-status" class="status-pill">Loading</span>
+          </div>
+          <div id="story-tree" class="story-tree"></div>
+        </aside>
+
+        <section class="reader" aria-label="Selected story node">
+          <div id="node-header" class="node-header"></div>
+          <div id="beat-list" class="beat-list"></div>
+        </section>
+
+        <aside class="inspector" aria-label="Beat details">
+          <div class="inspector-heading">
+            <span class="section-label">Inspector</span>
+            <span id="selection-id" class="mono muted">No beat selected</span>
+          </div>
+          <div id="inspector-content" class="inspector-content empty-state">
+            Select a beat to inspect its game-facing details.
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer-note">
+        <span>JSON-backed local narrative view.</span>
+        <span>Exact dialogue, shots, and unapproved story details remain outside this dataset.</span>
+      </footer>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

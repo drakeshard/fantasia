@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "id": "fantasia",
+    "title": "Fantasia"
+  },
+  "sagas": [
+    {
+      "id": "S01",
+      "title": "The Maid of France",
+      "chapters": [
+        {
+          "id": "CH01",
+          "title": "A Stranger in France",
+          "status": "approved-structure",
+          "nodes": [
+            {
+              "id": "CH01-N01",
+              "title": "The Other Side",
+              "type": "story",
+              "status": "approved-structure",
+              "location": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+              "time": "26 April 1429 — late afternoon",
+              "summary": "MC emerges from the Fracture injured and disoriented, is discovered by a small civilian/local-escort group already traveling with Julie d’Aubigny, receives Julie's practical aid, learns that Primora and Vaelkrath are unknown, and travels onward with the group before road danger escalates into CH01-B01.",
+              "beats": [
+                {
+                  "id": "CH01-N01-BEAT-01",
+                  "order": 1,
+                  "title": "Fracture Arrival",
+                  "presentation": "cinematic",
+                  "characters": ["MC"],
+                  "screenAction": "MC crashes into unfamiliar wooded farmland while still injured from the failed-chimera encounter. The broken starting sword remains with MC. The small Fracture collapses and leaves no obvious trace.",
+                  "dialogueIntent": "Short reaction to pain, disorientation, and unfamiliar surroundings. No cosmology explanation.",
+                  "playerControl": "none",
+                  "trigger": "node_start",
+                  "result": "MC is mobile but still unable to contribute normal attacks.",
+                  "next": "CH01-N01-BEAT-02"
+                },
+                {
+                  "id": "CH01-N01-BEAT-02",
+                  "order": 2,
+                  "title": "Toward the Road",
+                  "presentation": "exploration",
+                  "characters": ["MC"],
+                  "screenAction": "MC gets bearings, checks the unusable broken sword, and moves toward the nearby road.",
+                  "dialogueIntent": "MC still assumes the fall or passage led somewhere unfamiliar within the home world.",
+                  "playerControl": "short movement segment",
+                  "trigger": "player_moves_toward_road",
+                  "result": "Voices and a traveling cart/group become noticeable.",
+                  "next": "CH01-N01-BEAT-03"
+                },
+                {
+                  "id": "CH01-N01-BEAT-03",
+                  "order": 3,
+                  "title": "The Group Finds MC",
+                  "presentation": "story-scene",
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "screenAction": "A small traveling group of displaced civilians and local militia/courier escorts discovers MC. Julie is already traveling with them.",
+                  "dialogueIntent": "The escorts are cautious about an unknown injured stranger. Julie notices MC's condition.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "group_encounter",
+                  "result": "Ordinary civilians/local escorts become MC's literal first France contact; Julie is the first notable primary character present.",
+                  "next": "CH01-N01-BEAT-04"
+                },
+                {
+                  "id": "CH01-N01-BEAT-04",
+                  "order": 4,
+                  "title": "Julie Helps",
+                  "presentation": "character-scene",
+                  "characters": ["MC", "Julie d’Aubigny", "Local escorts"],
+                  "screenAction": "Julie approaches the injured MC, checks the wounds, provides or directs immediate aid, and makes clear the group should not abandon an injured stranger simply because the stranger is unknown.",
+                  "dialogueIntent": "Practical compassion rather than a dramatic rescue speech. Julie remains independent, not a formal French-army representative.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "injury_noticed",
+                  "result": "Julie becomes the first notable person in France to personally choose to help MC.",
+                  "next": "CH01-N01-BEAT-05"
+                },
+                {
+                  "id": "CH01-N01-BEAT-05",
+                  "order": 5,
+                  "title": "Foreign Words",
+                  "presentation": "dialogue",
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "screenAction": "Conversation continues while MC notices the group's speech sounds foreign even though the meaning is understood. MC answers in their own language and is understood in return.",
+                  "dialogueIntent": "Confirm the spoken-language anomaly naturally. Nobody explains its cause.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "first_conversation",
+                  "result": "The approved cross-world spoken-language rule is experienced directly.",
+                  "next": "CH01-N01-BEAT-06"
+                },
+                {
+                  "id": "CH01-N01-BEAT-06",
+                  "order": 6,
+                  "title": "Primora and Vaelkrath",
+                  "presentation": "dialogue",
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "screenAction": "MC gives their player-selected name and identifies Primora Village and Vaelkrath as home references. Nobody in the group recognizes either name.",
+                  "dialogueIntent": "The locals are genuinely unfamiliar with the names; Julie does not ridicule or accuse MC.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "origin_question",
+                  "result": "MC gains the first strong contradiction while still assuming an unfamiliar distant region rather than another world.",
+                  "next": "CH01-N01-BEAT-07"
+                },
+                {
+                  "id": "CH01-N01-BEAT-07",
+                  "order": 7,
+                  "title": "Orléans",
+                  "presentation": "travel-dialogue",
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "screenAction": "The group continues along the road with MC included. Conversation naturally introduces Orléans, the English siege, and Charles/the Dauphin within the Loire-war context.",
+                  "dialogueIntent": "Give enough historical context for player recognition to precede MC recognition without turning the scene into an exposition lecture.",
+                  "playerControl": "short travel / dialogue advance",
+                  "trigger": "group_resumes_travel",
+                  "result": "Orléans becomes a practical source of information and supplies rather than a political commitment.",
+                  "next": "CH01-N01-BEAT-08"
+                },
+                {
+                  "id": "CH01-N01-BEAT-08",
+                  "order": 8,
+                  "title": "Stay With Us",
+                  "presentation": "character-scene",
+                  "characters": ["MC", "Julie d’Aubigny"],
+                  "screenAction": "Julie makes it clear that wandering off alone while injured is unsafe and supports keeping MC with the traveling group until treatment and information are available.",
+                  "dialogueIntent": "MC accepts for treatment, safety, information, and a route toward answers about home—not because of allegiance to France.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "travel_discussion",
+                  "result": "MC has a believable temporary place with Julie and the civilian group.",
+                  "next": "CH01-N01-BEAT-09"
+                },
+                {
+                  "id": "CH01-N01-BEAT-09",
+                  "order": 9,
+                  "title": "Trouble Ahead",
+                  "presentation": "transition",
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
+                  "screenAction": "The traveling group detects armed trouble on the road ahead and the journey is interrupted.",
+                  "dialogueIntent": "Keep the escalation immediate and practical; this is the handoff into the first mandatory France battle.",
+                  "playerControl": "none",
+                  "trigger": "road_threat_detected",
+                  "result": "Load CH01-B01 — Strangers on the Road.",
+                  "next": "CH01-B01"
+                }
+              ]
+            },
+            {
+              "id": "CH01-B01",
+              "title": "Strangers on the Road",
+              "type": "battle",
+              "status": "approved-structure",
+              "summary": "First mandatory France battle. Protect/escort the civilian group and supply cart from armed foragers/stragglers while MC remains attack-limited. Julie is already present; Hangaku Gozen and La Hire are the next notable named introductions.",
+              "beats": []
+            },
+            {
+              "id": "CH01-N03",
+              "title": "Shelter Before Nightfall",
+              "type": "story",
+              "status": "approved-structure",
+              "summary": "Post-B01 shelter, treatment, food and rest. A cheap replacement weapon is obtained only after this recovery period.",
+              "beats": []
+            },
+            {
+              "id": "CH01-N04",
+              "title": "Names That Should Mean Nothing",
+              "type": "story",
+              "status": "approved-structure",
+              "summary": "Recovery and context deepen the contradiction: Primora and Vaelkrath remain unknown while Orléans becomes the practical route toward information.",
+              "beats": []
+            },
+            {
+              "id": "CH01-B02",
+              "title": "The Road to Orléans",
+              "type": "battle",
+              "status": "approved-structure",
+              "summary": "Combat climax against an organized English siege-line road detachment/outer screen. The sequence progresses through approach/passage, opening the cordon/freeing detainees, and escape before reinforcements. MC restores basic Attack when using the cheap replacement sword to protect someone in immediate danger.",
+              "beats": []
+            },
+            {
+              "id": "CH01-N06",
+              "title": "The Maid Is Coming",
+              "type": "story",
+              "status": "approved-structure",
+              "summary": "Chapter resolution. Jeanne remains physically offscreen; conflicting rumors establish that the Maid is coming while MC's practical route remains Orléans and the search for answers.",
+              "beats": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
