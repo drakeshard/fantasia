@@ -809,3 +809,90 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* GAME-UI07 semantic keyboard battlefield navigator */
+.keyboard-battlefield-navigation {
+  display: grid;
+  gap: var(--ui-s3);
+  margin-top: var(--ui-s4);
+}
+.keyboard-battlefield-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--ui-s3);
+}
+.keyboard-battlefield-heading > span {
+  color: var(--ui-text-muted);
+  font-size: 0.8rem;
+  text-align: right;
+}
+.keyboard-battlefield-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 2px;
+}
+.keyboard-battlefield-grid {
+  display: grid;
+  gap: var(--ui-s1);
+  min-width: 380px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.keyboard-battlefield-legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.keyboard-battlefield-cell {
+  min-width: var(--ui-min-target);
+  min-height: 58px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1px;
+  padding: var(--ui-s1);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  line-height: 1.05;
+}
+.keyboard-battlefield-cell > span,
+.keyboard-battlefield-cell > small {
+  color: var(--ui-text-muted);
+  font-size: 0.68rem;
+}
+.keyboard-battlefield-cell.is-blocked {
+  border-style: dashed;
+}
+.keyboard-battlefield-cell.is-reachable:not(.is-blocked) {
+  box-shadow: inset 0 0 0 1px var(--ui-complete);
+}
+.keyboard-battlefield-cell.is-active::after {
+  content: "Active";
+  font-size: 0.62rem;
+}
+.keyboard-battlefield-cell.is-selected {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: -3px;
+}
+.keyboard-battlefield-cell:focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 767px), (max-height: 499px) {
+  .keyboard-battlefield-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .keyboard-battlefield-heading > span {
+    text-align: left;
+  }
+}

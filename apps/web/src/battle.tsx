@@ -1,4 +1,5 @@
 import {
+  type ProductionBattleCellView,
   ProductionBattleSession,
   type ProductionBattleView,
   runtimeStatus,
@@ -54,6 +55,13 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
   const modeRef = useRef<ActionMode>(actionMode);
   const viewRef = useRef<ProductionBattleView>(view);
   const previewGoalRef = useRef<PreviewGoal | undefined>(previewGoal);
+  const cellButtonRefs = useRef(new Map<string, HTMLButtonElement>());
+  const [keyboardCellKey, setKeyboardCellKey] = useState(() => {
+    const activeCell = view.cells.find((cell) => cell.occupantActorId === view.activeActorId);
+    return activeCell
+      ? `${activeCell.x}:${activeCell.y}`
+      : `${view.bounds.minX}:${view.bounds.minY}`;
+  });
 
   modeRef.current = actionMode;
   viewRef.current = view;
@@ -64,47 +72,7 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
     if (!host) return;
 
     const instance = new ProductionBattleRenderer(host, {
-      onCellActivate: (cell) => {
-        const current = viewRef.current;
-        const mode = modeRef.current;
-
-        if (mode === "attack" && cell.occupantActorId !== undefined) {
-          const target = current.actors.find((actor) => actor.id === cell.occupantActorId);
-          const active = current.actors.find((actor) => actor.id === current.activeActorId);
-          if (target && active && target.side !== active.side && !target.defeated) {
-            setAttackTargetId(target.id);
-            setMessage(
-              `${target.name} selected as the attack target. Confirm the attack to commit.`,
-            );
-          }
-          return;
-        }
-
-        if (mode === "move") {
-          if (cell.occupantActorId !== undefined || !cell.reachable) {
-            setMessage("Choose an empty reachable square for the move preview.");
-            return;
-          }
-          if (current.selectedActorId !== current.activeActorId) {
-            setMessage(`Only ${current.activeActorName} can move this turn.`);
-            return;
-          }
-          const goal = { x: cell.x, y: cell.y };
-          setPreviewGoal(goal);
-          const preview = battle.view(goal);
-          setView(preview);
-          setMessage(`Move preview: ${cell.x}, ${cell.y}. Confirm move to commit.`);
-          return;
-        }
-
-        if (cell.occupantActorId !== undefined) {
-          const selected = battle.selectActor(cell.occupantActorId);
-          if (selected) {
-            setView(selected);
-            setMessage(`${selected.selectedActorName} selected for inspection.`);
-          }
-        }
-      },
+      onCellActivate: (cell) => activateCell(cell),
       onCellPreview: (cell) => {
         if (modeRef.current !== "move" || previewGoalRef.current !== undefined) return;
         setView(cell?.reachable ? battle.view({ x: cell.x, y: cell.y }) : battle.view());
@@ -134,6 +102,107 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
   const reachableCells = view.cells.filter(
     (cell) => cell.reachable && !cell.blocked && cell.occupantActorId === undefined,
   );
+
+  const keyboardCells = [...view.cells].sort((left, right) => left.y - right.y || left.x - right.x);
+  const keyboardGridColumns = view.bounds.maxX - view.bounds.minX + 1;
+
+  function cellKey(cell: Pick<ProductionBattleCellView, "x" | "y">): string {
+    return `${cell.x}:${cell.y}`;
+  }
+
+  function cellAccessibleLabel(cell: ProductionBattleCellView): string {
+    const occupant = view.actors.find((actor) => actor.id === cell.occupantActorId);
+    const parts = [`Square ${cell.x}, ${cell.y}`, `elevation ${cell.elevation}`];
+    if (cell.blocked) parts.push("blocked terrain");
+    if (occupant) {
+      parts.push(`${occupant.name}, ${occupant.side === "player" ? "ally" : "opponent"}`);
+      if (occupant.active) parts.push("active unit");
+      if (occupant.selected) parts.push("selected unit");
+    } else {
+      parts.push("empty");
+    }
+    if (cell.reachable && !cell.blocked && !occupant) {
+      parts.push(`reachable, movement cost ${cell.reachableCost ?? "unknown"}`);
+    } else if (!cell.blocked && !occupant) {
+      parts.push("not currently reachable");
+    }
+    if (cell.path) parts.push("preview path");
+    return parts.join(", ");
+  }
+
+  function focusBattlefieldNeighbor(cell: ProductionBattleCellView, key: string) {
+    const offset =
+      key === "ArrowLeft"
+        ? { x: -1, y: 0 }
+        : key === "ArrowRight"
+          ? { x: 1, y: 0 }
+          : key === "ArrowUp"
+            ? { x: 0, y: -1 }
+            : key === "ArrowDown"
+              ? { x: 0, y: 1 }
+              : undefined;
+    if (!offset) return;
+    const target = view.cells.find(
+      (candidate) => candidate.x === cell.x + offset.x && candidate.y === cell.y + offset.y,
+    );
+    if (!target) return;
+    const targetKey = cellKey(target);
+    setKeyboardCellKey(targetKey);
+    requestAnimationFrame(() => cellButtonRefs.current.get(targetKey)?.focus());
+  }
+
+  function activateCell(cell: ProductionBattleCellView) {
+    const current = viewRef.current;
+    const mode = modeRef.current;
+
+    if (mode === "attack") {
+      if (cell.occupantActorId === undefined) {
+        setMessage("Choose an opposing unit for the attack preview.");
+        return;
+      }
+      const target = current.actors.find((actor) => actor.id === cell.occupantActorId);
+      const active = current.actors.find((actor) => actor.id === current.activeActorId);
+      if (target && active && target.side !== active.side && !target.defeated) {
+        setAttackTargetId(target.id);
+        setMessage(`${target.name} selected as the attack target. Confirm the attack to commit.`);
+        return;
+      }
+      setMessage("Choose an opposing unit for the attack preview.");
+      return;
+    }
+
+    if (mode === "move") {
+      if (cell.occupantActorId !== undefined || !cell.reachable || cell.blocked) {
+        setMessage("Choose an empty reachable square for the move preview.");
+        return;
+      }
+      if (current.selectedActorId !== current.activeActorId) {
+        setMessage(`Only ${current.activeActorName} can move this turn.`);
+        return;
+      }
+      const goal = { x: cell.x, y: cell.y };
+      setPreviewGoal(goal);
+      const preview = battle.view(goal);
+      setView(preview);
+      setMessage(`Move preview: ${cell.x}, ${cell.y}. Confirm move to commit.`);
+      return;
+    }
+
+    if (cell.occupantActorId !== undefined) {
+      const selected = battle.selectActor(cell.occupantActorId);
+      if (selected) {
+        setView(selected);
+        setMessage(`${selected.selectedActorName} selected for inspection.`);
+      }
+      return;
+    }
+
+    setMessage(
+      cell.blocked
+        ? `Square ${cell.x}, ${cell.y} is blocked terrain.`
+        : `Square ${cell.x}, ${cell.y} is empty.`,
+    );
+  }
 
   function resetPreview(nextMode: ActionMode = "inspect") {
     setActionMode(nextMode);
@@ -339,7 +408,7 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
           </div>
         </aside>
 
-        <section class={`command-preview mode-${actionMode}`} aria-live="polite">
+        <section class={`command-preview mode-${actionMode}`}>
           <div>
             <p class="hud-eyebrow">{actionMode === "inspect" ? "Status" : "Action preview"}</p>
             <h2>{previewTitle}</h2>
@@ -379,7 +448,7 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
           </div>
         </section>
 
-        <section class="battle-feedback" aria-live="polite">
+        <section class="battle-feedback" role="status" aria-live="polite" aria-atomic="true">
           <span aria-hidden="true">◆</span>
           <p>{message}</p>
         </section>
@@ -465,6 +534,74 @@ export function BattleApp({ onReturnCampaign }: { readonly onReturnCampaign: () 
                 <dd>{view.selectedAttributes.stability}</dd>
               </div>
             </dl>
+
+            <section
+              class="keyboard-battlefield-navigation"
+              aria-labelledby="keyboard-battlefield-title"
+            >
+              <div class="keyboard-battlefield-heading">
+                <div>
+                  <p class="hud-eyebrow">Keyboard battlefield</p>
+                  <strong id="keyboard-battlefield-title">Logical cell navigator</strong>
+                </div>
+                <span>Arrow keys move focus · Enter or Space selects</span>
+              </div>
+              <div class="keyboard-battlefield-scroll">
+                <fieldset
+                  class="keyboard-battlefield-grid"
+                  style={{
+                    gridTemplateColumns: `repeat(${keyboardGridColumns}, minmax(44px, 1fr))`,
+                  }}
+                >
+                  <legend class="keyboard-battlefield-legend">
+                    Battlefield cells in logical square coordinates
+                  </legend>
+                  {keyboardCells.map((cell) => {
+                    const occupant = view.actors.find((actor) => actor.id === cell.occupantActorId);
+                    const key = cellKey(cell);
+                    return (
+                      <button
+                        type="button"
+                        class={`keyboard-battlefield-cell${cell.blocked ? " is-blocked" : ""}${cell.reachable ? " is-reachable" : ""}${cell.path ? " is-path" : ""}${occupant?.active ? " is-active" : ""}${occupant?.selected ? " is-selected" : ""}`}
+                        data-battle-cell={key}
+                        aria-label={cellAccessibleLabel(cell)}
+                        aria-pressed={occupant?.selected ?? false}
+                        tabIndex={keyboardCellKey === key ? 0 : -1}
+                        ref={(element) => {
+                          if (element) cellButtonRefs.current.set(key, element);
+                          else cellButtonRefs.current.delete(key);
+                        }}
+                        onFocus={() => setKeyboardCellKey(key)}
+                        onKeyDown={(event) => {
+                          if (
+                            !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)
+                          )
+                            return;
+                          event.preventDefault();
+                          focusBattlefieldNeighbor(cell, event.key);
+                        }}
+                        onClick={() => {
+                          setKeyboardCellKey(key);
+                          activateCell(cell);
+                        }}
+                      >
+                        <span>
+                          {cell.x},{cell.y}
+                        </span>
+                        <strong>{occupant?.shortLabel ?? "·"}</strong>
+                        <small>
+                          {cell.blocked
+                            ? "Blocked"
+                            : cell.reachable && !occupant
+                              ? `Move ${cell.reachableCost ?? "—"}`
+                              : `E${cell.elevation}`}
+                        </small>
+                      </button>
+                    );
+                  })}
+                </fieldset>
+              </div>
+            </section>
 
             {actionMode === "move" ? (
               <div class="keyboard-choice-group">
