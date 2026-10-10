@@ -1,9 +1,10 @@
 const app = document.querySelector("#app");
 const tree = document.querySelector("#story-tree");
 const nodeHeader = document.querySelector("#node-header");
-const scenePreview = document.querySelector("#scene-preview");
+const workspaceContent = document.querySelector("#workspace-content");
+const workspaceTabs = [...document.querySelectorAll(".workspace-tab")];
 const beatTimeline = document.querySelector("#beat-timeline");
-const eventList = document.querySelector("#event-list");
+const timelineSummary = document.querySelector("#timeline-summary");
 const inspector = document.querySelector("#inspector-content");
 const selectionId = document.querySelector("#selection-id");
 const status = document.querySelector("#story-status");
@@ -26,6 +27,7 @@ const state = {
   chapterId: null,
   nodeId: null,
   beatId: null,
+  workspace: "overview",
   compact: false,
   playerBeatIndex: 0,
   playerEventIndex: 0,
@@ -73,10 +75,24 @@ function scriptForBeat(beat) {
   return Array.isArray(beat?.script) ? beat.script : [];
 }
 
+function spokenScriptForBeat(beat) {
+  return scriptForBeat(beat).filter((event) => event.type === "dialogue" || event.type === "thought");
+}
+
 function statusLabel(value) {
   if (value === "approved-structure") return "Approved structure";
+  if (value === "production-ready") return "Production ready";
   if (value === "draft") return "Draft";
-  return value;
+  if (value === "proposed") return "Proposed";
+  if (value === "approved") return "Approved";
+  return value ?? "Unknown";
+}
+
+function formatSeconds(total) {
+  const rounded = Math.max(0, Math.round(total));
+  const minutes = Math.floor(rounded / 60);
+  const seconds = String(rounded % 60).padStart(2, "0");
+  return `${minutes}:${seconds}`;
 }
 
 function timingLabel(beat) {
@@ -90,7 +106,7 @@ function timingLabel(beat) {
   return "Timing TBD";
 }
 
-function nodeTimingLabel(node) {
+function nodeTiming(node) {
   let min = 0;
   let max = 0;
   let hasTiming = false;
@@ -109,15 +125,72 @@ function nodeTimingLabel(node) {
     }
   }
   if (!hasTiming) return null;
-  if (hasPlayerRange) return `Estimated ${formatSeconds(min)}–${formatSeconds(max)}`;
-  return `Estimated ${formatSeconds(max)}`;
+  return { min, max, ranged: hasPlayerRange };
 }
 
-function formatSeconds(total) {
-  const rounded = Math.max(0, Math.round(total));
-  const minutes = Math.floor(rounded / 60);
-  const seconds = String(rounded % 60).padStart(2, "0");
-  return `${minutes}:${seconds}`;
+function nodeTimingLabel(node) {
+  const timing = nodeTiming(node);
+  if (!timing) return null;
+  if (timing.ranged) return `Estimated ${formatSeconds(timing.min)}–${formatSeconds(timing.max)}`;
+  return `Estimated ${formatSeconds(timing.max)}`;
+}
+
+function nodeCounts(node) {
+  let events = 0;
+  let spoken = 0;
+  let staged = 0;
+  for (const beat of node.beats) {
+    const script = scriptForBeat(beat);
+    events += script.length;
+    spoken += spokenScriptForBeat(beat).length;
+    if (productionForBeat(beat)?.staging) staged += 1;
+  }
+  return { events, spoken, staged };
+}
+
+function speakerDisplayForCharacter(beat, character) {
+  const event = scriptForBeat(beat).find(
+    (item) => item.speaker === character && typeof item.displayLabel === "string",
+  );
+  return event?.displayLabel ?? character;
+}
+
+function renderCharacterSlot(slotName, slot, beat = currentBeat()) {
+  if (!slot) {
+    return `<div class="character-slot empty"><span>${escapeHtml(slotName)}</span><small>Unassigned</small></div>`;
+  }
+  const label = speakerDisplayForCharacter(beat, slot.character);
+  const shortLabel =
+    slot.shortLabel && label === slot.character
+      ? slot.shortLabel
+      : label
+          .split(/\s+/)
+          .map((part) => part[0])
+          .join("")
+          .slice(0, 3)
+          .toUpperCase();
+  return `
+    <div class="character-slot">
+      <div class="portrait-placeholder" aria-hidden="true">${escapeHtml(shortLabel || "??")}</div>
+      <strong>${escapeHtml(label)}</strong>
+      <small>${escapeHtml(slot.pose ?? slot.expression ?? slotName)}</small>
+    </div>
+  `;
+}
+
+function productionStatus(kind, value, note) {
+  const className = value === "ready" ? "ready" : value === "partial" ? "partial" : "missing";
+  const label = value === "ready" ? "Ready" : value === "partial" ? "Partial" : "Not assigned";
+  return `
+    <article class="production-card">
+      <div class="production-card-top">
+        <span class="production-dot ${className}" aria-hidden="true"></span>
+        <span>${escapeHtml(kind)}</span>
+        <strong>${label}</strong>
+      </div>
+      <p>${escapeHtml(note)}</p>
+    </article>
+  `;
 }
 
 function renderTree() {
@@ -140,10 +213,11 @@ function renderTree() {
         const button = document.createElement("button");
         button.type = "button";
         button.className = `node-link ${node.id === state.nodeId ? "active" : ""}`;
+        const scriptState = node.scriptStatus ? `<span class="node-state">${escapeHtml(statusLabel(node.scriptStatus))}</span>` : "";
         button.innerHTML = `
           <span class="node-link-main">
             <span class="mono node-code">${escapeHtml(node.id.replace(`${chapter.id}-`, ""))}</span>
-            <span>${escapeHtml(node.title)}</span>
+            <span class="node-link-copy"><strong>${escapeHtml(node.title)}</strong>${scriptState}</span>
           </span>
           <span class="type-chip ${escapeHtml(node.type)}">${escapeHtml(node.type)}</span>
         `;
@@ -159,7 +233,7 @@ function renderTree() {
   }
 }
 
-function renderNode() {
+function renderNodeHeader() {
   const saga = currentSaga();
   const chapter = currentChapter();
   const node = currentNode();
@@ -167,15 +241,16 @@ function renderNode() {
 
   const metadata = [node.location, node.time, nodeTimingLabel(node)].filter(Boolean);
   const scriptBadge = node.scriptStatus
-    ? `<span class="status-pill">${escapeHtml(statusLabel(node.scriptStatus))} script</span>`
+    ? `<span class="status-pill script-status">${escapeHtml(statusLabel(node.scriptStatus))} script</span>`
     : "";
   nodeHeader.innerHTML = `
+    <div class="breadcrumb mono">${escapeHtml(saga.id)} / ${escapeHtml(chapter.id)} / ${escapeHtml(node.id)}</div>
     <div class="node-title-row">
       <div>
-        <p class="eyebrow">${escapeHtml(saga.id)} · ${escapeHtml(chapter.id)} · ${escapeHtml(node.type)}</p>
+        <p class="eyebrow">${escapeHtml(node.type)} node</p>
         <h2>${escapeHtml(node.title)}</h2>
       </div>
-      <div class="tag-list">
+      <div class="tag-list status-stack">
         <span class="status-pill">${escapeHtml(statusLabel(node.status))}</span>
         ${scriptBadge}
       </div>
@@ -185,19 +260,18 @@ function renderNode() {
   `;
 
   playNodeButton.disabled = node.beats.length === 0;
-  renderScenePreview();
-  renderTimeline();
-  renderEvents();
 }
 
 function renderTimeline() {
   const node = currentNode();
   beatTimeline.innerHTML = "";
   if (!node || node.beats.length === 0) {
-    beatTimeline.innerHTML = `<div class="empty-node"><span class="section-label">Structure only</span><strong>Detailed beats have not been authored for this node yet.</strong><p>The Studio shows approved structure without inventing scene content.</p></div>`;
+    timelineSummary.textContent = "Structure only";
+    beatTimeline.innerHTML = `<div class="empty-node"><strong>No detailed beats authored.</strong><p>The Studio will not invent production detail for this node.</p></div>`;
     return;
   }
 
+  timelineSummary.textContent = `${node.beats.length} beats · ${nodeCounts(node).events} exact events`;
   for (const beat of node.beats) {
     const button = document.createElement("button");
     button.type = "button";
@@ -207,7 +281,7 @@ function renderTimeline() {
       <span class="timeline-order mono">${String(beat.order).padStart(2, "0")}</span>
       <span class="timeline-copy">
         <strong>${escapeHtml(beat.title)}</strong>
-        <small>${escapeHtml(timingLabel(beat))}${lineCount ? ` · ${lineCount} script events` : ""}</small>
+        <small>${escapeHtml(timingLabel(beat))}${lineCount ? ` · ${lineCount} events` : ""}</small>
       </span>
     `;
     button.addEventListener("click", () => selectBeat(beat.id));
@@ -215,57 +289,103 @@ function renderTimeline() {
   }
 }
 
-function speakerDisplayForCharacter(beat, character) {
-  const event = scriptForBeat(beat).find(
-    (item) => item.speaker === character && typeof item.displayLabel === "string",
-  );
-  return event?.displayLabel ?? character;
-}
+function renderOverview() {
+  const node = currentNode();
+  if (!node) return;
+  const counts = nodeCounts(node);
+  const timing = nodeTimingLabel(node) ?? "Timing TBD";
+  const hasScript = counts.events > 0;
+  const hasStaging = counts.staged > 0;
+  const allStaged = node.beats.length > 0 && counts.staged === node.beats.length;
 
-function renderCharacterSlot(slotName, slot, beat = currentBeat()) {
-  if (!slot) {
-    return `<div class="character-slot empty"><span>${escapeHtml(slotName)}</span><small>Empty</small></div>`;
-  }
-  const label = speakerDisplayForCharacter(beat, slot.character);
-  const shortLabel =
-    slot.shortLabel && label === slot.character
-      ? slot.shortLabel
-      : label
-          .split(/\s+/)
-          .map((part) => part[0])
-          .join("")
-          .slice(0, 3)
-          .toUpperCase();
-  return `
-    <div class="character-slot">
-      <div class="portrait-placeholder" aria-hidden="true">${escapeHtml(shortLabel || "??")}</div>
-      <strong>${escapeHtml(label)}</strong>
-      <small>${escapeHtml(slot.pose ?? slot.expression ?? slotName)}</small>
-    </div>
+  workspaceContent.innerHTML = `
+    <section class="workspace-section overview-hero">
+      <div>
+        <span class="section-label">Production overview</span>
+        <h3>Node readiness</h3>
+        <p>Repository-backed status only. Voice, art, and other media are not assumed unless they are represented in source data.</p>
+      </div>
+      <div class="metric-grid">
+        <div class="metric-card"><span>Beats</span><strong>${node.beats.length}</strong></div>
+        <div class="metric-card"><span>Exact events</span><strong>${counts.events}</strong></div>
+        <div class="metric-card"><span>Spoken lines</span><strong>${counts.spoken}</strong></div>
+        <div class="metric-card"><span>Duration</span><strong>${escapeHtml(timing.replace("Estimated ", ""))}</strong></div>
+      </div>
+    </section>
+
+    <section class="workspace-section">
+      <div class="section-heading">
+        <div><span class="section-label">Pipeline</span><h3>Production layers</h3></div>
+      </div>
+      <div class="production-grid">
+        ${productionStatus("Structure", node.status ? "ready" : "missing", node.status ? statusLabel(node.status) : "No structure status")}
+        ${productionStatus("Script", hasScript ? "ready" : "missing", hasScript ? `${counts.events} exact events in repository story data` : "No exact script authored")}
+        ${productionStatus("Scene staging", allStaged ? "ready" : hasStaging ? "partial" : "missing", hasStaging ? `${counts.staged}/${node.beats.length} beats have staging metadata` : "No staging metadata assigned")}
+        ${productionStatus("Voice", "missing", "No voice-generation or approved audio data is represented in the current production schema")}
+        ${productionStatus("Assets", hasStaging ? "partial" : "missing", hasStaging ? "Staging references exist; asset availability is not tracked by the current schema" : "No scene asset references available")}
+      </div>
+    </section>
   `;
 }
 
-function renderScenePreview() {
+function eventIcon(type) {
+  return (
+    {
+      action: "ACT",
+      dialogue: "DIA",
+      thought: "THO",
+      narration: "NAR",
+      control: "CTL",
+      transition: "TRN",
+    }[type] ?? "EVT"
+  );
+}
+
+function renderScript() {
   const beat = currentBeat();
   if (!beat) {
-    scenePreview.innerHTML = `<div class="scene-empty"><span class="section-label">Scene preview</span><p>Select a detailed beat to preview staging.</p></div>`;
+    workspaceContent.innerHTML = `<div class="empty-workspace">Select a detailed beat to review its script.</div>`;
+    return;
+  }
+  const script = scriptForBeat(beat);
+  if (script.length === 0) {
+    workspaceContent.innerHTML = `<div class="empty-workspace"><span class="section-label">Script</span><h3>${escapeHtml(beat.title)}</h3><p>No exact script has been authored for this beat.</p></div>`;
     return;
   }
 
+  const rows = script
+    .map((event) => {
+      const speaker = event.displayLabel ?? event.speaker;
+      const speakerBlock = speaker
+        ? `<div class="script-speaker"><strong>${escapeHtml(speaker)}</strong>${event.speaker && event.displayLabel !== event.speaker ? `<small>Canonical: ${escapeHtml(event.speaker)}</small>` : ""}</div>`
+        : `<div class="script-speaker non-dialogue"><strong>${escapeHtml(event.type)}</strong></div>`;
+      return `
+        <article class="script-row ${escapeHtml(event.type)}">
+          <div class="script-kind mono">${eventIcon(event.type)}</div>
+          ${speakerBlock}
+          <div class="script-copy"><p>${displayText(event.text)}</p>${event.note ? `<small>${displayText(event.note)}</small>` : ""}</div>
+          <div class="script-id mono">${escapeHtml(event.id)}</div>
+        </article>
+      `;
+    })
+    .join("");
+
+  workspaceContent.innerHTML = `
+    <section class="workspace-section script-sheet">
+      <div class="section-heading sticky-section-heading">
+        <div><span class="section-label">Script</span><h3>${escapeHtml(beat.title)}</h3></div>
+        <div class="tag-list"><span class="status-pill">${escapeHtml(statusLabel(beat.scriptStatus ?? "draft"))}</span><span class="status-pill">${script.length} events</span></div>
+      </div>
+      <div class="script-list">${rows}</div>
+    </section>
+  `;
+}
+
+function renderStageCanvas(beat) {
   const production = productionForBeat(beat);
   const staging = production?.staging ?? {};
   const slots = staging.slots ?? {};
-  scenePreview.innerHTML = `
-    <div class="scene-preview-head">
-      <div>
-        <span class="section-label">Scene preview</span>
-        <strong>${escapeHtml(beat.title)}</strong>
-      </div>
-      <div class="tag-list">
-        <span class="presentation-chip">${escapeHtml(beat.presentation)}</span>
-        ${beat.scriptStatus ? `<span class="status-pill">${escapeHtml(statusLabel(beat.scriptStatus))} script</span>` : ""}
-      </div>
-    </div>
+  return `
     <div class="stage-canvas">
       <div class="stage-background">
         <span class="mono muted">BACKGROUND</span>
@@ -282,59 +402,153 @@ function renderScenePreview() {
   `;
 }
 
-function eventIcon(type) {
-  return (
-    {
-      action: "⚡",
-      dialogue: "💬",
-      thought: "◌",
-      reaction: "🙂",
-      camera: "🎬",
-      control: "🎮",
-      transition: "➡",
-      narration: "◆",
-    }[type] ?? "•"
-  );
-}
-
-function renderEvents() {
+function renderScene() {
   const beat = currentBeat();
-  eventList.innerHTML = "";
-  if (!beat) return;
-  const script = scriptForBeat(beat);
-  const fallbackEvents = productionForBeat(beat)?.events ?? [];
-  const events = script.length ? script : fallbackEvents;
-  const isScript = script.length > 0;
-
-  if (events.length === 0) {
-    eventList.innerHTML = `<div class="event-empty"><span class="section-label">Event sequence</span><p>No ordered sub-events authored yet. Beat-level action and dialogue intent remain available in the inspector.</p></div>`;
+  if (!beat) {
+    workspaceContent.innerHTML = `<div class="empty-workspace">Select a detailed beat to review scene staging.</div>`;
     return;
   }
+  const staging = productionForBeat(beat)?.staging ?? {};
+  const slots = staging.slots ?? {};
+  const slotRows = ["left", "center", "right"]
+    .map((slotName) => {
+      const slot = slots[slotName];
+      return `<div class="property-row"><span>${slotName}</span><strong>${escapeHtml(slot?.character ?? "Unassigned")}</strong><small>${escapeHtml(slot?.pose ?? slot?.expression ?? "—")}</small></div>`;
+    })
+    .join("");
 
-  const heading = document.createElement("div");
-  heading.className = "event-heading";
-  heading.innerHTML = `<span class="section-label">${isScript ? "Playable script" : "Production event sequence"}</span><span class="mono muted">${events.length} events</span>`;
-  eventList.append(heading);
-
-  for (const [index, event] of events.entries()) {
-    const row = document.createElement("article");
-    row.className = `event-row ${event.type ?? "action"}`;
-    const speaker = event.displayLabel ?? event.speaker;
-    row.innerHTML = `
-      <div class="event-index mono">${String(index + 1).padStart(2, "0")}</div>
-      <div class="event-icon" aria-hidden="true">${eventIcon(event.type)}</div>
-      <div class="event-copy">
-        <div class="event-meta">
-          <span>${escapeHtml(event.type ?? "action")}</span>
-          ${speaker ? `<strong>${escapeHtml(speaker)}</strong>` : ""}
-          ${event.id ? `<span class="mono muted">${escapeHtml(event.id)}</span>` : ""}
-        </div>
-        <p>${displayText(event.text)}</p>
-        ${event.note ? `<small>${displayText(event.note)}</small>` : ""}
+  workspaceContent.innerHTML = `
+    <section class="workspace-section scene-workspace">
+      <div class="section-heading">
+        <div><span class="section-label">Scene</span><h3>${escapeHtml(beat.title)}</h3></div>
+        <span class="presentation-chip">${escapeHtml(beat.presentation)}</span>
       </div>
-    `;
-    eventList.append(row);
+      ${renderStageCanvas(beat)}
+      <div class="scene-properties">
+        <div class="property-panel">
+          <span class="section-label">Framing</span>
+          <div class="property-row"><span>Background</span><strong>${escapeHtml(staging.background ?? "Unassigned")}</strong></div>
+          <div class="property-row"><span>Camera</span><strong>${escapeHtml(staging.camera ?? "Unassigned")}</strong></div>
+          <div class="property-row"><span>Timing</span><strong>${escapeHtml(timingLabel(beat))}</strong></div>
+        </div>
+        <div class="property-panel">
+          <span class="section-label">Character slots</span>
+          ${slotRows}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function speakerInventory(node) {
+  const speakers = new Map();
+  for (const beat of node.beats) {
+    for (const event of spokenScriptForBeat(beat)) {
+      const canonical = event.speaker;
+      const existing = speakers.get(canonical) ?? { canonical, labels: new Set(), lines: 0 };
+      if (event.displayLabel) existing.labels.add(event.displayLabel);
+      existing.lines += 1;
+      speakers.set(canonical, existing);
+    }
   }
+  return [...speakers.values()];
+}
+
+function renderVoice() {
+  const node = currentNode();
+  const beat = currentBeat();
+  if (!node) return;
+  const speakers = speakerInventory(node);
+  const beatLines = beat ? spokenScriptForBeat(beat) : [];
+  const cast = speakers.length
+    ? speakers
+        .map(
+          (speaker) => `
+            <article class="voice-cast-card">
+              <div class="voice-avatar">${escapeHtml(speaker.canonical.slice(0, 2).toUpperCase())}</div>
+              <div><strong>${escapeHtml(speaker.canonical)}</strong><small>${escapeHtml([...speaker.labels].join(" / ") || speaker.canonical)} · ${speaker.lines} lines</small></div>
+              <span class="status-pill">Not configured</span>
+            </article>
+          `,
+        )
+        .join("")
+    : `<div class="empty-inline">No spoken script is available for this node.</div>`;
+
+  const lines = beatLines.length
+    ? beatLines
+        .map(
+          (event) => `
+            <div class="voice-line">
+              <div><strong>${escapeHtml(event.displayLabel ?? event.speaker)}</strong><span>${displayText(event.text)}</span></div>
+              <span class="mono muted">${escapeHtml(event.id)}</span>
+              <span class="status-pill">No audio</span>
+            </div>
+          `,
+        )
+        .join("")
+    : `<div class="empty-inline">The selected beat has no spoken lines.</div>`;
+
+  workspaceContent.innerHTML = `
+    <section class="workspace-section">
+      <div class="section-heading">
+        <div><span class="section-label">Voice</span><h3>Cast and line inventory</h3></div>
+        <span class="status-pill warning">Provider not connected</span>
+      </div>
+      <p class="workspace-note">This workspace is production-ready UI scaffolding only. No provider credentials, generated takes, or audio completion state are stored in the current repository schema.</p>
+      <div class="voice-cast-grid">${cast}</div>
+    </section>
+    <section class="workspace-section">
+      <div class="section-heading"><div><span class="section-label">Selected beat</span><h3>${escapeHtml(beat?.title ?? "No beat selected")}</h3></div></div>
+      <div class="voice-lines">${lines}</div>
+    </section>
+  `;
+}
+
+function renderAssets() {
+  const node = currentNode();
+  if (!node) return;
+  const backgrounds = new Set();
+  const characters = new Set();
+  let missingBackgrounds = 0;
+  let missingSlots = 0;
+
+  for (const beat of node.beats) {
+    const staging = productionForBeat(beat)?.staging ?? {};
+    if (staging.background) backgrounds.add(staging.background);
+    else missingBackgrounds += 1;
+    const slots = staging.slots ?? {};
+    for (const slotName of ["left", "center", "right"]) {
+      const slot = slots[slotName];
+      if (slot?.character) characters.add(slot.character);
+      else missingSlots += 1;
+    }
+  }
+
+  const renderReferenceList = (items, emptyText) => {
+    if (items.length === 0) return `<div class="empty-inline">${escapeHtml(emptyText)}</div>`;
+    return items.map((item) => `<div class="asset-reference"><strong>${escapeHtml(item)}</strong><span class="status-pill">Referenced</span></div>`).join("");
+  };
+
+  workspaceContent.innerHTML = `
+    <section class="workspace-section">
+      <div class="section-heading"><div><span class="section-label">Assets</span><h3>Referenced production data</h3></div></div>
+      <p class="workspace-note">The current schema records staging references, not asset-library availability. “Referenced” means the identifier appears in production metadata; it does not claim a finished file exists.</p>
+      <div class="asset-grid">
+        <div class="asset-panel"><span class="section-label">Background references</span>${renderReferenceList([...backgrounds], "No background references assigned")}</div>
+        <div class="asset-panel"><span class="section-label">Character references</span>${renderReferenceList([...characters], "No character references assigned")}</div>
+        <div class="asset-panel"><span class="section-label">Unassigned production fields</span><div class="asset-stat"><strong>${missingBackgrounds}</strong><span>beats without background</span></div><div class="asset-stat"><strong>${missingSlots}</strong><span>empty character slots across beats</span></div></div>
+      </div>
+    </section>
+  `;
+}
+
+function renderWorkspace() {
+  workspaceTabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.workspace === state.workspace));
+  if (state.workspace === "overview") renderOverview();
+  else if (state.workspace === "script") renderScript();
+  else if (state.workspace === "scene") renderScene();
+  else if (state.workspace === "voice") renderVoice();
+  else if (state.workspace === "assets") renderAssets();
 }
 
 function renderInspector() {
@@ -345,19 +559,19 @@ function renderInspector() {
   }
 
   const script = scriptForBeat(beat);
-  const dialogueCount = script.filter((event) => event.type === "dialogue").length;
+  const dialogueCount = spokenScriptForBeat(beat).length;
+  const staging = productionForBeat(beat)?.staging;
   selectionId.textContent = beat.id;
   inspector.classList.remove("empty-state");
   inspector.innerHTML = `
     <section class="inspector-section primary-detail"><span class="section-label">Player sees</span><p>${displayText(beat.screenAction)}</p></section>
     <section class="inspector-section"><span class="section-label">Timing</span><p>${escapeHtml(timingLabel(beat))}</p></section>
-    <section class="inspector-section"><span class="section-label">Characters present</span><div class="tag-list">${beat.characters.map((character) => `<span class="tag">${escapeHtml(character)}</span>`).join("")}</div></section>
+    <section class="inspector-section"><span class="section-label">Characters</span><div class="tag-list">${beat.characters.map((character) => `<span class="tag">${escapeHtml(character)}</span>`).join("")}</div></section>
     <section class="inspector-section"><span class="section-label">Script</span><p>${script.length ? `${escapeHtml(statusLabel(beat.scriptStatus ?? "draft"))} · ${script.length} events · ${dialogueCount} spoken lines` : "No exact script authored yet."}</p></section>
+    <section class="inspector-section"><span class="section-label">Scene metadata</span><p>${staging ? "Staging metadata assigned." : "No staging metadata assigned."}</p></section>
     <section class="inspector-section"><span class="section-label">Dialogue intent</span><p>${displayText(beat.dialogueIntent)}</p></section>
-    <div class="detail-grid">
-      <section class="inspector-section"><span class="section-label">Player control</span><p>${displayText(beat.playerControl)}</p></section>
-      <section class="inspector-section"><span class="section-label">Trigger</span><p class="mono">${escapeHtml(beat.trigger)}</p></section>
-    </div>
+    <section class="inspector-section"><span class="section-label">Player control</span><p>${displayText(beat.playerControl)}</p></section>
+    <section class="inspector-section"><span class="section-label">Trigger</span><p class="mono">${escapeHtml(beat.trigger)}</p></section>
     <section class="inspector-section result-panel"><span class="section-label">Resulting state</span><p>${displayText(beat.result)}</p></section>
     <section class="inspector-section next-panel"><span class="section-label">Next</span><p class="mono">${escapeHtml(beat.next ?? "—")}</p></section>
   `;
@@ -366,7 +580,13 @@ function renderInspector() {
 function clearInspector() {
   selectionId.textContent = "No beat selected";
   inspector.className = "inspector-content empty-state";
-  inspector.textContent = "Select a beat to inspect its game-facing details.";
+  inspector.textContent = "Select a beat to inspect its production details.";
+}
+
+function renderNode() {
+  renderNodeHeader();
+  renderWorkspace();
+  renderTimeline();
 }
 
 function selectNode(sagaId, chapterId, nodeId) {
@@ -375,6 +595,7 @@ function selectNode(sagaId, chapterId, nodeId) {
   state.nodeId = nodeId;
   const node = currentNode();
   state.beatId = node?.beats[0]?.id ?? null;
+  state.workspace = "overview";
   renderTree();
   renderNode();
   renderInspector();
@@ -383,9 +604,13 @@ function selectNode(sagaId, chapterId, nodeId) {
 function selectBeat(beatId) {
   state.beatId = beatId;
   renderTimeline();
-  renderScenePreview();
-  renderEvents();
+  renderWorkspace();
   renderInspector();
+}
+
+function selectWorkspace(workspace) {
+  state.workspace = workspace;
+  renderWorkspace();
 }
 
 function toggleDensity() {
@@ -437,8 +662,7 @@ function renderPlayer() {
   const node = currentNode();
   const beat = playerBeat();
   if (!node || !beat) return;
-  const production = productionForBeat(beat);
-  const staging = production?.staging ?? {};
+  const staging = productionForBeat(beat)?.staging ?? {};
   const slots = staging.slots ?? {};
   const events = playerEvents();
   const event = currentPlayerEvent();
@@ -467,8 +691,7 @@ function renderPlayer() {
   let absoluteIndex = 0;
   for (let index = 0; index < state.playerBeatIndex; index += 1) {
     const priorBeat = node.beats[index];
-    absoluteIndex +=
-      scriptForBeat(priorBeat).length || (productionForBeat(priorBeat)?.events?.length ?? 1);
+    absoluteIndex += scriptForBeat(priorBeat).length || (productionForBeat(priorBeat)?.events?.length ?? 1);
   }
   absoluteIndex += state.playerEventIndex + 1;
 
@@ -503,8 +726,7 @@ function syncPlayerSelection() {
   if (!beat) return;
   state.beatId = beat.id;
   renderTimeline();
-  renderScenePreview();
-  renderEvents();
+  renderWorkspace();
   renderInspector();
 }
 
@@ -543,21 +765,16 @@ async function init() {
       fetch("./story.json", { cache: "no-store" }),
       fetch("./story-production.json", { cache: "no-store" }),
     ]);
-    if (!storyResponse.ok) {
-      throw new Error(`Story data request failed: ${storyResponse.status}`);
-    }
-    if (!productionResponse.ok) {
-      throw new Error(`Production data request failed: ${productionResponse.status}`);
-    }
+    if (!storyResponse.ok) throw new Error(`Story data request failed: ${storyResponse.status}`);
+    if (!productionResponse.ok) throw new Error(`Production data request failed: ${productionResponse.status}`);
+
     state.story = await storyResponse.json();
     state.production = await productionResponse.json();
 
     const firstSaga = state.story.sagas[0];
     const firstChapter = firstSaga?.chapters[0];
     const firstNode = firstChapter?.nodes[0];
-    if (!firstSaga || !firstChapter || !firstNode) {
-      throw new Error("Story data has no readable nodes.");
-    }
+    if (!firstSaga || !firstChapter || !firstNode) throw new Error("Story data has no readable nodes.");
 
     state.sagaId = firstSaga.id;
     state.chapterId = firstChapter.id;
@@ -572,10 +789,11 @@ async function init() {
   } catch (error) {
     status.textContent = "Load failed";
     status.classList.add("error");
-    nodeHeader.innerHTML = `<div class="load-error"><strong>Unable to load story data.</strong><p>${escapeHtml(error instanceof Error ? error.message : error)}</p></div>`;
+    workspaceContent.innerHTML = `<div class="load-error"><strong>Unable to load story data.</strong><p>${escapeHtml(error instanceof Error ? error.message : error)}</p></div>`;
   }
 }
 
+workspaceTabs.forEach((tab) => tab.addEventListener("click", () => selectWorkspace(tab.dataset.workspace)));
 densityButton.addEventListener("click", toggleDensity);
 exportButton.addEventListener("click", exportStory);
 playNodeButton.addEventListener("click", openPlayer);
