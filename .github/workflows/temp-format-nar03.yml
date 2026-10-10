@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - game-nar03/n01-conversation
+    paths:
+      - .github/workflows/temp-format-nar03.yml
 
 permissions:
   contents: write
 
 jobs:
   format:
-    if: ${{ !contains(github.event.head_commit.message, 'chore: apply NAR03 formatting') }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
