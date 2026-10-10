@@ -76,7 +76,9 @@ function scriptForBeat(beat) {
 }
 
 function spokenScriptForBeat(beat) {
-  return scriptForBeat(beat).filter((event) => event.type === "dialogue" || event.type === "thought");
+  return scriptForBeat(beat).filter(
+    (event) => event.type === "dialogue" || event.type === "thought",
+  );
 }
 
 function statusLabel(value) {
@@ -100,7 +102,8 @@ function timingLabel(beat) {
   if (!timing) return "Timing TBD";
   if (timing.mode === "player") {
     const range = [timing.minSeconds, timing.maxSeconds].filter(Number.isFinite);
-    return range.length === 2 ? `~${range[0]}–${range[1]}s player-controlled` : "Player-controlled";
+    if (range.length === 2) return `~${range[0]}–${range[1]}s player-controlled`;
+    return "Player-controlled";
   }
   if (Number.isFinite(timing.estimatedSeconds)) return `~${timing.estimatedSeconds}s`;
   return "Timing TBD";
@@ -131,7 +134,9 @@ function nodeTiming(node) {
 function nodeTimingLabel(node) {
   const timing = nodeTiming(node);
   if (!timing) return null;
-  if (timing.ranged) return `Estimated ${formatSeconds(timing.min)}–${formatSeconds(timing.max)}`;
+  if (timing.ranged) {
+    return `Estimated ${formatSeconds(timing.min)}–${formatSeconds(timing.max)}`;
+  }
   return `Estimated ${formatSeconds(timing.max)}`;
 }
 
@@ -140,8 +145,7 @@ function nodeCounts(node) {
   let spoken = 0;
   let staged = 0;
   for (const beat of node.beats) {
-    const script = scriptForBeat(beat);
-    events += script.length;
+    events += scriptForBeat(beat).length;
     spoken += spokenScriptForBeat(beat).length;
     if (productionForBeat(beat)?.staging) staged += 1;
   }
@@ -198,12 +202,22 @@ function renderTree() {
   for (const saga of state.story.sagas) {
     const sagaBlock = document.createElement("section");
     sagaBlock.className = "tree-group";
-    sagaBlock.innerHTML = `<div class="tree-title"><span class="mono">${escapeHtml(saga.id)}</span><strong>${escapeHtml(saga.title)}</strong></div>`;
+    sagaBlock.innerHTML = `
+      <div class="tree-title">
+        <span class="mono">${escapeHtml(saga.id)}</span>
+        <strong>${escapeHtml(saga.title)}</strong>
+      </div>
+    `;
 
     for (const chapter of saga.chapters) {
       const chapterBlock = document.createElement("div");
       chapterBlock.className = "chapter-block";
-      chapterBlock.innerHTML = `<div class="chapter-title"><span>${escapeHtml(chapter.id)}</span><strong>${escapeHtml(chapter.title)}</strong></div>`;
+      chapterBlock.innerHTML = `
+        <div class="chapter-title">
+          <span>${escapeHtml(chapter.id)}</span>
+          <strong>${escapeHtml(chapter.title)}</strong>
+        </div>
+      `;
 
       const nodeNav = document.createElement("nav");
       nodeNav.className = "node-nav";
@@ -213,11 +227,16 @@ function renderTree() {
         const button = document.createElement("button");
         button.type = "button";
         button.className = `node-link ${node.id === state.nodeId ? "active" : ""}`;
-        const scriptState = node.scriptStatus ? `<span class="node-state">${escapeHtml(statusLabel(node.scriptStatus))}</span>` : "";
+        const scriptState = node.scriptStatus
+          ? `<span class="node-state">${escapeHtml(statusLabel(node.scriptStatus))}</span>`
+          : "";
         button.innerHTML = `
           <span class="node-link-main">
             <span class="mono node-code">${escapeHtml(node.id.replace(`${chapter.id}-`, ""))}</span>
-            <span class="node-link-copy"><strong>${escapeHtml(node.title)}</strong>${scriptState}</span>
+            <span class="node-link-copy">
+              <strong>${escapeHtml(node.title)}</strong>
+              ${scriptState}
+            </span>
           </span>
           <span class="type-chip ${escapeHtml(node.type)}">${escapeHtml(node.type)}</span>
         `;
@@ -228,7 +247,6 @@ function renderTree() {
       chapterBlock.append(nodeNav);
       sagaBlock.append(chapterBlock);
     }
-
     tree.append(sagaBlock);
   }
 }
@@ -258,7 +276,6 @@ function renderNodeHeader() {
     <div class="node-meta mono">${metadata.map(escapeHtml).join(" · ")}</div>
     <p class="node-summary">${escapeHtml(node.summary)}</p>
   `;
-
   playNodeButton.disabled = node.beats.length === 0;
 }
 
@@ -267,11 +284,17 @@ function renderTimeline() {
   beatTimeline.innerHTML = "";
   if (!node || node.beats.length === 0) {
     timelineSummary.textContent = "Structure only";
-    beatTimeline.innerHTML = `<div class="empty-node"><strong>No detailed beats authored.</strong><p>The Studio will not invent production detail for this node.</p></div>`;
+    beatTimeline.innerHTML = `
+      <div class="empty-node">
+        <strong>No detailed beats authored.</strong>
+        <p>The Studio will not invent production detail for this node.</p>
+      </div>
+    `;
     return;
   }
 
-  timelineSummary.textContent = `${node.beats.length} beats · ${nodeCounts(node).events} exact events`;
+  const counts = nodeCounts(node);
+  timelineSummary.textContent = `${node.beats.length} beats · ${counts.events} exact events`;
   for (const beat of node.beats) {
     const button = document.createElement("button");
     button.type = "button";
@@ -349,7 +372,13 @@ function renderScript() {
   }
   const script = scriptForBeat(beat);
   if (script.length === 0) {
-    workspaceContent.innerHTML = `<div class="empty-workspace"><span class="section-label">Script</span><h3>${escapeHtml(beat.title)}</h3><p>No exact script has been authored for this beat.</p></div>`;
+    workspaceContent.innerHTML = `
+      <div class="empty-workspace">
+        <span class="section-label">Script</span>
+        <h3>${escapeHtml(beat.title)}</h3>
+        <p>No exact script has been authored for this beat.</p>
+      </div>
+    `;
     return;
   }
 
@@ -363,7 +392,10 @@ function renderScript() {
         <article class="script-row ${escapeHtml(event.type)}">
           <div class="script-kind mono">${eventIcon(event.type)}</div>
           ${speakerBlock}
-          <div class="script-copy"><p>${displayText(event.text)}</p>${event.note ? `<small>${displayText(event.note)}</small>` : ""}</div>
+          <div class="script-copy">
+            <p>${displayText(event.text)}</p>
+            ${event.note ? `<small>${displayText(event.note)}</small>` : ""}
+          </div>
           <div class="script-id mono">${escapeHtml(event.id)}</div>
         </article>
       `;
@@ -374,7 +406,10 @@ function renderScript() {
     <section class="workspace-section script-sheet">
       <div class="section-heading sticky-section-heading">
         <div><span class="section-label">Script</span><h3>${escapeHtml(beat.title)}</h3></div>
-        <div class="tag-list"><span class="status-pill">${escapeHtml(statusLabel(beat.scriptStatus ?? "draft"))}</span><span class="status-pill">${script.length} events</span></div>
+        <div class="tag-list">
+          <span class="status-pill">${escapeHtml(statusLabel(beat.scriptStatus ?? "draft"))}</span>
+          <span class="status-pill">${script.length} events</span>
+        </div>
       </div>
       <div class="script-list">${rows}</div>
     </section>
@@ -382,8 +417,7 @@ function renderScript() {
 }
 
 function renderStageCanvas(beat) {
-  const production = productionForBeat(beat);
-  const staging = production?.staging ?? {};
+  const staging = productionForBeat(beat)?.staging ?? {};
   const slots = staging.slots ?? {};
   return `
     <div class="stage-canvas">
@@ -413,7 +447,13 @@ function renderScene() {
   const slotRows = ["left", "center", "right"]
     .map((slotName) => {
       const slot = slots[slotName];
-      return `<div class="property-row"><span>${slotName}</span><strong>${escapeHtml(slot?.character ?? "Unassigned")}</strong><small>${escapeHtml(slot?.pose ?? slot?.expression ?? "—")}</small></div>`;
+      return `
+        <div class="property-row">
+          <span>${slotName}</span>
+          <strong>${escapeHtml(slot?.character ?? "Unassigned")}</strong>
+          <small>${escapeHtml(slot?.pose ?? slot?.expression ?? "—")}</small>
+        </div>
+      `;
     })
     .join("");
 
@@ -445,7 +485,11 @@ function speakerInventory(node) {
   for (const beat of node.beats) {
     for (const event of spokenScriptForBeat(beat)) {
       const canonical = event.speaker;
-      const existing = speakers.get(canonical) ?? { canonical, labels: new Set(), lines: 0 };
+      const existing = speakers.get(canonical) ?? {
+        canonical,
+        labels: new Set(),
+        lines: 0,
+      };
       if (event.displayLabel) existing.labels.add(event.displayLabel);
       existing.lines += 1;
       speakers.set(canonical, existing);
@@ -466,7 +510,10 @@ function renderVoice() {
           (speaker) => `
             <article class="voice-cast-card">
               <div class="voice-avatar">${escapeHtml(speaker.canonical.slice(0, 2).toUpperCase())}</div>
-              <div><strong>${escapeHtml(speaker.canonical)}</strong><small>${escapeHtml([...speaker.labels].join(" / ") || speaker.canonical)} · ${speaker.lines} lines</small></div>
+              <div>
+                <strong>${escapeHtml(speaker.canonical)}</strong>
+                <small>${escapeHtml([...speaker.labels].join(" / ") || speaker.canonical)} · ${speaker.lines} lines</small>
+              </div>
               <span class="status-pill">Not configured</span>
             </article>
           `,
@@ -479,7 +526,10 @@ function renderVoice() {
         .map(
           (event) => `
             <div class="voice-line">
-              <div><strong>${escapeHtml(event.displayLabel ?? event.speaker)}</strong><span>${displayText(event.text)}</span></div>
+              <div>
+                <strong>${escapeHtml(event.displayLabel ?? event.speaker)}</strong>
+                <span>${displayText(event.text)}</span>
+              </div>
               <span class="mono muted">${escapeHtml(event.id)}</span>
               <span class="status-pill">No audio</span>
             </div>
@@ -498,7 +548,9 @@ function renderVoice() {
       <div class="voice-cast-grid">${cast}</div>
     </section>
     <section class="workspace-section">
-      <div class="section-heading"><div><span class="section-label">Selected beat</span><h3>${escapeHtml(beat?.title ?? "No beat selected")}</h3></div></div>
+      <div class="section-heading">
+        <div><span class="section-label">Selected beat</span><h3>${escapeHtml(beat?.title ?? "No beat selected")}</h3></div>
+      </div>
       <div class="voice-lines">${lines}</div>
     </section>
   `;
@@ -525,25 +577,46 @@ function renderAssets() {
   }
 
   const renderReferenceList = (items, emptyText) => {
-    if (items.length === 0) return `<div class="empty-inline">${escapeHtml(emptyText)}</div>`;
-    return items.map((item) => `<div class="asset-reference"><strong>${escapeHtml(item)}</strong><span class="status-pill">Referenced</span></div>`).join("");
+    if (items.length === 0) {
+      return `<div class="empty-inline">${escapeHtml(emptyText)}</div>`;
+    }
+    return items
+      .map(
+        (item) =>
+          `<div class="asset-reference"><strong>${escapeHtml(item)}</strong><span class="status-pill">Referenced</span></div>`,
+      )
+      .join("");
   };
 
   workspaceContent.innerHTML = `
     <section class="workspace-section">
-      <div class="section-heading"><div><span class="section-label">Assets</span><h3>Referenced production data</h3></div></div>
+      <div class="section-heading">
+        <div><span class="section-label">Assets</span><h3>Referenced production data</h3></div>
+      </div>
       <p class="workspace-note">The current schema records staging references, not asset-library availability. “Referenced” means the identifier appears in production metadata; it does not claim a finished file exists.</p>
       <div class="asset-grid">
-        <div class="asset-panel"><span class="section-label">Background references</span>${renderReferenceList([...backgrounds], "No background references assigned")}</div>
-        <div class="asset-panel"><span class="section-label">Character references</span>${renderReferenceList([...characters], "No character references assigned")}</div>
-        <div class="asset-panel"><span class="section-label">Unassigned production fields</span><div class="asset-stat"><strong>${missingBackgrounds}</strong><span>beats without background</span></div><div class="asset-stat"><strong>${missingSlots}</strong><span>empty character slots across beats</span></div></div>
+        <div class="asset-panel">
+          <span class="section-label">Background references</span>
+          ${renderReferenceList([...backgrounds], "No background references assigned")}
+        </div>
+        <div class="asset-panel">
+          <span class="section-label">Character references</span>
+          ${renderReferenceList([...characters], "No character references assigned")}
+        </div>
+        <div class="asset-panel">
+          <span class="section-label">Unassigned production fields</span>
+          <div class="asset-stat"><strong>${missingBackgrounds}</strong><span>beats without background</span></div>
+          <div class="asset-stat"><strong>${missingSlots}</strong><span>empty character slots across beats</span></div>
+        </div>
       </div>
     </section>
   `;
 }
 
 function renderWorkspace() {
-  workspaceTabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.workspace === state.workspace));
+  workspaceTabs.forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.workspace === state.workspace);
+  });
   if (state.workspace === "overview") renderOverview();
   else if (state.workspace === "script") renderScript();
   else if (state.workspace === "scene") renderScene();
@@ -679,9 +752,15 @@ function renderPlayer() {
 
   if (event) {
     const label = playerSpeaker(event, beat);
-    playerCopy.innerHTML = `<span class="player-speaker">${escapeHtml(label)}</span><p>${displayText(event.text)}</p>`;
+    playerCopy.innerHTML = `
+      <span class="player-speaker">${escapeHtml(label)}</span>
+      <p>${displayText(event.text)}</p>
+    `;
   } else {
-    playerCopy.innerHTML = `<span class="player-speaker">${escapeHtml(beat.presentation)}</span><p>${displayText(beat.dialogueIntent || beat.screenAction)}</p>`;
+    playerCopy.innerHTML = `
+      <span class="player-speaker">${escapeHtml(beat.presentation)}</span>
+      <p>${displayText(beat.dialogueIntent || beat.screenAction)}</p>
+    `;
   }
 
   const totalNodeEvents = node.beats.reduce((sum, item) => {
@@ -691,7 +770,8 @@ function renderPlayer() {
   let absoluteIndex = 0;
   for (let index = 0; index < state.playerBeatIndex; index += 1) {
     const priorBeat = node.beats[index];
-    absoluteIndex += scriptForBeat(priorBeat).length || (productionForBeat(priorBeat)?.events?.length ?? 1);
+    absoluteIndex +=
+      scriptForBeat(priorBeat).length || (productionForBeat(priorBeat)?.events?.length ?? 1);
   }
   absoluteIndex += state.playerEventIndex + 1;
 
@@ -765,8 +845,12 @@ async function init() {
       fetch("./story.json", { cache: "no-store" }),
       fetch("./story-production.json", { cache: "no-store" }),
     ]);
-    if (!storyResponse.ok) throw new Error(`Story data request failed: ${storyResponse.status}`);
-    if (!productionResponse.ok) throw new Error(`Production data request failed: ${productionResponse.status}`);
+    if (!storyResponse.ok) {
+      throw new Error(`Story data request failed: ${storyResponse.status}`);
+    }
+    if (!productionResponse.ok) {
+      throw new Error(`Production data request failed: ${productionResponse.status}`);
+    }
 
     state.story = await storyResponse.json();
     state.production = await productionResponse.json();
@@ -774,7 +858,9 @@ async function init() {
     const firstSaga = state.story.sagas[0];
     const firstChapter = firstSaga?.chapters[0];
     const firstNode = firstChapter?.nodes[0];
-    if (!firstSaga || !firstChapter || !firstNode) throw new Error("Story data has no readable nodes.");
+    if (!firstSaga || !firstChapter || !firstNode) {
+      throw new Error("Story data has no readable nodes.");
+    }
 
     state.sagaId = firstSaga.id;
     state.chapterId = firstChapter.id;
@@ -789,11 +875,18 @@ async function init() {
   } catch (error) {
     status.textContent = "Load failed";
     status.classList.add("error");
-    workspaceContent.innerHTML = `<div class="load-error"><strong>Unable to load story data.</strong><p>${escapeHtml(error instanceof Error ? error.message : error)}</p></div>`;
+    workspaceContent.innerHTML = `
+      <div class="load-error">
+        <strong>Unable to load story data.</strong>
+        <p>${escapeHtml(error instanceof Error ? error.message : error)}</p>
+      </div>
+    `;
   }
 }
 
-workspaceTabs.forEach((tab) => tab.addEventListener("click", () => selectWorkspace(tab.dataset.workspace)));
+workspaceTabs.forEach((tab) => {
+  tab.addEventListener("click", () => selectWorkspace(tab.dataset.workspace));
+});
 densityButton.addEventListener("click", toggleDensity);
 exportButton.addEventListener("click", exportStory);
 playNodeButton.addEventListener("click", openPlayer);
