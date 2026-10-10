@@ -1,35 +1,115 @@
 @media (min-width: 761px) {
-  .app-shell { height: 100dvh; overflow: hidden; }
-  .workspace { min-height: 0; overflow: hidden; }
-  .rail, .reader, .inspector { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
-  .reader { scrollbar-gutter: stable; }
-  .workspace-tabs { position: sticky; top: -22px; z-index: 15; background: color-mix(in srgb, var(--bg) 96%, transparent); padding-top: 22px; }
-  .workspace.inspector-is-collapsed { grid-template-columns: 270px minmax(0, 1fr) 58px; }
+  .app-shell {
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .workspace {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .rail,
+  .reader,
+  .inspector {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .reader {
+    scrollbar-gutter: stable;
+  }
+  .workspace-tabs {
+    position: sticky;
+    top: -22px;
+    z-index: 15;
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+    padding-top: 22px;
+  }
+  .workspace.inspector-is-collapsed {
+    grid-template-columns: 270px minmax(0, 1fr) 58px;
+  }
   .workspace.inspector-is-collapsed .inspector-content,
   .workspace.inspector-is-collapsed .inspector-heading > div,
-  .workspace.inspector-is-collapsed #selection-id { display: none; }
-  .workspace.inspector-is-collapsed .inspector { padding: 12px 8px; overflow: hidden; }
-  .workspace.inspector-is-collapsed .inspector-heading { justify-content: center; }
+  .workspace.inspector-is-collapsed #selection-id {
+    display: none;
+  }
+  .workspace.inspector-is-collapsed .inspector {
+    padding: 12px 8px;
+    overflow: hidden;
+  }
+  .workspace.inspector-is-collapsed .inspector-heading {
+    justify-content: center;
+  }
 }
-.chapter-toggle, .panel-toggle {
-  min-height: 40px; border: 0; background: transparent; color: inherit; cursor: pointer;
+.chapter-toggle,
+.panel-toggle {
+  min-height: 40px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
 }
-.chapter-toggle { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 0; text-align: left; }
-.chapter-toggle-copy { min-width: 0; display: grid; gap: 2px; }
-.chapter-toggle .chapter-chevron, .panel-toggle .panel-chevron { color: var(--accent); font-size: .8rem; transition: transform 120ms ease; }
-.chapter-block.is-collapsed .chapter-chevron { transform: rotate(-90deg); }
-.chapter-block.is-collapsed .node-nav { display: none; }
-.panel-toggle { min-width: 40px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 8px; }
-.timeline-dock.is-collapsed #beat-timeline { display: none; }
-.timeline-dock.is-collapsed { padding-bottom: 4px; }
-.inspector-content { min-height: 0; }
+.chapter-toggle {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 0;
+  text-align: left;
+}
+.chapter-toggle-copy {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.chapter-toggle .chapter-chevron,
+.panel-toggle .panel-chevron {
+  color: var(--accent);
+  font-size: 0.8rem;
+  transition: transform 120ms ease;
+}
+.chapter-block.is-collapsed .chapter-chevron {
+  transform: rotate(-90deg);
+}
+.chapter-block.is-collapsed .node-nav {
+  display: none;
+}
+.panel-toggle {
+  min-width: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+}
+.timeline-dock.is-collapsed #beat-timeline {
+  display: none;
+}
+.timeline-dock.is-collapsed {
+  padding-bottom: 4px;
+}
+.inspector-content {
+  min-height: 0;
+}
 @media (max-width: 1040px) and (min-width: 761px) {
-  .workspace.inspector-is-collapsed { grid-template-columns: 220px minmax(0, 1fr); }
-  .workspace.inspector-is-collapsed .inspector { display: none; }
+  .workspace.inspector-is-collapsed {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .workspace.inspector-is-collapsed .inspector {
+    display: none;
+  }
 }
 @media (max-width: 760px) {
-  .app-shell { min-height: 100vh; }
-  .inspector-content { max-height: min(55dvh, 480px); overflow-y: auto; }
-  .inspector.is-collapsed .inspector-content, .inspector.is-collapsed #selection-id { display: none; }
-  .inspector.is-collapsed { padding-bottom: 8px; }
+  .app-shell {
+    min-height: 100vh;
+  }
+  .inspector-content {
+    max-height: min(55dvh, 480px);
+    overflow-y: auto;
+  }
+  .inspector.is-collapsed .inspector-content,
+  .inspector.is-collapsed #selection-id {
+    display: none;
+  }
+  .inspector.is-collapsed {
+    padding-bottom: 8px;
+  }
 }
