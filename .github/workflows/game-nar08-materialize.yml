@@ -1,0 +1,33 @@
+name: GAME-NAR08 Materialize
+
+on:
+  push:
+    branches:
+      - game-nar08/pacing-navigation
+    paths:
+      - .github/scripts/game-nar08-apply.py
+      - .github/workflows/game-nar08-materialize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: game-nar08/pacing-navigation
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply GAME-NAR08 revision
+        run: python .github/scripts/game-nar08-apply.py
+      - name: Commit materialized revision
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "GAME-NAR08: revise pacing and Story Studio navigation"
+          git push origin HEAD:game-nar08/pacing-navigation
