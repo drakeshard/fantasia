@@ -1,0 +1,552 @@
+/* GAME-UI10 — generated Fantasia presentation art integration.
+ * Generated imagery is presentation-only. The Home kingdom view is ambience,
+ * never campaign geography. Player-facing text and navigation remain DOM-owned.
+ */
+
+:root {
+  --fantasia-art-gold: #e3bd72;
+  --fantasia-art-gold-soft: rgb(227 189 114 / 24%);
+  --fantasia-art-gold-strong: rgb(227 189 114 / 72%);
+  --fantasia-art-ink: #071019;
+  --fantasia-art-panel: rgb(9 20 30 / 86%);
+  --fantasia-art-panel-deep: rgb(6 14 22 / 94%);
+  --fantasia-art-line: rgb(226 190 120 / 30%);
+  --fantasia-art-shadow: 0 22px 70px rgb(0 0 0 / 48%);
+}
+
+/* HOME ------------------------------------------------------------------ */
+
+.home-screen {
+  isolation: isolate;
+  background: #071019;
+}
+
+.home-screen::before {
+  z-index: -3;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(4 10 16 / 96%) 0%,
+      rgb(4 10 16 / 88%) 31%,
+      rgb(4 10 16 / 54%) 58%,
+      rgb(4 10 16 / 68%) 100%
+    ),
+    linear-gradient(180deg, rgb(5 11 17 / 28%) 0%, rgb(5 11 17 / 8%) 47%, rgb(5 11 17 / 90%) 100%),
+    url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center / cover no-repeat;
+  content: "";
+}
+
+.home-screen::after {
+  z-index: -2;
+  inset: 14px;
+  border: 1px solid rgb(227 189 114 / 18%);
+  box-shadow: inset 0 0 80px rgb(0 0 0 / 24%);
+}
+
+.home-topbar {
+  border-bottom-color: rgb(227 189 114 / 22%);
+  background: linear-gradient(180deg, rgb(4 10 16 / 93%), rgb(4 10 16 / 58%));
+  box-shadow: 0 14px 34px rgb(0 0 0 / 18%);
+  backdrop-filter: blur(12px);
+}
+
+.home-wordmark-mark {
+  overflow: hidden;
+  border-color: var(--fantasia-art-gold-strong);
+  background:
+    url("/assets/ui/fantasia_ui_icon_campaign_v001.webp") center / 148% 148% no-repeat,
+    rgb(7 17 27 / 86%);
+  box-shadow:
+    inset 0 0 0 3px rgb(227 189 114 / 7%),
+    0 8px 22px rgb(0 0 0 / 34%);
+}
+
+.home-wordmark-mark > span {
+  opacity: 0;
+}
+
+.home-wordmark-copy strong {
+  color: #fbf4e5;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 66%);
+}
+
+.home-wordmark-copy small {
+  color: rgb(246 238 221 / 68%);
+}
+
+.home-main-layout {
+  align-items: center;
+}
+
+.home-hero-copy {
+  position: relative;
+  padding: clamp(18px, 2vw, 30px) 0;
+}
+
+.home-hero-copy::before {
+  position: absolute;
+  z-index: -1;
+  top: -34px;
+  right: -80px;
+  bottom: -34px;
+  left: -70px;
+  background: radial-gradient(ellipse at 28% 50%, rgb(4 10 16 / 62%), transparent 72%);
+  content: "";
+  pointer-events: none;
+}
+
+.home-hero-title {
+  color: #fff8e9;
+  text-shadow:
+    0 4px 18px rgb(0 0 0 / 74%),
+    0 1px 0 rgb(255 255 255 / 7%);
+}
+
+.home-hero-title em {
+  color: #edca84;
+  text-shadow: 0 4px 18px rgb(0 0 0 / 72%);
+}
+
+.home-hero-lede {
+  color: rgb(249 242 228 / 78%);
+  text-shadow: 0 2px 8px rgb(0 0 0 / 75%);
+}
+
+.home-story-card {
+  overflow: hidden;
+  border: 1px solid rgb(227 189 114 / 50%);
+  border-left: 3px solid #e7c479;
+  background:
+    linear-gradient(105deg, rgb(13 31 45 / 96%) 0%, rgb(8 19 29 / 94%) 72%),
+    var(--fantasia-art-panel);
+  box-shadow:
+    0 22px 58px rgb(0 0 0 / 38%),
+    inset 0 1px rgb(255 255 255 / 4%);
+  backdrop-filter: blur(14px);
+}
+
+.home-story-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #e6c176, transparent 72%);
+  content: "";
+}
+
+.home-story-seal {
+  position: relative;
+  overflow: hidden;
+  border-color: rgb(227 189 114 / 66%);
+  color: #fff5dc;
+  background:
+    linear-gradient(rgb(7 17 26 / 36%), rgb(7 17 26 / 62%)),
+    url("/assets/ui/fantasia_ui_icon_campaign_v001.webp") center / 142% 142% no-repeat;
+  box-shadow:
+    inset 0 0 0 4px rgb(227 189 114 / 7%),
+    0 10px 22px rgb(0 0 0 / 38%);
+  text-shadow: 0 2px 5px #000;
+}
+
+.home-story-copy h2 {
+  color: #fff5df;
+}
+
+.home-story-continue {
+  border-color: #f0cf89;
+  background: linear-gradient(180deg, #ebc87f, #c69a4d);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 36%),
+    0 8px 22px rgb(0 0 0 / 30%);
+}
+
+.home-command-column {
+  padding: 20px;
+  border: 1px solid rgb(227 189 114 / 22%);
+  background: linear-gradient(155deg, rgb(8 19 29 / 86%), rgb(5 13 21 / 76%));
+  box-shadow: var(--fantasia-art-shadow);
+  backdrop-filter: blur(16px);
+}
+
+.home-command-column::before {
+  width: 72px;
+  height: 2px;
+  position: absolute;
+  margin-top: -21px;
+  background: linear-gradient(90deg, #e5bf73, transparent);
+  content: "";
+}
+
+.home-primary-nav button {
+  overflow: hidden;
+  border-color: rgb(146 162 177 / 24%);
+  border-left-color: rgb(227 189 114 / 34%);
+  background: linear-gradient(90deg, rgb(24 43 59 / 94%), rgb(7 17 26 / 82%));
+  box-shadow: inset 0 1px rgb(255 255 255 / 3%);
+}
+
+.home-primary-nav button::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: linear-gradient(#f0cf88, #977039);
+  content: "";
+  opacity: 0.72;
+}
+
+.home-primary-nav button:hover:not(:disabled) {
+  border-color: rgb(227 189 114 / 54%);
+  background: linear-gradient(90deg, rgb(31 54 73 / 97%), rgb(10 23 34 / 92%));
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 4%),
+    0 12px 28px rgb(0 0 0 / 22%);
+}
+
+.home-primary-nav button > span:first-child {
+  overflow: hidden;
+  border: 0;
+  color: transparent;
+  background-color: transparent;
+  background-position: center;
+  background-size: 126% 126%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 5px 8px rgb(0 0 0 / 36%));
+}
+
+.home-primary-nav button:nth-child(1) > span:first-child {
+  background-image: url("/assets/ui/fantasia_ui_icon_campaign_v001.webp");
+}
+
+.home-primary-nav button:nth-child(2) > span:first-child {
+  background-image: url("/assets/ui/fantasia_ui_icon_summon_v001.webp");
+}
+
+.home-primary-nav button:nth-child(3) > span:first-child {
+  background-image: url("/assets/ui/fantasia_ui_icon_settings_v001.webp");
+}
+
+.home-footer {
+  border-top-color: rgb(227 189 114 / 22%);
+  background: linear-gradient(180deg, rgb(4 10 16 / 54%), rgb(4 10 16 / 94%));
+  backdrop-filter: blur(10px);
+}
+
+/* SAGA ------------------------------------------------------------------ */
+
+.saga-reference-screen {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 80% 23%, rgb(45 72 96 / 34%), transparent 28%),
+    radial-gradient(circle at 73% 73%, rgb(227 189 114 / 8%), transparent 18%),
+    linear-gradient(145deg, #101d29, #08121c 63%, #060d15);
+}
+
+.saga-reference-screen::before {
+  background:
+    repeating-linear-gradient(118deg, transparent 0 86px, rgb(227 189 114 / 2%) 87px 88px),
+    radial-gradient(
+      circle at 67% 52%,
+      transparent 0 160px,
+      rgb(227 189 114 / 4%) 161px 162px,
+      transparent 163px 225px,
+      rgb(227 189 114 / 2%) 226px 227px,
+      transparent 228px
+    );
+}
+
+.saga-reference-rail {
+  border-right-color: rgb(227 189 114 / 24%);
+  background: linear-gradient(180deg, rgb(13 29 43 / 97%), rgb(6 15 24 / 96%));
+  box-shadow: 18px 0 52px rgb(0 0 0 / 24%);
+}
+
+.saga-banner-mark {
+  overflow: hidden;
+  color: transparent;
+  background:
+    url("/assets/ui/fantasia_ui_icon_campaign_v001.webp") center / 135% 135% no-repeat,
+    linear-gradient(#173a58, #091b2b);
+  filter: drop-shadow(0 7px 10px rgb(0 0 0 / 34%));
+}
+
+.saga-brand-row h1 {
+  color: #fff4db;
+  text-shadow: 0 3px 14px rgb(0 0 0 / 50%);
+}
+
+.saga-chapter-row {
+  position: relative;
+  overflow: hidden;
+}
+
+.saga-chapter-row.is-current {
+  box-shadow:
+    inset 3px 0 #e3bd72,
+    inset 0 1px rgb(255 255 255 / 3%);
+}
+
+.saga-chapter-number {
+  border-color: rgb(227 189 114 / 38%);
+  background: radial-gradient(circle at 40% 30%, #1d3a50, #0a1722 72%);
+  box-shadow: inset 0 0 0 3px rgb(227 189 114 / 4%);
+}
+
+.saga-main-field {
+  background: linear-gradient(110deg, rgb(12 25 36 / 46%), rgb(7 16 24 / 10%));
+}
+
+.saga-field-header {
+  border-bottom-color: rgb(227 189 114 / 22%);
+}
+
+.saga-route-mark::before {
+  border-color: rgb(227 189 114 / 25%);
+  box-shadow:
+    0 0 0 26px rgb(227 189 114 / 2%),
+    0 0 0 27px rgb(227 189 114 / 9%),
+    0 0 0 68px rgb(227 189 114 / 1%),
+    0 0 0 69px rgb(227 189 114 / 5%),
+    0 20px 70px rgb(0 0 0 / 26%);
+}
+
+.saga-route-emblem .emblem-glyph {
+  overflow: hidden;
+  color: transparent;
+  background:
+    url("/assets/ui/fantasia_ui_icon_campaign_v001.webp") center / 136% 136% no-repeat,
+    rgb(8 18 28 / 84%);
+}
+
+.saga-current-card {
+  border-color: rgb(227 189 114 / 40%);
+  background: linear-gradient(145deg, rgb(23 43 59 / 94%), rgb(7 17 26 / 93%));
+  box-shadow:
+    0 24px 58px rgb(0 0 0 / 34%),
+    inset 0 1px rgb(255 255 255 / 4%);
+}
+
+.saga-next-objective {
+  border-color: #efd08c;
+  background: linear-gradient(180deg, #e9c57a, #be9145);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 34%),
+    0 10px 22px rgb(0 0 0 / 24%);
+}
+
+.saga-bottom-nav {
+  border-color: rgb(227 189 114 / 26%);
+  background: rgb(6 15 23 / 84%);
+  box-shadow: 0 -10px 28px rgb(0 0 0 / 16%);
+}
+
+/* CHAPTER / CAMPAIGN ----------------------------------------------------- */
+
+.campaign-shell {
+  overflow: hidden;
+  border-color: rgb(227 189 114 / 22%);
+  box-shadow:
+    0 28px 80px rgb(0 0 0 / 46%),
+    inset 0 1px rgb(255 255 255 / 3%);
+}
+
+.campaign-header {
+  border-bottom-color: rgb(227 189 114 / 22%);
+  background: linear-gradient(180deg, rgb(14 30 43 / 99%), rgb(7 17 26 / 98%));
+}
+
+.campaign-title-block h1 {
+  color: #fff4dc;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 44%);
+}
+
+.campaign-map-heading {
+  border-bottom-color: rgb(227 189 114 / 18%);
+  background: linear-gradient(90deg, rgb(18 38 53 / 96%), rgb(9 21 31 / 93%));
+}
+
+.map-toolbar {
+  border-color: rgb(227 189 114 / 22%);
+  background: rgb(5 13 20 / 66%);
+}
+
+.campaign-map-viewport {
+  background:
+    radial-gradient(ellipse at 19% 73%, rgb(128 112 69 / 18%), transparent 26%),
+    radial-gradient(ellipse at 74% 29%, rgb(70 100 75 / 24%), transparent 31%),
+    repeating-linear-gradient(31deg, transparent 0 80px, rgb(247 231 193 / 1.5%) 81px 82px),
+    linear-gradient(150deg, #33483b 0%, #24382f 39%, #25342d 68%, #192722 100%);
+  box-shadow:
+    inset 0 0 90px rgb(0 0 0 / 42%),
+    inset 0 0 0 1px rgb(227 189 114 / 9%);
+}
+
+.campaign-route {
+  stroke: rgb(234 201 137 / 72%);
+  stroke-width: 1.45;
+  stroke-dasharray: 1.3 1.2;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 82%));
+}
+
+.campaign-node {
+  width: 64px;
+  height: 64px;
+  border: 1px solid rgb(227 189 114 / 54%);
+  background: radial-gradient(circle at 38% 28%, #213d53, #0a1925 72%);
+  box-shadow:
+    inset 0 0 0 4px rgb(5 13 20 / 56%),
+    inset 0 1px rgb(255 255 255 / 7%),
+    0 10px 22px rgb(0 0 0 / 52%);
+}
+
+.campaign-node.battle {
+  border-color: rgb(218 151 136 / 60%);
+  background: radial-gradient(circle at 38% 28%, #53343b, #21151a 72%);
+}
+
+.campaign-node .node-glyph {
+  width: 48px;
+  height: 48px;
+  display: block;
+  overflow: hidden;
+  color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 125% 125%;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 46%));
+}
+
+.campaign-node.story .node-glyph {
+  background-image: url("/assets/ui/fantasia_ui_icon_story_v001.webp");
+}
+
+.campaign-node.battle .node-glyph {
+  background-image: url("/assets/ui/fantasia_ui_icon_battle_v001.webp");
+}
+
+.campaign-node.is-selected {
+  border-color: #f0cf88;
+  box-shadow:
+    0 0 0 2px #071019,
+    0 0 0 5px rgb(227 189 114 / 58%),
+    0 0 24px rgb(227 189 114 / 18%),
+    0 12px 24px rgb(0 0 0 / 52%);
+}
+
+.campaign-node.is-current::after {
+  border-color: rgb(227 189 114 / 46%);
+  color: #f4d79d;
+  background: rgb(6 15 23 / 96%);
+}
+
+.node-label {
+  border-color: rgb(227 189 114 / 24%);
+  background: rgb(5 14 22 / 96%);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 38%);
+}
+
+.stage-list,
+.campaign-inspector {
+  border-left-color: rgb(227 189 114 / 20%);
+  background: linear-gradient(180deg, #152b3d, #0b1823 76%);
+}
+
+.stage-list-entry {
+  border-bottom-color: rgb(227 189 114 / 10%);
+}
+
+.stage-list-entry.is-selected {
+  background: linear-gradient(90deg, rgb(227 189 114 / 12%), rgb(30 51 68 / 72%));
+  box-shadow: inset 3px 0 #e3bd72;
+}
+
+.campaign-inspector {
+  box-shadow: inset 10px 0 34px rgb(0 0 0 / 10%);
+}
+
+.campaign-enter {
+  border-color: #efd08b;
+  background: linear-gradient(180deg, #e9c57a, #bf9248);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 34%),
+    0 8px 20px rgb(0 0 0 / 24%);
+}
+
+.campaign-root-navigation button {
+  border-color: rgb(227 189 114 / 28%);
+  background: linear-gradient(180deg, rgb(17 34 48 / 96%), rgb(6 15 23 / 96%));
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 4%),
+    0 8px 20px rgb(0 0 0 / 28%);
+}
+
+.settings-dialog {
+  border-color: rgb(227 189 114 / 34%);
+  background:
+    radial-gradient(circle at 85% 4%, rgb(227 189 114 / 7%), transparent 24%),
+    linear-gradient(155deg, #1a3041, #0d1c28 70%);
+  box-shadow:
+    0 30px 90px rgb(0 0 0 / 68%),
+    inset 0 1px rgb(255 255 255 / 4%);
+}
+
+/* Keep art additive and layouts resilient at constrained sizes. */
+@media (max-width: 767px) {
+  .home-screen::before {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(4 10 16 / 68%) 0%,
+        rgb(4 10 16 / 77%) 38%,
+        rgb(4 10 16 / 97%) 100%
+      ),
+      url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") 66% center / auto 100% no-repeat,
+      #071019;
+  }
+
+  .home-command-column {
+    padding: 14px;
+  }
+
+  .home-hero-copy::before {
+    right: -16px;
+    left: -16px;
+  }
+
+  .campaign-node {
+    width: 50px;
+    height: 50px;
+  }
+
+  .campaign-node .node-glyph {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (max-height: 499px) and (min-width: 700px) {
+  .home-screen::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgb(4 10 16 / 94%) 0%,
+        rgb(4 10 16 / 80%) 45%,
+        rgb(4 10 16 / 58%) 76%,
+        rgb(4 10 16 / 70%) 100%
+      ),
+      url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center / cover no-repeat;
+  }
+
+  .home-command-column {
+    padding: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-primary-nav button:hover:not(:disabled) {
+    transform: none;
+  }
+}
