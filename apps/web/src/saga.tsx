@@ -82,7 +82,12 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
           </button>
         </nav>
 
-        <button type="button" class="saga-next-objective" onClick={onContinue}>
+        <button
+          type="button"
+          class="saga-next-objective"
+          aria-label="Continue current chapter"
+          onClick={onContinue}
+        >
           <span>
             <small class="saga-objective-label">Next objective</small>
             <strong class="saga-objective-title">{view.selectedChapterTitle}</strong>
