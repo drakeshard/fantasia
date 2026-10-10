@@ -74,30 +74,34 @@ function App() {
 
   return (
     <>
-      {screen === "battle" ? (
-        <BattleApp onReturnCampaign={() => setScreen("campaign")} />
-      ) : screen === "campaign" ? (
-        <div class="campaign-rooted-shell">
-          <CampaignApp onOpenBattle={() => setScreen("battle")} />
-          <nav class="campaign-root-navigation" aria-label="Campaign root navigation">
-            <button type="button" onClick={() => setScreen("saga")}>Back</button>
-            <button type="button" onClick={() => setScreen("home")}>Home</button>
-            <button type="button" onClick={(event) => openSettings(event.currentTarget)}>Settings</button>
-          </nav>
-        </div>
-      ) : screen === "saga" ? (
-        <SagaApp
-          onHome={() => setScreen("home")}
-          onContinue={() => setScreen("campaign")}
-          onSettings={openSettings}
-        />
-      ) : (
+      {screen === "home" ? (
         <HomeApp
           onContinue={() => setScreen("campaign")}
           onCampaign={() => setScreen("saga")}
           onSettings={openSettings}
         />
-      )}
+      ) : null}
+
+      {screen === "saga" ? (
+        <SagaApp
+          onHome={() => setScreen("home")}
+          onContinue={() => setScreen("campaign")}
+          onSettings={openSettings}
+        />
+      ) : null}
+
+      <div class="campaign-rooted-shell" hidden={screen !== "campaign"}>
+        <CampaignApp onOpenBattle={() => setScreen("battle")} />
+        <nav class="campaign-root-navigation" aria-label="Campaign root navigation">
+          <button type="button" onClick={() => setScreen("saga")}>Back</button>
+          <button type="button" onClick={() => setScreen("home")}>Home</button>
+          <button type="button" onClick={(event) => openSettings(event.currentTarget)}>Settings</button>
+        </nav>
+      </div>
+
+      {screen === "battle" ? (
+        <BattleApp onReturnCampaign={() => setScreen("campaign")} />
+      ) : null}
 
       {screen === "battle" ? (
         <button
