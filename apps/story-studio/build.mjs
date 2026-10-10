@@ -65,13 +65,19 @@ for (const saga of story.sagas) {
 for (const [beatId, annotation] of Object.entries(production.beats)) {
   assert(seenIds.has(beatId), `production references unknown beat: ${beatId}`);
   const timing = annotation.timing;
-  assert(timing && ["auto", "advance", "player"].includes(timing.mode), `${beatId}.timing.mode is invalid`);
+  assert(
+    timing && ["auto", "advance", "player"].includes(timing.mode),
+    `${beatId}.timing.mode is invalid`,
+  );
   if (timing.mode === "player") {
     assert(Number.isFinite(timing.minSeconds), `${beatId}.timing.minSeconds is required`);
     assert(Number.isFinite(timing.maxSeconds), `${beatId}.timing.maxSeconds is required`);
     assert(timing.maxSeconds >= timing.minSeconds, `${beatId}.timing range is invalid`);
   } else {
-    assert(Number.isFinite(timing.estimatedSeconds), `${beatId}.timing.estimatedSeconds is required`);
+    assert(
+      Number.isFinite(timing.estimatedSeconds),
+      `${beatId}.timing.estimatedSeconds is required`,
+    );
   }
 
   assert(Array.isArray(annotation.events), `${beatId}.events must be an array`);
@@ -101,8 +107,5 @@ rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
 cpSync(source, dist, { recursive: true });
 writeFileSync(resolve(dist, "story.json"), `${JSON.stringify(story, null, 2)}\n`);
-writeFileSync(
-  resolve(dist, "story-production.json"),
-  `${JSON.stringify(production, null, 2)}\n`,
-);
+writeFileSync(resolve(dist, "story-production.json"), `${JSON.stringify(production, null, 2)}\n`);
 console.log(`Story Studio build complete: ${seenIds.size} narrative IDs validated.`);
