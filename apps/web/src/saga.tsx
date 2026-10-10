@@ -40,7 +40,9 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                   disabled={!current}
                   aria-label={`${chapter.title}${current ? ", current chapter" : ", not implemented"}`}
                 >
-                  <span class="saga-chapter-number">{String(chapter.sequence).padStart(2, "0")}</span>
+                  <span class="saga-chapter-number">
+                    {String(chapter.sequence).padStart(2, "0")}
+                  </span>
                   <span class="saga-chapter-copy">
                     <strong class="saga-chapter-title">{chapter.title}</strong>
                     <small class="saga-chapter-meta">
@@ -70,7 +72,7 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                 Unimplemented chapters remain unavailable rather than implying progression.
               </p>
             </div>
-            <div class="saga-index" aria-label="Saga status">
+            <div class="saga-index">
               <span>Saga {String(view.sagaSequence).padStart(2, "0")}</span>
               <span>{view.chapters.length} chapters visible</span>
             </div>
@@ -81,7 +83,9 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
               <div class="saga-route-emblem">
                 <span class="emblem-glyph">⚜</span>
                 <strong>The current route</strong>
-                <small>One active chapter is exposed by the present production campaign state.</small>
+                <small>
+                  One active chapter is exposed by the present production campaign state.
+                </small>
               </div>
             </div>
 
@@ -93,7 +97,7 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                 remain driven by the campaign model.
               </p>
 
-              <div class="saga-current-meta" aria-label="Current chapter details">
+              <div class="saga-current-meta">
                 <span>
                   <small>Chapter</small>
                   <strong>{String(view.selectedChapterSequence).padStart(2, "0")}</strong>
