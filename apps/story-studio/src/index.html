@@ -6,6 +6,7 @@
     <meta name="color-scheme" content="dark" />
     <title>Fantasia Story Studio</title>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./scene.css" />
   </head>
   <body>
     <div id="app" class="app-shell">
@@ -15,6 +16,7 @@
           <h1>Story Studio</h1>
         </div>
         <div class="topbar-actions">
+          <button id="play-node" type="button" class="primary-button">▶ Play Node</button>
           <button id="toggle-density" type="button" class="secondary-button">Compact</button>
           <button id="export-json" type="button" class="secondary-button">Export JSON</button>
         </div>
@@ -31,12 +33,14 @@
 
         <section class="reader" aria-label="Selected story node">
           <div id="node-header" class="node-header"></div>
-          <div id="beat-list" class="beat-list"></div>
+          <div id="scene-preview" class="scene-preview"></div>
+          <nav id="beat-timeline" class="beat-timeline" aria-label="Node beat timeline"></nav>
+          <div id="event-list" class="event-list"></div>
         </section>
 
         <aside class="inspector" aria-label="Beat details">
           <div class="inspector-heading">
-            <span class="section-label">Inspector</span>
+            <span class="section-label">Beat details</span>
             <span id="selection-id" class="mono muted">No beat selected</span>
           </div>
           <div id="inspector-content" class="inspector-content empty-state">
@@ -46,9 +50,28 @@
       </main>
 
       <footer class="footer-note">
-        <span>JSON-backed local narrative view.</span>
-        <span>Exact dialogue, shots, and unapproved story details remain outside this dataset.</span>
+        <span>JSON-backed narrative production view.</span>
+        <span>Timing and staging are planning aids; controlled Drive decisions remain authoritative.</span>
       </footer>
+    </div>
+
+    <div id="player-overlay" class="player-overlay" hidden>
+      <div class="player-shell" role="dialog" aria-modal="true" aria-labelledby="player-title">
+        <div class="player-toolbar">
+          <div>
+            <p class="eyebrow">Play Node</p>
+            <strong id="player-title">Story preview</strong>
+          </div>
+          <button id="close-player" type="button" class="secondary-button">Close</button>
+        </div>
+        <div id="player-stage" class="player-stage"></div>
+        <div id="player-copy" class="player-copy"></div>
+        <div class="player-controls">
+          <button id="player-prev" type="button" class="secondary-button">← Previous</button>
+          <span id="player-progress" class="mono muted"></span>
+          <button id="player-next" type="button" class="primary-button">Next →</button>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="./app.js"></script>
