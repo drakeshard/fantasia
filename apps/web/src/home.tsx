@@ -61,7 +61,12 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
               </p>
               {currentStage ? <small>Current stage · {currentStage.title}</small> : null}
             </div>
-            <button type="button" class="home-story-continue" onClick={onContinue}>
+            <button
+              type="button"
+              class="home-story-continue"
+              aria-label="Continue current story"
+              onClick={onContinue}
+            >
               Continue
             </button>
           </section>
