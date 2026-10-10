@@ -281,7 +281,7 @@
 .home-news-strip {
   bottom: 2.5%;
   left: 31%;
-  width: min(37vw, 580px);
+  width: min(22vw, 360px);
   min-height: 56px;
   display: flex;
   gap: 18px;
@@ -289,6 +289,7 @@
   padding: 0 20px;
   border: 1px solid rgb(226 190 120 / 28%);
   background: rgb(6 13 22 / 86%);
+  pointer-events: none;
 }
 
 .home-news-label {
