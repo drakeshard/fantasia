@@ -1,0 +1,63 @@
+name: GAME-UI08 Format Helper
+
+on:
+  push:
+    branches: [game-ui08/main-menu-saga]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: game-ui08-format-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: game-ui08/main-menu-saga
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Format GAME-UI08 files
+        run: >-
+          pnpm exec biome check --write
+          apps/web/src/home.tsx
+          apps/web/src/home.css
+          apps/web/src/main.tsx
+          apps/web/src/root-shell.css
+          apps/web/src/saga.tsx
+          apps/web/src/saga.css
+          tests/e2e/bootstrap.spec.ts
+          tests/e2e/campaign-camera.spec.ts
+          tests/e2e/settings.spec.ts
+          tests/e2e/battle-keyboard.spec.ts
+
+      - name: Commit formatting
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No formatting changes required."
+            exit 0
+          fi
+          git config user.name "drakeshard-planning-bot[bot]"
+          git config user.email "drakeshard-planning-bot[bot]@users.noreply.github.com"
+          git add apps/web/src tests/e2e
+          git commit -m "GAME-UI08: apply Biome formatting"
+          git push origin HEAD:game-ui08/main-menu-saga
