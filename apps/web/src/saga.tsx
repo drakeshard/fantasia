@@ -17,7 +17,9 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
       <section class="campaign-shell overview-shell saga-reference-screen">
         <aside class="saga-reference-rail" aria-label="Saga chapters">
           <div class="saga-brand-row">
-            <span class="saga-banner-mark" aria-hidden="true">⚜</span>
+            <span class="saga-banner-mark" aria-hidden="true">
+              ⚜
+            </span>
             <div>
               <p class="hud-eyebrow">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
               <h1>{view.sagaTitle}</h1>
@@ -40,8 +42,8 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                 >
                   <span class="saga-chapter-number">Ch.{chapter.sequence}</span>
                   <span class="saga-chapter-copy">
-                    <strong>{chapter.title}</strong>
-                    <small>
+                    <strong class="saga-chapter-title">{chapter.title}</strong>
+                    <small class="saga-chapter-meta">
                       {current
                         ? "Current chapter"
                         : chapter.stageCount > 0
@@ -49,33 +51,45 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                           : "Production stages not implemented"}
                     </small>
                   </span>
-                  <span class="saga-chapter-arrow" aria-hidden="true">{current ? "›" : "—"}</span>
+                  <span class="saga-chapter-arrow" aria-hidden="true">
+                    {current ? "›" : "—"}
+                  </span>
                 </button>
               );
             })}
           </div>
         </aside>
 
-        <div class="saga-season-badge" aria-label="Saga timeframe">
-          <span aria-hidden="true">☀</span>
+        <section class="saga-season-badge" aria-label="Saga timeframe">
+          <span class="saga-season-icon" aria-hidden="true">
+            ☀
+          </span>
           <div>
-            <strong>Spring</strong>
-            <small>Year 1429</small>
+            <strong class="saga-season-name">Spring</strong>
+            <small class="saga-season-year">Year 1429</small>
           </div>
-        </div>
+        </section>
 
         <nav class="saga-bottom-nav" aria-label="Saga navigation">
-          <button type="button" onClick={onHome}>Home</button>
-          <button type="button" onClick={onContinue}>Campaign</button>
-          <button type="button" onClick={(event) => onSettings(event.currentTarget)}>Settings</button>
+          <button type="button" onClick={onHome}>
+            Home
+          </button>
+          <button type="button" onClick={onContinue}>
+            Campaign
+          </button>
+          <button type="button" onClick={(event) => onSettings(event.currentTarget)}>
+            Settings
+          </button>
         </nav>
 
         <button type="button" class="saga-next-objective" onClick={onContinue}>
           <span>
-            <small>Next objective</small>
-            <strong>{view.selectedChapterTitle}</strong>
+            <small class="saga-objective-label">Next objective</small>
+            <strong class="saga-objective-title">{view.selectedChapterTitle}</strong>
           </span>
-          <span aria-hidden="true">›</span>
+          <span class="saga-objective-arrow" aria-hidden="true">
+            ›
+          </span>
         </button>
       </section>
     </main>
