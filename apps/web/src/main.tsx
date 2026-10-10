@@ -29,14 +29,20 @@ function browserStorage(): Storage | undefined {
 }
 
 function initialScreen(): AppScreen {
-  return new URLSearchParams(window.location.search).get("dev") === "battle" ? "battle" : "home";
+  return new URLSearchParams(window.location.search).get("dev") === "battle"
+    ? "battle"
+    : "home";
 }
 
 function App() {
   const initialPreferences = loadUiPreferences(browserStorage());
   const [screen, setScreen] = useState<AppScreen>(() => initialScreen());
-  const [preferences, setPreferences] = useState<UiPreferences>(initialPreferences.preferences);
-  const [storageMessage, setStorageMessage] = useState<string | undefined>(initialPreferences.message);
+  const [preferences, setPreferences] = useState<UiPreferences>(
+    initialPreferences.preferences,
+  );
+  const [storageMessage, setStorageMessage] = useState<string | undefined>(
+    initialPreferences.message,
+  );
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsTrigger = useRef<HTMLElement>();
 
@@ -93,9 +99,15 @@ function App() {
       <div class="campaign-rooted-shell" hidden={screen !== "campaign"}>
         <CampaignApp onOpenBattle={() => setScreen("battle")} />
         <nav class="campaign-root-navigation" aria-label="Campaign root navigation">
-          <button type="button" onClick={() => setScreen("saga")}>Back</button>
-          <button type="button" onClick={() => setScreen("home")}>Home</button>
-          <button type="button" onClick={(event) => openSettings(event.currentTarget)}>Settings</button>
+          <button type="button" onClick={() => setScreen("saga")}>
+            Back
+          </button>
+          <button type="button" onClick={() => setScreen("home")}>
+            Home
+          </button>
+          <button type="button" onClick={(event) => openSettings(event.currentTarget)}>
+            Settings
+          </button>
         </nav>
       </div>
 
