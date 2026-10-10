@@ -1,0 +1,35 @@
+name: Temp Format NAR03
+
+on:
+  push:
+    branches:
+      - game-nar03/n01-conversation
+    paths:
+      - .github/workflows/temp-format-nar03.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: game-nar03/n01-conversation
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+          check-latest: false
+      - name: Format changed files with pinned Biome
+        run: npx --yes @biomejs/biome@2.5.14 format --write content/narrative/story.json apps/story-studio/src/app.js apps/story-studio/build.mjs
+      - name: Commit formatting
+        run: |
+          git config user.name "drakeshard-format-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/narrative/story.json apps/story-studio/src/app.js apps/story-studio/build.mjs
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: apply pinned Biome formatting"
+          git push origin HEAD:game-nar03/n01-conversation
