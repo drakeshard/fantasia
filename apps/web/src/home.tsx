@@ -15,7 +15,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
   return (
     <main class="home-screen" aria-label="Fantasia home">
       <header class="home-topbar">
-        <div class="home-wordmark" aria-label="Fantasia">
+        <div class="home-wordmark">
           <span class="home-wordmark-mark" aria-hidden="true">
             <span>✦</span>
           </span>
@@ -24,7 +24,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
             <small>Chronicles beyond the fracture</small>
           </span>
         </div>
-        <div class="home-top-actions" aria-label="Current interface status">
+        <div class="home-top-actions">
           <span class="fantasia-chip">Story campaign</span>
           <button
             type="button"
@@ -87,7 +87,12 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
                 ›
               </span>
             </button>
-            <button type="button" aria-label="Summon" disabled title="Summon is not implemented yet">
+            <button
+              type="button"
+              aria-label="Summon"
+              disabled
+              title="Summon is not implemented yet"
+            >
               <span aria-hidden="true">✦</span>
               <span class="home-nav-copy">
                 <strong>Summon</strong>
