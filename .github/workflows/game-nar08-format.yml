@@ -1,0 +1,35 @@
+name: GAME-NAR08 Format
+
+on:
+  push:
+    branches:
+      - game-nar08/pacing-navigation
+    paths:
+      - .github/workflows/game-nar08-format.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: game-nar08/pacing-navigation
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: node scripts/prepare-shared-packages.mjs
+      - run: pnpm install --frozen-lockfile
+      - name: Format changed sources
+        run: pnpm exec biome format --write apps/story-studio/src/index.html apps/story-studio/src/workspace-navigation.css apps/story-studio/src/workspace-navigation.js content/narrative/story.json content/narrative/story-production.json
+      - name: Remove temporary workflow and commit
+        run: |
+          rm .github/workflows/game-nar08-format.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "GAME-NAR08: format revised story and navigation"
+          git push origin HEAD:game-nar08/pacing-navigation
