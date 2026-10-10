@@ -16,6 +16,7 @@ function makePanelToggle(label, onClick) {
   button.type = "button";
   button.className = "panel-toggle";
   button.setAttribute("aria-label", label);
+  button.setAttribute("aria-expanded", "true");
   button.innerHTML = '<span class="panel-chevron" aria-hidden="true">▾</span>';
   button.addEventListener("click", onClick);
   return button;
