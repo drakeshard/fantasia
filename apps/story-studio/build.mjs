@@ -42,15 +42,35 @@ for (const saga of story.sagas) {
     if (chapter.routeClusters !== undefined) {
       assert(Array.isArray(chapter.routeClusters), `${chapter.id}.routeClusters must be an array`);
       for (const cluster of chapter.routeClusters) {
-        assert(typeof cluster.id === "string" && cluster.id, `${chapter.id} route cluster needs an id`);
+        assert(
+          typeof cluster.id === "string" && cluster.id,
+          `${chapter.id} route cluster needs an id`,
+        );
         assert(cluster.mode === "complete-any", `${cluster.id}.mode must be complete-any`);
-        assert(Array.isArray(cluster.nodeIds) && cluster.nodeIds.length > 0, `${cluster.id}.nodeIds must be non-empty`);
-        assert(Number.isInteger(cluster.requiredCount) && cluster.requiredCount > 0 && cluster.requiredCount <= cluster.nodeIds.length, `${cluster.id}.requiredCount is invalid`);
-        assert(typeof cluster.reconvergesAt === "string" && cluster.reconvergesAt, `${cluster.id}.reconvergesAt is required`);
+        assert(
+          Array.isArray(cluster.nodeIds) && cluster.nodeIds.length > 0,
+          `${cluster.id}.nodeIds must be non-empty`,
+        );
+        assert(
+          Number.isInteger(cluster.requiredCount) &&
+            cluster.requiredCount > 0 &&
+            cluster.requiredCount <= cluster.nodeIds.length,
+          `${cluster.id}.requiredCount is invalid`,
+        );
+        assert(
+          typeof cluster.reconvergesAt === "string" && cluster.reconvergesAt,
+          `${cluster.id}.reconvergesAt is required`,
+        );
         for (const routeNodeId of cluster.nodeIds) {
-          assert(chapterNodeIds.has(routeNodeId), `${cluster.id} references unknown node: ${routeNodeId}`);
+          assert(
+            chapterNodeIds.has(routeNodeId),
+            `${cluster.id} references unknown node: ${routeNodeId}`,
+          );
         }
-        assert(chapterNodeIds.has(cluster.reconvergesAt), `${cluster.id} reconverges at unknown node: ${cluster.reconvergesAt}`);
+        assert(
+          chapterNodeIds.has(cluster.reconvergesAt),
+          `${cluster.id} reconverges at unknown node: ${cluster.reconvergesAt}`,
+        );
       }
     }
     for (const node of chapter.nodes) {

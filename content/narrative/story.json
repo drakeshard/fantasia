@@ -29,10 +29,7 @@
                   "order": 1,
                   "title": "A Small Request",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "Guild Clerk"
-                  ],
+                  "characters": ["MC", "Guild Clerk"],
                   "screenAction": "MC accepts a low-risk wild-boar request at Primora's guild post before leaving for the nearby forest.",
                   "dialogueIntent": "Establish MC's hero aspiration lightly and quickly; keep village life ordinary.",
                   "playerControl": "dialogue advance",
@@ -108,10 +105,7 @@
                   "order": 1,
                   "title": "Routine Work",
                   "presentation": "battle-preview",
-                  "characters": [
-                    "MC",
-                    "Wild Boar"
-                  ],
+                  "characters": ["MC", "Wild Boar"],
                   "screenAction": "MC handles the expected low-threat target until a much heavier presence enters the area.",
                   "dialogueIntent": "Keep the first fight simple and ordinary so the later chimera feels genuinely wrong.",
                   "playerControl": "battle tutorial",
@@ -183,10 +177,7 @@
                   "order": 1,
                   "title": "The Wrong Target",
                   "presentation": "battle-preview",
-                  "characters": [
-                    "MC",
-                    "Failed Chimera"
-                  ],
+                  "characters": ["MC", "Failed Chimera"],
                   "screenAction": "The anomalous chimera appears. MC attacks, the creature intercepts the strike, breaks the sword, and throws MC back.",
                   "dialogueIntent": "Destroy MC's confidence quickly; the creature behaves as a dangerous physical threat, not a speaking villain.",
                   "playerControl": "brief combat control",
@@ -248,10 +239,7 @@
                   "order": 2,
                   "title": "Escape",
                   "presentation": "escape-gameplay",
-                  "characters": [
-                    "MC",
-                    "Failed Chimera"
-                  ],
+                  "characters": ["MC", "Failed Chimera"],
                   "screenAction": "MC flees through the forest while injured and attack-limited, then tumbles through a visible refractive Fracture by accident.",
                   "dialogueIntent": "Keep the escape immediate. Do not explain the Fracture, chimera origin, or destination selection.",
                   "playerControl": "escape movement / route interaction",
@@ -328,9 +316,7 @@
                   "order": 1,
                   "title": "Fracture Arrival",
                   "presentation": "cinematic",
-                  "characters": [
-                    "MC"
-                  ],
+                  "characters": ["MC"],
                   "screenAction": "MC crashes into unfamiliar wooded farmland, still injured and carrying the broken starting sword. The small Fracture collapses without obvious trace.",
                   "dialogueIntent": "Pain and disorientation only; no cosmology explanation.",
                   "playerControl": "none",
@@ -375,9 +361,7 @@
                   "order": 2,
                   "title": "Toward the Road",
                   "presentation": "exploration",
-                  "characters": [
-                    "MC"
-                  ],
+                  "characters": ["MC"],
                   "screenAction": "MC moves toward a nearby road after hearing a cart beyond the trees.",
                   "dialogueIntent": "MC assumes this is some unfamiliar region reached during the fall, not another world.",
                   "playerControl": "short movement segment",
@@ -415,12 +399,7 @@
                   "order": 3,
                   "title": "The Group Finds MC",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "A small civilian/local-escort group finds MC. Julie is already traveling with them and notices the injuries.",
                   "dialogueIntent": "Caution from the escort; Julie's attention goes immediately to the visible injury.",
                   "playerControl": "dialogue advance",
@@ -486,11 +465,7 @@
                   "order": 4,
                   "title": "Julie Helps",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Local escorts"],
                   "screenAction": "Julie steps past the escort, checks MC's arm, and directs immediate aid before asking for an explanation.",
                   "dialogueIntent": "Practical compassion with restrained humor; no dramatic rescue speech.",
                   "playerControl": "dialogue advance",
@@ -581,11 +556,7 @@
                   "order": 5,
                   "title": "Foreign Words",
                   "presentation": "dialogue",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Local escorts"],
                   "screenAction": "The introduction itself reveals that the group's speech sounds foreign even though its meaning reaches MC clearly.",
                   "dialogueIntent": "Show the language anomaly with one sharp contradiction rather than a long explanation.",
                   "playerControl": "dialogue advance",
@@ -642,12 +613,7 @@
                   "order": 6,
                   "title": "Primora and Vaelkrath",
                   "presentation": "dialogue",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "MC names Primora and Vaelkrath; nobody recognizes either place.",
                   "dialogueIntent": "The locals are genuinely unfamiliar; Julie does not ridicule or accuse MC.",
                   "playerControl": "dialogue advance",
@@ -705,12 +671,7 @@
                   "order": 7,
                   "title": "Orléans",
                   "presentation": "travel-dialogue",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "The group resumes travel. Orléans and the siege are introduced only as practical local context.",
                   "dialogueIntent": "Give the player recognizable historical clues while keeping MC focused on location and survival.",
                   "playerControl": "short travel / dialogue advance",
@@ -757,10 +718,7 @@
                   "order": 8,
                   "title": "Stay With Us",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny"],
                   "screenAction": "Julie gives her name and tells MC to stay with the group rather than wander off injured.",
                   "dialogueIntent": "Create a direct personal bond and a practical reason to travel together, not political allegiance.",
                   "playerControl": "dialogue advance",
@@ -833,12 +791,7 @@
                   "order": 9,
                   "title": "Trouble Ahead",
                   "presentation": "transition",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Civilians",
-                    "Local escorts"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Civilians", "Local escorts"],
                   "screenAction": "The lead escort detects armed movement ahead and halts the group.",
                   "dialogueIntent": "Immediate practical escalation into B01.",
                   "playerControl": "none",
@@ -1186,12 +1139,7 @@
                   "order": 1,
                   "title": "Food, Water, Bandages",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Hangaku Gozen",
-                    "La Hire"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
                   "screenAction": "At a rough shelter, Julie properly cleans and binds MC's injuries while the group eats and settles.",
                   "dialogueIntent": "Use recovery to let personalities breathe after the battle.",
                   "playerControl": "dialogue advance",
@@ -1245,11 +1193,7 @@
                   "order": 2,
                   "title": "Not the Only Stranger",
                   "presentation": "dialogue",
-                  "characters": [
-                    "MC",
-                    "Hangaku Gozen",
-                    "Julie d’Aubigny"
-                  ],
+                  "characters": ["MC", "Hangaku Gozen", "Julie d’Aubigny"],
                   "screenAction": "MC asks Hangaku where she comes from and realizes another exceptional traveler may also be far from home.",
                   "dialogueIntent": "Hint at broader displacement without explaining Story Worlds or Fracture cosmology.",
                   "playerControl": "dialogue advance",
@@ -1298,11 +1242,7 @@
                   "order": 3,
                   "title": "A Usable Sword",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "La Hire",
-                    "Julie d’Aubigny"
-                  ],
+                  "characters": ["MC", "La Hire", "Julie d’Aubigny"],
                   "screenAction": "La Hire notices the broken sword and points MC toward a cheap replacement among available gear.",
                   "dialogueIntent": "The replacement is ordinary and practical; it matters because MC can carry a complete sword again, not because it is special.",
                   "playerControl": "dialogue advance",
@@ -1376,12 +1316,7 @@
                   "order": 1,
                   "title": "France",
                   "presentation": "dialogue",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Hangaku Gozen",
-                    "La Hire"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
                   "screenAction": "Simple conversation names France, England, Orléans, and Charles/the Dauphin. None of them belong in MC's known world.",
                   "dialogueIntent": "Turn necessary context into a growing contradiction, not a history lecture.",
                   "playerControl": "dialogue advance",
@@ -1444,11 +1379,7 @@
                   "order": 2,
                   "title": "Where Is Vaelkrath?",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Hangaku Gozen"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen"],
                   "screenAction": "Julie asks the question plainly: where is Vaelkrath supposed to be? MC realizes there is no map direction that can answer.",
                   "dialogueIntent": "Let MC reach fear and uncertainty before reaching a formal another-world conclusion.",
                   "playerControl": "dialogue advance",
@@ -1511,12 +1442,7 @@
                   "order": 3,
                   "title": "Leave at First Light",
                   "presentation": "transition",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Hangaku Gozen",
-                    "La Hire"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
                   "screenAction": "The group prepares to continue toward Orléans with the civilians and supplies.",
                   "dialogueIntent": "End recovery cleanly and move back into danger.",
                   "playerControl": "none",
@@ -1718,11 +1644,7 @@
                   "order": 4,
                   "title": "Draw the Sword",
                   "presentation": "battle-event",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "English Soldier"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "English Soldier"],
                   "screenAction": "An attacker slips through toward Julie while she is covering the retreat. MC reacts before thinking and finally draws the replacement sword.",
                   "dialogueIntent": "Pay off Julie helping MC in N01. The action is protective and instinctive, not a sudden cure for fear.",
                   "playerControl": "battle control",
@@ -1775,13 +1697,7 @@
                   "order": 5,
                   "title": "Breakthrough",
                   "presentation": "battle-preview",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Hangaku Gozen",
-                    "La Hire",
-                    "Civilians"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire", "Civilians"],
                   "screenAction": "The party and civilians complete the breakthrough before reinforcements can trap them.",
                   "dialogueIntent": "End on escape and survival, not annihilation of the English detachment.",
                   "playerControl": "battle control",
@@ -1832,10 +1748,7 @@
                   "order": 1,
                   "title": "After the Road",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny"],
                   "screenAction": "After the escape, Julie notices that MC finally used the replacement sword.",
                   "dialogueIntent": "Give the prologue defeat a small emotional echo without dumping backstory.",
                   "playerControl": "dialogue advance",
@@ -1894,12 +1807,7 @@
                   "order": 2,
                   "title": "The Maid",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Travelers",
-                    "Civilians"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Travelers", "Civilians"],
                   "screenAction": "Passing travelers trade conflicting rumors about a young woman called the Maid who is expected toward Orléans.",
                   "dialogueIntent": "Jeanne remains offscreen. Present hope, doubt, and uncertainty rather than authoritative prophecy.",
                   "playerControl": "dialogue advance",
@@ -1957,12 +1865,7 @@
                   "order": 3,
                   "title": "Toward Orléans",
                   "presentation": "chapter-end",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Hangaku Gozen",
-                    "La Hire"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "La Hire"],
                   "screenAction": "The group continues toward Orléans. MC still wants answers and a route home; the Maid rumor becomes the next major story hook.",
                   "dialogueIntent": "Close the chapter quietly and keep MC's motivation personal rather than political.",
                   "playerControl": "none",
@@ -2168,12 +2071,7 @@
                   "order": 2,
                   "title": "Back to Ordinary Work",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Hangaku Gozen",
-                    "Quartermaster"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "Quartermaster"],
                   "screenAction": "The crowd disperses and MC's group is sent back to the unglamorous work of a besieged city. Three unrelated local problems are posted at once.",
                   "dialogueIntent": "Turn the chapter from spectacle back to earned credibility. The party chooses where to help first rather than being summoned upward.",
                   "playerControl": "mission selection / dialogue advance",
@@ -2475,12 +2373,7 @@
                   "order": 3,
                   "title": "The Quartermaster Counts",
                   "presentation": "post-battle",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Quartermaster",
-                    "Supply Drivers"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Quartermaster", "Supply Drivers"],
                   "screenAction": "Back inside Orléans, the quartermaster counts recovered food, bandages, arrows, and living drivers rather than enemy bodies.",
                   "dialogueIntent": "Create an independent civilian/logistics report of competence. This can satisfy the second mandatory reputation source.",
                   "playerControl": "dialogue advance",
@@ -2631,12 +2524,7 @@
                   "order": 3,
                   "title": "A Sergeant's Report",
                   "presentation": "post-battle",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Watch Sergeant",
-                    "La Hire"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Watch Sergeant", "La Hire"],
                   "screenAction": "The watch sergeant reports that the outsiders reinforced the post, moved the wounded, and withdrew cleanly. La Hire hears the report separately from the other missions.",
                   "dialogueIntent": "This is a military witness independent of the courier and quartermaster accounts. If it is the second completed mission, the party has enough credibility to reach Dunois.",
                   "playerControl": "dialogue advance",
@@ -2734,12 +2622,7 @@
                   "order": 2,
                   "title": "Work, Not Rank",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "La Hire",
-                    "Jean de Dunois"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "La Hire", "Jean de Dunois"],
                   "screenAction": "Dunois assigns the party to the supporting line for Saint-Loup. The offer is practical work and responsibility, not a title or privileged place in command.",
                   "dialogueIntent": "Make the promotion social rather than formal: the party has become useful enough to receive real work and to be included in an operational briefing.",
                   "playerControl": "dialogue advance",
@@ -2833,12 +2716,7 @@
                   "order": 2,
                   "title": "Jeanne the Person",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Jeanne d’Arc",
-                    "Bradamante",
-                    "Jean de Dunois"
-                  ],
+                  "characters": ["MC", "Jeanne d’Arc", "Bradamante", "Jean de Dunois"],
                   "screenAction": "Jeanne briefly speaks to MC's group while confirming the supporting line. She knows them from the reports, not because fate singled MC out.",
                   "dialogueIntent": "Make the first direct exchange practical and short. Jeanne is tired, direct, and human; MC remains socially junior.",
                   "playerControl": "dialogue advance",
@@ -3040,12 +2918,7 @@
                   "order": 1,
                   "title": "After the Cheering",
                   "presentation": "aftermath",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "French soldiers",
-                    "Wounded"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "French soldiers", "Wounded"],
                   "screenAction": "MC carries water and supplies among casualties while soldiers who now recognize the party ask for help without ceremony.",
                   "dialogueIntent": "Recognition should feel like responsibility before it feels like prestige.",
                   "playerControl": "dialogue advance",
@@ -3080,11 +2953,7 @@
                   "order": 2,
                   "title": "Hope Still Has a Cost",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Jeanne d’Arc",
-                    "Julie d’Aubigny"
-                  ],
+                  "characters": ["MC", "Jeanne d’Arc", "Julie d’Aubigny"],
                   "screenAction": "Jeanne briefly joins the casualty work after escaping another round of officers and civilians demanding certainty.",
                   "dialogueIntent": "Build connection through shared labor and fatigue, not destiny or instant friendship.",
                   "playerControl": "dialogue advance",
@@ -3236,12 +3105,7 @@
                   "order": 3,
                   "title": "The Augustins Falls",
                   "presentation": "post-battle",
-                  "characters": [
-                    "MC",
-                    "Bradamante",
-                    "Julie d’Aubigny",
-                    "French soldiers"
-                  ],
+                  "characters": ["MC", "Bradamante", "Julie d’Aubigny", "French soldiers"],
                   "screenAction": "After sustained fighting the Augustins position gives way, but the force is exhausted and cannot pretend the next assault will be easy.",
                   "dialogueIntent": "End with physical cost and the need for recovery before Tourelles rather than a clean victory montage.",
                   "playerControl": "dialogue advance",
@@ -3346,11 +3210,7 @@
                   "order": 2,
                   "title": "Tomorrow Is My Choice",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Jeanne d’Arc"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Jeanne d’Arc"],
                   "screenAction": "MC separates personal choice from political allegiance and chooses to return to the line because people will be left behind otherwise.",
                   "dialogueIntent": "Keep MC's reason personal and consistent with the story so far; helping here does not mean swearing their life to France.",
                   "playerControl": "dialogue advance",
@@ -3450,13 +3310,7 @@
                   "order": 2,
                   "title": "Hold Without Her",
                   "presentation": "battle-event",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "La Hire",
-                    "French soldiers",
-                    "Wounded"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "La Hire", "French soldiers", "Wounded"],
                   "screenAction": "With Jeanne behind the line, the immediate goal becomes preventing collapse, protecting the treatment area, and keeping a route open.",
                   "dialogueIntent": "Make the objective shift mechanically and emotionally honest. MC does not replace Jeanne as commander or symbol.",
                   "playerControl": "battle control",
@@ -3557,13 +3411,7 @@
                   "order": 1,
                   "title": "The English Leave",
                   "presentation": "aftermath",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Jeanne d’Arc",
-                    "La Hire",
-                    "Civilians"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Jeanne d’Arc", "La Hire", "Civilians"],
                   "screenAction": "On 8 May the English withdrawal becomes visible. The city reacts with exhausted relief rather than a clean heroic tableau.",
                   "dialogueIntent": "Resolve the siege historically while keeping the human cost present.",
                   "playerControl": "dialogue advance",
@@ -3655,11 +3503,7 @@
               "title": "Proof Before Rank",
               "mode": "complete-any",
               "requiredCount": 2,
-              "nodeIds": [
-                "CH02-B00",
-                "CH02-B00B",
-                "CH02-B00C"
-              ],
+              "nodeIds": ["CH02-B00", "CH02-B00B", "CH02-B00C"],
               "reconvergesAt": "CH02-N02A",
               "optionalAfterThreshold": true,
               "summary": "Three small local siege incidents are available in free order. Completing any two gives MC's party enough independent witnesses for Dunois to recognize them as useful irregulars; the third remains optional before the route reconverges."
@@ -3960,12 +3804,7 @@
                   "order": 2,
                   "title": "Forward Column Tomorrow",
                   "presentation": "character-scene",
-                  "characters": [
-                    "MC",
-                    "Jean II d’Alençon",
-                    "Jeanne d’Arc",
-                    "Julie d’Aubigny"
-                  ],
+                  "characters": ["MC", "Jean II d’Alençon", "Jeanne d’Arc", "Julie d’Aubigny"],
                   "screenAction": "Alençon now addresses the party without La Hire introducing them. A small disagreement over campaign pace follows while wounded are still being moved.",
                   "dialogueIntent": "Recognition is now believable because Orléans and Jargeau produced repeated firsthand evidence.",
                   "playerControl": "dialogue advance",
@@ -4017,12 +3856,7 @@
                   "order": 1,
                   "title": "Pressure Without a Parade",
                   "presentation": "field-sequence",
-                  "characters": [
-                    "MC",
-                    "La Hire",
-                    "Hangaku Gozen",
-                    "French soldiers"
-                  ],
+                  "characters": ["MC", "La Hire", "Hangaku Gozen", "French soldiers"],
                   "screenAction": "The column pressures crossings, screens roads, moves supplies, and watches English positions around Meung and Beaugency without turning every contact into a full mandatory battle.",
                   "dialogueIntent": "Show campaign labor, scouting uncertainty, and smaller clashes between major set pieces.",
                   "playerControl": "limited field control / dialogue advance",
@@ -4057,12 +3891,7 @@
                   "order": 2,
                   "title": "An Ally Nobody Invited",
                   "presentation": "story-scene",
-                  "characters": [
-                    "MC",
-                    "Arthur de Richemont",
-                    "Jean II d’Alençon",
-                    "La Hire"
-                  ],
+                  "characters": ["MC", "Arthur de Richemont", "Jean II d’Alençon", "La Hire"],
                   "screenAction": "Richemont arrives with Breton strength. Officers react with distrust even while the campaign needs his soldiers.",
                   "dialogueIntent": "Make internal French politics visible through practical tension, not a lecture.",
                   "playerControl": "dialogue advance",
@@ -4128,13 +3957,7 @@
                   "order": 1,
                   "title": "Bad Information",
                   "presentation": "pre-battle",
-                  "characters": [
-                    "MC",
-                    "La Hire",
-                    "Jean II d’Alençon",
-                    "Jeanne d’Arc",
-                    "Scouts"
-                  ],
+                  "characters": ["MC", "La Hire", "Jean II d’Alençon", "Jeanne d’Arc", "Scouts"],
                   "screenAction": "Scouts bring conflicting positions for the withdrawing English. Nobody knows yet that Patay will become a famous victory.",
                   "dialogueIntent": "Create uncertainty before the decision to press.",
                   "playerControl": "dialogue advance",
@@ -4176,12 +3999,7 @@
                   "order": 2,
                   "title": "Before the Line Sets",
                   "presentation": "pre-battle",
-                  "characters": [
-                    "MC",
-                    "La Hire",
-                    "Jean II d’Alençon",
-                    "Jeanne d’Arc"
-                  ],
+                  "characters": ["MC", "La Hire", "Jean II d’Alençon", "Jeanne d’Arc"],
                   "screenAction": "La Hire argues that waiting guarantees a prepared English line. The vanguard moves to make contact while the rest follows cautiously.",
                   "dialogueIntent": "Make Patay causality explicit: the opportunity exists because the French catch the withdrawal before deployment stabilizes.",
                   "playerControl": "dialogue advance",
@@ -4305,12 +4123,7 @@
                   "order": 3,
                   "title": "Talbot Under Guard",
                   "presentation": "post-battle",
-                  "characters": [
-                    "MC",
-                    "John Talbot",
-                    "La Hire",
-                    "Jean II d’Alençon"
-                  ],
+                  "characters": ["MC", "John Talbot", "La Hire", "Jean II d’Alençon"],
                   "screenAction": "Talbot is captured. He remains composed enough to warn that one badly timed defeat does not end the war.",
                   "dialogueIntent": "Give the battle an aftermath beat and preserve Talbot's weight as a future threat rather than a disposable boss.",
                   "playerControl": "dialogue advance",
@@ -4362,12 +4175,7 @@
                   "order": 1,
                   "title": "After Patay",
                   "presentation": "aftermath",
-                  "characters": [
-                    "MC",
-                    "Julie d’Aubigny",
-                    "Jeanne d’Arc",
-                    "French soldiers"
-                  ],
+                  "characters": ["MC", "Julie d’Aubigny", "Jeanne d’Arc", "French soldiers"],
                   "screenAction": "The army counts the cost of Patay and prepares to move again. MC's growing reputation is visible but not glamorous.",
                   "dialogueIntent": "Give another breath before the political road; show success creating expectation rather than privilege.",
                   "playerControl": "dialogue advance",
@@ -4409,12 +4217,7 @@
                   "order": 2,
                   "title": "The King Before the Crown",
                   "presentation": "travel-dialogue",
-                  "characters": [
-                    "MC",
-                    "Charles VII",
-                    "Jean II d’Alençon",
-                    "Jeanne d’Arc"
-                  ],
+                  "characters": ["MC", "Charles VII", "Jean II d’Alençon", "Jeanne d’Arc"],
                   "screenAction": "During a group campaign halt, Alençon identifies veterans whose reports Charles has been reading. MC is one name among them, not the recipient of a private royal audience.",
                   "dialogueIntent": "Keep Charles cautious and human. His awareness of MC is earned through reports and repeated service.",
                   "playerControl": "dialogue advance",
@@ -4499,12 +4302,7 @@
                   "order": 1,
                   "title": "The Crown",
                   "presentation": "chapter-end",
-                  "characters": [
-                    "MC",
-                    "Jeanne d’Arc",
-                    "Julie d’Aubigny",
-                    "Charles VII"
-                  ],
+                  "characters": ["MC", "Jeanne d’Arc", "Julie d’Aubigny", "Charles VII"],
                   "screenAction": "The coronation unfolds amid heat, armor, cloth, incense, and accumulated campaign fatigue. MC is present with the campaign, not centered by the ceremony.",
                   "dialogueIntent": "Let the historical milestone land, then add one subtle Fracture-like visual clue without explanation.",
                   "playerControl": "dialogue advance",
