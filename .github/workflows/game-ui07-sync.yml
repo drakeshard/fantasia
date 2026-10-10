@@ -1,0 +1,26 @@
+name: GAME-UI07 sync main
+
+on:
+  push:
+    branches:
+      - game-ui07/battle-keyboard-nav
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: game-ui07/battle-keyboard-nav
+          fetch-depth: 0
+      - name: Merge current main
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin main
+          git merge --no-edit origin/main
+          git push origin HEAD:game-ui07/battle-keyboard-nav
