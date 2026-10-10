@@ -11,13 +11,13 @@ import {
   saveUiPreferences,
   type UiPreferences,
 } from "./preferences.js";
+import { SagaApp } from "./saga.js";
 import { SettingsDialog } from "./settings-dialog.js";
 import "./styles.css";
 import "./production.css";
 import "./settings.css";
 
-type AppScreen = "home" | "campaign" | "battle";
-type CampaignEntryMode = "overview" | "chapter";
+type AppScreen = "home" | "saga" | "campaign" | "battle";
 
 function browserStorage(): Storage | undefined {
   try {
@@ -34,7 +34,6 @@ function initialScreen(): AppScreen {
 function App() {
   const initialPreferences = loadUiPreferences(browserStorage());
   const [screen, setScreen] = useState<AppScreen>(() => initialScreen());
-  const [campaignEntryMode, setCampaignEntryMode] = useState<CampaignEntryMode>("overview");
   const [preferences, setPreferences] = useState<UiPreferences>(initialPreferences.preferences);
   const [storageMessage, setStorageMessage] = useState<string | undefined>(initialPreferences.message);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -72,27 +71,29 @@ function App() {
     setStorageMessage(result.message ?? "Interface preferences are saved in this browser.");
   }
 
-  function openCampaign(mode: CampaignEntryMode) {
-    setCampaignEntryMode(mode);
-    setScreen("campaign");
-  }
-
   return (
     <>
       {screen === "battle" ? (
-        <BattleApp onReturnCampaign={() => openCampaign("chapter")} />
+        <BattleApp onReturnCampaign={() => setScreen("campaign")} />
       ) : screen === "campaign" ? (
-        <CampaignApp
-          key={campaignEntryMode}
-          initialScreen={campaignEntryMode}
+        <div class="campaign-rooted-shell">
+          <CampaignApp onOpenBattle={() => setScreen("battle")} />
+          <nav class="campaign-root-navigation" aria-label="Campaign root navigation">
+            <button type="button" onClick={() => setScreen("saga")}>Back</button>
+            <button type="button" onClick={() => setScreen("home")}>Home</button>
+            <button type="button" onClick={(event) => openSettings(event.currentTarget)}>Settings</button>
+          </nav>
+        </div>
+      ) : screen === "saga" ? (
+        <SagaApp
           onHome={() => setScreen("home")}
-          onOpenBattle={() => setScreen("battle")}
-          onOpenSettings={openSettings}
+          onContinue={() => setScreen("campaign")}
+          onSettings={openSettings}
         />
       ) : (
         <HomeApp
-          onContinue={() => openCampaign("chapter")}
-          onCampaign={() => openCampaign("overview")}
+          onContinue={() => setScreen("campaign")}
+          onCampaign={() => setScreen("saga")}
           onSettings={openSettings}
         />
       )}
