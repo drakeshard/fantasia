@@ -1906,6 +1906,1585 @@
               ]
             }
           ]
+        },
+        {
+          "id": "CH02",
+          "title": "The Siege of Orléans",
+          "status": "approved-structure",
+          "nodes": [
+            {
+              "id": "CH02-N01",
+              "title": "Behind the Walls",
+              "type": "story",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "location": "Orléans",
+              "time": "29 April 1429 — afternoon",
+              "summary": "MC enters Orléans and sees the siege as an exhausted civilian and military crisis rather than a heroic legend. Dunois becomes the command anchor while MC still searches for answers about home.",
+              "beats": [
+                {
+                  "id": "CH02-N01-BEAT-01",
+                  "order": 1,
+                  "title": "A City Still Standing",
+                  "presentation": "story-scene",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire",
+                    "Jean de Dunois"
+                  ],
+                  "screenAction": "The group enters Orléans through crowded defenses, wounded soldiers, damaged streets, ration lines, and hurried messengers.",
+                  "dialogueIntent": "Ground the city before Jeanne appears. Dunois should read as capable and overburdened, not ceremonial.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "chapter_start",
+                  "result": "MC understands that Orléans is surviving under pressure and gains access to the local command network without becoming politically committed.",
+                  "next": "CH02-N02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-N01-L010",
+                      "type": "action",
+                      "text": "Orléans is loud with hammering, carts, bells, wounded men, and people arguing over food."
+                    },
+                    {
+                      "id": "S01-CH02-N01-L020",
+                      "type": "dialogue",
+                      "text": "This is what everyone was trying to reach?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N01-L030",
+                      "type": "dialogue",
+                      "text": "This is what is left of it after months of siege.",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH02-N01-L040",
+                      "type": "action",
+                      "text": "A tired commander crosses the street while giving three different orders without slowing."
+                    },
+                    {
+                      "id": "S01-CH02-N01-L050",
+                      "type": "dialogue",
+                      "text": "La Hire. You brought more mouths.",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
+                    },
+                    {
+                      "id": "S01-CH02-N01-L060",
+                      "type": "dialogue",
+                      "text": "I brought people who can keep them attached to their bodies.",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH02-N01-L070",
+                      "type": "dialogue",
+                      "text": "Then I can use them. Jean de Dunois.",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
+                    },
+                    {
+                      "id": "S01-CH02-N01-L080",
+                      "type": "dialogue",
+                      "text": "{{MC_NAME}}. I was hoping somebody here had maps of places no one else has heard of.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N01-L090",
+                      "type": "dialogue",
+                      "text": "If your place exists on a map, we will look after we survive the week.",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
+                    },
+                    {
+                      "id": "S01-CH02-N01-L100",
+                      "type": "transition",
+                      "text": "CH02-N02 — The Maid Enters Orléans."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-N02",
+              "title": "The Maid Enters Orléans",
+              "type": "story",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "location": "Orléans",
+              "time": "29 April 1429 — evening",
+              "summary": "Jeanne enters Orléans as a public symbol before MC meets her privately. The city projects hope and expectation onto a young woman MC can barely see through the crowd.",
+              "beats": [
+                {
+                  "id": "CH02-N02-BEAT-01",
+                  "order": 1,
+                  "title": "The Maid",
+                  "presentation": "cinematic",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire",
+                    "Jeanne d’Arc",
+                    "Civilians"
+                  ],
+                  "screenAction": "Crowds gather as Jeanne enters the city. MC sees banners, armor, and a young rider almost swallowed by the reaction around her.",
+                  "dialogueIntent": "Keep Jeanne distant and human inside the spectacle. Do not validate prophecy or explain miracles.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "maid_arrival",
+                  "result": "MC understands why the rumor mattered to Orléans, but still knows Jeanne only as the Maid seen by everyone else.",
+                  "next": "CH02-N03",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-N02-L010",
+                      "type": "action",
+                      "text": "A wave of shouting rolls down the street before MC can see its cause."
+                    },
+                    {
+                      "id": "S01-CH02-N02-L020",
+                      "type": "dialogue",
+                      "text": "What happened?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L030",
+                      "type": "dialogue",
+                      "text": "She made it into the city.",
+                      "speaker": "Civilian",
+                      "displayLabel": "Civilian"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L040",
+                      "type": "dialogue",
+                      "text": "The Maid?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L050",
+                      "type": "action",
+                      "text": "A white banner rises above the crowd. Beneath it rides a young armored woman, visibly tired and trying to acknowledge everyone at once."
+                    },
+                    {
+                      "id": "S01-CH02-N02-L060",
+                      "type": "dialogue",
+                      "text": "They look at her like the siege is already over.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L070",
+                      "type": "dialogue",
+                      "text": "That is a dangerous amount of hope to put on one person.",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
+                    },
+                    {
+                      "id": "S01-CH02-N02-L080",
+                      "type": "action",
+                      "text": "The crowd closes and Jeanne disappears from view."
+                    },
+                    {
+                      "id": "S01-CH02-N02-L090",
+                      "type": "transition",
+                      "text": "CH02-N03 — Beneath the Banner."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-N03",
+              "title": "Beneath the Banner",
+              "type": "story",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "location": "Orléans command quarters",
+              "time": "Early May 1429",
+              "summary": "MC meets Jeanne directly at human scale. Bradamante also enters the Orléans group as a disciplined armored lancer, while the coming Saint-Loup assault pulls everyone toward the same immediate problem.",
+              "beats": [
+                {
+                  "id": "CH02-N03-BEAT-01",
+                  "order": 1,
+                  "title": "Jeanne the Person",
+                  "presentation": "character-scene",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Jeanne d’Arc",
+                    "Jean de Dunois",
+                    "Bradamante"
+                  ],
+                  "screenAction": "Away from the crowd, MC finds Jeanne eating quickly over a campaign table while Dunois reviews positions. Bradamante stands among the arriving fighters.",
+                  "dialogueIntent": "Make Jeanne serious, young, tired, and direct. Her first bond with MC comes from recognizing another person who does not know what comes next.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "private_meeting",
+                  "result": "MC and Jeanne meet as people before fighting together; Bradamante is established as a new allied lancer for the coming assault.",
+                  "next": "CH02-B01",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-N03-L010",
+                      "type": "action",
+                      "text": "The room is quieter than the street. Jeanne is halfway through a piece of bread when Dunois points MC toward the table."
+                    },
+                    {
+                      "id": "S01-CH02-N03-L020",
+                      "type": "dialogue",
+                      "text": "This is the stranger from the eastern road.",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L030",
+                      "type": "dialogue",
+                      "text": "I have a name.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L040",
+                      "type": "dialogue",
+                      "text": "Good. So do I. Jeanne.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L050",
+                      "type": "dialogue",
+                      "text": "I know. Half the city has been shouting it.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L060",
+                      "type": "action",
+                      "text": "Jeanne almost smiles, then looks back at the marked positions outside the walls."
+                    },
+                    {
+                      "id": "S01-CH02-N03-L070",
+                      "type": "dialogue",
+                      "text": "They want me to know what happens next.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L080",
+                      "type": "dialogue",
+                      "text": "Do you?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L090",
+                      "type": "dialogue",
+                      "text": "I know what I am going to try. That has to be enough.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L100",
+                      "type": "action",
+                      "text": "An armored lancer sets a helm beside the table."
+                    },
+                    {
+                      "id": "S01-CH02-N03-L110",
+                      "type": "dialogue",
+                      "text": "Bradamante. If Saint-Loup is the road forward, I will take it with you.",
+                      "speaker": "Bradamante",
+                      "displayLabel": "Bradamante"
+                    },
+                    {
+                      "id": "S01-CH02-N03-L120",
+                      "type": "control",
+                      "text": "Draft battle-party intent: Bradamante enters as an allied Lancer; La Hire provides the first clear Cavalry guest role for the siege offensives."
+                    },
+                    {
+                      "id": "S01-CH02-N03-L130",
+                      "type": "transition",
+                      "text": "CH02-B01 — Saint-Loup."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-B01",
+              "title": "Saint-Loup",
+              "type": "battle",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "summary": "The first full siege offensive attacks Saint-Loup. MC fights as a functioning participant while Jeanne, La Hire, Bradamante, and the French force break an English outer position.",
+              "beats": [
+                {
+                  "id": "CH02-B01-BEAT-01",
+                  "order": 1,
+                  "title": "Take the Bastille",
+                  "presentation": "battle-preview",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "La Hire",
+                    "Bradamante",
+                    "English defenders"
+                  ],
+                  "screenAction": "French forces assault Saint-Loup under missile pressure and fortified resistance. La Hire uses mounted mobility around the approach while Bradamante opens safe pressure lanes for infantry.",
+                  "dialogueIntent": "This is MC’s first battle entered willingly as a fighter in France. Keep the objective positional: breach and secure, not simple annihilation.",
+                  "playerControl": "battle control",
+                  "trigger": "saint_loup_assault",
+                  "result": "The attackers breach Saint-Loup and force the defense to collapse.",
+                  "next": "CH02-B01-BEAT-02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B01-L010",
+                      "type": "control",
+                      "text": "Objective: breach the Saint-Loup defenses and secure the inner position."
+                    },
+                    {
+                      "id": "S01-CH02-B01-L020",
+                      "type": "dialogue",
+                      "text": "Do not bunch under the arrows! Keep moving!",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L030",
+                      "type": "action",
+                      "text": "La Hire rides hard across the exposed approach, forcing defenders to split their attention."
+                    },
+                    {
+                      "id": "S01-CH02-B01-L040",
+                      "type": "dialogue",
+                      "text": "There. That gap.",
+                      "speaker": "Bradamante",
+                      "displayLabel": "Bradamante"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L050",
+                      "type": "dialogue",
+                      "text": "I see it.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L060",
+                      "type": "action",
+                      "text": "MC advances with the assault instead of staying behind the civilians for the first time."
+                    },
+                    {
+                      "id": "S01-CH02-B01-L070",
+                      "type": "dialogue",
+                      "text": "With me!",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B01-BEAT-02",
+                  "order": 2,
+                  "title": "After the Breach",
+                  "presentation": "battle-event",
+                  "characters": ["MC", "Jeanne d’Arc", "Julie d’Aubigny", "French soldiers"],
+                  "screenAction": "The position falls. The immediate triumph is undercut by wounded soldiers and prisoners in the captured works.",
+                  "dialogueIntent": "Do not turn the victory into a clean heroic tableau. Set up N05 by showing the human cost immediately.",
+                  "playerControl": "battle control / dialogue advance",
+                  "trigger": "saint_loup_secured",
+                  "result": "Saint-Loup is secured and the group returns to Orléans with a more complicated sense of victory.",
+                  "next": "CH02-N05",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B01-L080",
+                      "type": "action",
+                      "text": "The last organized resistance inside the position breaks."
+                    },
+                    {
+                      "id": "S01-CH02-B01-L090",
+                      "type": "control",
+                      "text": "Battle objective complete: Saint-Loup secured."
+                    },
+                    {
+                      "id": "S01-CH02-B01-L100",
+                      "type": "action",
+                      "text": "Cheers rise, then thin as the wounded are carried past."
+                    },
+                    {
+                      "id": "S01-CH02-B01-L110",
+                      "type": "dialogue",
+                      "text": "We won.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L120",
+                      "type": "dialogue",
+                      "text": "Yes.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L130",
+                      "type": "dialogue",
+                      "text": "You do not sound happy.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L140",
+                      "type": "dialogue",
+                      "text": "I am. I just know what it cost.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-B01-L150",
+                      "type": "transition",
+                      "text": "CH02-N05 — The Cost of Hope."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-N05",
+              "title": "The Cost of Hope",
+              "type": "story",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "summary": "After Saint-Loup, MC and Jeanne compare what it means to help people when one is already being treated as a hero and the other still does not believe the word applies.",
+              "beats": [
+                {
+                  "id": "CH02-N05-BEAT-01",
+                  "order": 1,
+                  "title": "Heroes",
+                  "presentation": "character-scene",
+                  "characters": ["MC", "Jeanne d’Arc", "Julie d’Aubigny"],
+                  "screenAction": "MC helps carry supplies among the wounded. Jeanne joins briefly after escaping another cluster of people demanding answers from her.",
+                  "dialogueIntent": "Build the MC–Jeanne relationship through shared discomfort with the idea of heroism, not romance or prophecy.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "after_saint_loup",
+                  "result": "Jeanne sees that MC keeps helping without needing a grand reason; MC sees how exhausting it is to be treated as everyone’s answer.",
+                  "next": "CH02-B02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-N05-L010",
+                      "type": "action",
+                      "text": "MC stacks water beside the wounded while Jeanne finally slips away from a knot of officers and civilians."
+                    },
+                    {
+                      "id": "S01-CH02-N05-L020",
+                      "type": "dialogue",
+                      "text": "Do they ever stop asking you what to do?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L030",
+                      "type": "dialogue",
+                      "text": "No.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L040",
+                      "type": "dialogue",
+                      "text": "That sounds terrible.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L050",
+                      "type": "dialogue",
+                      "text": "It is also why they keep moving.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L060",
+                      "type": "action",
+                      "text": "Jeanne watches MC hand a cup of water to a wounded soldier."
+                    },
+                    {
+                      "id": "S01-CH02-N05-L070",
+                      "type": "dialogue",
+                      "text": "You do that often.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L080",
+                      "type": "dialogue",
+                      "text": "What?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L090",
+                      "type": "dialogue",
+                      "text": "Help first. Decide what it means later.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L100",
+                      "type": "dialogue",
+                      "text": "Julie says that is how I get into trouble.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L110",
+                      "type": "dialogue",
+                      "text": "Then perhaps she is right.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N05-L120",
+                      "type": "transition",
+                      "text": "CH02-B02 — Across the Loire / The Augustins."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-B02",
+              "title": "Across the Loire / The Augustins",
+              "type": "battle",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "summary": "The campaign shifts across the Loire toward fortified positions around the Augustins. Mobility, crossings, and separated fronts become more important than the Saint-Loup assault.",
+              "beats": [
+                {
+                  "id": "CH02-B02-BEAT-01",
+                  "order": 1,
+                  "title": "Across the River",
+                  "presentation": "battle-preview",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "La Hire",
+                    "Bradamante",
+                    "Hangaku Gozen",
+                    "English defenders"
+                  ],
+                  "screenAction": "The force crosses and reorganizes under fire. La Hire’s mounted movement connects separated pressure points while Hangaku and Bradamante keep the crossing from collapsing.",
+                  "dialogueIntent": "Escalate from a single fortress assault into coordinated movement across constrained approaches.",
+                  "playerControl": "battle control",
+                  "trigger": "loire_crossing",
+                  "result": "The French force establishes the attack and drives toward the Augustins position.",
+                  "next": "CH02-B02-BEAT-02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B02-L010",
+                      "type": "control",
+                      "text": "Objective: establish the crossing, protect the route, and open the approach to the Augustins."
+                    },
+                    {
+                      "id": "S01-CH02-B02-L020",
+                      "type": "dialogue",
+                      "text": "If that crossing closes, half of us fight alone.",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L030",
+                      "type": "dialogue",
+                      "text": "Then keep it open. I will carry orders between the fronts.",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L040",
+                      "type": "action",
+                      "text": "La Hire wheels away before anyone can answer."
+                    },
+                    {
+                      "id": "S01-CH02-B02-L050",
+                      "type": "dialogue",
+                      "text": "Does he always do that?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L060",
+                      "type": "dialogue",
+                      "text": "Yes.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L070",
+                      "type": "dialogue",
+                      "text": "Unfortunately.",
+                      "speaker": "Bradamante",
+                      "displayLabel": "Bradamante"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B02-BEAT-02",
+                  "order": 2,
+                  "title": "The Augustins Break",
+                  "presentation": "battle-event",
+                  "characters": ["MC", "Jeanne d’Arc", "French soldiers", "English defenders"],
+                  "screenAction": "After sustained pressure the Augustins position gives way and the route toward the Tourelles becomes the next unavoidable objective.",
+                  "dialogueIntent": "End with momentum but visible exhaustion. The Tourelles should feel harder, not like a victory lap.",
+                  "playerControl": "battle control",
+                  "trigger": "augustins_breached",
+                  "result": "The Augustins fall and the assault line turns toward the Tourelles.",
+                  "next": "CH02-B03",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B02-L080",
+                      "type": "action",
+                      "text": "The defenders begin pulling back from the broken position."
+                    },
+                    {
+                      "id": "S01-CH02-B02-L090",
+                      "type": "control",
+                      "text": "Objective complete: Augustins position taken."
+                    },
+                    {
+                      "id": "S01-CH02-B02-L100",
+                      "type": "dialogue",
+                      "text": "They are falling back.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L110",
+                      "type": "dialogue",
+                      "text": "Toward the Tourelles.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L120",
+                      "type": "dialogue",
+                      "text": "Then we are not finished.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L130",
+                      "type": "dialogue",
+                      "text": "No.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-B02-L140",
+                      "type": "transition",
+                      "text": "CH02-B03 — The Tourelles."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-B03",
+              "title": "The Tourelles",
+              "type": "battle",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "location": "Tourelles, Orléans",
+              "time": "7 May 1429",
+              "summary": "The siege climax assaults the Tourelles. Jeanne is wounded, morale falters, and the objective honestly shifts to preventing collapse before she returns bandaged and the final assault resumes.",
+              "beats": [
+                {
+                  "id": "CH02-B03-BEAT-01",
+                  "order": 1,
+                  "title": "The Wound",
+                  "presentation": "battle-event",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Julie d’Aubigny",
+                    "La Hire",
+                    "Bradamante",
+                    "French soldiers"
+                  ],
+                  "screenAction": "During the assault Jeanne is wounded and removed from the immediate line. The attack stalls as soldiers react to seeing the symbol of their hope fall.",
+                  "dialogueIntent": "Treat the wound as dangerous and frightening. No miraculous healing.",
+                  "playerControl": "battle control",
+                  "trigger": "tourelles_assault_midpoint",
+                  "result": "The battle objective changes from assault to hold/protect/reorganize while Jeanne is treated.",
+                  "next": "CH02-B03-BEAT-02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B03-L010",
+                      "type": "action",
+                      "text": "The assault compresses against the fortifications under heavy fire."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L020",
+                      "type": "action",
+                      "text": "Jeanne jerks backward and falls among the front ranks."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L030",
+                      "type": "dialogue",
+                      "text": "Jeanne!",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L040",
+                      "type": "dialogue",
+                      "text": "Get her back! Now!",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L050",
+                      "type": "control",
+                      "text": "Objective changes: HOLD THE LINE. Protect the wounded, prevent a rout, and keep the assault route from collapsing."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L060",
+                      "type": "dialogue",
+                      "text": "Nobody runs. Not one step!",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L070",
+                      "type": "action",
+                      "text": "Jeanne is carried away from the immediate fighting for treatment."
+                    }
+                  ]
+                },
+                {
+                  "id": "CH02-B03-BEAT-02",
+                  "order": 2,
+                  "title": "Return to the Line",
+                  "presentation": "battle-preview",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Julie d’Aubigny",
+                    "French soldiers",
+                    "English defenders"
+                  ],
+                  "screenAction": "After the line stabilizes, Jeanne returns visibly bandaged and insists on continuing. Morale recovers because the soldiers see her return, not because the wound disappears.",
+                  "dialogueIntent": "The final push belongs to the whole force. Jeanne restores morale; the player completes the tactical objective.",
+                  "playerControl": "battle control",
+                  "trigger": "line_stabilized",
+                  "result": "The final assault succeeds and the siege position collapses.",
+                  "next": "CH02-N08",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-B03-L080",
+                      "type": "action",
+                      "text": "The line holds long enough for the panic to stop spreading."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L090",
+                      "type": "action",
+                      "text": "A murmur begins behind the front."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L100",
+                      "type": "action",
+                      "text": "Jeanne returns with the wound bound tightly, pale but standing."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L110",
+                      "type": "dialogue",
+                      "text": "You should be lying down.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L120",
+                      "type": "dialogue",
+                      "text": "Later.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L130",
+                      "type": "dialogue",
+                      "text": "That is a terrible answer.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L140",
+                      "type": "dialogue",
+                      "text": "It is the one I have.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-B03-L150",
+                      "type": "control",
+                      "text": "Objective update: resume the final assault and secure the Tourelles."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L160",
+                      "type": "action",
+                      "text": "The French line surges forward again."
+                    },
+                    {
+                      "id": "S01-CH02-B03-L170",
+                      "type": "transition",
+                      "text": "The Tourelles position falls. CH02-N08 — The Siege Is Lifted."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH02-N08",
+              "title": "The Siege Is Lifted",
+              "type": "story",
+              "status": "approved-structure",
+              "scriptStatus": "draft",
+              "location": "Orléans",
+              "time": "8 May 1429",
+              "summary": "The English withdrawal resolves the siege without another mandatory battle. Orléans celebrates, while MC realizes the people here are no longer merely strangers between them and home.",
+              "beats": [
+                {
+                  "id": "CH02-N08-BEAT-01",
+                  "order": 1,
+                  "title": "Eight Days of May",
+                  "presentation": "chapter-end",
+                  "characters": [
+                    "MC",
+                    "Julie d’Aubigny",
+                    "Jeanne d’Arc",
+                    "Hangaku Gozen",
+                    "La Hire",
+                    "Bradamante",
+                    "Jean de Dunois"
+                  ],
+                  "screenAction": "The city wakes to the English withdrawal and erupts into exhausted celebration. MC still has no map to Vaelkrath, but now has relationships they are unwilling to treat as temporary inconveniences.",
+                  "dialogueIntent": "End on emotional attachment and the next campaign direction, not on a solved world mystery.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "siege_lifted",
+                  "result": "Chapter 2 ends with the siege lifted and the route toward the Loire campaign / crown becoming the next story movement.",
+                  "next": "CH03",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH02-N08-L010",
+                      "type": "action",
+                      "text": "Church bells answer each other across Orléans. People spill into streets that were defensive positions the day before."
+                    },
+                    {
+                      "id": "S01-CH02-N08-L020",
+                      "type": "dialogue",
+                      "text": "They are leaving.",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L030",
+                      "type": "dialogue",
+                      "text": "The English?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L040",
+                      "type": "dialogue",
+                      "text": "The siege. It is over.",
+                      "speaker": "Jean de Dunois",
+                      "displayLabel": "Dunois"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L050",
+                      "type": "action",
+                      "text": "MC looks at Julie, Hangaku, La Hire, Bradamante, and finally Jeanne."
+                    },
+                    {
+                      "id": "S01-CH02-N08-L060",
+                      "type": "dialogue",
+                      "text": "I still do not know how to get home.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L070",
+                      "type": "dialogue",
+                      "text": "I know.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L080",
+                      "type": "dialogue",
+                      "text": "But?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L090",
+                      "type": "dialogue",
+                      "text": "But you are not leaving today.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L100",
+                      "type": "dialogue",
+                      "text": "No. I guess I am not.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L110",
+                      "type": "dialogue",
+                      "text": "There is another road now. The Loire first. Then Reims.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L120",
+                      "type": "narration",
+                      "text": "CHAPTER 2 COMPLETE"
+                    },
+                    {
+                      "id": "S01-CH02-N08-L130",
+                      "type": "transition",
+                      "text": "Next: Chapter 3 — The Road to the Crown."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "CH03",
+          "title": "The Road to the Crown",
+          "status": "draft",
+          "nodes": [
+            {
+              "id": "CH03-N01",
+              "title": "Beyond Orléans",
+              "type": "story",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Loire campaign route",
+              "time": "June 1429",
+              "summary": "After the siege, the campaign turns from saving one city toward opening the Loire and carrying Charles toward Reims. Jean II d’Alençon becomes a central campaign commander while MC chooses to keep traveling with Jeanne.",
+              "beats": [
+                {
+                  "id": "CH03-N01-BEAT-01",
+                  "order": 1,
+                  "title": "A Larger Road",
+                  "presentation": "story-scene",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Julie d’Aubigny",
+                    "Jean II d’Alençon",
+                    "La Hire"
+                  ],
+                  "screenAction": "The party leaves the immediate Orléans crisis behind and joins a larger campaign moving along the Loire. Alençon frames the next operations as a military road toward the king’s coronation.",
+                  "dialogueIntent": "Expand the political scale without making MC suddenly care about dynastic legitimacy more than people.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "chapter_start",
+                  "result": "MC commits to the next leg because Jeanne and the group are going, while the road to Reims becomes the chapter goal.",
+                  "next": "CH03-B01",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH03-N01-L010",
+                      "type": "action",
+                      "text": "The walls of Orléans recede behind a column of soldiers, carts, horses, and banners."
+                    },
+                    {
+                      "id": "S01-CH03-N01-L020",
+                      "type": "dialogue",
+                      "text": "I thought winning Orléans meant we could rest.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N01-L030",
+                      "type": "dialogue",
+                      "text": "It meant we could start moving.",
+                      "speaker": "Jean II d’Alençon",
+                      "displayLabel": "Alençon"
+                    },
+                    {
+                      "id": "S01-CH03-N01-L040",
+                      "type": "dialogue",
+                      "text": "Jean d’Alençon. We clear the Loire, then the road to Reims becomes possible.",
+                      "speaker": "Jean II d’Alençon",
+                      "displayLabel": "Alençon"
+                    },
+                    {
+                      "id": "S01-CH03-N01-L050",
+                      "type": "dialogue",
+                      "text": "And the crown.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH03-N01-L060",
+                      "type": "dialogue",
+                      "text": "You really intend to go all the way.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N01-L070",
+                      "type": "dialogue",
+                      "text": "Yes.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH03-N01-L080",
+                      "type": "dialogue",
+                      "text": "Then I am coming too.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N01-L090",
+                      "type": "transition",
+                      "text": "CH03-B01 — Jargeau."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH03-B01",
+              "title": "Jargeau",
+              "type": "battle",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Jargeau",
+              "time": "12 June 1429",
+              "summary": "The campaign attacks Jargeau. William de la Pole, Earl of Suffolk, anchors the English defense as the French push from siege assault into open campaign warfare.",
+              "beats": [
+                {
+                  "id": "CH03-B01-BEAT-01",
+                  "order": 1,
+                  "title": "Break Jargeau",
+                  "presentation": "battle-preview",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Jean II d’Alençon",
+                    "La Hire",
+                    "William de la Pole, Earl of Suffolk"
+                  ],
+                  "screenAction": "The French assault Jargeau against determined English resistance under Suffolk.",
+                  "dialogueIntent": "Make the battle a disciplined escalation from Orléans rather than another miraculous charge. Suffolk should read as a serious commander, not a disposable villain.",
+                  "playerControl": "battle control",
+                  "trigger": "jargeau_assault",
+                  "result": "Jargeau falls and Suffolk is taken out of the campaign, opening the next Loire positions.",
+                  "next": "CH03-N03",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH03-B01-L010",
+                      "type": "control",
+                      "text": "Objective: breach Jargeau and force the English garrison to surrender or collapse."
+                    },
+                    {
+                      "id": "S01-CH03-B01-L020",
+                      "type": "dialogue",
+                      "text": "They have momentum. Break it here.",
+                      "speaker": "William de la Pole, Earl of Suffolk",
+                      "displayLabel": "Suffolk"
+                    },
+                    {
+                      "id": "S01-CH03-B01-L030",
+                      "type": "dialogue",
+                      "text": "He knows what he is doing.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-B01-L040",
+                      "type": "dialogue",
+                      "text": "Good. Then beating him will matter.",
+                      "speaker": "Jean II d’Alençon",
+                      "displayLabel": "Alençon"
+                    },
+                    {
+                      "id": "S01-CH03-B01-L050",
+                      "type": "action",
+                      "text": "The French push through the defenses in successive waves instead of a single rush."
+                    },
+                    {
+                      "id": "S01-CH03-B01-L060",
+                      "type": "dialogue",
+                      "text": "Forward! Keep the pressure!",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH03-B01-L070",
+                      "type": "action",
+                      "text": "By the battle’s end, organized resistance at Jargeau has collapsed and Suffolk is captured."
+                    },
+                    {
+                      "id": "S01-CH03-B01-L080",
+                      "type": "transition",
+                      "text": "The Loire campaign continues west. CH03-N03 — Between Fortresses."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH03-N03",
+              "title": "Between Fortresses",
+              "type": "story",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Loire valley — Meung / Beaugency approaches",
+              "time": "Mid-June 1429",
+              "summary": "The campaign moves through the Loire positions around Meung and Beaugency. Arthur de Richemont’s arrival creates political friction even as his strength helps pressure the English position.",
+              "beats": [
+                {
+                  "id": "CH03-N03-BEAT-01",
+                  "order": 1,
+                  "title": "An Ally Nobody Invited",
+                  "presentation": "story-scene",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Jean II d’Alençon",
+                    "Arthur de Richemont",
+                    "La Hire"
+                  ],
+                  "screenAction": "As Beaugency comes under pressure, Richemont arrives with Breton strength despite political distrust around him.",
+                  "dialogueIntent": "Use Richemont to show that allies can be politically inconvenient. MC should understand the personal tension before the dynastic details.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "richemont_arrives",
+                  "result": "The campaign accepts Richemont’s practical help, but the political fracture inside the French side becomes visible to MC.",
+                  "next": "CH03-B02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH03-N03-L010",
+                      "type": "action",
+                      "text": "A fresh column approaches under Breton banners while officers around Alençon react with more suspicion than relief."
+                    },
+                    {
+                      "id": "S01-CH03-N03-L020",
+                      "type": "dialogue",
+                      "text": "Those are ours, yes?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N03-L030",
+                      "type": "dialogue",
+                      "text": "That depends which argument you are asking about.",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH03-N03-L040",
+                      "type": "dialogue",
+                      "text": "Arthur de Richemont. I brought soldiers, not a debate.",
+                      "speaker": "Arthur de Richemont",
+                      "displayLabel": "Richemont"
+                    },
+                    {
+                      "id": "S01-CH03-N03-L050",
+                      "type": "dialogue",
+                      "text": "For today, soldiers are useful.",
+                      "speaker": "Jean II d’Alençon",
+                      "displayLabel": "Alençon"
+                    },
+                    {
+                      "id": "S01-CH03-N03-L060",
+                      "type": "dialogue",
+                      "text": "That may be the kindest welcome I receive.",
+                      "speaker": "Arthur de Richemont",
+                      "displayLabel": "Richemont"
+                    },
+                    {
+                      "id": "S01-CH03-N03-L070",
+                      "type": "action",
+                      "text": "The army turns its attention back toward the English withdrawal and the road beyond Beaugency."
+                    },
+                    {
+                      "id": "S01-CH03-N03-L080",
+                      "type": "transition",
+                      "text": "CH03-B02 — Patay."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH03-B02",
+              "title": "Patay",
+              "type": "battle",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Near Patay",
+              "time": "18 June 1429",
+              "summary": "The French catch the retreating English near Patay. La Hire’s vanguard becomes central, while John Talbot’s disciplined reputation makes the sudden English collapse feel consequential rather than easy.",
+              "beats": [
+                {
+                  "id": "CH03-B02-BEAT-01",
+                  "order": 1,
+                  "title": "Before the Line Sets",
+                  "presentation": "battle-preview",
+                  "characters": [
+                    "MC",
+                    "La Hire",
+                    "Jean II d’Alençon",
+                    "John Talbot",
+                    "French vanguard",
+                    "English army"
+                  ],
+                  "screenAction": "The French discover the English before their defensive deployment is fully settled and attack the vulnerable formation.",
+                  "dialogueIntent": "This battle should feel fast, dangerous, and opportunity-driven. Talbot is formidable, but the English position is caught at the wrong moment.",
+                  "playerControl": "battle control",
+                  "trigger": "patay_contact",
+                  "result": "The French vanguard breaks the English field position before it can stabilize.",
+                  "next": "CH03-B02-BEAT-02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH03-B02-L010",
+                      "type": "control",
+                      "text": "Objective: strike before the English line fully forms; prevent an organized withdrawal."
+                    },
+                    {
+                      "id": "S01-CH03-B02-L020",
+                      "type": "dialogue",
+                      "text": "Now! Do not give them time to plant themselves!",
+                      "speaker": "La Hire",
+                      "displayLabel": "La Hire"
+                    },
+                    {
+                      "id": "S01-CH03-B02-L030",
+                      "type": "action",
+                      "text": "Mounted French forces surge toward the incomplete English position."
+                    },
+                    {
+                      "id": "S01-CH03-B02-L040",
+                      "type": "dialogue",
+                      "text": "Hold the line!",
+                      "speaker": "John Talbot",
+                      "displayLabel": "Talbot"
+                    },
+                    {
+                      "id": "S01-CH03-B02-L050",
+                      "type": "dialogue",
+                      "text": "That one is not running.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-B02-L060",
+                      "type": "dialogue",
+                      "text": "Talbot. He rarely does.",
+                      "speaker": "Jean II d’Alençon",
+                      "displayLabel": "Alençon"
+                    }
+                  ]
+                },
+                {
+                  "id": "CH03-B02-BEAT-02",
+                  "order": 2,
+                  "title": "A Commander Captured",
+                  "presentation": "post-battle",
+                  "characters": ["MC", "John Talbot", "La Hire", "Jeanne d’Arc"],
+                  "screenAction": "The English field force collapses and Talbot is captured. MC sees that a famous enemy can lose because conditions, timing, and people failed around him—not because history guarantees it.",
+                  "dialogueIntent": "Let Talbot retain dignity and danger in defeat. This is useful groundwork for his later importance.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "patay_won",
+                  "result": "Patay opens the road toward Reims and establishes Talbot as a major opposing figure rather than a one-battle enemy.",
+                  "next": "CH03-N05",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH03-B02-L070",
+                      "type": "action",
+                      "text": "The English formation breaks into retreat and surrender."
+                    },
+                    {
+                      "id": "S01-CH03-B02-L080",
+                      "type": "action",
+                      "text": "Talbot is brought under guard, furious but composed."
+                    },
+                    {
+                      "id": "S01-CH03-B02-L090",
+                      "type": "dialogue",
+                      "text": "You caught an army before it was ready. Do not mistake that for the end of the war.",
+                      "speaker": "John Talbot",
+                      "displayLabel": "Talbot"
+                    },
+                    {
+                      "id": "S01-CH03-B02-L100",
+                      "type": "dialogue",
+                      "text": "I will remember.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-B02-L110",
+                      "type": "dialogue",
+                      "text": "Good. I would rather my enemies learn something.",
+                      "speaker": "John Talbot",
+                      "displayLabel": "Talbot"
+                    },
+                    {
+                      "id": "S01-CH03-B02-L120",
+                      "type": "action",
+                      "text": "Jeanne looks past the prisoners toward the road north-east."
+                    },
+                    {
+                      "id": "S01-CH03-B02-L130",
+                      "type": "dialogue",
+                      "text": "Reims.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH03-B02-L140",
+                      "type": "transition",
+                      "text": "CH03-N05 — The Road to Reims."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH03-N05",
+              "title": "The Road to Reims",
+              "type": "story",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Road to Reims",
+              "time": "Late June–July 1429",
+              "summary": "With the Loire campaign won, the army moves toward Reims. Charles VII enters the chapter directly, and MC sees the political meaning of Jeanne’s campaign becoming larger than any one battlefield.",
+              "beats": [
+                {
+                  "id": "CH03-N05-BEAT-01",
+                  "order": 1,
+                  "title": "The King Before the Crown",
+                  "presentation": "travel-dialogue",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Charles VII",
+                    "Julie d’Aubigny",
+                    "Jean II d’Alençon"
+                  ],
+                  "screenAction": "On the march, MC finally speaks directly with Charles while towns and gates along the route become political choices rather than tactical objectives.",
+                  "dialogueIntent": "Keep Charles human and cautious. The story should not require MC to instantly revere him.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "reims_march",
+                  "result": "MC understands that Jeanne’s goal is not simply military victory but making Charles publicly king at Reims.",
+                  "next": "CH03-N06",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH03-N05-L010",
+                      "type": "action",
+                      "text": "The campaign road is quieter than the battles, but every town ahead carries another decision about opening its gates."
+                    },
+                    {
+                      "id": "S01-CH03-N05-L020",
+                      "type": "dialogue",
+                      "text": "You are the one from nowhere.",
+                      "speaker": "Charles VII",
+                      "displayLabel": "Charles"
+                    },
+                    {
+                      "id": "S01-CH03-N05-L030",
+                      "type": "dialogue",
+                      "text": "That is becoming an uncomfortable reputation.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N05-L040",
+                      "type": "dialogue",
+                      "text": "I know something about uncomfortable reputations.",
+                      "speaker": "Charles VII",
+                      "displayLabel": "Charles"
+                    },
+                    {
+                      "id": "S01-CH03-N05-L050",
+                      "type": "dialogue",
+                      "text": "Jeanne says the road ends at Reims.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N05-L060",
+                      "type": "dialogue",
+                      "text": "If the city receives us, it begins there. A crown is useful because people agree it means something.",
+                      "speaker": "Charles VII",
+                      "displayLabel": "Charles"
+                    },
+                    {
+                      "id": "S01-CH03-N05-L070",
+                      "type": "dialogue",
+                      "text": "And if they do not agree?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N05-L080",
+                      "type": "dialogue",
+                      "text": "Then France continues arguing with itself.",
+                      "speaker": "Charles VII",
+                      "displayLabel": "Charles"
+                    },
+                    {
+                      "id": "S01-CH03-N05-L090",
+                      "type": "action",
+                      "text": "MC looks toward Jeanne riding farther up the column."
+                    },
+                    {
+                      "id": "S01-CH03-N05-L100",
+                      "type": "transition",
+                      "text": "CH03-N06 — The Crown at Reims."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "CH03-N06",
+              "title": "The Crown at Reims",
+              "type": "story",
+              "status": "draft",
+              "scriptStatus": "draft",
+              "location": "Reims Cathedral",
+              "time": "17 July 1429",
+              "summary": "Charles is crowned at Reims. The chapter closes on the apparent fulfillment of Jeanne’s great public mission and the first subtle suggestion that the world does not feel as settled as it should.",
+              "beats": [
+                {
+                  "id": "CH03-N06-BEAT-01",
+                  "order": 1,
+                  "title": "The Crown",
+                  "presentation": "chapter-end",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Charles VII",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "La Hire",
+                    "Bradamante"
+                  ],
+                  "screenAction": "The coronation is primarily narrative. MC watches Charles crowned and sees Jeanne briefly without the battlefield around her.",
+                  "dialogueIntent": "Deliver a genuine emotional high, then introduce only a restrained anomaly clue after it. Do not explain the cosmology.",
+                  "playerControl": "dialogue advance",
+                  "trigger": "coronation",
+                  "result": "Chapter 3 ends with Charles crowned, MC and Jeanne closer, and a faint wrongness that points toward the darker second half of the Saga.",
+                  "next": "CH04",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-CH03-N06-L010",
+                      "type": "narration",
+                      "text": "Reims — 17 July 1429"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L020",
+                      "type": "action",
+                      "text": "The cathedral is filled with ceremony, heat, armor, cloth, incense, and people trying not to miss history happening in front of them."
+                    },
+                    {
+                      "id": "S01-CH03-N06-L030",
+                      "type": "action",
+                      "text": "Charles receives the crown. The sound inside the cathedral swells."
+                    },
+                    {
+                      "id": "S01-CH03-N06-L040",
+                      "type": "dialogue",
+                      "text": "So that is it?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L050",
+                      "type": "dialogue",
+                      "text": "For this road.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L060",
+                      "type": "dialogue",
+                      "text": "You do not sound finished.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L070",
+                      "type": "dialogue",
+                      "text": "I do not think France is finished.",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L080",
+                      "type": "action",
+                      "text": "For a heartbeat, light bends strangely across a distant pane of glass. MC turns toward it."
+                    },
+                    {
+                      "id": "S01-CH03-N06-L090",
+                      "type": "dialogue",
+                      "text": "Did you see that?",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L100",
+                      "type": "dialogue",
+                      "text": "See what?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L110",
+                      "type": "action",
+                      "text": "The light is normal again."
+                    },
+                    {
+                      "id": "S01-CH03-N06-L120",
+                      "type": "narration",
+                      "text": "CHAPTER 3 COMPLETE"
+                    },
+                    {
+                      "id": "S01-CH03-N06-L130",
+                      "type": "transition",
+                      "text": "Next: Chapter 4 — The Maid Falls."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }
