@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 1,
+  "profile": "fantasia-story-studio-production-v1",
+  "beats": {
+    "CH01-N01-BEAT-01": {
+      "timing": {
+        "mode": "auto",
+        "estimatedSeconds": 12
+      },
+      "staging": {
+        "background": "Wooded farmland east of Orléans",
+        "camera": "Wide arrival shot → closer injured-MC framing",
+        "slots": {
+          "center": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "injured / recovering"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "camera",
+          "text": "Establish unfamiliar wooded farmland and the collapsing refractive distortion."
+        },
+        {
+          "type": "action",
+          "text": "MC lands hard, remains conscious, and checks their condition."
+        },
+        {
+          "type": "action",
+          "text": "The broken starting sword is still present and unusable."
+        },
+        {
+          "type": "reaction",
+          "speaker": "MC",
+          "text": "Register pain, disorientation, and unfamiliar surroundings without understanding the crossing."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 60
+      },
+      "staging": {
+        "background": "Field edge leading toward a rural road",
+        "camera": "Gameplay-follow framing",
+        "slots": {
+          "center": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "injured / mobile"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "control",
+          "text": "Player regains movement control while MC remains attack-limited."
+        },
+        {
+          "type": "action",
+          "text": "MC checks the broken sword and continues toward the nearest road."
+        },
+        {
+          "type": "reaction",
+          "speaker": "MC",
+          "text": "Treat the location as an unfamiliar region rather than another world."
+        },
+        {
+          "type": "transition",
+          "text": "Voices and the sound of a traveling cart become noticeable ahead."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-03": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Rural road with a small civilian cart group",
+        "camera": "Group reveal, then MC-facing conversational framing",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "injured / wary"
+          },
+          "center": {
+            "character": "Civilians / escorts",
+            "shortLabel": "GRP",
+            "pose": "cautious group"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JD",
+            "pose": "observing MC"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "camera",
+          "text": "Reveal the traveling group stopping after noticing MC."
+        },
+        {
+          "type": "reaction",
+          "speaker": "Local escorts",
+          "text": "Respond cautiously to an unknown injured stranger."
+        },
+        {
+          "type": "reaction",
+          "speaker": "Julie d’Aubigny",
+          "text": "Notice MC's wounds and condition before focusing on suspicion."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "Local escorts",
+          "text": "Establish cautious first-contact questioning without hostility escalation."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-04": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 25
+      },
+      "staging": {
+        "background": "Roadside beside the civilian cart",
+        "camera": "Medium two-shot emphasizing Julie kneeling beside MC",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "seated / injured"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JD",
+            "pose": "kneeling / checking wounds"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Julie moves past the group's hesitation and approaches MC directly."
+        },
+        {
+          "type": "action",
+          "text": "Julie checks the visible arm and forehead injuries and directs immediate practical aid."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "Local escorts",
+          "text": "Express reasonable concern about taking responsibility for an unknown stranger."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "Julie d’Aubigny",
+          "text": "Refuse to leave an injured stranger behind; keep the tone practical rather than heroic."
+        },
+        {
+          "type": "reaction",
+          "speaker": "MC",
+          "text": "Register that Julie is choosing to help despite knowing nothing about MC."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-05": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Roadside beside the cart",
+        "camera": "Conversation close framing",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "confused / listening"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JD",
+            "pose": "speaking normally"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "dialogue",
+          "speaker": "Julie d’Aubigny",
+          "text": "Continue ordinary first-contact questions in speech that sounds foreign to MC."
+        },
+        {
+          "type": "reaction",
+          "speaker": "MC",
+          "text": "Realize the words sound unfamiliar even though their meaning is understood."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "MC",
+          "text": "Answer in MC's own language and observe that the group understands in return."
+        },
+        {
+          "type": "narration",
+          "text": "Do not explain why mutual spoken understanding is happening."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-06": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 22
+      },
+      "staging": {
+        "background": "Roadside beside the cart",
+        "camera": "MC/Julie conversational framing with group reactions",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "answering / uncertain"
+          },
+          "center": {
+            "character": "Civilians / escorts",
+            "shortLabel": "GRP",
+            "pose": "unfamiliar / puzzled"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JD",
+            "pose": "listening without accusation"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "dialogue",
+          "speaker": "Julie d’Aubigny",
+          "text": "Ask who MC is and where MC came from."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "MC",
+          "text": "Provide the player-selected name and identify Primora Village and Vaelkrath."
+        },
+        {
+          "type": "reaction",
+          "speaker": "Civilians / escorts",
+          "text": "Show genuine nonrecognition of both place names."
+        },
+        {
+          "type": "reaction",
+          "speaker": "Julie d’Aubigny",
+          "text": "Treat the strange answer as uncertainty to work through, not proof that MC is lying."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-07": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 30,
+        "maxSeconds": 55
+      },
+      "staging": {
+        "background": "Road toward the Orléans approaches",
+        "camera": "Traveling group / walking conversation",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "walking with injury"
+          },
+          "center": {
+            "character": "Civilians / escorts",
+            "shortLabel": "GRP",
+            "pose": "moving with cart"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JD",
+            "pose": "walking alongside group"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "control",
+          "text": "Resume short travel while the group continues toward safer ground."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "Civilians / escorts",
+          "text": "Mention Orléans and the danger created by the English siege as practical local context."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "Civilians / escorts",
+          "text": "Reference Charles/the Dauphin naturally within the current war situation."
+        },
+        {
+          "type": "reaction",
+          "speaker": "MC",
+          "text": "Absorb recognizable names without yet concluding that this is another world."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-08": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Roadside travel before dusk",
+        "camera": "Closer two-character walking exchange",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "tired / considering"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JD",
+            "pose": "matter-of-fact / supportive"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "dialogue",
+          "speaker": "Julie d’Aubigny",
+          "text": "Make clear that leaving the group alone while injured is unsafe and unnecessary."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "MC",
+          "text": "Accept temporary help in order to recover, learn where they are, and seek a route toward home."
+        },
+        {
+          "type": "reaction",
+          "speaker": "Julie d’Aubigny",
+          "text": "Treat MC's acceptance as a practical arrangement rather than political allegiance."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-09": {
+      "timing": {
+        "mode": "auto",
+        "estimatedSeconds": 10
+      },
+      "staging": {
+        "background": "Road bend with obscured armed movement ahead",
+        "camera": "Travel group halts → threat-facing transition",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "alert / still injured"
+          },
+          "center": {
+            "character": "Civilians / escorts",
+            "shortLabel": "GRP",
+            "pose": "halted / alarmed"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JD",
+            "pose": "alert / hand near weapon"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "reaction",
+          "speaker": "Local escorts",
+          "text": "Detect armed trouble ahead and halt the group."
+        },
+        {
+          "type": "action",
+          "text": "Civilians and cart stop while the escorts assess immediate danger."
+        },
+        {
+          "type": "reaction",
+          "speaker": "Julie d’Aubigny",
+          "text": "Shift from travel posture to readiness while staying with the group."
+        },
+        {
+          "type": "transition",
+          "text": "End the story node and hand off into CH01-B01 — Strangers on the Road."
+        }
+      ]
+    }
+  }
+}
