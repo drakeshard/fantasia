@@ -12,14 +12,14 @@
         {
           "id": "PRO",
           "title": "The Hunter Who Fell",
-          "status": "draft",
+          "status": "approved-structure",
           "nodes": [
             {
               "id": "PRO-N01",
               "title": "Every Hero Starts Somewhere",
               "type": "story",
-              "status": "draft",
-              "scriptStatus": "draft",
+              "status": "approved-structure",
+              "scriptStatus": "approved",
               "location": "Primora Village, Vaelkrath",
               "time": "Morning",
               "summary": "MC accepts a routine wild-boar request from Primora's local guild post, showing an earnest desire to become a hero without grand destiny or prophecy.",
@@ -36,7 +36,7 @@
                   "trigger": "prologue_start",
                   "result": "MC leaves Primora carrying the ordinary starting sword and a routine request.",
                   "next": "PRO-B01",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-PRO-N01-L010",
@@ -94,8 +94,8 @@
               "id": "PRO-B01",
               "title": "A Simple Hunt",
               "type": "battle",
-              "status": "draft",
-              "scriptStatus": "draft",
+              "status": "approved-structure",
+              "scriptStatus": "approved",
               "location": "Forest trail outside Primora",
               "time": "Morning",
               "summary": "A routine wild-boar request teaches basic movement and sword combat before an abnormal threat interrupts the hunt.",
@@ -112,7 +112,7 @@
                   "trigger": "wild_boar_engaged",
                   "result": "The ordinary tutorial threat is resolved and the anomalous creature interrupts the hunt.",
                   "next": "PRO-B02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-PRO-B01-L010",
@@ -166,8 +166,8 @@
               "id": "PRO-B02",
               "title": "The Wrong Beast",
               "type": "battle",
-              "status": "draft",
-              "scriptStatus": "draft",
+              "status": "approved-structure",
+              "scriptStatus": "approved",
               "location": "Forest outside Primora",
               "time": "Late morning",
               "summary": "The failed chimera breaks MC's starting sword and injures MC. The encounter becomes an escape sequence ending in an accidental crossing through a small Fracture.",
@@ -184,7 +184,7 @@
                   "trigger": "chimera_appears",
                   "result": "MC is injured, the sword is broken, and direct fighting is no longer viable.",
                   "next": "PRO-B02-BEAT-02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-PRO-B02-L010",
@@ -246,7 +246,7 @@
                   "trigger": "sword_breaks",
                   "result": "MC crosses the Fracture with clothing and carried gear; the destination remains unknown.",
                   "next": "CH01-N01",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-PRO-B02-L090",
@@ -306,7 +306,7 @@
               "title": "The Other Side",
               "type": "story",
               "status": "approved-structure",
-              "scriptStatus": "draft",
+              "scriptStatus": "approved",
               "location": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
               "time": "26 April 1429 — late afternoon",
               "summary": "MC emerges from the Fracture injured and disoriented, is found by civilians/local escorts traveling with Julie d’Aubigny, receives Julie's practical aid, learns that Primora and Vaelkrath are unknown, and joins the group before road danger escalates into CH01-B01.",
@@ -323,7 +323,7 @@
                   "trigger": "node_start",
                   "result": "MC is conscious, mobile, and still unable to make normal attacks.",
                   "next": "CH01-N01-BEAT-02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L010",
@@ -368,7 +368,7 @@
                   "trigger": "player_moves_toward_road",
                   "result": "A traveling group becomes audible and visible.",
                   "next": "CH01-N01-BEAT-03",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L080",
@@ -406,7 +406,7 @@
                   "trigger": "group_encounter",
                   "result": "Julie becomes the first notable France character to take direct interest in MC.",
                   "next": "CH01-N01-BEAT-04",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L130",
@@ -472,7 +472,7 @@
                   "trigger": "injury_noticed",
                   "result": "Julie personally helps MC despite not knowing who MC is.",
                   "next": "CH01-N01-BEAT-05",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L210",
@@ -563,7 +563,7 @@
                   "trigger": "first_conversation",
                   "result": "MC realizes mutual spoken understanding is happening despite genuinely different languages.",
                   "next": "CH01-N01-BEAT-06",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L330",
@@ -620,7 +620,7 @@
                   "trigger": "origin_question",
                   "result": "MC gets the first major contradiction while still resisting an impossible explanation.",
                   "next": "CH01-N01-BEAT-07",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L430",
@@ -678,7 +678,7 @@
                   "trigger": "group_resumes_travel",
                   "result": "Orléans becomes the best nearby place to seek treatment, supplies, and answers.",
                   "next": "CH01-N01-BEAT-08",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L550",
@@ -725,7 +725,7 @@
                   "trigger": "travel_discussion",
                   "result": "MC accepts temporary help and joins the group toward safer ground and Orléans.",
                   "next": "CH01-N01-BEAT-09",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L690",
@@ -798,7 +798,7 @@
                   "trigger": "road_threat_detected",
                   "result": "Load CH01-B01 — Strangers on the Road.",
                   "next": "CH01-B01",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N01-L800",
@@ -843,7 +843,7 @@
               "title": "Strangers on the Road",
               "type": "battle",
               "status": "approved-structure",
-              "scriptStatus": "draft",
+              "scriptStatus": "approved",
               "summary": "First mandatory France battle. Protect/escort the civilian group and supply cart from armed foragers/stragglers while MC remains attack-limited. Julie is already present; Hangaku Gozen and La Hire enter through the fight.",
               "beats": [
                 {
@@ -864,7 +864,7 @@
                   "trigger": "battle_start",
                   "result": "The group holds long enough to start moving civilians and supplies out of the kill zone.",
                   "next": "CH01-B01-BEAT-02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B01-L010",
@@ -924,7 +924,7 @@
                   "trigger": "civilian_cutoff",
                   "result": "A capable unknown warrior joins the defense and stabilizes the road flank.",
                   "next": "CH01-B01-BEAT-03",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B01-L070",
@@ -973,7 +973,7 @@
                   "trigger": "second_flank_pressure",
                   "result": "The attackers lose momentum and the civilians gain an escape route.",
                   "next": "CH01-B01-BEAT-04",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B01-L120",
@@ -1025,7 +1025,7 @@
                   "trigger": "route_open",
                   "result": "Civilians and cart escape the immediate road threat.",
                   "next": "CH01-B01-BEAT-05",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B01-L170",
@@ -1075,7 +1075,7 @@
                   "trigger": "battle_cleared",
                   "result": "Hangaku Gozen and La Hire become known to MC; the group moves to shelter.",
                   "next": "CH01-N03",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B01-L220",
@@ -1131,7 +1131,7 @@
               "title": "Shelter Before Nightfall",
               "type": "story",
               "status": "approved-structure",
-              "scriptStatus": "draft",
+              "scriptStatus": "approved",
               "summary": "Post-B01 shelter, treatment, food and rest. MC builds early rapport with Julie, Hangaku and La Hire, then receives a cheap replacement sword after recovery.",
               "beats": [
                 {
@@ -1146,7 +1146,7 @@
                   "trigger": "shelter_reached",
                   "result": "MC is stable enough to rest and talk; the immediate road danger is behind them.",
                   "next": "CH01-N03-BEAT-02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N03-L010",
@@ -1200,7 +1200,7 @@
                   "trigger": "recovery_conversation",
                   "result": "MC gains reason to suspect the strangeness is larger than a simple wrong turn.",
                   "next": "CH01-N03-BEAT-03",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N03-L070",
@@ -1249,7 +1249,7 @@
                   "trigger": "after_rest",
                   "result": "MC obtains a cheap replacement sword but remains hesitant to use it in real combat.",
                   "next": "CH01-N04",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N03-L120",
@@ -1308,7 +1308,7 @@
               "title": "Names That Should Mean Nothing",
               "type": "story",
               "status": "approved-structure",
-              "scriptStatus": "draft",
+              "scriptStatus": "approved",
               "summary": "Recovery and context deepen the contradiction: France, England, Orléans and Charles/the Dauphin mean nothing to MC, while Primora and Vaelkrath mean nothing to the others. Orléans becomes the practical route toward answers.",
               "beats": [
                 {
@@ -1323,7 +1323,7 @@
                   "trigger": "rested_conversation",
                   "result": "MC can no longer comfortably explain the situation as merely being somewhere distant in Vaelkrath.",
                   "next": "CH01-N04-BEAT-02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N04-L010",
@@ -1386,7 +1386,7 @@
                   "trigger": "world_names_fail",
                   "result": "MC decides Orléans is the best route to information and a possible way home.",
                   "next": "CH01-N04-BEAT-03",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N04-L080",
@@ -1449,7 +1449,7 @@
                   "trigger": "departure_agreed",
                   "result": "The party route is set toward Orléans.",
                   "next": "CH01-B02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N04-L150",
@@ -1475,7 +1475,7 @@
               "title": "The Road to Orléans",
               "type": "battle",
               "status": "approved-structure",
-              "scriptStatus": "draft",
+              "scriptStatus": "approved",
               "summary": "Combat climax against an organized English siege-line road detachment/outer screen. The group opens the cordon, frees detainees and escapes before reinforcements. MC restores basic Attack with the cheap replacement sword when protecting Julie from immediate danger.",
               "beats": [
                 {
@@ -1497,7 +1497,7 @@
                   "trigger": "checkpoint_reached",
                   "result": "The checkpoint blocks safe passage and begins detaining travelers.",
                   "next": "CH01-B02-BEAT-02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B02-L010",
@@ -1555,7 +1555,7 @@
                   "trigger": "detention_turns_violent",
                   "result": "The barrier is breached and detainees begin escaping.",
                   "next": "CH01-B02-BEAT-03",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B02-L070",
@@ -1606,7 +1606,7 @@
                   "trigger": "cordon_breached",
                   "result": "The objective changes from holding ground to escaping before the road is sealed again.",
                   "next": "CH01-B02-BEAT-04",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B02-L120",
@@ -1651,7 +1651,7 @@
                   "trigger": "julie_exposed",
                   "result": "MC regains basic Attack for the remainder of the battle preview.",
                   "next": "CH01-B02-BEAT-05",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B02-L170",
@@ -1704,7 +1704,7 @@
                   "trigger": "mc_attack_restored",
                   "result": "The road group escapes the outer screen and continues toward Orléans.",
                   "next": "CH01-N06",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-B02-L240",
@@ -1740,7 +1740,7 @@
               "title": "The Maid Is Coming",
               "type": "story",
               "status": "approved-structure",
-              "scriptStatus": "draft",
+              "scriptStatus": "approved",
               "summary": "Chapter resolution. Jeanne remains physically offscreen; conflicting rumors establish that the Maid is coming while MC continues toward Orléans seeking answers and a route home.",
               "beats": [
                 {
@@ -1755,7 +1755,7 @@
                   "trigger": "checkpoint_escaped",
                   "result": "Julie understands that MC's reluctance to fight came from something recent and frightening.",
                   "next": "CH01-N06-BEAT-02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N06-L010",
@@ -1814,7 +1814,7 @@
                   "trigger": "travel_resumes",
                   "result": "The Maid becomes the chapter-ending hook without replacing MC's practical search for answers.",
                   "next": "CH01-N06-BEAT-03",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N06-L080",
@@ -1872,7 +1872,7 @@
                   "trigger": "maid_rumor_heard",
                   "result": "Chapter 1 ends with the party moving toward Orléans and the coming siege story.",
                   "next": "CH02",
-                  "scriptStatus": "draft",
+                  "scriptStatus": "approved",
                   "script": [
                     {
                       "id": "S01-CH01-N06-L140",
