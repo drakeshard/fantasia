@@ -1,0 +1,108 @@
+body.player-open {
+  overflow: hidden;
+}
+
+.player-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  padding: 24px;
+  background: rgba(3, 5, 8, 0.86);
+  backdrop-filter: blur(10px);
+}
+
+.player-overlay[hidden] {
+  display: none;
+}
+
+.player-shell {
+  width: min(1100px, 100%);
+  height: min(820px, calc(100vh - 48px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  background: #10151c;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+.player-toolbar,
+.player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  background: #0f141c;
+}
+
+.player-toolbar > div {
+  display: grid;
+  gap: 4px;
+}
+
+.player-controls {
+  border-top: 1px solid var(--border);
+  border-bottom: 0;
+}
+
+.player-stage {
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(126, 160, 194, 0.16), transparent 36%),
+    linear-gradient(180deg, #24313e, #18212a 64%, #10151c);
+}
+
+.player-background {
+  position: absolute;
+  inset: 20px auto auto 22px;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.player-copy {
+  min-height: 116px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  background: #0c1117;
+}
+
+.player-speaker {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.player-copy p {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1rem, 2vw, 1.32rem);
+  line-height: 1.52;
+}
+
+@media (max-width: 760px) {
+  .player-overlay {
+    padding: 0;
+  }
+
+  .player-shell {
+    width: 100%;
+    height: 100vh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .player-stage {
+    padding: 14px;
+  }
+}

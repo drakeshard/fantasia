@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Fantasia Story Studio</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./scene.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <p class="eyebrow">Fantasia Narrative Production</p>
+          <div class="brand-line">
+            <h1>Story Studio</h1>
+            <span class="studio-badge">Internal</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button id="play-node" type="button" class="primary-button">▶ Preview Node</button>
+          <button id="toggle-density" type="button" class="secondary-button">Compact</button>
+          <button id="export-json" type="button" class="secondary-button">Export JSON</button>
+        </div>
+      </header>
+
+      <main class="workspace" aria-live="polite">
+        <aside class="rail" aria-label="Story navigation">
+          <div class="rail-heading">
+            <div>
+              <span class="section-label">Story</span>
+              <small>Repository source</small>
+            </div>
+            <span id="story-status" class="status-pill">Loading</span>
+          </div>
+          <div id="story-tree" class="story-tree"></div>
+        </aside>
+
+        <section class="reader" aria-label="Narrative production workspace">
+          <div id="node-header" class="node-header"></div>
+
+          <nav class="workspace-tabs" aria-label="Production workspace">
+            <button type="button" class="workspace-tab active" data-workspace="overview">Overview</button>
+            <button type="button" class="workspace-tab" data-workspace="script">Script</button>
+            <button type="button" class="workspace-tab" data-workspace="scene">Scene</button>
+            <button type="button" class="workspace-tab" data-workspace="voice">Voice</button>
+            <button type="button" class="workspace-tab" data-workspace="assets">Assets</button>
+          </nav>
+
+          <div id="workspace-content" class="workspace-content"></div>
+
+          <section class="timeline-dock" aria-label="Beat timeline">
+            <div class="timeline-dock-head">
+              <span class="section-label">Beat timeline</span>
+              <span id="timeline-summary" class="mono muted"></span>
+            </div>
+            <nav id="beat-timeline" class="beat-timeline" aria-label="Node beat timeline"></nav>
+          </section>
+        </section>
+
+        <aside class="inspector" aria-label="Beat details">
+          <div class="inspector-heading">
+            <div>
+              <span class="section-label">Inspector</span>
+              <small>Selected beat</small>
+            </div>
+            <span id="selection-id" class="mono muted">No beat selected</span>
+          </div>
+          <div id="inspector-content" class="inspector-content empty-state">
+            Select a beat to inspect its production details.
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer-note">
+        <span>Story content: <strong>content/narrative/story.json</strong></span>
+        <span>Timing and staging are production metadata; voice generation is not configured.</span>
+      </footer>
+    </div>
+
+    <div id="player-overlay" class="player-overlay" hidden>
+      <div class="player-shell" role="dialog" aria-modal="true" aria-labelledby="player-title">
+        <div class="player-toolbar">
+          <div>
+            <p class="eyebrow">Node preview</p>
+            <strong id="player-title">Story preview</strong>
+          </div>
+          <button id="close-player" type="button" class="secondary-button">Close</button>
+        </div>
+        <div id="player-stage" class="player-stage"></div>
+        <div id="player-copy" class="player-copy"></div>
+        <div class="player-controls">
+          <button id="player-prev" type="button" class="secondary-button">← Previous</button>
+          <span id="player-progress" class="mono muted"></span>
+          <button id="player-next" type="button" class="primary-button">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

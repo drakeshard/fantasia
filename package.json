@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter @fantasia/web dev",
+    "story:build": "node apps/story-studio/build.mjs",
     "check": "pnpm check:format && pnpm check:architecture && pnpm check:determinism",
     "check:write": "biome check --write .",
     "check:format": "biome check .",
@@ -23,7 +24,7 @@
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
-    "build": "pnpm -r build",
+    "build": "pnpm -r build && pnpm story:build",
     "verify": "pnpm audit && pnpm foundation:consumer && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
   },
   "devDependencies": {
