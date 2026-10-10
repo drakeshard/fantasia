@@ -34,10 +34,24 @@ for (const saga of story.sagas) {
         assert(typeof beat.id === "string" && beat.id, `${node.id} beat needs an id`);
         assert(!seenIds.has(beat.id), `duplicate narrative id: ${beat.id}`);
         seenIds.add(beat.id);
-        assert(Number.isInteger(beat.order) && beat.order > previousOrder, `${beat.id} order must increase`);
+        assert(
+          Number.isInteger(beat.order) && beat.order > previousOrder,
+          `${beat.id} order must increase`,
+        );
         previousOrder = beat.order;
-        for (const field of ["title", "presentation", "screenAction", "dialogueIntent", "playerControl", "trigger", "result"]) {
-          assert(typeof beat[field] === "string" && beat[field].trim(), `${beat.id}.${field} is required`);
+        for (const field of [
+          "title",
+          "presentation",
+          "screenAction",
+          "dialogueIntent",
+          "playerControl",
+          "trigger",
+          "result",
+        ]) {
+          assert(
+            typeof beat[field] === "string" && beat[field].trim(),
+            `${beat.id}.${field} is required`,
+          );
         }
       }
     }
