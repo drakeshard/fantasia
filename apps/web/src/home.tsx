@@ -1,6 +1,5 @@
 import { CampaignSession } from "@fantasia/runtime";
 import { useMemo } from "preact/hooks";
-import "./home.css";
 
 interface HomeAppProps {
   readonly onContinue: () => void;
