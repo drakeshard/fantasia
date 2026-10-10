@@ -18,15 +18,24 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
       <div class="home-vignette" aria-hidden="true" />
 
       <section class="home-continue-panel" aria-label="Continue story">
-        <span class="home-compass" aria-hidden="true">✦</span>
+        <span class="home-compass" aria-hidden="true">
+          ✦
+        </span>
         <div>
           <p class="home-kicker">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
           <h1>Continue</h1>
           <p>{view.sagaTitle}</p>
-          <p>Ch. {view.selectedChapterSequence} · {view.selectedChapterTitle}</p>
+          <p>
+            Ch. {view.selectedChapterSequence} · {view.selectedChapterTitle}
+          </p>
           {currentStage ? <small>{currentStage.title}</small> : null}
         </div>
-        <button type="button" class="home-continue-action" onClick={onContinue} aria-label="Continue current story">
+        <button
+          type="button"
+          class="home-continue-action"
+          onClick={onContinue}
+          aria-label="Continue current story"
+        >
           <span aria-hidden="true">›</span>
         </button>
       </section>
@@ -44,14 +53,20 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
         </article>
       </aside>
 
-      <div class="home-utility-strip" aria-label="Account systems">
+      <section class="home-utility-strip" aria-label="Account systems">
         <span class="home-utility-pill">Resources —</span>
-        <span class="home-utility-icon" aria-hidden="true">✉</span>
-        <span class="home-utility-icon" aria-hidden="true">◆</span>
-      </div>
+        <span class="home-utility-icon" aria-hidden="true">
+          ✉
+        </span>
+        <span class="home-utility-icon" aria-hidden="true">
+          ◆
+        </span>
+      </section>
 
       <section class="home-player-card" aria-label="Player profile">
-        <div class="home-player-avatar" aria-hidden="true">✦</div>
+        <div class="home-player-avatar" aria-hidden="true">
+          ✦
+        </div>
         <div>
           <strong>Player</strong>
           <small>Fantasia</small>
@@ -74,10 +89,10 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
         </button>
       </nav>
 
-      <div class="home-news-strip" aria-label="News">
-        <span>News</span>
+      <section class="home-news-strip" aria-label="News">
+        <span class="home-news-label">News</span>
         <strong>Welcome to Fantasia.</strong>
-      </div>
+      </section>
     </main>
   );
 }
