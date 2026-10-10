@@ -467,7 +467,8 @@ function renderPlayer() {
   let absoluteIndex = 0;
   for (let index = 0; index < state.playerBeatIndex; index += 1) {
     const priorBeat = node.beats[index];
-    absoluteIndex += scriptForBeat(priorBeat).length || (productionForBeat(priorBeat)?.events?.length ?? 1);
+    absoluteIndex +=
+      scriptForBeat(priorBeat).length || (productionForBeat(priorBeat)?.events?.length ?? 1);
   }
   absoluteIndex += state.playerEventIndex + 1;
 
