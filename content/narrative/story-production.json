@@ -2,39 +2,181 @@
   "schemaVersion": 1,
   "profile": "fantasia-story-studio-production-v1",
   "beats": {
-    "CH01-N01-BEAT-01": {
+    "PRO-N01-BEAT-01": {
       "timing": {
-        "mode": "auto",
-        "estimatedSeconds": 12
+        "mode": "advance",
+        "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Wooded farmland east of Orléans",
-        "camera": "Wide arrival shot → closer injured-MC framing",
+        "background": "Primora Village, Vaelkrath",
+        "camera": "Scene framing → character focus",
         "slots": {
-          "center": {
+          "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "injured / recovering"
+            "pose": "active"
+          },
+          "right": {
+            "character": "Guild Clerk",
+            "shortLabel": "GUI",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "camera",
-          "text": "Establish unfamiliar wooded farmland and the collapsing refractive distortion."
+          "type": "action",
+          "text": "MC accepts a low-risk wild-boar request at Primora's guild post before leaving for the nearby forest."
         },
+        {
+          "type": "dialogue",
+          "text": "Establish MC's hero aspiration lightly and quickly; keep village life ordinary."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to PRO-B01."
+        }
+      ]
+    },
+    "PRO-B01-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Forest trail outside Primora",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Wild Boar",
+            "shortLabel": "WIL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
         {
           "type": "action",
-          "text": "MC lands hard, remains conscious, and checks their condition."
+          "text": "MC handles the expected low-threat target until a much heavier presence enters the area."
         },
+        {
+          "type": "dialogue",
+          "text": "Keep the first fight simple and ordinary so the later chimera feels genuinely wrong."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to PRO-B02."
+        }
+      ]
+    },
+    "PRO-B02-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Forest outside Primora",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Failed Chimera",
+            "shortLabel": "FAI",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
         {
           "type": "action",
-          "text": "The broken starting sword is still present and unusable."
+          "text": "The anomalous chimera appears. MC attacks, the creature intercepts the strike, breaks the sword, and throws MC back."
         },
         {
-          "type": "reaction",
-          "speaker": "MC",
-          "text": "Register pain, disorientation, and unfamiliar surroundings without understanding the crossing."
+          "type": "dialogue",
+          "text": "Destroy MC's confidence quickly; the creature behaves as a dangerous physical threat, not a speaking villain."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to PRO-B02-BEAT-02."
+        }
+      ]
+    },
+    "PRO-B02-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Forest outside Primora",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Failed Chimera",
+            "shortLabel": "FAI",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "MC flees through the forest while injured and attack-limited, then tumbles through a visible refractive Fracture by accident."
+        },
+        {
+          "type": "dialogue",
+          "text": "Keep the escape immediate. Do not explain the Fracture, chimera origin, or destination selection."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N01."
+        }
+      ]
+    },
+    "CH01-N01-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "center": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "MC crashes into unfamiliar wooded farmland, still injured and carrying the broken starting sword. The small Fracture collapses without obvious trace."
+        },
+        {
+          "type": "dialogue",
+          "text": "Pain and disorientation only; no cosmology explanation."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N01-BEAT-02."
         }
       ]
     },
@@ -42,36 +184,31 @@
       "timing": {
         "mode": "player",
         "minSeconds": 20,
-        "maxSeconds": 60
+        "maxSeconds": 90
       },
       "staging": {
-        "background": "Field edge leading toward a rural road",
-        "camera": "Gameplay-follow framing",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "center": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "injured / mobile"
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "control",
-          "text": "Player regains movement control while MC remains attack-limited."
-        },
-        {
           "type": "action",
-          "text": "MC checks the broken sword and continues toward the nearest road."
+          "text": "MC moves toward a nearby road after hearing a cart beyond the trees."
         },
         {
-          "type": "reaction",
-          "speaker": "MC",
-          "text": "Treat the location as an unfamiliar region rather than another world."
+          "type": "dialogue",
+          "text": "MC assumes this is some unfamiliar region reached during the fall, not another world."
         },
         {
           "type": "transition",
-          "text": "Voices and the sound of a traveling cart become noticeable ahead."
+          "text": "Continue to CH01-N01-BEAT-03."
         }
       ]
     },
@@ -81,92 +218,79 @@
         "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Rural road with a small civilian cart group",
-        "camera": "Group reveal, then MC-facing conversational framing",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "injured / wary"
+            "pose": "active"
           },
           "center": {
-            "character": "Civilians / escorts",
-            "shortLabel": "GRP",
-            "pose": "cautious group"
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
           },
           "right": {
-            "character": "Julie d’Aubigny",
-            "shortLabel": "JD",
-            "pose": "observing MC"
+            "character": "Civilians",
+            "shortLabel": "CIV",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "camera",
-          "text": "Reveal the traveling group stopping after noticing MC."
-        },
-        {
-          "type": "reaction",
-          "speaker": "Local escorts",
-          "text": "Respond cautiously to an unknown injured stranger."
-        },
-        {
-          "type": "reaction",
-          "speaker": "Julie d’Aubigny",
-          "text": "Notice MC's wounds and condition before focusing on suspicion."
+          "type": "action",
+          "text": "A small civilian/local-escort group finds MC. Julie is already traveling with them and notices the injuries."
         },
         {
           "type": "dialogue",
-          "speaker": "Local escorts",
-          "text": "Establish cautious first-contact questioning without hostility escalation."
+          "text": "Caution from the escort; Julie's attention goes immediately to the visible injury."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N01-BEAT-04."
         }
       ]
     },
     "CH01-N01-BEAT-04": {
       "timing": {
         "mode": "advance",
-        "estimatedSeconds": 25
+        "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Roadside beside the civilian cart",
-        "camera": "Medium two-shot emphasizing Julie kneeling beside MC",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "seated / injured"
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
           },
           "right": {
-            "character": "Julie d’Aubigny",
-            "shortLabel": "JD",
-            "pose": "kneeling / checking wounds"
+            "character": "Local escorts",
+            "shortLabel": "LOC",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
           "type": "action",
-          "text": "Julie moves past the group's hesitation and approaches MC directly."
-        },
-        {
-          "type": "action",
-          "text": "Julie checks the visible arm and forehead injuries and directs immediate practical aid."
+          "text": "Julie steps past the escort, checks MC's arm, and directs immediate aid before asking for an explanation."
         },
         {
           "type": "dialogue",
-          "speaker": "Local escorts",
-          "text": "Express reasonable concern about taking responsibility for an unknown stranger."
+          "text": "Practical compassion with restrained humor; no dramatic rescue speech."
         },
         {
-          "type": "dialogue",
-          "speaker": "Julie d’Aubigny",
-          "text": "Refuse to leave an injured stranger behind; keep the tone practical rather than heroic."
-        },
-        {
-          "type": "reaction",
-          "speaker": "MC",
-          "text": "Register that Julie is choosing to help despite knowing nothing about MC."
+          "type": "transition",
+          "text": "Continue to CH01-N01-BEAT-05."
         }
       ]
     },
@@ -176,138 +300,120 @@
         "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Roadside beside the cart",
-        "camera": "Conversation close framing",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "confused / listening"
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
           },
           "right": {
-            "character": "Julie d’Aubigny",
-            "shortLabel": "JD",
-            "pose": "speaking normally"
+            "character": "Local escorts",
+            "shortLabel": "LOC",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "dialogue",
-          "speaker": "Julie d’Aubigny",
-          "text": "Continue ordinary first-contact questions in speech that sounds foreign to MC."
-        },
-        {
-          "type": "reaction",
-          "speaker": "MC",
-          "text": "Realize the words sound unfamiliar even though their meaning is understood."
+          "type": "action",
+          "text": "The introduction itself reveals that the group's speech sounds foreign even though its meaning reaches MC clearly."
         },
         {
           "type": "dialogue",
-          "speaker": "MC",
-          "text": "Answer in MC's own language and observe that the group understands in return."
+          "text": "Show the language anomaly with one sharp contradiction rather than a long explanation."
         },
         {
-          "type": "narration",
-          "text": "Do not explain why mutual spoken understanding is happening."
+          "type": "transition",
+          "text": "Continue to CH01-N01-BEAT-06."
         }
       ]
     },
     "CH01-N01-BEAT-06": {
       "timing": {
         "mode": "advance",
-        "estimatedSeconds": 22
+        "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Roadside beside the cart",
-        "camera": "MC/Julie conversational framing with group reactions",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "answering / uncertain"
+            "pose": "active"
           },
           "center": {
-            "character": "Civilians / escorts",
-            "shortLabel": "GRP",
-            "pose": "unfamiliar / puzzled"
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
           },
           "right": {
-            "character": "Julie d’Aubigny",
-            "shortLabel": "JD",
-            "pose": "listening without accusation"
+            "character": "Civilians",
+            "shortLabel": "CIV",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "dialogue",
-          "speaker": "Julie d’Aubigny",
-          "text": "Ask who MC is and where MC came from."
+          "type": "action",
+          "text": "MC names Primora and Vaelkrath; nobody recognizes either place."
         },
         {
           "type": "dialogue",
-          "speaker": "MC",
-          "text": "Provide the player-selected name and identify Primora Village and Vaelkrath."
+          "text": "The locals are genuinely unfamiliar; Julie does not ridicule or accuse MC."
         },
         {
-          "type": "reaction",
-          "speaker": "Civilians / escorts",
-          "text": "Show genuine nonrecognition of both place names."
-        },
-        {
-          "type": "reaction",
-          "speaker": "Julie d’Aubigny",
-          "text": "Treat the strange answer as uncertainty to work through, not proof that MC is lying."
+          "type": "transition",
+          "text": "Continue to CH01-N01-BEAT-07."
         }
       ]
     },
     "CH01-N01-BEAT-07": {
       "timing": {
-        "mode": "player",
-        "minSeconds": 30,
-        "maxSeconds": 55
+        "mode": "advance",
+        "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Road toward the Orléans approaches",
-        "camera": "Traveling group / walking conversation",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "walking with injury"
+            "pose": "active"
           },
           "center": {
-            "character": "Civilians / escorts",
-            "shortLabel": "GRP",
-            "pose": "moving with cart"
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
           },
           "right": {
-            "character": "Julie d’Aubigny",
-            "shortLabel": "JD",
-            "pose": "walking alongside group"
+            "character": "Civilians",
+            "shortLabel": "CIV",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "control",
-          "text": "Resume short travel while the group continues toward safer ground."
+          "type": "action",
+          "text": "The group resumes travel. Orléans and the siege are introduced only as practical local context."
         },
         {
           "type": "dialogue",
-          "speaker": "Civilians / escorts",
-          "text": "Mention Orléans and the danger created by the English siege as practical local context."
+          "text": "Give the player recognizable historical clues while keeping MC focused on location and survival."
         },
         {
-          "type": "dialogue",
-          "speaker": "Civilians / escorts",
-          "text": "Reference Charles/the Dauphin naturally within the current war situation."
-        },
-        {
-          "type": "reaction",
-          "speaker": "MC",
-          "text": "Absorb recognizable names without yet concluding that this is another world."
+          "type": "transition",
+          "text": "Continue to CH01-N01-BEAT-08."
         }
       ]
     },
@@ -317,83 +423,858 @@
         "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Roadside travel before dusk",
-        "camera": "Closer two-character walking exchange",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "tired / considering"
+            "pose": "active"
           },
           "right": {
             "character": "Julie d’Aubigny",
-            "shortLabel": "JD",
-            "pose": "matter-of-fact / supportive"
+            "shortLabel": "JUL",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "dialogue",
-          "speaker": "Julie d’Aubigny",
-          "text": "Make clear that leaving the group alone while injured is unsafe and unnecessary."
+          "type": "action",
+          "text": "Julie gives her name and tells MC to stay with the group rather than wander off injured."
         },
         {
           "type": "dialogue",
-          "speaker": "MC",
-          "text": "Accept temporary help in order to recover, learn where they are, and seek a route toward home."
+          "text": "Create a direct personal bond and a practical reason to travel together, not political allegiance."
         },
         {
-          "type": "reaction",
-          "speaker": "Julie d’Aubigny",
-          "text": "Treat MC's acceptance as a practical arrangement rather than political allegiance."
+          "type": "transition",
+          "text": "Continue to CH01-N01-BEAT-09."
         }
       ]
     },
     "CH01-N01-BEAT-09": {
       "timing": {
         "mode": "auto",
-        "estimatedSeconds": 10
+        "estimatedSeconds": 18
       },
       "staging": {
-        "background": "Road bend with obscured armed movement ahead",
-        "camera": "Travel group halts → threat-facing transition",
+        "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
+        "camera": "Scene framing → character focus",
         "slots": {
           "left": {
             "character": "MC",
             "shortLabel": "MC",
-            "pose": "alert / still injured"
+            "pose": "active"
           },
           "center": {
-            "character": "Civilians / escorts",
-            "shortLabel": "GRP",
-            "pose": "halted / alarmed"
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
           },
           "right": {
-            "character": "Julie d’Aubigny",
-            "shortLabel": "JD",
-            "pose": "alert / hand near weapon"
+            "character": "Civilians",
+            "shortLabel": "CIV",
+            "pose": "active"
           }
         }
       },
       "events": [
         {
-          "type": "reaction",
-          "speaker": "Local escorts",
-          "text": "Detect armed trouble ahead and halt the group."
-        },
-        {
           "type": "action",
-          "text": "Civilians and cart stop while the escorts assess immediate danger."
+          "text": "The lead escort detects armed movement ahead and halts the group."
         },
         {
-          "type": "reaction",
-          "speaker": "Julie d’Aubigny",
-          "text": "Shift from travel posture to readiness while staying with the group."
+          "type": "dialogue",
+          "text": "Immediate practical escalation into B01."
         },
         {
           "type": "transition",
-          "text": "End the story node and hand off into CH01-B01 — Strangers on the Road."
+          "text": "Continue to CH01-B01."
+        }
+      ]
+    },
+    "CH01-B01-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Strangers on the Road",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Civilians",
+            "shortLabel": "CIV",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Armed foragers/stragglers rush the road. Julie and the escorts form a defense while civilians pull behind the cart."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the first France battle about protecting ordinary people rather than defeating every enemy."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B01-BEAT-02."
+        }
+      ]
+    },
+    "CH01-B01-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Strangers on the Road",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "A civilian is nearly cut off. A precise ranged strike from an unknown warrior interrupts the attacker before she enters the line herself."
+        },
+        {
+          "type": "dialogue",
+          "text": "Introduce Hangaku by decisive action, not biography. Keep her identity hidden until dialogue earns it."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B01-BEAT-03."
+        }
+      ]
+    },
+    "CH01-B01-BEAT-03": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Strangers on the Road",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Pressure builds on the opposite side until a rough-edged swordsman crashes into the attackers from the road."
+        },
+        {
+          "type": "dialogue",
+          "text": "Contrast Hangaku's controlled entrance with La Hire's aggressive battlefield energy; keep his identity hidden until reveal."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B01-BEAT-04."
+        }
+      ]
+    },
+    "CH01-B01-BEAT-04": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Strangers on the Road",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The improvised defenders create a corridor. MC focuses on getting civilians and the supply cart through while the others hold the attackers."
+        },
+        {
+          "type": "dialogue",
+          "text": "Let MC contribute meaningfully without undoing the prologue defeat or attack limitation."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B01-BEAT-05."
+        }
+      ]
+    },
+    "CH01-B01-BEAT-05": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "Strangers on the Road",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Once the immediate danger passes, the two newcomers finally give their names."
+        },
+        {
+          "type": "dialogue",
+          "text": "Keep the introductions short; the battle itself should have already defined their first impressions."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N03."
+        }
+      ]
+    },
+    "CH01-N03-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Shelter Before Nightfall",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "At a rough shelter, Julie properly cleans and binds MC's injuries while the group eats and settles."
+        },
+        {
+          "type": "dialogue",
+          "text": "Use recovery to let personalities breathe after the battle."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N03-BEAT-02."
+        }
+      ]
+    },
+    "CH01-N03-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Shelter Before Nightfall",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "MC asks Hangaku where she comes from and realizes another exceptional traveler may also be far from home."
+        },
+        {
+          "type": "dialogue",
+          "text": "Hint at broader displacement without explaining Story Worlds or Fracture cosmology."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N03-BEAT-03."
+        }
+      ]
+    },
+    "CH01-N03-BEAT-03": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Shelter Before Nightfall",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "La Hire",
+            "shortLabel": "LA ",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "La Hire notices the broken sword and points MC toward a cheap replacement among available gear."
+        },
+        {
+          "type": "dialogue",
+          "text": "The replacement is ordinary and practical; it matters because MC can carry a complete sword again, not because it is special."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N04."
+        }
+      ]
+    },
+    "CH01-N04-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Names That Should Mean Nothing",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Simple conversation names France, England, Orléans, and Charles/the Dauphin. None of them belong in MC's known world."
+        },
+        {
+          "type": "dialogue",
+          "text": "Turn necessary context into a growing contradiction, not a history lecture."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N04-BEAT-02."
+        }
+      ]
+    },
+    "CH01-N04-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Names That Should Mean Nothing",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Julie asks the question plainly: where is Vaelkrath supposed to be? MC realizes there is no map direction that can answer."
+        },
+        {
+          "type": "dialogue",
+          "text": "Let MC reach fear and uncertainty before reaching a formal another-world conclusion."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N04-BEAT-03."
+        }
+      ]
+    },
+    "CH01-N04-BEAT-03": {
+      "timing": {
+        "mode": "auto",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "Names That Should Mean Nothing",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The group prepares to continue toward Orléans with the civilians and supplies."
+        },
+        {
+          "type": "dialogue",
+          "text": "End recovery cleanly and move back into danger."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B02."
+        }
+      ]
+    },
+    "CH01-B02-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "The Road to Orléans",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "An organized English road detachment stops the group, controls passage, and begins inspecting supplies and travelers."
+        },
+        {
+          "type": "dialogue",
+          "text": "Start with pressure and negotiation, not instant combat. Establish that simply walking away will strand or expose the civilians."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B02-BEAT-02."
+        }
+      ]
+    },
+    "CH01-B02-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "The Road to Orléans",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The detention turns violent. La Hire and Hangaku act to open the cordon and free the people being held."
+        },
+        {
+          "type": "dialogue",
+          "text": "Escalate from passage dispute to rescue/breakthrough. MC still hesitates to draw the replacement sword."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B02-BEAT-03."
+        }
+      ]
+    },
+    "CH01-B02-BEAT-03": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "The Road to Orléans",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The detachment signals for reinforcements, including a mounted enemy presence that makes the escape window narrow."
+        },
+        {
+          "type": "dialogue",
+          "text": "Raise urgency and preview Cavalry pressure without turning this into a full siege battle."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B02-BEAT-04."
+        }
+      ]
+    },
+    "CH01-B02-BEAT-04": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "The Road to Orléans",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "English Soldier",
+            "shortLabel": "ENG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "An attacker slips through toward Julie while she is covering the retreat. MC reacts before thinking and finally draws the replacement sword."
+        },
+        {
+          "type": "dialogue",
+          "text": "Pay off Julie helping MC in N01. The action is protective and instinctive, not a sudden cure for fear."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-B02-BEAT-05."
+        }
+      ]
+    },
+    "CH01-B02-BEAT-05": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 20,
+        "maxSeconds": 90
+      },
+      "staging": {
+        "background": "The Road to Orléans",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party and civilians complete the breakthrough before reinforcements can trap them."
+        },
+        {
+          "type": "dialogue",
+          "text": "End on escape and survival, not annihilation of the English detachment."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N06."
+        }
+      ]
+    },
+    "CH01-N06-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "The Maid Is Coming",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "After the escape, Julie notices that MC finally used the replacement sword."
+        },
+        {
+          "type": "dialogue",
+          "text": "Give the prologue defeat a small emotional echo without dumping backstory."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N06-BEAT-02."
+        }
+      ]
+    },
+    "CH01-N06-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "The Maid Is Coming",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Travelers",
+            "shortLabel": "TRA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Passing travelers trade conflicting rumors about a young woman called the Maid who is expected toward Orléans."
+        },
+        {
+          "type": "dialogue",
+          "text": "Jeanne remains offscreen. Present hope, doubt, and uncertainty rather than authoritative prophecy."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH01-N06-BEAT-03."
+        }
+      ]
+    },
+    "CH01-N06-BEAT-03": {
+      "timing": {
+        "mode": "auto",
+        "estimatedSeconds": 18
+      },
+      "staging": {
+        "background": "The Maid Is Coming",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The group continues toward Orléans. MC still wants answers and a route home; the Maid rumor becomes the next major story hook."
+        },
+        {
+          "type": "dialogue",
+          "text": "Close the chapter quietly and keep MC's motivation personal rather than political."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH02."
         }
       ]
     }
