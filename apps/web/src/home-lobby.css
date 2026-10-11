@@ -1,24 +1,19 @@
-/* GAME-UI14 — landscape-first in-game lobby composition.
- * Layout is intentionally asset-light. Art may be replaced later without changing the shell geometry.
- */
+/* GAME-UI14 — landscape-first in-game lobby composition. */
 
 .home-lobby {
-  --home-gold: #e2be78;
-  --home-ivory: #f4f0e7;
-  --home-muted: #bbc6d2;
-  --home-ink: #071019;
-  --home-panel: rgb(8 20 30 / 82%);
-  --home-panel-strong: rgb(7 17 27 / 92%);
-  --home-line: rgb(226 190 120 / 34%);
-  --home-safe-x: clamp(24px, 3.75vw, 72px);
-  --home-safe-y: clamp(18px, 2.2vh, 30px);
+  --lobby-gold: #e2be78;
+  --lobby-ivory: #f4f0e7;
+  --lobby-muted: #bbc6d2;
+  --lobby-edge: rgb(226 190 120 / 32%);
+  --lobby-safe-x: clamp(24px, 3.75vw, 72px);
   position: relative;
   width: 100vw;
   height: 100dvh;
   min-height: 390px;
   overflow: hidden;
   display: grid;
-  grid-template-rows: clamp(64px, 8.2vh, 78px) minmax(0, 1fr) clamp(68px, 9.4vh, 88px);
+  grid-template-rows: clamp(62px, 8.2vh, 78px) minmax(0, 1fr) clamp(68px, 9.4vh, 88px);
+  color: var(--lobby-ivory);
   background: #071019;
 }
 
@@ -26,8 +21,15 @@
   z-index: 0;
   inset: 0;
   background:
-    linear-gradient(90deg, rgb(4 10 16 / 68%) 0%, rgb(4 10 16 / 34%) 28%, rgb(4 10 16 / 8%) 54%, rgb(4 10 16 / 18%) 72%, rgb(4 10 16 / 46%) 100%),
-    linear-gradient(180deg, rgb(4 10 16 / 18%) 0%, transparent 42%, rgb(4 10 16 / 58%) 100%),
+    linear-gradient(
+      90deg,
+      rgb(4 10 16 / 62%) 0%,
+      rgb(4 10 16 / 28%) 29%,
+      rgb(4 10 16 / 5%) 54%,
+      rgb(4 10 16 / 14%) 72%,
+      rgb(4 10 16 / 42%) 100%
+    ),
+    linear-gradient(180deg, rgb(4 10 16 / 15%), transparent 44%, rgb(4 10 16 / 58%)),
     url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center 46% / cover no-repeat;
   content: "";
 }
@@ -37,20 +39,20 @@
   inset: 10px;
   border: 1px solid rgb(226 190 120 / 16%);
   pointer-events: none;
-  box-shadow: inset 0 0 60px rgb(0 0 0 / 18%);
+  content: "";
 }
 
 .home-lobby-hud {
   position: relative;
   z-index: 6;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  min-height: 0;
-  padding: 0 var(--home-safe-x);
+  padding: 0 var(--lobby-safe-x);
   border-bottom: 1px solid rgb(226 190 120 / 22%);
-  background: linear-gradient(180deg, rgb(4 10 16 / 88%), rgb(4 10 16 / 54%));
+  background: linear-gradient(180deg, rgb(4 10 16 / 86%), rgb(4 10 16 / 50%));
   backdrop-filter: blur(12px);
 }
 
@@ -85,14 +87,13 @@
   background: rgb(6 14 22 / 56%);
   font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.035em;
 }
 
 .home-status-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--home-gold);
+  background: var(--lobby-gold);
   box-shadow: 0 0 0 4px rgb(226 190 120 / 8%);
 }
 
@@ -103,13 +104,13 @@
   display: grid;
   grid-template-columns: minmax(0, 1.618fr) minmax(292px, 1fr);
   gap: clamp(22px, 2.4vw, 42px);
-  padding: clamp(22px, 3.2vh, 38px) var(--home-safe-x) clamp(20px, 2.8vh, 34px);
+  padding: clamp(22px, 3.2vh, 38px) var(--lobby-safe-x) clamp(20px, 2.8vh, 34px);
 }
 
 .home-lobby-stage {
+  position: relative;
   min-width: 0;
   min-height: 0;
-  position: relative;
   display: grid;
   align-content: end;
 }
@@ -118,9 +119,14 @@
   position: absolute;
   z-index: -1;
   inset: -12px -34px -18px -42px;
-  background: radial-gradient(ellipse at 17% 72%, rgb(4 10 16 / 64%) 0%, rgb(4 10 16 / 22%) 48%, transparent 74%);
-  content: "";
+  background: radial-gradient(
+    ellipse at 17% 72%,
+    rgb(4 10 16 / 62%) 0%,
+    rgb(4 10 16 / 20%) 48%,
+    transparent 74%
+  );
   pointer-events: none;
+  content: "";
 }
 
 .home-stage-label {
@@ -130,20 +136,20 @@
   display: grid;
   gap: 4px;
   padding-left: 14px;
-  border-left: 2px solid var(--home-gold);
+  border-left: 2px solid var(--lobby-gold);
   text-shadow: 0 2px 8px rgb(0 0 0 / 72%);
 }
 
 .home-stage-label span {
-  color: var(--home-gold);
+  color: var(--lobby-gold);
   font-size: clamp(0.62rem, 0.72vw, 0.74rem);
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
-.home-stage-label strong {
-  color: var(--home-ivory);
+.home-lobby .home-stage-label strong {
+  color: var(--lobby-ivory);
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.1rem, 1.6vw, 1.55rem);
   font-weight: 500;
@@ -159,8 +165,13 @@
   align-items: center;
   padding: clamp(18px, 2.2vw, 28px);
   border: 1px solid rgb(226 190 120 / 44%);
-  border-left: 3px solid var(--home-gold);
-  background: linear-gradient(105deg, rgb(7 18 28 / 94%) 0%, rgb(7 18 28 / 82%) 74%, rgb(7 18 28 / 68%) 100%);
+  border-left: 3px solid var(--lobby-gold);
+  background: linear-gradient(
+    105deg,
+    rgb(7 18 28 / 94%) 0%,
+    rgb(7 18 28 / 82%) 74%,
+    rgb(7 18 28 / 68%) 100%
+  );
   box-shadow: 0 26px 70px rgb(0 0 0 / 36%);
   backdrop-filter: blur(11px);
 }
@@ -170,8 +181,8 @@
   position: absolute;
   width: 26px;
   height: 26px;
-  content: "";
   pointer-events: none;
+  content: "";
 }
 
 .home-current-story::before {
@@ -195,7 +206,7 @@
   place-items: center;
   border: 1px solid rgb(226 190 120 / 62%);
   border-radius: 50%;
-  color: var(--home-gold);
+  color: var(--lobby-gold);
   background:
     linear-gradient(rgb(6 16 25 / 42%), rgb(6 16 25 / 62%)),
     url("/assets/ui/fantasia_ui_icon_campaign_v001.webp") center / 142% 142% no-repeat;
@@ -209,7 +220,7 @@
 }
 
 .home-current-story-kicker {
-  color: var(--home-gold);
+  color: var(--lobby-gold);
   font-size: clamp(0.66rem, 0.72vw, 0.76rem);
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -218,13 +229,13 @@
 
 .home-current-story h1,
 .home-current-story p,
-.home-current-story small {
+.home-lobby .home-current-story small {
   margin: 0;
 }
 
 .home-current-story h1 {
   margin-top: 5px;
-  color: var(--home-ivory);
+  color: var(--lobby-ivory);
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.65rem, 2.65vw, 2.65rem);
   font-weight: 500;
@@ -237,10 +248,10 @@
   font-size: clamp(0.82rem, 0.95vw, 0.98rem);
 }
 
-.home-current-story small {
+.home-lobby .home-current-story small {
   display: block;
   margin-top: 5px;
-  color: var(--home-muted);
+  color: var(--lobby-muted);
   font-size: clamp(0.72rem, 0.82vw, 0.84rem);
 }
 
@@ -309,7 +320,7 @@
 
 .home-feature-kicker {
   grid-column: 1 / -1;
-  color: var(--home-gold);
+  color: var(--lobby-gold);
   font-size: 0.7rem;
   font-weight: 850;
   letter-spacing: 0.15em;
@@ -324,7 +335,7 @@
   align-self: end;
   border: 1px solid rgb(226 190 120 / 48%);
   border-radius: 50%;
-  color: var(--home-gold);
+  color: var(--lobby-gold);
   background: rgb(6 16 25 / 58%);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.4rem;
@@ -332,13 +343,13 @@
 
 .home-feature-card h2,
 .home-feature-card p,
-.home-feature-card small {
+.home-lobby .home-feature-card small {
   margin: 0;
 }
 
 .home-feature-current h2 {
   align-self: end;
-  color: var(--home-ivory);
+  color: var(--lobby-ivory);
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.45rem, 2vw, 2.05rem);
   font-weight: 500;
@@ -352,10 +363,10 @@
   font-size: 0.88rem;
 }
 
-.home-feature-current small {
+.home-lobby .home-feature-current small {
   grid-column: 2;
   margin-top: 4px;
-  color: var(--home-muted);
+  color: var(--lobby-muted);
   font-size: 0.75rem;
 }
 
@@ -378,7 +389,6 @@
   background: rgb(25 66 59 / 20%);
   font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
 }
 
 .home-feature-locked {
@@ -430,8 +440,9 @@
   display: flex;
   align-items: stretch;
   justify-content: center;
-  gap: 0;
-  padding: 0 max(var(--home-safe-x), env(safe-area-inset-right)) env(safe-area-inset-bottom) max(var(--home-safe-x), env(safe-area-inset-left));
+  padding-right: max(var(--lobby-safe-x), env(safe-area-inset-right));
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: max(var(--lobby-safe-x), env(safe-area-inset-left));
   border-top: 1px solid rgb(226 190 120 / 22%);
   background: linear-gradient(180deg, rgb(5 13 21 / 74%), rgb(4 10 16 / 94%));
   backdrop-filter: blur(14px);
@@ -463,18 +474,18 @@
   height: 30px;
   display: grid;
   place-items: center;
-  color: var(--home-gold);
+  color: var(--lobby-gold);
   font-size: 1rem;
 }
 
-.home-dock-item strong {
+.home-lobby .home-dock-item strong {
   font-size: 0.79rem;
   letter-spacing: 0.035em;
 }
 
 .home-dock-item.is-active {
   position: relative;
-  color: var(--home-ivory);
+  color: var(--lobby-ivory);
   background: linear-gradient(180deg, rgb(226 190 120 / 8%), transparent);
 }
 
@@ -484,12 +495,12 @@
   right: 18%;
   left: 18%;
   height: 2px;
-  background: var(--home-gold);
+  background: var(--lobby-gold);
   content: "";
 }
 
 button.home-dock-item:hover:not(:disabled) {
-  color: var(--home-ivory);
+  color: var(--lobby-ivory);
   background: rgb(226 190 120 / 7%);
 }
 
@@ -498,8 +509,7 @@ button.home-dock-item:disabled {
   opacity: 0.42;
 }
 
-.home-lobby button:focus-visible,
-.orientation-gate button:focus-visible {
+.home-lobby button:focus-visible {
   outline: 2px solid #9acbff;
   outline-offset: 3px;
 }
@@ -554,14 +564,13 @@ button.home-dock-item:disabled {
 }
 
 .orientation-device {
+  position: relative;
   width: 74px;
   height: 48px;
-  position: relative;
   margin-bottom: 10px;
   border: 2px solid #e2be78;
   border-radius: 8px;
   transform: rotate(-8deg);
-  box-shadow: inset 0 0 0 4px rgb(226 190 120 / 5%);
 }
 
 .orientation-device::after {
@@ -589,7 +598,7 @@ button.home-dock-item:disabled {
 
 @media (max-width: 1120px) and (orientation: landscape) {
   .home-lobby {
-    --home-safe-x: clamp(18px, 2.8vw, 30px);
+    --lobby-safe-x: clamp(18px, 2.8vw, 30px);
   }
 
   .home-lobby-field {
@@ -633,14 +642,14 @@ button.home-dock-item:disabled {
   .home-lobby-field {
     grid-template-columns: minmax(0, 1.75fr) minmax(218px, 0.82fr);
     gap: 12px;
-    padding: 12px 18px 12px;
+    padding: 12px 18px;
   }
 
   .home-stage-label {
     top: 0;
   }
 
-  .home-stage-label strong {
+  .home-lobby .home-stage-label strong {
     font-size: 1rem;
   }
 
@@ -665,7 +674,7 @@ button.home-dock-item:disabled {
     font-size: 0.72rem;
   }
 
-  .home-current-story small {
+  .home-lobby .home-current-story small {
     margin-top: 2px;
     font-size: 0.66rem;
   }
@@ -694,7 +703,7 @@ button.home-dock-item:disabled {
   }
 
   .home-feature-current p,
-  .home-feature-current small,
+  .home-lobby .home-feature-current small,
   .home-feature-rule,
   .home-feature-current .home-feature-state {
     display: none;
@@ -745,10 +754,8 @@ button.home-dock-item:disabled {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-lobby *,
-  .orientation-gate * {
-    scroll-behavior: auto !important;
-    transition: none !important;
-    animation: none !important;
+  .home-lobby,
+  .orientation-gate {
+    scroll-behavior: auto;
   }
 }
