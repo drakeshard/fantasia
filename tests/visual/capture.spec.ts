@@ -117,6 +117,17 @@ async function captureChapterGeometry(page: Page, testInfo: TestInfo) {
   ]);
 }
 
+async function captureStoryGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "story-geometry.json", [
+    ".story-screen",
+    ".story-hud",
+    ".story-stage",
+    ".story-scene-context",
+    ".story-caption",
+    ".story-controls",
+  ]);
+}
+
 async function captureBattleGeometry(page: Page, testInfo: TestInfo) {
   await captureGeometry(page, testInfo, "battle-geometry.json", [
     ".battle-screen",
@@ -158,6 +169,12 @@ test("capture controlled player-facing UI for review", async ({ page }, testInfo
   await expect(page.locator(".campaign-node").first()).toBeVisible();
   await captureViewport(page, testInfo, "chapter");
   await captureChapterGeometry(page, testInfo);
+
+  await page.getByRole("button", { name: "View story", exact: true }).click();
+  await expect(page.getByRole("main", { name: "Story playback" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "The Other Side", exact: true })).toBeVisible();
+  await captureViewport(page, testInfo, "story");
+  await captureStoryGeometry(page, testInfo);
 
   await page.goto("/?dev=battle");
   await expect(page.getByRole("main").locator(".battle-stage")).toBeVisible();
