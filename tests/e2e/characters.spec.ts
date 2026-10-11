@@ -32,9 +32,11 @@ test("Characters exposes only production-safe protagonist facts and returns Home
   }
 
   await page.getByRole("button", { name: "Settings", exact: true }).click();
-  await expect(page.getByRole("dialog", { name: "Settings", exact: true })).toBeVisible();
+  const settingsDialog = page.getByRole("dialog", { name: "Settings", exact: true });
+  await expect(settingsDialog).toBeVisible();
+  await expect(settingsDialog.getByRole("button", { name: "Close", exact: true })).toBeFocused();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog", { name: "Settings", exact: true })).toHaveCount(0);
+  await expect(settingsDialog).toHaveCount(0);
 
   const viewportWidth = page.viewportSize()?.width ?? 0;
   const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
