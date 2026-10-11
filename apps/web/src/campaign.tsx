@@ -1,9 +1,8 @@
 import { CampaignSession, type CampaignStageView, type CampaignView } from "@fantasia/runtime";
-import { useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { useMemo, useRef, useState } from "preact/hooks";
+import { GameButton } from "./game-controls.js";
 import "./campaign.css";
 import "./campaign-camera.css";
-
-type CampaignScreen = "overview" | "chapter";
 
 type CameraSnapshot = Readonly<{
   zoom: number;
@@ -115,17 +114,21 @@ function StageInspector({
         ) : null}
         {unavailableReason ? <p class="entry-reason">{unavailableReason}</p> : null}
       </div>
-      <button type="button" class="ui-button primary campaign-enter" onClick={onEnter}>
+      <GameButton
+        tone="primary"
+        icon={stage.kind === "battle" ? "campaign" : "forward"}
+        class="campaign-enter"
+        onClick={onEnter}
+      >
         {stage.kind === "battle" ? "Enter battle" : "View story"}
-      </button>
+      </GameButton>
     </aside>
   );
 }
 
-export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => void }) {
+export function CampaignApp() {
   const session = useMemo(() => new CampaignSession(), []);
   const [view, setView] = useState<CampaignView>(() => session.view());
-  const [screen, setScreen] = useState<CampaignScreen>("chapter");
   const [message, setMessage] = useState("Select a stage to inspect it before entry.");
   const [stageListOpen, setStageListOpen] = useState(true);
   const [zoom, setZoom] = useState(MIN_MAP_ZOOM);
@@ -133,40 +136,11 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
   const viewportRef = useRef<HTMLDivElement>(null);
   const cameraRef = useRef<CameraSnapshot>({ zoom: MIN_MAP_ZOOM, left: 0, top: 0 });
   const camerasByChapter = useRef(new Map<string, CameraSnapshot>());
-  const pendingRestore = useRef(false);
   const pointers = useRef(new Map<number, PointerPoint>());
   const dragState = useRef<DragState>();
   const pinchState = useRef<PinchState>();
   const suppressClick = useRef(false);
   const selectedStage = view.stages.find((stage) => stage.id === view.selectedStageId);
-
-  function rememberCamera(chapterId = view.selectedChapterId) {
-    const viewport = viewportRef.current;
-    const snapshot = viewport
-      ? { zoom, left: viewport.scrollLeft, top: viewport.scrollTop }
-      : cameraRef.current;
-    cameraRef.current = snapshot;
-    camerasByChapter.current.set(chapterId, snapshot);
-  }
-
-  function requestCameraRestore(snapshot: CameraSnapshot) {
-    cameraRef.current = snapshot;
-    pendingRestore.current = true;
-    setZoom(snapshot.zoom);
-  }
-
-  useEffect(() => {
-    if (screen !== "chapter" || !pendingRestore.current) return;
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const snapshot = cameraRef.current;
-    const frame = requestAnimationFrame(() => {
-      viewport.scrollLeft = snapshot.left;
-      viewport.scrollTop = snapshot.top;
-      pendingRestore.current = false;
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [screen, view.selectedChapterId, zoom]);
 
   function zoomAt(nextZoom: number, focalX?: number, focalY?: number) {
     const targetZoom = clampZoom(nextZoom);
@@ -196,58 +170,12 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
     });
   }
 
-  function selectChapter(chapterId: string) {
-    rememberCamera();
-    if (chapterId === view.selectedChapterId) {
-      requestCameraRestore(camerasByChapter.current.get(chapterId) ?? cameraRef.current);
-      setScreen("chapter");
-      setMessage(`${view.selectedChapterTitle} reopened with the previous map context.`);
-      return;
-    }
-
-    const next = session.selectChapter(chapterId);
-    if (!next) return;
-    setView(next);
-    requestCameraRestore(
-      camerasByChapter.current.get(next.selectedChapterId) ?? {
-        zoom: MIN_MAP_ZOOM,
-        left: 0,
-        top: 0,
-      },
-    );
-    setScreen("chapter");
-    setMessage(
-      next.stages.length > 0
-        ? `${next.selectedChapterTitle} opened. Select a stage to inspect it.`
-        : `${next.selectedChapterTitle} is known, but production stage content is not implemented yet.`,
-    );
-  }
-
   function selectStage(stageId: string) {
     const next = session.selectStage(stageId);
     if (!next) return;
     setView(next);
     const stage = next.stages.find((candidate) => candidate.id === next.selectedStageId);
     setMessage(stage ? `${stage.title} selected for inspection.` : "Stage selected.");
-  }
-
-  function showOverview() {
-    rememberCamera();
-    setScreen("overview");
-  }
-
-  function continueCurrent() {
-    const next = session.continueCurrent();
-    setView(next);
-    requestCameraRestore(
-      camerasByChapter.current.get(next.selectedChapterId) ?? {
-        zoom: MIN_MAP_ZOOM,
-        left: 0,
-        top: 0,
-      },
-    );
-    setScreen("chapter");
-    setMessage(`Continue restored ${next.selectedChapterTitle} and its current stage.`);
   }
 
   function enterSelected() {
@@ -383,92 +311,16 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
     }
   }
 
-  if (screen === "overview") {
-    return (
-      <main class="campaign-screen">
-        <section class="campaign-shell overview-shell">
-          <header class="campaign-header">
-            <button type="button" class="nav-button" disabled>
-              Back
-            </button>
-            <div class="campaign-title-block">
-              <span>FANTASIA / CAMPAIGN</span>
-              <h1>{view.sagaTitle}</h1>
-            </div>
-            <div class="campaign-header-actions">
-              <button type="button" class="nav-button" onClick={continueCurrent}>
-                Home
-              </button>
-            </div>
-          </header>
-
-          <section class="saga-overview-card">
-            <p class="hud-eyebrow">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
-            <h2>{view.sagaTitle}</h2>
-            <p>{view.sagaSynopsis}</p>
-            <button
-              type="button"
-              class="ui-button primary continue-button"
-              onClick={continueCurrent}
-            >
-              Continue chapter
-            </button>
-            <span>Resume your current journey</span>
-          </section>
-
-          <section class="chapter-selection" aria-label="Chapters">
-            <div class="section-heading">
-              <div>
-                <p class="hud-eyebrow">Chapters</p>
-                <h2>Choose a chapter</h2>
-              </div>
-              <button type="button" class="ui-button secondary" onClick={onOpenBattle}>
-                Development battle sandbox
-              </button>
-            </div>
-            <div class="chapter-grid">
-              {view.chapters.map((chapter) => (
-                <button
-                  type="button"
-                  class={`chapter-card${chapter.current ? " is-current" : ""}`}
-                  onClick={() => selectChapter(chapter.id)}
-                >
-                  <span>Chapter {String(chapter.sequence).padStart(2, "0")}</span>
-                  <strong>{chapter.title}</strong>
-                  <small>
-                    {chapter.current
-                      ? "Current chapter"
-                      : chapter.stageCount > 0
-                        ? `${chapter.stageCount} stages available`
-                        : "Production stages not implemented"}
-                  </small>
-                </button>
-              ))}
-            </div>
-          </section>
-        </section>
-      </main>
-    );
-  }
-
   return (
     <main class="campaign-screen">
       <section class="campaign-shell">
         <header class="campaign-header">
-          <button type="button" class="nav-button" onClick={showOverview}>
-            Back
-          </button>
           <div class="campaign-title-block">
             <span>
               {view.sagaTitle.toUpperCase()} / CHAPTER{" "}
               {String(view.selectedChapterSequence).padStart(2, "0")}
             </span>
             <h1>{view.selectedChapterTitle}</h1>
-          </div>
-          <div class="campaign-header-actions">
-            <button type="button" class="nav-button" onClick={showOverview}>
-              Home
-            </button>
           </div>
         </header>
 
@@ -480,28 +332,28 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
                 <p>{view.stages.length} permitted stages</p>
               </div>
               <div class="map-toolbar" role="toolbar" aria-label="Map controls">
-                <button
-                  type="button"
+                <GameButton
+                  tone="utility"
                   aria-label="Zoom out"
                   onClick={() => zoomAt(zoom - MAP_ZOOM_STEP)}
                   disabled={zoom <= MIN_MAP_ZOOM}
                 >
                   −
-                </button>
-                <button
-                  type="button"
+                </GameButton>
+                <GameButton
+                  tone="utility"
                   aria-label="Zoom in"
                   onClick={() => zoomAt(zoom + MAP_ZOOM_STEP)}
                   disabled={zoom >= MAX_MAP_ZOOM}
                 >
                   +
-                </button>
-                <button type="button" onClick={fitMap}>
+                </GameButton>
+                <GameButton tone="utility" onClick={fitMap}>
                   Fit
-                </button>
-                <button type="button" onClick={() => setStageListOpen((value) => !value)}>
-                  {stageListOpen ? "Hide stage list" : "Stage list"}
-                </button>
+                </GameButton>
+                <GameButton tone="utility" onClick={() => setStageListOpen((value) => !value)}>
+                  {stageListOpen ? "Hide stages" : "Stages"}
+                </GameButton>
               </div>
             </div>
 
@@ -630,10 +482,6 @@ export function CampaignApp({ onOpenBattle }: { readonly onOpenBattle: () => voi
 
           <StageInspector stage={selectedStage} onEnter={enterSelected} />
         </div>
-
-        <button type="button" class="sandbox-launch" onClick={onOpenBattle}>
-          Open development battle sandbox
-        </button>
       </section>
     </main>
   );
