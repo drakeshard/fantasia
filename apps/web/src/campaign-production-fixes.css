@@ -1,0 +1,84 @@
+/* GAME-UI17 interaction-safe overlay placement.
+ * Keep the semantic stage list useful without covering the primary map nodes.
+ */
+
+.campaign-rooted-shell .stage-list {
+  top: 88px;
+  right: 404px;
+  bottom: auto;
+  left: 16px;
+  width: auto;
+  max-height: 94px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.campaign-rooted-shell .stage-list-heading {
+  display: none;
+}
+
+.campaign-rooted-shell .stage-list-items {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+}
+
+.campaign-rooted-shell .stage-list-entry {
+  width: 202px;
+  min-width: 202px;
+  min-height: 58px;
+  align-content: center;
+  border-right: 1px solid rgb(226 190 120 / 9%);
+  border-bottom: 0;
+}
+
+@media (max-width: 1120px) and (min-height: 500px) {
+  .campaign-rooted-shell .stage-list {
+    right: 344px;
+    width: auto;
+  }
+}
+
+@media (max-width: 900px) and (min-height: 500px) and (orientation: landscape) {
+  .campaign-rooted-shell .stage-list {
+    right: 286px;
+    left: 10px;
+    width: auto;
+  }
+
+  .campaign-rooted-shell .stage-list-entry {
+    width: 184px;
+    min-width: 184px;
+  }
+}
+
+@media (max-height: 499px) and (orientation: landscape) {
+  .campaign-rooted-shell .campaign-map-heading > div:first-child {
+    display: block;
+    min-width: 86px;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading > div:first-child > p:last-child {
+    display: none;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading .hud-eyebrow {
+    font-size: 0.56rem;
+    white-space: nowrap;
+  }
+
+  .campaign-rooted-shell .stage-list {
+    top: auto;
+    right: 268px;
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    max-height: 106px;
+  }
+
+  .campaign-rooted-shell .stage-list-entry {
+    width: 186px;
+    min-width: 186px;
+    min-height: 52px;
+  }
+}
