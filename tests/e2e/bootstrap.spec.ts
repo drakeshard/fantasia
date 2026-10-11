@@ -44,7 +44,7 @@ async function openBattleSandbox(page: Page) {
   await expect(page.getByText("Defeat the opposing units", { exact: true })).toBeVisible();
 }
 
-test("home, saga and chapter navigation preserve truthful campaign entry", async ({
+test("home, saga, chapter and approved story navigation preserve truthful execution", async ({
   page,
 }, testInfo) => {
   await page.goto("/");
@@ -65,8 +65,22 @@ test("home, saga and chapter navigation preserve truthful campaign entry", async
   await expect(page.locator(".campaign-node")).toHaveCount(6);
   await expect(page.locator(".stage-list-entry")).toHaveCount(6);
 
-  await page.locator(".stage-list-entry").filter({ hasText: "Strangers on the Road" }).click();
   const inspector = page.locator(".campaign-inspector");
+  await expect(inspector.getByText("The Other Side", { exact: true })).toBeVisible();
+  await inspector.getByRole("button", { name: "View story", exact: true }).click();
+
+  await expect(page.getByRole("main", { name: "Story playback" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "The Other Side", exact: true })).toBeVisible();
+  await expect(
+    page.getByText("A sharp shimmer folds in on itself behind MC and vanishes.", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Player regains movement control", { exact: false })).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Back", exact: true }).click();
+  await expect(page.getByText("Loire approaches", { exact: true })).toBeVisible();
+  await expect(inspector.getByText("The Other Side", { exact: true })).toBeVisible();
+
+  await page.locator(".stage-list-entry").filter({ hasText: "Strangers on the Road" }).click();
   await expect(inspector.getByText("Strangers on the Road", { exact: true })).toBeVisible();
   await expect(
     inspector.getByText("Escort civilians and the supply cart to safety."),
@@ -75,11 +89,12 @@ test("home, saga and chapter navigation preserve truthful campaign entry", async
   await expect(
     page
       .getByText(
-        "Canonical story and battle execution is not implemented in the current production slice.",
+        "Canonical battle execution is unavailable until the reviewed CH01 encounter geometry and content are implemented.",
         { exact: true },
       )
       .last(),
   ).toBeVisible();
+  await expect(page.getByText("Defeat the opposing units", { exact: true })).toHaveCount(0);
 
   await page.getByRole("button", { name: "Back", exact: true }).click();
   await expect(page.getByRole("button", { name: /The Siege of Orléans/ })).toBeDisabled();
@@ -151,7 +166,7 @@ test("standardized Fantasia Battle HUD remains reachable through development que
   expect(sample.maxMs).toBeLessThan(500);
 });
 
-test("home, campaign and battle primary actions remain reachable at 200 percent interface text", async ({
+test("home, campaign, story and battle primary actions remain reachable at 200 percent interface text", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium-desktop", "Desktop text-scale proof only");
@@ -163,6 +178,9 @@ test("home, campaign and battle primary actions remain reachable at 200 percent 
   await page.getByRole("button", { name: "Continue current story", exact: true }).click();
   await expect(page.getByRole("button", { name: "Back", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Fit", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "View story", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Next", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Back", exact: true })).toBeVisible();
 
   let viewportWidth = page.viewportSize()?.width ?? 0;
   let bodyWidth = await page.evaluate(() => document.body.scrollWidth);

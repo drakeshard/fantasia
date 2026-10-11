@@ -126,7 +126,7 @@ function StageInspector({
   );
 }
 
-export function CampaignApp() {
+export function CampaignApp({ onEnterStory }: { readonly onEnterStory: (nodeId: string) => void }) {
   const session = useMemo(() => new CampaignSession(), []);
   const [view, setView] = useState<CampaignView>(() => session.view());
   const [message, setMessage] = useState("Select a stage to inspect it before entry.");
@@ -181,11 +181,16 @@ export function CampaignApp() {
   function enterSelected() {
     const result = session.enterSelectedStage();
     setView(result.view);
-    setMessage(
-      result.kind === "rejected"
-        ? result.reason
-        : `Stage entry accepted for ${result.destination}.`,
-    );
+    if (result.kind === "rejected") {
+      setMessage(result.reason);
+      return;
+    }
+    if (selectedStage?.kind !== "story") {
+      setMessage("This stage has no production execution route yet.");
+      return;
+    }
+    setMessage(`Opening ${selectedStage.title}.`);
+    onEnterStory(result.destination);
   }
 
   function fitMap() {
