@@ -1,6 +1,6 @@
 import { CampaignSession } from "@fantasia/runtime";
 import { useMemo } from "preact/hooks";
-import { GameButton } from "./game-controls.js";
+import { GameUtilityCluster } from "./game-controls.js";
 
 const UI_ASSET_ROOT = "/assets/ui/core";
 
@@ -19,9 +19,7 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
     <main class="campaign-screen saga-campaign-screen">
       <section class="campaign-shell saga-reference-screen saga-war-table">
         <header class="saga-top-hud">
-          <GameButton icon="home" compactLabel="Home" onClick={onHome} aria-label="Home">
-            Home
-          </GameButton>
+          <div class="saga-navigation-start" aria-hidden="true" />
 
           <div class="saga-title-lockup">
             <span class="saga-title-crest" aria-hidden="true">
@@ -33,15 +31,7 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
             </div>
           </div>
 
-          <GameButton
-            icon="settings"
-            compactLabel="Settings"
-            class="saga-settings-control"
-            onClick={(event) => onSettings(event.currentTarget)}
-            aria-label="Settings"
-          >
-            Settings
-          </GameButton>
+          <GameUtilityCluster onHome={onHome} onSettings={onSettings} class="saga-global-utilities" />
         </header>
 
         <div class="saga-war-table-body">
