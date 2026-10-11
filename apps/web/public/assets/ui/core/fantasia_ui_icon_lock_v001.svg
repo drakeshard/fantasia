@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <title>Unavailable</title>
+  <rect x="5.25" y="10.25" width="13.5" height="10" rx="2" stroke="#BBC6D2" stroke-width="1.45"/>
+  <path d="M8.25 10.25V7.8a3.75 3.75 0 0 1 7.5 0v2.45" stroke="#E2BE78" stroke-width="1.45" stroke-linecap="round"/>
+  <circle cx="12" cy="15.05" r="1.15" fill="#E2BE78"/>
+  <path d="M12 16.2v1.4" stroke="#E2BE78" stroke-width="1.15" stroke-linecap="round"/>
+</svg>
