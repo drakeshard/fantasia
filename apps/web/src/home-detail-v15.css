@@ -57,7 +57,13 @@
   padding-inline: max(var(--lobby-safe-x), env(safe-area-inset-left));
   border-bottom-color: rgb(226 190 120 / 27%);
   background:
-    linear-gradient(90deg, rgb(226 190 120 / 4%), transparent 24%, transparent 76%, rgb(226 190 120 / 3%)),
+    linear-gradient(
+      90deg,
+      rgb(226 190 120 / 4%),
+      transparent 24%,
+      transparent 76%,
+      rgb(226 190 120 / 3%)
+    ),
     linear-gradient(180deg, rgb(4 10 16 / 91%), rgb(4 10 16 / 58%));
   box-shadow: 0 8px 32px rgb(0 0 0 / 18%);
 }
@@ -68,7 +74,13 @@
   bottom: -1px;
   left: var(--lobby-safe-x);
   height: 1px;
-  background: linear-gradient(90deg, var(--lobby-gold), transparent 18%, transparent 82%, var(--lobby-gold));
+  background: linear-gradient(
+    90deg,
+    var(--lobby-gold),
+    transparent 18%,
+    transparent 82%,
+    var(--lobby-gold)
+  );
   content: "";
   opacity: 0.28;
 }
@@ -128,7 +140,9 @@
 .home-status-dot {
   width: 5px;
   height: 5px;
-  box-shadow: 0 0 0 3px rgb(226 190 120 / 10%), 0 0 12px rgb(226 190 120 / 35%);
+  box-shadow:
+    0 0 0 3px rgb(226 190 120 / 10%),
+    0 0 12px rgb(226 190 120 / 35%);
 }
 
 .home-lobby-field {
@@ -173,7 +187,9 @@
   background:
     radial-gradient(circle at 13% 50%, rgb(226 190 120 / 7%), transparent 24%),
     linear-gradient(105deg, rgb(7 18 28 / 95%), rgb(8 20 30 / 88%) 64%, rgb(7 18 28 / 73%));
-  box-shadow: var(--lobby-shadow-deep), inset 0 0 0 1px var(--lobby-panel-inner);
+  box-shadow:
+    var(--lobby-shadow-deep),
+    inset 0 0 0 1px var(--lobby-panel-inner);
   backdrop-filter: blur(13px);
 }
 
@@ -266,7 +282,10 @@
     inset 0 -1px rgb(93 58 15 / 34%),
     0 11px 28px rgb(0 0 0 / 30%);
   letter-spacing: 0.015em;
-  transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease,
+    box-shadow 120ms ease;
 }
 
 .home-current-story-continue::before {
@@ -289,7 +308,9 @@
 
 .home-current-story-continue:active {
   transform: translateY(1px);
-  box-shadow: inset 0 2px 5px rgb(83 49 10 / 24%), 0 5px 14px rgb(0 0 0 / 26%);
+  box-shadow:
+    inset 0 2px 5px rgb(83 49 10 / 24%),
+    0 5px 14px rgb(0 0 0 / 26%);
 }
 
 .home-current-story-continue:focus-visible,
@@ -309,7 +330,9 @@
   background:
     linear-gradient(145deg, rgb(226 190 120 / 3%), transparent 27%),
     linear-gradient(150deg, rgb(8 20 30 / 91%), rgb(6 15 24 / 78%));
-  box-shadow: var(--lobby-shadow-soft), inset 0 0 0 1px rgb(244 240 231 / 3%);
+  box-shadow:
+    var(--lobby-shadow-soft),
+    inset 0 0 0 1px rgb(244 240 231 / 3%);
 }
 
 .home-feature-card::before {
@@ -319,7 +342,8 @@
   width: 30px;
   height: 30px;
   background: var(--lobby-gold);
-  -webkit-mask: url("/assets/ui/fantasia_ui_ornament_corner_default_v001.svg") center / contain no-repeat;
+  -webkit-mask:
+    url("/assets/ui/fantasia_ui_ornament_corner_default_v001.svg") center / contain no-repeat;
   mask: url("/assets/ui/fantasia_ui_ornament_corner_default_v001.svg") center / contain no-repeat;
   transform: rotate(180deg);
   opacity: 0.18;
@@ -477,8 +501,7 @@
   border: 1px solid rgb(226 190 120 / 30%);
   border-bottom-color: rgb(226 190 120 / 46%);
   border-radius: 4px;
-  background:
-    linear-gradient(180deg, rgb(19 35 48 / 91%), rgb(7 16 24 / 95%));
+  background: linear-gradient(180deg, rgb(19 35 48 / 91%), rgb(7 16 24 / 95%));
   box-shadow:
     0 16px 36px rgb(0 0 0 / 36%),
     inset 0 0 0 1px rgb(244 240 231 / 4%);
@@ -492,7 +515,8 @@
   width: 34px;
   height: 34px;
   background: var(--lobby-gold);
-  -webkit-mask: url("/assets/ui/fantasia_ui_ornament_corner_default_v001.svg") center / contain no-repeat;
+  -webkit-mask:
+    url("/assets/ui/fantasia_ui_ornament_corner_default_v001.svg") center / contain no-repeat;
   mask: url("/assets/ui/fantasia_ui_ornament_corner_default_v001.svg") center / contain no-repeat;
   opacity: 0.23;
   content: "";
@@ -522,7 +546,10 @@
   border-radius: 2px;
   color: rgb(187 198 210 / 78%);
   background: transparent;
-  transition: color 120ms ease, background 120ms ease, transform 120ms ease;
+  transition:
+    color 120ms ease,
+    background 120ms ease,
+    transform 120ms ease;
 }
 
 .home-dock-item:last-child {
