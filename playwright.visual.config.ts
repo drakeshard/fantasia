@@ -16,10 +16,7 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   outputDir: "test-results-visual",
-  reporter: [
-    ["list"],
-    ["html", { outputFolder: "playwright-visual-report", open: "never" }],
-  ],
+  reporter: [["list"], ["html", { outputFolder: "playwright-visual-report", open: "never" }]],
   use: {
     baseURL: "http://127.0.0.1:4173",
     browserName: "chromium",
