@@ -84,15 +84,38 @@
   }
 
   .home-lobby-hud .game-control.has-compact-label .game-control-label,
-  .characters-hud .game-control.has-compact-label .game-control-label,
-  .story-hud .game-control.has-compact-label .game-control-label {
+  .characters-hud .game-control.has-compact-label .game-control-label {
     display: none;
   }
 
   .home-lobby-hud .game-control.has-compact-label .game-control-compact-label,
-  .characters-hud .game-control.has-compact-label .game-control-compact-label,
-  .story-hud .game-control.has-compact-label .game-control-compact-label {
+  .characters-hud .game-control.has-compact-label .game-control-compact-label {
     display: inline;
+  }
+
+  .story-hud {
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+  }
+
+  .story-hud .game-global-utilities {
+    flex: 0 0 auto;
+  }
+
+  .story-hud .game-global-utilities .game-control {
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+  }
+
+  .story-hud .game-global-utilities .game-control-label,
+  .story-hud .game-global-utilities .game-control-compact-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .saga-top-hud {
