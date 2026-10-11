@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("Characters exposes only production-safe protagonist facts and returns Home", async ({ page }, testInfo) => {
+test("Characters exposes only production-safe protagonist facts and returns Home", async ({
+  page,
+}, testInfo) => {
   await page.goto("/");
   await expect(page.getByRole("main", { name: "Fantasia home" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Characters", exact: true })).toBeVisible();
@@ -19,7 +21,13 @@ test("Characters exposes only production-safe protagonist facts and returns Home
   for (const unrevealedName of ["Julie", "Hangaku", "La Hire", "Jeanne"]) {
     await expect(page.getByText(new RegExp(unrevealedName, "i"))).toHaveCount(0);
   }
-  for (const unavailableField of ["Level", "Rarity", "Equipment", "Physical Power", "Magical Power"]) {
+  for (const unavailableField of [
+    "Level",
+    "Rarity",
+    "Equipment",
+    "Physical Power",
+    "Magical Power",
+  ]) {
     await expect(page.getByText(unavailableField, { exact: true })).toHaveCount(0);
   }
 
