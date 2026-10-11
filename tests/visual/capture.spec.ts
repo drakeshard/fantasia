@@ -117,6 +117,20 @@ async function captureChapterGeometry(page: Page, testInfo: TestInfo) {
   ]);
 }
 
+async function captureBattleGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "battle-geometry.json", [
+    ".battle-screen",
+    ".battle-stage",
+    ".pixi-battlefield",
+    ".battle-statusbar",
+    ".active-unit-card",
+    ".turn-order-card",
+    ".command-preview",
+    ".battle-actionbar",
+    ".unit-details-sheet",
+  ]);
+}
+
 test("capture controlled player-facing UI for review", async ({ page }, testInfo) => {
   await page.goto("/");
   const viewport = page.viewportSize();
@@ -144,6 +158,12 @@ test("capture controlled player-facing UI for review", async ({ page }, testInfo
   await expect(page.locator(".campaign-node").first()).toBeVisible();
   await captureViewport(page, testInfo, "chapter");
   await captureChapterGeometry(page, testInfo);
+
+  await page.goto("/?dev=battle");
+  await expect(page.getByRole("main").locator(".battle-stage")).toBeVisible();
+  await expect(page.getByTestId("production-battlefield")).toBeVisible();
+  await captureViewport(page, testInfo, "battle");
+  await captureBattleGeometry(page, testInfo);
 
   await page.goto("/");
   await page.getByRole("button", { name: "Settings", exact: true }).click();
