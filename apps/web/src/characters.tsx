@@ -42,13 +42,13 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
       </header>
 
       <section class="characters-layout" aria-label="Character archive">
-        <aside class="characters-roster" aria-label="Available character entries">
+        <aside class="characters-roster" aria-label="Known character entries">
           <div class="characters-section-title">
-            <small>Available now</small>
-            <strong>Known characters</strong>
+            <small>Known now</small>
+            <strong>Character archive</strong>
           </div>
 
-          <button type="button" class="character-card is-selected" aria-pressed="true">
+          <div class="character-card is-selected">
             <span class="character-card-crest" aria-hidden="true">
               <CharactersIcon src="fantasia_ui_brand_crest_v001.svg" />
             </span>
@@ -56,15 +56,15 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
               <strong>Traveler</strong>
               <small>Protagonist · Infantry</small>
             </span>
-            <span class="character-card-state">Current</span>
-          </button>
+            <span class="character-card-state">Known</span>
+          </div>
 
           <div class="characters-roster-note">
             <span class="characters-note-mark" aria-hidden="true">+</span>
             <span>
-              <strong>More entries appear through the story.</strong>
+              <strong>More entries can be revealed through the story.</strong>
               <small>
-                Future characters stay hidden here until production progression can reveal them safely.
+                Future characters stay hidden here until production story state can reveal them safely.
               </small>
             </span>
           </div>
