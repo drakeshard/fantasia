@@ -292,14 +292,6 @@
   pointer-events: auto;
 }
 
-.saga-top-hud.game-screen-header {
-  padding-inline: clamp(16px, 2vw, 28px);
-}
-
-.saga-top-hud.game-screen-header .game-screen-title-lockup h1 {
-  max-width: min(46vw, 620px);
-}
-
 .saga-current-mission .game-control-primary {
   width: 100%;
   justify-content: space-between;
@@ -350,6 +342,24 @@
   .game-control-icon {
     width: 20px;
     height: 20px;
+  }
+
+  .saga-top-hud .game-control {
+    width: 46px;
+    min-width: 46px;
+    min-height: 46px;
+    padding: 0;
+  }
+
+  .saga-top-hud .game-control-label,
+  .saga-top-hud .game-control-compact-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .campaign-root-navigation.game-navigation-cluster {
