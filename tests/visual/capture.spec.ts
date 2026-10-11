@@ -1,6 +1,6 @@
-import { expect, type Page, test, type TestInfo } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { expect, type Page, type TestInfo, test } from "@playwright/test";
 
 const artifactRoot = path.resolve("visual-artifacts");
 
@@ -17,7 +17,9 @@ async function waitForVisualStability(page: Page) {
         });
       }),
     );
-    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
   });
 }
 
@@ -82,7 +84,10 @@ async function captureHomeGeometry(page: Page, testInfo: TestInfo) {
   });
 
   const directory = await projectDirectory(testInfo);
-  await writeFile(path.join(directory, "home-geometry.json"), `${JSON.stringify(geometry, null, 2)}\n`);
+  await writeFile(
+    path.join(directory, "home-geometry.json"),
+    `${JSON.stringify(geometry, null, 2)}\n`,
+  );
 }
 
 test("capture controlled player-facing UI for review", async ({ page }, testInfo) => {
