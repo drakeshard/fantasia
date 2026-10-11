@@ -45,13 +45,12 @@ async function captureHomeGeometry(page: Page, testInfo: TestInfo) {
   const geometry = await page.evaluate(() => {
     const selectors = [
       ".home-screen",
-      ".home-topbar",
-      ".home-main-layout",
-      ".home-hero-copy",
-      ".home-hero-title",
-      ".home-story-card",
-      ".home-command-column",
-      ".home-footer",
+      ".home-lobby-hud",
+      ".home-lobby-field",
+      ".home-lobby-stage",
+      ".home-current-story",
+      ".home-feature-rail",
+      ".home-game-dock",
     ];
 
     const regions = Object.fromEntries(
@@ -92,6 +91,16 @@ async function captureHomeGeometry(page: Page, testInfo: TestInfo) {
 
 test("capture controlled player-facing UI for review", async ({ page }, testInfo) => {
   await page.goto("/");
+  const viewport = page.viewportSize();
+  const portrait = Boolean(viewport && viewport.height > viewport.width);
+
+  if (portrait) {
+    await expect(page.getByRole("main", { name: "Landscape orientation required" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Rotate your device" })).toBeVisible();
+    await captureViewport(page, testInfo, "orientation-gate");
+    return;
+  }
+
   await expect(page.getByRole("main", { name: "Fantasia home" })).toBeVisible();
   await captureViewport(page, testInfo, "home");
   await captureHomeGeometry(page, testInfo);

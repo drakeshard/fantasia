@@ -13,8 +13,8 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
   const currentStage = view.stages.find((stage) => stage.current) ?? view.stages[0];
 
   return (
-    <main class="home-screen" aria-label="Fantasia home">
-      <header class="home-topbar">
+    <main class="home-screen home-lobby" aria-label="Fantasia home">
+      <header class="home-lobby-hud">
         <div class="home-wordmark">
           <span class="home-wordmark-mark" aria-hidden="true">
             <span>✦</span>
@@ -24,38 +24,28 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
             <small>Chronicles beyond the fracture</small>
           </span>
         </div>
-        <div class="home-top-actions">
-          <span class="fantasia-chip">Story campaign</span>
-          <button
-            type="button"
-            class="home-top-action"
-            disabled
-            title="Account services are not implemented"
-          >
-            Account —
-          </button>
+        <div class="home-lobby-status">
+          <span class="home-status-dot" aria-hidden="true" />
+          <span>Story campaign</span>
         </div>
       </header>
 
-      <div class="home-main-layout">
-        <section class="home-hero-copy" aria-labelledby="home-hero-title">
-          <p class="home-kicker fantasia-ornament">Current journey</p>
-          <h1 id="home-hero-title" class="home-hero-title">
-            <span>Step beyond</span>
-            <em>history.</em>
-          </h1>
-          <p class="home-hero-lede">
-            Follow the current campaign, review the active saga, and return to the chapter exactly
-            where you left it.
-          </p>
+      <div class="home-lobby-field">
+        <section class="home-lobby-stage" aria-label="Current journey">
+          <div class="home-stage-label">
+            <span>Current journey</span>
+            <strong>{view.sagaTitle}</strong>
+          </div>
 
-          <section class="home-story-card" aria-label="Continue current story">
-            <div class="home-story-seal" aria-hidden="true">
+          <section class="home-current-story" aria-label="Continue current story">
+            <div class="home-current-story-mark" aria-hidden="true">
               {view.sagaSequence}
             </div>
-            <div class="home-story-copy">
-              <p class="home-kicker">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
-              <h2>{view.sagaTitle}</h2>
+            <div class="home-current-story-copy">
+              <span class="home-current-story-kicker">
+                Saga {String(view.sagaSequence).padStart(2, "0")}
+              </span>
+              <h1>{view.sagaTitle}</h1>
               <p>
                 Chapter {String(view.selectedChapterSequence).padStart(2, "0")} ·{" "}
                 {view.selectedChapterTitle}
@@ -64,7 +54,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
             </div>
             <button
               type="button"
-              class="home-story-continue"
+              class="home-current-story-continue"
               aria-label="Continue current story"
               onClick={onContinue}
             >
@@ -74,63 +64,60 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
           </section>
         </section>
 
-        <aside class="home-command-column" aria-label="Main menu">
-          <div class="home-command-heading">
-            <div>
-              <p class="home-kicker">Main menu</p>
-              <h2>Choose your path</h2>
+        <aside class="home-feature-rail" aria-label="Home highlights">
+          <section class="home-feature-card home-feature-current">
+            <span class="home-feature-kicker">Current Saga</span>
+            <div class="home-feature-emblem" aria-hidden="true">
+              I
             </div>
-            <p>Player-facing systems only</p>
-          </div>
+            <h2>{view.sagaTitle}</h2>
+            <p>{view.selectedChapterTitle}</p>
+            {currentStage ? <small>{currentStage.title}</small> : null}
+            <div class="home-feature-rule" aria-hidden="true" />
+            <span class="home-feature-state">Campaign ready</span>
+          </section>
 
-          <nav class="home-primary-nav" aria-label="Primary navigation">
-            <button type="button" aria-label="Campaign" onClick={onCampaign}>
-              <span aria-hidden="true">▤</span>
-              <span class="home-nav-copy">
-                <strong>Campaign</strong>
-                <small>Review Saga I and choose the current chapter.</small>
-              </span>
-              <span class="home-nav-arrow" aria-hidden="true">
-                ›
-              </span>
-            </button>
-            <button
-              type="button"
-              aria-label="Summon"
-              disabled
-              title="Summon is not implemented yet"
-            >
-              <span aria-hidden="true">✦</span>
-              <span class="home-nav-copy">
-                <strong>Summon</strong>
-                <small>Unavailable until its gameplay systems exist.</small>
-              </span>
-              <span class="home-nav-arrow" aria-hidden="true">
-                —
-              </span>
-            </button>
-            <button
-              type="button"
-              aria-label="Settings"
-              onClick={(event) => onSettings(event.currentTarget)}
-            >
-              <span aria-hidden="true">⚙</span>
-              <span class="home-nav-copy">
-                <strong>Settings</strong>
-                <small>Interface scale, motion, and campaign labels.</small>
-              </span>
-              <span class="home-nav-arrow" aria-hidden="true">
-                ›
-              </span>
-            </button>
-          </nav>
+          <section class="home-feature-card home-feature-locked" aria-label="Summon unavailable">
+            <span class="home-feature-kicker">Summon</span>
+            <div class="home-feature-emblem summon" aria-hidden="true">
+              ✦
+            </div>
+            <h2>Summon</h2>
+            <p>Character summoning is not available in this production slice.</p>
+            <span class="home-feature-state unavailable">Unavailable</span>
+          </section>
         </aside>
       </div>
 
-      <footer class="home-footer">
-        <strong>{view.sagaTitle}</strong>
-        <span>Current production campaign · interface-only presentation</span>
-      </footer>
+      <nav class="home-game-dock" aria-label="Primary navigation">
+        <span class="home-dock-item is-active" aria-current="page">
+          <span aria-hidden="true">⌂</span>
+          <strong>Home</strong>
+        </span>
+        <button type="button" class="home-dock-item" aria-label="Campaign" onClick={onCampaign}>
+          <span aria-hidden="true">▤</span>
+          <strong>Campaign</strong>
+        </button>
+        <button
+          type="button"
+          class="home-dock-item"
+          aria-label="Summon"
+          disabled
+          title="Summon is not implemented yet"
+        >
+          <span aria-hidden="true">✦</span>
+          <strong>Summon</strong>
+        </button>
+        <button
+          type="button"
+          class="home-dock-item"
+          aria-label="Settings"
+          onClick={(event) => onSettings(event.currentTarget)}
+        >
+          <span aria-hidden="true">⚙</span>
+          <strong>Settings</strong>
+        </button>
+      </nav>
     </main>
   );
 }

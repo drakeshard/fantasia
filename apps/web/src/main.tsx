@@ -22,6 +22,7 @@ import "./detail-polish-fixes.css";
 import "./art-integration.css";
 import "./home-reference.css";
 import "./home-fidelity.css";
+import "./home-lobby.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
@@ -37,6 +38,25 @@ function initialScreen(): AppScreen {
   return new URLSearchParams(window.location.search).get("dev") === "battle" ? "battle" : "home";
 }
 
+function isLandscapeViewport() {
+  return window.innerWidth >= window.innerHeight;
+}
+
+function OrientationGate() {
+  return (
+    <main class="orientation-gate" aria-label="Landscape orientation required">
+      <div class="orientation-gate-card">
+        <div class="orientation-device" aria-hidden="true">
+          <span />
+        </div>
+        <p>Fantasia is designed for a wide battlefield view.</p>
+        <h1>Rotate your device</h1>
+        <p class="orientation-gate-detail">Landscape orientation is required to continue.</p>
+      </div>
+    </main>
+  );
+}
+
 function App() {
   const initialPreferences = loadUiPreferences(browserStorage());
   const [screen, setScreen] = useState<AppScreen>(() => initialScreen());
@@ -45,11 +65,22 @@ function App() {
     initialPreferences.message,
   );
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [landscape, setLandscape] = useState(() => isLandscapeViewport());
   const settingsTrigger = useRef<HTMLElement>();
 
   useEffect(() => {
     applyUiPreferences(preferences);
   }, [preferences]);
+
+  useEffect(() => {
+    const updateOrientation = () => setLandscape(isLandscapeViewport());
+    window.addEventListener("resize", updateOrientation);
+    window.addEventListener("orientationchange", updateOrientation);
+    return () => {
+      window.removeEventListener("resize", updateOrientation);
+      window.removeEventListener("orientationchange", updateOrientation);
+    };
+  }, []);
 
   function openSettings(trigger: HTMLElement) {
     settingsTrigger.current = trigger;
@@ -78,6 +109,8 @@ function App() {
     const result = saveUiPreferences(browserStorage(), preferences);
     setStorageMessage(result.message ?? "Interface preferences are saved in this browser.");
   }
+
+  if (!landscape) return <OrientationGate />;
 
   return (
     <>
