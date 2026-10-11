@@ -1,0 +1,374 @@
+/* GAME-UI19 — reusable Fantasia navigation/control grammar.
+ * Title-local presentation only: semantic navigation and campaign commands remain owned by callers.
+ */
+
+.game-control {
+  --game-control-border: rgb(226 190 120 / 30%);
+  --game-control-border-strong: rgb(226 190 120 / 66%);
+  --game-control-surface-top: rgb(24 43 57 / 96%);
+  --game-control-surface-bottom: rgb(7 17 25 / 98%);
+
+  position: relative;
+  min-width: 44px;
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  overflow: hidden;
+  border: 1px solid var(--game-control-border);
+  border-radius: 3px;
+  color: rgb(244 240 231 / 92%);
+  background:
+    linear-gradient(135deg, transparent 0 8px, rgb(226 190 120 / 7%) 8px 9px, transparent 9px),
+    linear-gradient(180deg, var(--game-control-surface-top), var(--game-control-surface-bottom));
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 5%),
+    inset 0 -1px rgb(226 190 120 / 5%),
+    0 9px 20px rgb(0 0 0 / 26%);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.game-control::after {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid rgb(226 190 120 / 36%);
+  border-bottom: 1px solid rgb(226 190 120 / 36%);
+  pointer-events: none;
+  content: "";
+}
+
+.game-control:hover:not(:disabled) {
+  border-color: var(--game-control-border-strong);
+  background:
+    linear-gradient(135deg, transparent 0 8px, rgb(226 190 120 / 13%) 8px 9px, transparent 9px),
+    linear-gradient(180deg, rgb(34 58 75 / 98%), rgb(9 22 32 / 98%));
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 7%),
+    0 10px 24px rgb(0 0 0 / 30%);
+}
+
+.game-control:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 8px rgb(0 0 0 / 28%),
+    0 5px 13px rgb(0 0 0 / 24%);
+}
+
+.game-control:focus-visible {
+  outline: 2px solid #9acbff;
+  outline-offset: 2px;
+}
+
+.game-control:disabled {
+  border-color: rgb(113 131 148 / 18%);
+  color: rgb(187 198 210 / 42%);
+  background: linear-gradient(180deg, rgb(22 33 43 / 72%), rgb(10 18 25 / 76%));
+  box-shadow: inset 0 1px rgb(255 255 255 / 2%);
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.game-control-icon {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+}
+
+.game-control-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.game-control-icon.is-back img {
+  transform: rotate(180deg);
+}
+
+.game-control-label {
+  white-space: nowrap;
+}
+
+.game-control-compact-label {
+  display: none;
+}
+
+.game-control-primary {
+  min-height: 52px;
+  border-color: #efd08b;
+  color: #18202a;
+  background:
+    linear-gradient(135deg, transparent 0 9px, rgb(255 255 255 / 20%) 9px 10px, transparent 10px),
+    linear-gradient(180deg, #f0d493, #d9ad58);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 34%),
+    0 11px 26px rgb(0 0 0 / 28%);
+}
+
+.game-control-primary:hover:not(:disabled) {
+  border-color: #f6dda7;
+  background:
+    linear-gradient(135deg, transparent 0 9px, rgb(255 255 255 / 24%) 9px 10px, transparent 10px),
+    linear-gradient(180deg, #f5dca1, #dfb761);
+}
+
+.game-control-primary .game-control-icon {
+  filter: brightness(0.45) saturate(0.7);
+}
+
+.game-control-utility {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 11px;
+  gap: 6px;
+  font-size: 0.72rem;
+}
+
+.game-screen-header {
+  position: relative;
+  z-index: 30;
+  min-height: 72px;
+  height: 72px;
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(0, auto) minmax(180px, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 8px 18px;
+  border-bottom: 1px solid rgb(226 190 120 / 20%);
+  background: linear-gradient(180deg, rgb(5 12 18 / 98%), rgb(7 17 25 / 94%));
+  box-shadow: 0 8px 26px rgb(0 0 0 / 24%);
+}
+
+.game-screen-header-start,
+.game-screen-header-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.game-screen-header-end {
+  justify-content: flex-end;
+}
+
+.game-screen-title-lockup {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.game-screen-title-lockup > div {
+  min-width: 0;
+}
+
+.game-screen-title-lockup span:not(.game-screen-title-crest) {
+  display: block;
+  color: rgb(226 190 120 / 82%);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.game-screen-title-lockup h1 {
+  max-width: min(48vw, 660px);
+  margin: 3px 0 0;
+  overflow: hidden;
+  color: #fff4dc;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-weight: 500;
+  line-height: 1.04;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 45%);
+}
+
+.game-screen-title-crest {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+}
+
+.game-screen-title-crest img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Chapter map utilities share the same component grammar even while campaign.tsx
+ * retains the existing semantic toolbar markup and camera behavior.
+ */
+.campaign-rooted-shell .map-toolbar button {
+  position: relative;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 11px;
+  overflow: hidden;
+  border: 1px solid rgb(226 190 120 / 30%);
+  border-radius: 3px;
+  color: rgb(244 240 231 / 92%);
+  background:
+    linear-gradient(135deg, transparent 0 7px, rgb(226 190 120 / 7%) 7px 8px, transparent 8px),
+    linear-gradient(180deg, rgb(24 43 57 / 94%), rgb(7 17 25 / 96%));
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 5%),
+    0 8px 18px rgb(0 0 0 / 23%);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    transform 120ms ease;
+}
+
+.campaign-rooted-shell .map-toolbar button:hover:not(:disabled) {
+  border-color: rgb(226 190 120 / 66%);
+  background:
+    linear-gradient(135deg, transparent 0 7px, rgb(226 190 120 / 13%) 7px 8px, transparent 8px),
+    linear-gradient(180deg, rgb(34 58 75 / 98%), rgb(9 22 32 / 98%));
+}
+
+.campaign-rooted-shell .map-toolbar button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.campaign-rooted-shell .map-toolbar button:focus-visible {
+  outline: 2px solid #9acbff;
+  outline-offset: 2px;
+}
+
+.campaign-rooted-shell .map-toolbar button:disabled {
+  border-color: rgb(113 131 148 / 18%);
+  color: rgb(187 198 210 / 42%);
+  background: linear-gradient(180deg, rgb(22 33 43 / 72%), rgb(10 18 25 / 76%));
+  cursor: not-allowed;
+}
+
+/* Root Chapter navigation becomes a single authored HUD object instead of three
+ * unrelated browser buttons floating above the map.
+ */
+.campaign-root-navigation.game-navigation-cluster {
+  z-index: 60;
+  top: 13px;
+  left: 18px;
+  right: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.campaign-root-navigation .game-navigation-start,
+.campaign-root-navigation .game-navigation-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.campaign-root-navigation .game-navigation-end {
+  justify-content: flex-end;
+}
+
+.campaign-root-navigation .game-control {
+  pointer-events: auto;
+}
+
+.saga-top-hud.game-screen-header {
+  padding-inline: clamp(16px, 2vw, 28px);
+}
+
+.saga-top-hud.game-screen-header .game-screen-title-lockup h1 {
+  max-width: min(46vw, 620px);
+}
+
+.saga-current-mission .game-control-primary {
+  width: 100%;
+  justify-content: space-between;
+  padding-inline: 16px 12px;
+}
+
+@media (max-height: 499px) {
+  .game-screen-header {
+    min-height: 54px;
+    height: 54px;
+    grid-template-columns: minmax(100px, 1fr) minmax(0, auto) minmax(100px, 1fr);
+    gap: 8px;
+    padding: 4px 10px;
+  }
+
+  .game-screen-header .game-control,
+  .campaign-root-navigation .game-control {
+    min-height: 44px;
+    padding-inline: 10px;
+  }
+
+  .game-screen-title-lockup {
+    gap: 6px;
+  }
+
+  .game-screen-title-crest {
+    width: 26px;
+    height: 26px;
+  }
+
+  .game-screen-title-lockup span:not(.game-screen-title-crest) {
+    font-size: 0.52rem;
+  }
+
+  .game-screen-title-lockup h1 {
+    max-width: 38vw;
+    font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  }
+
+  .game-control-label {
+    display: none;
+  }
+
+  .game-control-compact-label {
+    display: inline;
+  }
+
+  .game-control-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .campaign-root-navigation.game-navigation-cluster {
+    top: 5px;
+    left: 10px;
+    right: 10px;
+  }
+
+  .campaign-rooted-shell .map-toolbar button {
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 8px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-control,
+  .campaign-rooted-shell .map-toolbar button {
+    transition: none;
+  }
+}
