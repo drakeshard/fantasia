@@ -102,7 +102,7 @@ function App() {
   function resetPreferences() {
     const next = defaultUiPreferences();
     setPreferences(next);
-    const result = resetUiPreferences(browserStorage(), next);
+    const result = resetUiPreferences(browserStorage());
     setStorageMessage(result.message);
   }
 
