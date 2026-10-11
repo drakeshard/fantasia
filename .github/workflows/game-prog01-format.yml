@@ -13,14 +13,14 @@ jobs:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: game-prog01/account-talents
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version-file: .node-version
       - run: corepack enable
-      - run: pnpm shared:prepare
+      - run: node scripts/prepare-shared-packages.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm check:write
       - name: Commit formatting
