@@ -102,7 +102,8 @@ test("capture controlled player-facing UI for review", async ({ page }, testInfo
 
   await page.goto("/");
   await page.getByRole("button", { name: "Continue current story", exact: true }).click();
-  await expect(page.locator(".campaign-map")).toBeVisible();
+  await expect(page.getByText("Loire approaches", { exact: true })).toBeVisible();
+  await expect(page.locator(".campaign-node").first()).toBeVisible();
   await captureViewport(page, testInfo, "chapter");
 
   await page.goto("/");
