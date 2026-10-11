@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <title>Campaign</title>
   <circle cx="12" cy="12" r="8.2" stroke="#E2BE78" stroke-width="1.35"/>
   <circle cx="12" cy="12" r="4.25" stroke="#E2BE78" stroke-width="1.1" opacity=".72"/>
   <path d="m12 5.2 1.55 5.25L18.8 12l-5.25 1.55L12 18.8l-1.55-5.25L5.2 12l5.25-1.55L12 5.2Z" stroke="#F4F0E7" stroke-width="1.25" stroke-linejoin="round"/>
