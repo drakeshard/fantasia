@@ -139,7 +139,7 @@ function App() {
       ) : null}
 
       <div class="campaign-rooted-shell" hidden={screen !== "campaign"}>
-        <CampaignApp onOpenBattle={() => setScreen("battle")} />
+        <CampaignApp />
         <nav
           class="campaign-root-navigation game-navigation-cluster"
           aria-label="Campaign root navigation"
