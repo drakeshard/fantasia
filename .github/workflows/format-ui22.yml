@@ -22,7 +22,7 @@ jobs:
       - run: corepack enable
       - run: node scripts/prepare-shared-packages.mjs
       - run: pnpm install --frozen-lockfile
-      - run: pnpm check:write
+      - run: pnpm exec biome format --write apps/web/src/talent.tsx apps/web/src/talent.css apps/web/src/home.tsx apps/web/src/main.tsx apps/web/src/navigation-placement.css packages/game/src/talent/lancer.ts packages/runtime/src/talent-session.ts packages/runtime/src/index.ts tests/e2e/talent.spec.ts tests/e2e/navigation-placement.spec.ts tests/visual/capture.spec.ts
       - name: Commit formatting
         run: |
           if git diff --quiet; then
