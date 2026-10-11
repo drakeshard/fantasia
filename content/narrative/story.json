@@ -575,10 +575,9 @@
                     {
                       "id": "S01-CH01-N01-L340",
                       "type": "dialogue",
-                      "text": "{{MC_NAME}}. I'm from Primora.",
+                      "text": "Just call me Traveler. I'm from Primora.",
                       "speaker": "MC",
-                      "displayLabel": "MC",
-                      "tokenized": true
+                      "displayLabel": "MC"
                     },
                     {
                       "id": "S01-CH01-N01-L350",
@@ -737,10 +736,9 @@
                     {
                       "id": "S01-CH01-N01-L700",
                       "type": "dialogue",
-                      "text": "{{MC_NAME}}. Again, I suppose.",
+                      "text": "Traveler. At least for now.",
                       "speaker": "MC",
-                      "displayLabel": "MC",
-                      "tokenized": true
+                      "displayLabel": "MC"
                     },
                     {
                       "id": "S01-CH01-N01-L710",
@@ -3779,7 +3777,7 @@
                     {
                       "id": "S01-CH03-N02-L040",
                       "type": "dialogue",
-                      "text": "{{MC_NAME}}. Your group stays with the forward column tomorrow.",
+                      "text": "Rookie. Your group stays with the forward column tomorrow.",
                       "speaker": "Jean II d’Alençon",
                       "displayLabel": "Alençon"
                     },
@@ -4241,7 +4239,7 @@
                     {
                       "id": "S01-CH03-N05-L070",
                       "type": "dialogue",
-                      "text": "So you are {{MC_NAME}}. Your name appears in an unreasonable number of reports for someone with no rank.",
+                      "text": "So you're the Rookie. You appear in an unreasonable number of reports for someone with no rank.",
                       "speaker": "Charles VII",
                       "displayLabel": "Charles"
                     },
@@ -5755,7 +5753,7 @@
                     {
                       "id": "S01-CH05-N05-L040",
                       "type": "dialogue",
-                      "text": "{{MC_NAME}}?",
+                      "text": "Rookie?",
                       "speaker": "Jeanne d’Arc",
                       "displayLabel": "Jeanne"
                     },
@@ -6008,7 +6006,7 @@
               "scriptStatus": "draft",
               "location": "Rouen",
               "time": "30 May 1431 — dawn",
-              "summary": "The party learns that Jeanne is to be taken to the Vieux-Marché that morning. The prison route is gone and ordinary rescue planning has failed. Chapter 5 ends before the stake rescue itself, handing the final attempt and First Manifestation to the Finale.",
+              "summary": "The party learns that Jeanne is to be taken to the Vieux-Marché that morning. The prison route is gone and ordinary rescue planning has failed. Chapter 5 ends before the stake rescue itself, handing the final attempt to the Finale without revealing what follows a successful rescue.",
               "beats": [
                 {
                   "id": "CH05-N07-BEAT-01",
@@ -6070,10 +6068,10 @@
                   "presentation": "chapter-end",
                   "characters": ["MC", "Julie d’Aubigny", "Hangaku Gozen", "Bradamante"],
                   "screenAction": "The group abandons every remaining assumption about a clean extraction and prepares to intercept the execution movement itself. The scene ends before they reach Jeanne or the stake.",
-                  "dialogueIntent": "Hand cleanly into the Finale. Do not reveal the First Manifestation or resolve Jeanne's expected death here.",
+                  "dialogueIntent": "Hand cleanly into the Finale. Do not reveal the later world-like call, unknown antagonist, or Fracture before the rescue succeeds.",
                   "playerControl": "dialogue advance",
                   "trigger": "final_rescue_decision",
-                  "result": "Chapter 5 ends with the final rescue attempt beginning; the First Manifestation remains unrevealed.",
+                  "result": "Chapter 5 ends with the final rescue attempt beginning; the supernatural turn remains unrevealed.",
                   "next": "FIN",
                   "scriptStatus": "draft",
                   "script": [
@@ -6118,7 +6116,7 @@
                     {
                       "id": "S01-CH05-N07-L120",
                       "type": "transition",
-                      "text": "Next: Finale — The First Manifestation."
+                      "text": "Next: Finale — The Broken Horizon."
                     }
                   ]
                 }
@@ -6128,7 +6126,7 @@
         },
         {
           "id": "FIN",
-          "title": "The First Manifestation",
+          "title": "The Broken Horizon",
           "status": "draft",
           "nodes": [
             {
@@ -6337,7 +6335,7 @@
                     {
                       "id": "S01-FIN-B01-L060",
                       "type": "dialogue",
-                      "text": "{{MC_NAME}}?",
+                      "text": "Rookie?",
                       "speaker": "Jeanne d’Arc",
                       "displayLabel": "Jeanne"
                     },
@@ -6389,11 +6387,11 @@
                     "Jeanne d’Arc",
                     "English guards"
                   ],
-                  "screenAction": "With Jeanne free, the party stops trying to control the square and fights only for enough space to move her beyond the execution point.",
-                  "dialogueIntent": "The rescue must genuinely succeed. The expected death is prevented before anything supernatural interrupts.",
+                  "screenAction": "With Jeanne free, the party stops trying to control the square and fights only for enough space to move her beyond the execution point. Once they clear it, an impossible distant tone begins beneath the ordinary noise of Rouen.",
+                  "dialogueIntent": "The rescue must genuinely succeed before the supernatural turn. Let the first strange sound arrive only after Jeanne is safely beyond the expected execution point.",
                   "playerControl": "battle control / escape",
                   "trigger": "jeanne_freed",
-                  "result": "Jeanne leaves the execution point alive. The expected historical ending has been changed.",
+                  "result": "Jeanne survives the expected execution point. The party clears the square, and a strange world-like call begins from somewhere beyond it.",
                   "next": "FIN-B02",
                   "scriptStatus": "draft",
                   "script": [
@@ -6433,12 +6431,12 @@
                     {
                       "id": "S01-FIN-B01-L170",
                       "type": "action",
-                      "text": "The group clears the execution point with Jeanne alive. For one heartbeat, the square sounds impossibly far away."
+                      "text": "The group clears the execution point with Jeanne alive. For one heartbeat, the square sounds impossibly far away. Then a low, impossible tone rises beneath the city noise."
                     },
                     {
                       "id": "S01-FIN-B01-L180",
                       "type": "transition",
-                      "text": "FIN-B02 — The First Manifestation."
+                      "text": "FIN-B02 — The Broken Horizon."
                     }
                   ]
                 }
@@ -6446,150 +6444,151 @@
             },
             {
               "id": "FIN-B02",
-              "title": "The First Manifestation",
+              "title": "The Broken Horizon",
               "type": "battle",
               "status": "draft",
               "scriptStatus": "draft",
-              "location": "Rouen — Vieux-Marché and fractured overlap",
+              "location": "Rouen — streets beyond Vieux-Marché and the fractured horizon",
               "time": "30 May 1431 — moments later",
-              "summary": "Reality reacts to Jeanne surviving her expected ending. A presence manifests without a stable final form, states only the minimum contradiction, and a Correction begins. The party cannot solve or defeat the deeper phenomenon; the tactical goal is to protect Jeanne and survive until a new Fracture creates an escape route.",
+              "summary": "After Jeanne is safely rescued, a world-like call guides the party away from the square to a broad final view. There an unknown antagonist deliberately opens a Fracture and crosses it. Hostile fractured pressure remains in the passage's wake. The voice asks the Rookie for help because the world is breaking, and MC chooses pursuit rather than taking a random escape route.",
               "beats": [
                 {
                   "id": "FIN-B02-BEAT-01",
                   "order": 1,
-                  "title": "Reality Reacts",
-                  "presentation": "manifestation-event",
-                  "characters": ["MC", "Jeanne d’Arc", "Julie d’Aubigny", "First Manifestation"],
-                  "screenAction": "Light, distance, and sound stop agreeing with one another. The distortion gathers into a presence that refuses to hold one stable shape.",
-                  "dialogueIntent": "Reveal only the contradiction: Jeanne was expected to die here, MC was not expected to be present, and the changed outcome is treated as a problem. Explain nothing beyond that.",
-                  "playerControl": "dialogue advance",
-                  "trigger": "jeanne_survives_expected_end",
-                  "result": "The First Manifestation identifies the broken expected outcome and initiates a Correction.",
-                  "next": "FIN-B02-BEAT-02",
-                  "scriptStatus": "draft",
-                  "script": [
-                    {
-                      "id": "S01-FIN-B02-L010",
-                      "type": "action",
-                      "text": "The noise of the square drops away for one impossible heartbeat. Light bends across walls, armor, paving stones, and empty air at the same time."
-                    },
-                    {
-                      "id": "S01-FIN-B02-L020",
-                      "type": "dialogue",
-                      "text": "Tell me that's the thing from the road.",
-                      "speaker": "Julie d’Aubigny",
-                      "displayLabel": "Julie"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L030",
-                      "type": "dialogue",
-                      "text": "It was never this big.",
-                      "speaker": "MC",
-                      "displayLabel": "MC"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L040",
-                      "type": "action",
-                      "text": "The distortion gathers into a presence the eye cannot keep in one shape."
-                    },
-                    {
-                      "id": "S01-FIN-B02-L050",
-                      "type": "dialogue",
-                      "text": "Jeanne d'Arc was meant to die here.",
-                      "speaker": "First Manifestation",
-                      "displayLabel": "Manifestation"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L060",
-                      "type": "dialogue",
-                      "text": "What are you?",
-                      "speaker": "Jeanne d’Arc",
-                      "displayLabel": "Jeanne"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L070",
-                      "type": "dialogue",
-                      "text": "You were not meant to be present.",
-                      "speaker": "First Manifestation",
-                      "displayLabel": "Manifestation"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L080",
-                      "type": "action",
-                      "text": "The presence turns toward MC."
-                    },
-                    {
-                      "id": "S01-FIN-B02-L090",
-                      "type": "dialogue",
-                      "text": "Too late.",
-                      "speaker": "MC",
-                      "displayLabel": "MC"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L100",
-                      "type": "dialogue",
-                      "text": "The changed ending cannot remain.",
-                      "speaker": "First Manifestation",
-                      "displayLabel": "Manifestation"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L110",
-                      "type": "dialogue",
-                      "text": "Correction.",
-                      "speaker": "First Manifestation",
-                      "displayLabel": "Manifestation"
-                    }
-                  ]
-                },
-                {
-                  "id": "FIN-B02-BEAT-02",
-                  "order": 2,
-                  "title": "Correction",
-                  "presentation": "battle-event",
+                  "title": "The Call",
+                  "presentation": "story-event",
                   "characters": [
                     "MC",
                     "Jeanne d’Arc",
                     "Julie d’Aubigny",
                     "Hangaku Gozen",
                     "Bradamante",
-                    "Correction forms"
+                    "World Voice"
                   ],
-                  "screenAction": "Hostile forms peel out of the distortion without settling into consistent bodies. They close on Jeanne and the escape route rather than behaving like an ordinary army.",
-                  "dialogueIntent": "Turn the mystery into immediate survival gameplay without defining a final creature taxonomy or deeper antagonist.",
-                  "playerControl": "battle control",
-                  "trigger": "correction_begins",
-                  "result": "The party survives the first surge and keeps Jeanne moving.",
+                  "screenAction": "Beyond the execution point, the noise of pursuit thins beneath an impossible tone. The sound seems both distant and inside hearing itself, drawing MC toward a quieter route that opens onto a broad view beyond the square.",
+                  "dialogueIntent": "Introduce the world-like voice as a plea or guidance, not prophecy. It uses the current voiced address Rookie and explains nothing about cosmology yet.",
+                  "playerControl": "dialogue advance / guided movement",
+                  "trigger": "rescue_escape_complete",
+                  "result": "The party follows the call far enough from the square to see its apparent destination.",
+                  "next": "FIN-B02-BEAT-02",
+                  "scriptStatus": "draft",
+                  "script": [
+                    {
+                      "id": "S01-FIN-B02-L010",
+                      "type": "action",
+                      "text": "Behind them, Vieux-Marché is still shouting. Ahead, a low tone cuts through the noise without coming from any visible source."
+                    },
+                    {
+                      "id": "S01-FIN-B02-L020",
+                      "type": "dialogue",
+                      "text": "Do you hear that?",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
+                    },
+                    {
+                      "id": "S01-FIN-B02-L030",
+                      "type": "dialogue",
+                      "text": "Yeah.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-FIN-B02-L040",
+                      "type": "dialogue",
+                      "text": "Rookie...",
+                      "speaker": "World Voice",
+                      "displayLabel": "Unknown Voice"
+                    },
+                    {
+                      "id": "S01-FIN-B02-L050",
+                      "type": "dialogue",
+                      "text": "Hear me.",
+                      "speaker": "World Voice",
+                      "displayLabel": "Unknown Voice"
+                    },
+                    {
+                      "id": "S01-FIN-B02-L060",
+                      "type": "action",
+                      "text": "MC turns toward a quieter street. The strange tone strengthens in that direction while the ordinary pursuit noise falls behind."
+                    },
+                    {
+                      "id": "S01-FIN-B02-L070",
+                      "type": "dialogue",
+                      "text": "Where is that coming from?",
+                      "speaker": "Jeanne d’Arc",
+                      "displayLabel": "Jeanne"
+                    },
+                    {
+                      "id": "S01-FIN-B02-L080",
+                      "type": "dialogue",
+                      "text": "I don't know.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
+                    },
+                    {
+                      "id": "S01-FIN-B02-L090",
+                      "type": "action",
+                      "text": "The route opens into a broader view across Rouen. Something is already waiting at the far edge of it."
+                    },
+                    {
+                      "id": "S01-FIN-B02-L100",
+                      "type": "control",
+                      "text": "Keep Jeanne moving and follow the call away from the square."
+                    },
+                    {
+                      "id": "S01-FIN-B02-L110",
+                      "type": "transition",
+                      "text": "The party reaches the sourceward vista."
+                    }
+                  ]
+                },
+                {
+                  "id": "FIN-B02-BEAT-02",
+                  "order": 2,
+                  "title": "The Figure at the Horizon",
+                  "presentation": "cinematic",
+                  "characters": [
+                    "MC",
+                    "Jeanne d’Arc",
+                    "Julie d’Aubigny",
+                    "Hangaku Gozen",
+                    "Bradamante",
+                    "Unknown Figure"
+                  ],
+                  "screenAction": "An unknown figure stands at the far edge of the view and deliberately opens a large refractive Fracture. The figure notices the arriving party, gives no explanation, and crosses through.",
+                  "dialogueIntent": "Reveal deliberate agency behind this portal without naming the main antagonist, defining their form, or explaining motive. The point is that someone chose to open the way.",
+                  "playerControl": "none / cinematic reveal",
+                  "trigger": "call_vista_reached",
+                  "result": "The unknown antagonist crosses the deliberately opened Fracture; the passage remains unstable behind them.",
                   "next": "FIN-B02-BEAT-03",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-FIN-B02-L120",
-                      "type": "control",
-                      "text": "Objective: PROTECT JEANNE. Survive the Correction."
+                      "type": "action",
+                      "text": "At the edge of the view, an unknown figure raises one hand. Light folds inward around it instead of appearing by accident."
                     },
                     {
                       "id": "S01-FIN-B02-L130",
                       "type": "action",
-                      "text": "Unstable hostile shapes pull free of the bent light and cut across the route."
+                      "text": "A broad refractive Fracture opens deliberately. The figure looks back once toward the arriving party."
                     },
                     {
                       "id": "S01-FIN-B02-L140",
                       "type": "dialogue",
-                      "text": "Those aren't soldiers.",
-                      "speaker": "Hangaku Gozen",
-                      "displayLabel": "Hangaku Gozen"
-                    },
-                    {
-                      "id": "S01-FIN-B02-L150",
-                      "type": "dialogue",
-                      "text": "They're still in the way.",
+                      "text": "That one did it.",
                       "speaker": "Julie d’Aubigny",
                       "displayLabel": "Julie"
                     },
                     {
+                      "id": "S01-FIN-B02-L150",
+                      "type": "action",
+                      "text": "The figure steps through the light and vanishes. The Fracture does not close cleanly behind them."
+                    },
+                    {
                       "id": "S01-FIN-B02-L160",
                       "type": "dialogue",
-                      "text": "Then keep Jeanne moving.",
+                      "text": "After them.",
                       "speaker": "MC",
                       "displayLabel": "MC"
                     }
@@ -6598,66 +6597,66 @@
                 {
                   "id": "FIN-B02-BEAT-03",
                   "order": 3,
-                  "title": "The Street Breaks",
-                  "presentation": "battle-escalation",
+                  "title": "What the Passage Leaves",
+                  "presentation": "battle-event",
                   "characters": [
                     "MC",
                     "Jeanne d’Arc",
                     "Julie d’Aubigny",
                     "Hangaku Gozen",
                     "Bradamante",
-                    "Correction forms"
+                    "Fractured forms"
                   ],
-                  "screenAction": "Pieces of Rouen briefly overlap with places nobody recognizes: another sky, unfamiliar stone, a distant waterline. The fragments vanish before they can become destinations or explanations.",
-                  "dialogueIntent": "Tease the scale of the fracture without identifying Saga II, naming future worlds, or explaining why the overlap happens.",
+                  "screenAction": "Unstable hostile shapes and pressure spill out around the antagonist-opened passage. They obstruct the route without behaving like ordinary soldiers, forcing the party to protect Jeanne and push toward the still-open Fracture.",
+                  "dialogueIntent": "Keep supernatural pressure as immediate gameplay without calling it Correction, claiming the world wants Jeanne dead, or defining a final creature taxonomy.",
                   "playerControl": "battle control",
-                  "trigger": "correction_escalates",
-                  "result": "A larger refractive tear begins opening near the group while the battlefield remains unstable.",
+                  "trigger": "antagonist_crosses_fracture",
+                  "result": "The party survives the residual fractured pressure and secures a path toward the antagonist-opened Fracture.",
                   "next": "FIN-B02-BEAT-04",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-FIN-B02-L170",
                       "type": "action",
-                      "text": "For seconds at a time, parts of the street are replaced by places nobody present recognizes. Each fragment disappears before the eye can settle on it."
+                      "text": "The passage shudders. Hostile shapes peel out of the warped light and close across the route before their bodies can settle into anything familiar."
                     },
                     {
                       "id": "S01-FIN-B02-L180",
                       "type": "dialogue",
-                      "text": "The street moved.",
-                      "speaker": "Bradamante",
-                      "displayLabel": "Bradamante"
+                      "text": "Those aren't soldiers.",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
                     },
                     {
                       "id": "S01-FIN-B02-L190",
                       "type": "dialogue",
-                      "text": "I noticed.",
+                      "text": "They're still in the way.",
                       "speaker": "Julie d’Aubigny",
                       "displayLabel": "Julie"
                     },
                     {
                       "id": "S01-FIN-B02-L200",
                       "type": "dialogue",
-                      "text": "There. That light—",
-                      "speaker": "Jeanne d’Arc",
-                      "displayLabel": "Jeanne"
+                      "text": "Then keep Jeanne moving.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
                     },
                     {
                       "id": "S01-FIN-B02-L210",
-                      "type": "action",
-                      "text": "A broad refractive tear opens across the far side of the broken street."
+                      "type": "control",
+                      "text": "Objective: PROTECT JEANNE. Reach the antagonist-opened Fracture."
                     },
                     {
                       "id": "S01-FIN-B02-L220",
-                      "type": "control",
-                      "text": "Objective update: keep Jeanne protected and survive until the Fracture stabilizes enough to reach."
+                      "type": "action",
+                      "text": "Fragments of unfamiliar light flash around the route, but the deliberately opened passage remains the only stable direction."
                     }
                   ]
                 },
                 {
                   "id": "FIN-B02-BEAT-04",
                   "order": 4,
-                  "title": "Survive, Don’t Win",
+                  "title": "Follow",
                   "presentation": "battle-climax",
                   "characters": [
                     "MC",
@@ -6665,54 +6664,57 @@
                     "Julie d’Aubigny",
                     "Hangaku Gozen",
                     "Bradamante",
-                    "First Manifestation",
-                    "Correction forms"
+                    "World Voice"
                   ],
-                  "screenAction": "The party stops treating the Manifestation as something that can be defeated here. They hold together until the Fracture becomes a usable route.",
-                  "dialogueIntent": "Make the finale victory survival and protection, not killing or permanently solving the deeper phenomenon.",
-                  "playerControl": "battle control / survive",
-                  "trigger": "fracture_forming",
-                  "result": "The party survives long enough for the Fracture to become reachable. The Manifestation remains unresolved.",
+                  "screenAction": "As the party reaches the passage, the voice becomes clearer. It says the world is breaking and asks for help. MC chooses to pursue the figure through the path they deliberately opened.",
+                  "dialogueIntent": "Give MC a reason to continue beyond finding home while avoiding chosen-one language. The world asks for help; MC chooses to answer.",
+                  "playerControl": "battle control / dialogue advance",
+                  "trigger": "fracture_route_reached",
+                  "result": "MC commits to following the unknown antagonist through the Fracture; Jeanne still gets an independent choice before crossing.",
                   "next": "FIN-N03",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-FIN-B02-L230",
                       "type": "dialogue",
-                      "text": "We can't beat this.",
-                      "speaker": "MC",
-                      "displayLabel": "MC"
+                      "text": "Rookie...",
+                      "speaker": "World Voice",
+                      "displayLabel": "Unknown Voice"
                     },
                     {
                       "id": "S01-FIN-B02-L240",
                       "type": "dialogue",
-                      "text": "Then stop trying.",
-                      "speaker": "Hangaku Gozen",
-                      "displayLabel": "Hangaku Gozen"
+                      "text": "This world is breaking.",
+                      "speaker": "World Voice",
+                      "displayLabel": "Unknown Voice"
                     },
                     {
                       "id": "S01-FIN-B02-L250",
                       "type": "dialogue",
-                      "text": "Best order I've heard all day.",
-                      "speaker": "Julie d’Aubigny",
-                      "displayLabel": "Julie"
+                      "text": "I cannot stop them alone.",
+                      "speaker": "World Voice",
+                      "displayLabel": "Unknown Voice"
                     },
                     {
                       "id": "S01-FIN-B02-L260",
-                      "type": "control",
-                      "text": "Survive the final Correction surge. The Manifestation is not a defeat objective."
+                      "type": "dialogue",
+                      "text": "Please... follow.",
+                      "speaker": "World Voice",
+                      "displayLabel": "Unknown Voice"
                     },
                     {
                       "id": "S01-FIN-B02-L270",
                       "type": "dialogue",
-                      "text": "Deviation persists.",
-                      "speaker": "First Manifestation",
-                      "displayLabel": "Manifestation"
+                      "text": "That thing opened the way.",
+                      "speaker": "MC",
+                      "displayLabel": "MC"
                     },
                     {
                       "id": "S01-FIN-B02-L280",
-                      "type": "action",
-                      "text": "The Fracture widens just enough to become a route instead of a flash of light."
+                      "type": "dialogue",
+                      "text": "And went through it.",
+                      "speaker": "Julie d’Aubigny",
+                      "displayLabel": "Julie"
                     },
                     {
                       "id": "S01-FIN-B02-L290",
@@ -6731,12 +6733,12 @@
               "scriptStatus": "draft",
               "location": "Fractured Rouen — edge of the new Fracture",
               "time": "30 May 1431 — moments later",
-              "summary": "The new Fracture offers no promise of home or safety. MC prepares to take the unknown route. Jeanne is explicitly given the choice to stay or cross and chooses for herself. The distortion surges before the story confirms which additional companions cross, preserving the open handoff into Saga II.",
+              "summary": "The antagonist-opened Fracture remains available only briefly. Its destination is unknown, but MC now has a concrete trail and a plea for help rather than a random escape route. MC chooses pursuit; Jeanne is explicitly free to decide whether to follow.",
               "beats": [
                 {
                   "id": "FIN-N03-BEAT-01",
                   "order": 1,
-                  "title": "No Promise of Home",
+                  "title": "The Trail Ahead",
                   "presentation": "saga-end-scene",
                   "characters": [
                     "MC",
@@ -6745,53 +6747,51 @@
                     "Hangaku Gozen",
                     "Bradamante"
                   ],
-                  "screenAction": "The Fracture remains open but shows no readable destination. The Correction closes behind the party, turning an unknown crossing into the only route that is not collapsing.",
-                  "dialogueIntent": "Return to MC’s original home problem without pretending the new Fracture solves it.",
+                  "screenAction": "The Fracture opened by the unknown figure is still active but already narrowing. It shows no readable destination; the only certainty is that the antagonist went through it.",
+                  "dialogueIntent": "Frame the crossing as a chosen pursuit and unanswered responsibility, not a random escape or guaranteed route home.",
                   "playerControl": "dialogue advance",
                   "trigger": "fracture_reachable",
-                  "result": "MC accepts that the route may not lead home and prepares to cross anyway.",
+                  "result": "MC decides that the antagonist-opened Fracture is the first real lead worth following; time to choose is short.",
                   "next": "FIN-N03-BEAT-02",
                   "scriptStatus": "draft",
                   "script": [
                     {
                       "id": "S01-FIN-N03-L010",
                       "type": "action",
-                      "text": "The Fracture holds as a broad sheet of bent light. Nothing beyond it looks like a place anyone can name."
+                      "text": "The Fracture hangs across the view as a broad sheet of bent light. It is already beginning to narrow."
                     },
                     {
                       "id": "S01-FIN-N03-L020",
                       "type": "dialogue",
-                      "text": "I don't know where it goes.",
+                      "text": "I still don't know where it goes.",
                       "speaker": "MC",
                       "displayLabel": "MC"
                     },
                     {
                       "id": "S01-FIN-N03-L030",
                       "type": "dialogue",
-                      "text": "You didn't know the first time either.",
+                      "text": "But this time you know someone went through it.",
                       "speaker": "Julie d’Aubigny",
                       "displayLabel": "Julie"
                     },
                     {
                       "id": "S01-FIN-N03-L040",
                       "type": "dialogue",
-                      "text": "That worked out terribly.",
+                      "text": "Yeah. That's enough.",
                       "speaker": "MC",
                       "displayLabel": "MC"
                     },
                     {
                       "id": "S01-FIN-N03-L050",
                       "type": "dialogue",
-                      "text": "And yet we're here.",
-                      "speaker": "Julie d’Aubigny",
-                      "displayLabel": "Julie"
+                      "text": "Then don't stand here admiring it.",
+                      "speaker": "Hangaku Gozen",
+                      "displayLabel": "Hangaku Gozen"
                     },
                     {
                       "id": "S01-FIN-N03-L060",
-                      "type": "dialogue",
-                      "text": "It won't stay open.",
-                      "speaker": "Hangaku Gozen",
-                      "displayLabel": "Hangaku Gozen"
+                      "type": "action",
+                      "text": "The edge of the Fracture contracts another step. Whatever path the unknown figure opened will not stay available."
                     }
                   ]
                 },
@@ -6808,10 +6808,10 @@
                     "Bradamante"
                   ],
                   "screenAction": "MC refuses to decide for Jeanne. Jeanne considers the unknown Fracture and the world behind her, then steps toward the crossing by her own choice. The distortion surges before any additional crossings are confirmed.",
-                  "dialogueIntent": "End Saga I on agency and consequence. Do not reveal Saga II, guarantee home, or resolve which supporting companions cross.",
+                  "dialogueIntent": "End Saga I on agency and consequence. Jeanne chooses the pursuit herself. Do not reveal Saga II, guarantee home, identify the antagonist, or confirm which supporting companions cross.",
                   "playerControl": "dialogue advance",
                   "trigger": "crossing_choice",
-                  "result": "MC and Jeanne commit to the unknown crossing. Additional crossings and the Saga II destination remain unresolved.",
+                  "result": "MC and Jeanne enter the antagonist-opened Fracture by choice. The scene cuts before confirming which supporting companions also cross; the destination remains unknown.",
                   "next": "TBD-SAGA-II",
                   "scriptStatus": "draft",
                   "script": [
