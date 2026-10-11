@@ -144,12 +144,7 @@
   bottom: -8%;
   left: -5%;
   height: 48%;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgb(3 9 15 / 18%) 35%,
-    rgb(3 9 15 / 38%)
-  );
+  background: linear-gradient(180deg, transparent, rgb(3 9 15 / 18%) 35%, rgb(3 9 15 / 38%));
   pointer-events: none;
   content: "";
 }
@@ -190,12 +185,7 @@
   border-left-width: 2px;
   background:
     linear-gradient(90deg, rgb(226 190 120 / 4%), transparent 26%),
-    linear-gradient(
-      105deg,
-      rgb(6 17 27 / 96%) 0%,
-      rgb(7 19 30 / 88%) 66%,
-      rgb(7 18 28 / 75%) 100%
-    );
+    linear-gradient(105deg, rgb(6 17 27 / 96%) 0%, rgb(7 19 30 / 88%) 66%, rgb(7 18 28 / 75%) 100%);
   box-shadow:
     0 30px 72px rgb(0 0 0 / 38%),
     inset 0 1px rgb(255 255 255 / 4%),
@@ -429,7 +419,7 @@
   margin: 18px 0 11px;
   background:
     url("/assets/ui/core/fantasia_ui_ornament_divider_v001.svg") left center / min(180px, 58%) 12px
-      no-repeat,
+    no-repeat,
     linear-gradient(90deg, transparent 0 62%, rgb(113 131 148 / 12%));
 }
 
@@ -469,6 +459,22 @@
 .home-feature-locked p {
   max-width: 29ch;
   color: rgb(187 198 210 / 68%);
+}
+
+.home-feature-state.unavailable {
+  grid-column: 3;
+  grid-row: 2 / 4;
+  gap: 6px;
+  padding: 0 9px;
+  border-color: rgb(113 131 148 / 24%);
+  color: rgb(187 198 210 / 68%);
+  background: rgb(8 18 27 / 52%);
+}
+
+.home-feature-state.unavailable .home-icon {
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
 }
 
 .home-game-dock {
@@ -571,22 +577,6 @@ button.home-dock-item:active:not(:disabled) {
 
 button.home-dock-item:disabled {
   opacity: 0.34;
-}
-
-.home-feature-state.unavailable {
-  grid-column: 3;
-  grid-row: 2 / 4;
-  gap: 6px;
-  padding: 0 9px;
-  border-color: rgb(113 131 148 / 24%);
-  color: rgb(187 198 210 / 68%);
-  background: rgb(8 18 27 / 52%);
-}
-
-.home-feature-state.unavailable .home-icon {
-  width: 15px;
-  height: 15px;
-  opacity: 0.7;
 }
 
 .home-lobby button:focus-visible {
