@@ -4,7 +4,7 @@
   min-height: 0;
   overflow: hidden;
   padding: 0;
-  background: #101923;
+  background: var(--ui-bg);
 }
 
 .battle-screen .battle-stage {
@@ -26,18 +26,6 @@
   min-height: 0;
 }
 
-.battle-screen .pixi-battlefield::after {
-  background:
-    linear-gradient(
-      180deg,
-      rgb(7 13 18 / 68%) 0,
-      rgb(9 17 24 / 18%) 17%,
-      transparent 38%
-    ),
-    linear-gradient(0deg, rgb(7 13 18 / 76%) 0, rgb(9 17 24 / 18%) 22%, transparent 44%),
-    radial-gradient(ellipse at center, transparent 52%, rgb(4 8 12 / 38%) 100%);
-}
-
 .battle-screen .battle-statusbar,
 .battle-screen .hud-card,
 .battle-screen .command-preview,
@@ -46,7 +34,7 @@
 .battle-screen .unit-details-sheet,
 .battle-screen .battle-menu .menu-sheet {
   border-color: rgb(226 190 120 / 38%);
-  background: linear-gradient(180deg, rgb(31 47 63 / 96%), rgb(18 31 43 / 96%));
+  background: rgb(25 39 54 / 94%);
   box-shadow:
     0 16px 42px rgb(0 0 0 / 36%),
     inset 0 0 0 1px rgb(255 255 255 / 3%);
@@ -62,48 +50,15 @@
   border-radius: 8px;
 }
 
-.battle-screen .battle-statusbar::before,
-.battle-screen .active-unit-card::before,
-.battle-screen .turn-order-card::before,
-.battle-screen .command-preview::before {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.5;
-  content: "";
-  background:
-    url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") center / contain no-repeat;
-}
-
-.battle-screen .battle-statusbar::before {
-  top: -1px;
-  left: -1px;
-  width: 28px;
-  height: 28px;
-}
-
 .battle-screen .battle-brand {
   min-width: 175px;
   gap: 10px;
 }
 
 .battle-screen .battle-brand strong {
-  position: relative;
-  padding-left: 34px;
   color: var(--ui-text);
   font-size: 1.12rem;
   letter-spacing: 0.02em;
-}
-
-.battle-screen .battle-brand strong::before {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 26px;
-  height: 26px;
-  content: "";
-  transform: translateY(-50%);
-  background:
-    url("/assets/ui/core/fantasia_ui_brand_crest_v001.svg") center / contain no-repeat;
 }
 
 .battle-screen .battle-brand span {
@@ -138,7 +93,7 @@
   min-width: 64px;
   min-height: 44px;
   border-color: rgb(226 190 120 / 34%);
-  background: rgb(27 43 58 / 94%);
+  background: rgb(36 55 73 / 94%);
 }
 
 .battle-screen .hud-card {
@@ -156,16 +111,6 @@
   right: 14px;
   width: 220px;
   padding: 10px;
-}
-
-.battle-screen .active-unit-card::before,
-.battle-screen .turn-order-card::before,
-.battle-screen .command-preview::before {
-  top: -1px;
-  right: -1px;
-  width: 24px;
-  height: 24px;
-  transform: rotate(90deg);
 }
 
 .battle-screen .hud-eyebrow {
@@ -237,10 +182,6 @@
   font-size: 1rem;
 }
 
-.battle-screen .preview-controls .ui-button.primary {
-  box-shadow: 0 0 0 1px rgb(226 190 120 / 22%);
-}
-
 .battle-screen .battle-feedback {
   bottom: 18px;
   left: 14px;
@@ -280,7 +221,6 @@
   border-color: var(--ui-accent);
   color: var(--ui-accent-text);
   background: var(--ui-accent);
-  box-shadow: 0 0 0 1px rgb(226 190 120 / 22%);
 }
 
 .battle-screen .action-button.end-turn {
