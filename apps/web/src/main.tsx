@@ -14,6 +14,7 @@ import {
 } from "./preferences.js";
 import { SagaApp } from "./saga.js";
 import { SettingsDialog } from "./settings-dialog.js";
+import { StoryApp } from "./story.js";
 import "./styles.css";
 import "./production.css";
 import "./battle-production.css";
@@ -32,7 +33,7 @@ import "./campaign-production-fixes.css";
 import "./battle-production-fixes.css";
 import "./game-controls.css";
 
-type AppScreen = "home" | "saga" | "campaign" | "battle";
+type AppScreen = "home" | "saga" | "campaign" | "story" | "battle";
 
 function browserStorage(): Storage | undefined {
   try {
@@ -68,6 +69,7 @@ function OrientationGate() {
 function App() {
   const initialPreferences = loadUiPreferences(browserStorage());
   const [screen, setScreen] = useState<AppScreen>(() => initialScreen());
+  const [storyNodeId, setStoryNodeId] = useState<string>();
   const [preferences, setPreferences] = useState<UiPreferences>(initialPreferences.preferences);
   const [storageMessage, setStorageMessage] = useState<string | undefined>(
     initialPreferences.message,
@@ -139,7 +141,12 @@ function App() {
       ) : null}
 
       <div class="campaign-rooted-shell" hidden={screen !== "campaign"}>
-        <CampaignApp />
+        <CampaignApp
+          onEnterStory={(nodeId) => {
+            setStoryNodeId(nodeId);
+            setScreen("story");
+          }}
+        />
         <nav
           class="campaign-root-navigation game-navigation-cluster"
           aria-label="Campaign root navigation"
@@ -174,6 +181,14 @@ function App() {
           </div>
         </nav>
       </div>
+
+      {screen === "story" && storyNodeId ? (
+        <StoryApp
+          nodeId={storyNodeId}
+          onReturnCampaign={() => setScreen("campaign")}
+          onSettings={openSettings}
+        />
+      ) : null}
 
       {screen === "battle" ? <BattleApp onReturnCampaign={() => setScreen("campaign")} /> : null}
 
