@@ -351,10 +351,7 @@ export function CampaignApp() {
                 <GameButton tone="utility" onClick={fitMap}>
                   Fit
                 </GameButton>
-                <GameButton
-                  tone="utility"
-                  onClick={() => setStageListOpen((value) => !value)}
-                >
+                <GameButton tone="utility" onClick={() => setStageListOpen((value) => !value)}>
                   {stageListOpen ? "Hide stages" : "Stages"}
                 </GameButton>
               </div>
