@@ -7,8 +7,6 @@
   --home-detail-gold-deep: #b7863f;
   --home-detail-line: rgb(226 190 120 / 38%);
   --home-detail-line-soft: rgb(226 190 120 / 18%);
-  --home-detail-glass: rgb(5 15 24 / 82%);
-  --home-detail-glass-soft: rgb(7 18 28 / 68%);
 }
 
 .home-icon {
@@ -36,7 +34,13 @@
   padding-top: env(safe-area-inset-top);
   border-bottom-color: rgb(226 190 120 / 24%);
   background:
-    linear-gradient(90deg, rgb(226 190 120 / 4%), transparent 22%, transparent 78%, rgb(226 190 120 / 2%)),
+    linear-gradient(
+      90deg,
+      rgb(226 190 120 / 4%),
+      transparent 22%,
+      transparent 78%,
+      rgb(226 190 120 / 2%)
+    ),
     linear-gradient(180deg, rgb(3 9 15 / 91%), rgb(4 11 18 / 58%));
   box-shadow: 0 8px 30px rgb(0 0 0 / 14%);
 }
@@ -47,7 +51,14 @@
   bottom: -1px;
   left: var(--lobby-safe-x);
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(226 190 120 / 38%) 16%, transparent 48% 52%, rgb(226 190 120 / 18%) 84%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(226 190 120 / 38%) 16%,
+    transparent 48% 52%,
+    rgb(226 190 120 / 18%) 84%,
+    transparent
+  );
   content: "";
 }
 
@@ -133,7 +144,12 @@
   bottom: -8%;
   left: -5%;
   height: 48%;
-  background: linear-gradient(180deg, transparent, rgb(3 9 15 / 18%) 35%, rgb(3 9 15 / 38%));
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgb(3 9 15 / 18%) 35%,
+    rgb(3 9 15 / 38%)
+  );
   pointer-events: none;
   content: "";
 }
@@ -150,7 +166,8 @@
   height: 8px;
   display: block;
   margin-top: 3px;
-  background: url("/assets/ui/core/fantasia_ui_ornament_divider_v001.svg") left center / contain no-repeat;
+  background:
+    url("/assets/ui/core/fantasia_ui_ornament_divider_v001.svg") left center / contain no-repeat;
   content: "";
   opacity: 0.66;
 }
@@ -173,7 +190,12 @@
   border-left-width: 2px;
   background:
     linear-gradient(90deg, rgb(226 190 120 / 4%), transparent 26%),
-    linear-gradient(105deg, rgb(6 17 27 / 96%) 0%, rgb(7 19 30 / 88%) 66%, rgb(7 18 28 / 75%) 100%);
+    linear-gradient(
+      105deg,
+      rgb(6 17 27 / 96%) 0%,
+      rgb(7 19 30 / 88%) 66%,
+      rgb(7 18 28 / 75%) 100%
+    );
   box-shadow:
     0 30px 72px rgb(0 0 0 / 38%),
     inset 0 1px rgb(255 255 255 / 4%),
@@ -187,7 +209,8 @@
   width: 44px;
   height: 44px;
   border: 0;
-  background: url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") top right / 44px 44px no-repeat;
+  background:
+    url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") top right / 44px 44px no-repeat;
   transform: rotate(90deg);
   opacity: 0.68;
 }
@@ -198,7 +221,8 @@
   width: 36px;
   height: 36px;
   border: 0;
-  background: url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") top left / 36px 36px no-repeat;
+  background:
+    url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") top left / 36px 36px no-repeat;
   transform: rotate(-90deg);
   opacity: 0.32;
 }
@@ -217,7 +241,8 @@
   position: absolute;
   z-index: -1;
   inset: -9px;
-  background: url("/assets/ui/core/fantasia_ui_ornament_crest_ring_v001.svg") center / contain no-repeat;
+  background:
+    url("/assets/ui/core/fantasia_ui_ornament_crest_ring_v001.svg") center / contain no-repeat;
   content: "";
 }
 
@@ -332,7 +357,8 @@
   right: 9px;
   width: 34px;
   height: 34px;
-  background: url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") top right / contain no-repeat;
+  background:
+    url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") top right / contain no-repeat;
   content: "";
   transform: rotate(90deg);
   opacity: 0.46;
@@ -368,7 +394,8 @@
   position: absolute;
   z-index: -1;
   inset: -6px;
-  background: url("/assets/ui/core/fantasia_ui_ornament_crest_ring_v001.svg") center / contain no-repeat;
+  background:
+    url("/assets/ui/core/fantasia_ui_ornament_crest_ring_v001.svg") center / contain no-repeat;
   content: "";
   opacity: 0.82;
 }
@@ -401,7 +428,8 @@
 .home-feature-rule {
   margin: 18px 0 11px;
   background:
-    url("/assets/ui/core/fantasia_ui_ornament_divider_v001.svg") left center / min(180px, 58%) 12px no-repeat,
+    url("/assets/ui/core/fantasia_ui_ornament_divider_v001.svg") left center / min(180px, 58%) 12px
+      no-repeat,
     linear-gradient(90deg, transparent 0 62%, rgb(113 131 148 / 12%));
 }
 
@@ -443,26 +471,18 @@
   color: rgb(187 198 210 / 68%);
 }
 
-.home-feature-state.unavailable {
-  gap: 6px;
-  padding: 0 9px;
-  border-color: rgb(113 131 148 / 24%);
-  color: rgb(187 198 210 / 68%);
-  background: rgb(8 18 27 / 52%);
-}
-
-.home-feature-state.unavailable .home-icon {
-  width: 15px;
-  height: 15px;
-  opacity: 0.7;
-}
-
 .home-game-dock {
   gap: 0;
   align-items: center;
   border-top-color: rgb(226 190 120 / 24%);
   background:
-    linear-gradient(90deg, transparent, rgb(226 190 120 / 2%) 30%, rgb(226 190 120 / 2%) 70%, transparent),
+    linear-gradient(
+      90deg,
+      transparent,
+      rgb(226 190 120 / 2%) 30%,
+      rgb(226 190 120 / 2%) 70%,
+      transparent
+    ),
     linear-gradient(180deg, rgb(4 12 20 / 72%), rgb(3 9 15 / 97%));
   box-shadow: 0 -12px 34px rgb(0 0 0 / 16%);
 }
@@ -473,7 +493,13 @@
   left: 50%;
   width: min(72vw, 920px);
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(226 190 120 / 50%) 23%, rgb(226 190 120 / 50%) 77%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(226 190 120 / 50%) 23%,
+    rgb(226 190 120 / 50%) 77%,
+    transparent
+  );
   content: "";
   transform: translateX(-50%);
 }
@@ -545,6 +571,22 @@ button.home-dock-item:active:not(:disabled) {
 
 button.home-dock-item:disabled {
   opacity: 0.34;
+}
+
+.home-feature-state.unavailable {
+  grid-column: 3;
+  grid-row: 2 / 4;
+  gap: 6px;
+  padding: 0 9px;
+  border-color: rgb(113 131 148 / 24%);
+  color: rgb(187 198 210 / 68%);
+  background: rgb(8 18 27 / 52%);
+}
+
+.home-feature-state.unavailable .home-icon {
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
 }
 
 .home-lobby button:focus-visible {
