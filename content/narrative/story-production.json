@@ -4610,11 +4610,11 @@
       "events": [
         {
           "type": "action",
-          "text": "The group abandons every remaining assumption about a clean extraction and prepares to intercept the execution movement itself. The scene ends before they reach Jeanne or the stake."
+          "text": "The group abandons every remaining assumption about a clean extraction and prepares to intercept the execution movement itself."
         },
         {
           "type": "dialogue",
-          "text": "Hand cleanly into the Finale. Do not reveal the First Manifestation or resolve Jeanne's expected death here."
+          "text": "Hand cleanly into the revised Finale. Do not reveal the later world-like call, unknown antagonist, or Fracture before Jeanne is rescued."
         },
         {
           "type": "transition",
@@ -4818,11 +4818,11 @@
       "events": [
         {
           "type": "action",
-          "text": "With Jeanne free, the party stops trying to control the square and fights only for enough space to move her beyond the execution point."
+          "text": "Jeanne is freed and the party clears the execution point. Only after the human rescue succeeds does an impossible distant tone begin beneath the city noise."
         },
         {
           "type": "dialogue",
-          "text": "The rescue must genuinely succeed. The expected death is prevented before anything supernatural interrupts."
+          "text": "The rescue is real. The supernatural turn starts afterward rather than revoking success."
         },
         {
           "type": "transition",
@@ -4836,8 +4836,8 @@
         "estimatedSeconds": 30
       },
       "staging": {
-        "background": "Rouen — Vieux-Marché and fractured overlap",
-        "camera": "Tactical overview → event focus",
+        "background": "Rouen — streets beyond Vieux-Marché",
+        "camera": "Retreating street frame → guided horizon reveal",
         "slots": {
           "left": {
             "character": "MC",
@@ -4859,11 +4859,11 @@
       "events": [
         {
           "type": "action",
-          "text": "Light, distance, and sound stop agreeing with one another. The distortion gathers into a presence that refuses to hold one stable shape."
+          "text": "A low impossible tone cuts through the ordinary pursuit and guides the party toward a quieter route and broad final view."
         },
         {
           "type": "dialogue",
-          "text": "Reveal only the contradiction: Jeanne was expected to die here, MC was not expected to be present, and the changed outcome is treated as a problem. Explain nothing beyond that."
+          "text": "The unknown world-like voice addresses MC as Rookie and asks only to be heard; no prophecy or cosmology explanation."
         },
         {
           "type": "transition",
@@ -4873,13 +4873,12 @@
     },
     "FIN-B02-BEAT-02": {
       "timing": {
-        "mode": "player",
-        "minSeconds": 25,
-        "maxSeconds": 120
+        "mode": "advance",
+        "estimatedSeconds": 26
       },
       "staging": {
-        "background": "Rouen — Vieux-Marché and fractured overlap",
-        "camera": "Tactical overview → event focus",
+        "background": "Rouen — fractured horizon vista",
+        "camera": "Wide antagonist silhouette → deliberate Fracture opening",
         "slots": {
           "left": {
             "character": "MC",
@@ -4887,13 +4886,13 @@
             "pose": "active"
           },
           "center": {
-            "character": "Jeanne d’Arc",
-            "shortLabel": "JEA",
+            "character": "Unknown Figure",
+            "shortLabel": "???",
             "pose": "active"
           },
           "right": {
-            "character": "Julie d’Aubigny",
-            "shortLabel": "JUL",
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
             "pose": "active"
           }
         }
@@ -4901,11 +4900,11 @@
       "events": [
         {
           "type": "action",
-          "text": "Hostile forms peel out of the distortion without settling into consistent bodies. They close on Jeanne and the escape route rather than behaving like an ordinary army."
+          "text": "An unknown figure deliberately opens a large refractive Fracture, notices the arriving party, and crosses without explanation."
         },
         {
           "type": "dialogue",
-          "text": "Turn the mystery into immediate survival gameplay without defining a final creature taxonomy or deeper antagonist."
+          "text": "Do not name, explain, or assign a final form to the main antagonist here."
         },
         {
           "type": "transition",
@@ -4920,8 +4919,8 @@
         "maxSeconds": 120
       },
       "staging": {
-        "background": "Rouen — Vieux-Marché and fractured overlap",
-        "camera": "Tactical overview → event focus",
+        "background": "Rouen — fractured horizon vista",
+        "camera": "Tactical overview → unstable passage pressure",
         "slots": {
           "left": {
             "character": "MC",
@@ -4943,11 +4942,11 @@
       "events": [
         {
           "type": "action",
-          "text": "Pieces of Rouen briefly overlap with places nobody recognizes: another sky, unfamiliar stone, a distant waterline. The fragments vanish before they can become destinations or explanations."
+          "text": "Hostile fractured forms and pressure spill into the route after the antagonist crosses."
         },
         {
           "type": "dialogue",
-          "text": "Tease the scale of the fracture without identifying Saga II, naming future worlds, or explaining why the overlap happens."
+          "text": "Preserve supernatural gameplay pressure without calling it Correction or saying the world is enforcing Jeanne’s death."
         },
         {
           "type": "transition",
@@ -4962,8 +4961,8 @@
         "maxSeconds": 120
       },
       "staging": {
-        "background": "Rouen — Vieux-Marché and fractured overlap",
-        "camera": "Tactical overview → event focus",
+        "background": "Rouen — edge of the antagonist-opened Fracture",
+        "camera": "Battle pressure → voice/portal focus",
         "slots": {
           "left": {
             "character": "MC",
@@ -4985,11 +4984,11 @@
       "events": [
         {
           "type": "action",
-          "text": "The party stops treating the Manifestation as something that can be defeated here. They hold together until the Fracture becomes a usable route."
+          "text": "The party reaches the still-open passage while the world-like voice becomes clearer."
         },
         {
           "type": "dialogue",
-          "text": "Make the finale victory survival and protection, not killing or permanently solving the deeper phenomenon."
+          "text": "The voice says the world is breaking, cannot stop them alone, and asks the Rookie to follow. MC chooses pursuit."
         },
         {
           "type": "transition",
@@ -5003,8 +5002,8 @@
         "estimatedSeconds": 30
       },
       "staging": {
-        "background": "Fractured Rouen — edge of the new Fracture",
-        "camera": "Scene framing → character focus",
+        "background": "Rouen — edge of the antagonist-opened Fracture",
+        "camera": "Scene framing → narrowing passage",
         "slots": {
           "left": {
             "character": "MC",
@@ -5026,11 +5025,11 @@
       "events": [
         {
           "type": "action",
-          "text": "The Fracture remains open but shows no readable destination. The Correction closes behind the party, turning an unknown crossing into the only route that is not collapsing."
+          "text": "The antagonist-opened Fracture is narrowing. Its destination is unknown, but the antagonist’s route through it is certain."
         },
         {
           "type": "dialogue",
-          "text": "Return to MC’s original home problem without pretending the new Fracture solves it."
+          "text": "Frame the crossing as chosen pursuit and the first concrete lead, not random escape or guaranteed home."
         },
         {
           "type": "transition",
@@ -5067,11 +5066,11 @@
       "events": [
         {
           "type": "action",
-          "text": "MC refuses to decide for Jeanne. Jeanne considers the unknown Fracture and the world behind her, then steps toward the crossing by her own choice. The distortion surges before any additional crossings are confirmed."
+          "text": "MC refuses to decide for Jeanne. Jeanne considers the narrowing antagonist-opened Fracture and chooses to step beside MC."
         },
         {
           "type": "dialogue",
-          "text": "End Saga I on agency and consequence. Do not reveal Saga II, guarantee home, or resolve which supporting companions cross."
+          "text": "End Saga I on Jeanne’s independent agency and MC’s chosen pursuit; supporting crossings and destination remain unresolved."
         },
         {
           "type": "transition",
