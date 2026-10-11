@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <title>Characters</title>
+  <circle cx="12" cy="8.1" r="3.25" stroke="#F4F0E7" stroke-width="1.35"/>
+  <path d="M5.7 19.2c.35-3.45 2.58-5.55 6.3-5.55s5.95 2.1 6.3 5.55" stroke="#F4F0E7" stroke-width="1.35" stroke-linecap="round"/>
+  <path d="M4.2 6.4 6.1 4.5M19.8 6.4l-1.9-1.9M3.4 10.5H6M18 10.5h2.6" stroke="#E2BE78" stroke-width="1.1" stroke-linecap="round" opacity=".72"/>
+  <path d="M4.25 19.5h15.5" stroke="#E2BE78" stroke-width="1.1" stroke-linecap="round"/>
+</svg>
