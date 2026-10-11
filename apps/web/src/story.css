@@ -1,0 +1,309 @@
+.story-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-rows: 72px minmax(0, 1fr) 72px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--text-primary, #f4f0e7);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(226, 190, 120, 0.08), transparent 32%),
+    linear-gradient(180deg, #101923 0%, #111d29 48%, #0c141d 100%);
+}
+
+.story-screen::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  border: 1px solid rgba(226, 190, 120, 0.28);
+  clip-path: polygon(0 16px, 16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+.story-hud {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(150px, auto) 1fr minmax(120px, auto);
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  border-bottom: 1px solid rgba(226, 190, 120, 0.24);
+  background: linear-gradient(180deg, rgba(25, 39, 54, 0.98), rgba(16, 25, 35, 0.92));
+}
+
+.story-title-block {
+  min-width: 0;
+  text-align: center;
+}
+
+.story-title-block > span {
+  display: block;
+  overflow: hidden;
+  color: #bbc6d2;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.story-title-block h1 {
+  margin: 2px 0 0;
+  overflow: hidden;
+  color: #f4f0e7;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.05rem, 1.7vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.08;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.story-stage {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(18px, 3vw, 42px);
+}
+
+.story-stage::before,
+.story-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.story-stage::before {
+  background:
+    linear-gradient(115deg, transparent 0 18%, rgba(226, 190, 120, 0.035) 18.2% 18.6%, transparent 18.8%),
+    linear-gradient(245deg, transparent 0 21%, rgba(226, 190, 120, 0.03) 21.2% 21.6%, transparent 21.8%);
+}
+
+.story-stage::after {
+  background: linear-gradient(180deg, transparent 30%, rgba(5, 10, 15, 0.78) 100%);
+}
+
+.story-stage-ornament {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  width: min(36vw, 430px);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border: 1px solid rgba(226, 190, 120, 0.12);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 18px rgba(16, 25, 35, 0.24);
+}
+
+.story-stage-ornament::before,
+.story-stage-ornament::after {
+  content: "";
+  position: absolute;
+  inset: 16%;
+  rotate: 45deg;
+  border: 1px solid rgba(226, 190, 120, 0.1);
+}
+
+.story-stage-ornament::after {
+  inset: 31%;
+}
+
+.story-scene-context {
+  position: absolute;
+  z-index: 2;
+  top: 18px;
+  left: 50%;
+  display: flex;
+  max-width: min(78vw, 900px);
+  translate: -50% 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+  color: #bbc6d2;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.story-scene-context span + span::before {
+  content: "◆";
+  margin-right: 14px;
+  color: #e2be78;
+  font-size: 0.55rem;
+}
+
+.story-caption {
+  position: relative;
+  z-index: 3;
+  width: min(920px, calc(100vw - 96px));
+  min-height: 138px;
+  padding: 20px 26px 18px;
+  border: 1px solid rgba(226, 190, 120, 0.5);
+  border-left-width: 3px;
+  background:
+    linear-gradient(90deg, rgba(226, 190, 120, 0.08), transparent 24%),
+    rgba(15, 25, 35, 0.95);
+  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.34), inset 0 0 0 1px rgba(244, 240, 231, 0.04);
+}
+
+.story-caption::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 58px;
+  height: 10px;
+  border-top: 1px solid #e2be78;
+  border-right: 1px solid #e2be78;
+}
+
+.story-speaker {
+  margin: 0 0 8px;
+  color: #e2be78;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.story-line {
+  margin: 0;
+  color: #f4f0e7;
+  font-size: clamp(1rem, 1.45vw, 1.22rem);
+  line-height: 1.55;
+}
+
+.story-event-thought .story-line {
+  font-style: italic;
+}
+
+.story-event-action .story-line,
+.story-event-narration .story-line {
+  color: #dce3e8;
+  font-style: italic;
+}
+
+.story-progress {
+  position: absolute;
+  right: 18px;
+  bottom: 10px;
+  display: flex;
+  gap: 5px;
+  color: #8fa0af;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.story-controls {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 18px;
+  border-top: 1px solid rgba(226, 190, 120, 0.22);
+  background: rgba(10, 17, 24, 0.96);
+}
+
+.story-controls .game-button {
+  min-width: 150px;
+}
+
+.story-unavailable {
+  display: grid;
+  place-items: center;
+}
+
+.story-unavailable-card {
+  width: min(620px, calc(100vw - 48px));
+  padding: 32px;
+  border: 1px solid rgba(226, 190, 120, 0.38);
+  background: #192736;
+  text-align: center;
+}
+
+.story-unavailable-card h1 {
+  margin: 8px auto 24px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .story-screen {
+    grid-template-rows: 54px minmax(0, 1fr) 56px;
+  }
+
+  .story-hud {
+    grid-template-columns: 58px 1fr 58px;
+    gap: 8px;
+    padding: 5px 8px;
+  }
+
+  .story-title-block > span {
+    font-size: 0.58rem;
+  }
+
+  .story-title-block h1 {
+    font-size: 0.95rem;
+  }
+
+  .story-stage {
+    padding: 10px 14px 12px;
+  }
+
+  .story-scene-context {
+    top: 8px;
+    max-width: 72vw;
+    font-size: 0.62rem;
+  }
+
+  .story-stage-ornament {
+    top: 10%;
+    width: 240px;
+  }
+
+  .story-caption {
+    width: min(720px, calc(100vw - 90px));
+    min-height: 104px;
+    padding: 12px 18px 16px;
+  }
+
+  .story-speaker {
+    margin-bottom: 4px;
+    font-size: 0.65rem;
+  }
+
+  .story-line {
+    font-size: 0.88rem;
+    line-height: 1.35;
+  }
+
+  .story-controls {
+    padding: 6px 10px;
+  }
+
+  .story-controls .game-button {
+    min-width: 132px;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-screen *,
+  .story-screen *::before,
+  .story-screen *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
