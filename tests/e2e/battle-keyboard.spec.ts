@@ -40,6 +40,7 @@ test("battle supports logical-cell keyboard navigation without pointer input", a
   const movedScoutCell = page.locator('[data-battle-cell="1:5"]');
   await movedScoutCell.focus();
   await movedScoutCell.press("ArrowRight");
+  await expect(page.locator('[data-battle-cell="2:5"]')).toBeFocused();
   await page.keyboard.press("Enter");
   await pressFocused(page.getByRole("button", { name: "Confirm attack", exact: true }));
   await expect(status).toContainText("Attack dealt 9 damage.");
