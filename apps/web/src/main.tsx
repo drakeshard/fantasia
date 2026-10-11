@@ -23,6 +23,7 @@ import "./art-integration.css";
 import "./home-reference.css";
 import "./home-fidelity.css";
 import "./home-lobby.css";
+import "./home-detail-v15.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
@@ -101,7 +102,7 @@ function App() {
   function resetPreferences() {
     const next = defaultUiPreferences();
     setPreferences(next);
-    const result = resetUiPreferences(browserStorage());
+    const result = resetUiPreferences(browserStorage(), next);
     setStorageMessage(result.message);
   }
 
