@@ -1,0 +1,667 @@
+/* GAME-UI17 — full-bleed Saga correction + production-quality Chapter map.
+ * Presentation only: campaign truth, camera state and stage entry remain runtime/game-owned.
+ */
+
+.saga-campaign-screen {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  padding: 0;
+  overflow: hidden;
+  background: #080d13;
+}
+
+.saga-campaign-screen > .saga-war-table {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.campaign-rooted-shell {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #071019;
+}
+
+.campaign-rooted-shell > .campaign-screen {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  padding: 0;
+  overflow: hidden;
+  background: #071019;
+}
+
+.campaign-rooted-shell > .campaign-screen > .campaign-shell {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  margin: 0;
+  display: grid;
+  grid-template-rows: 72px minmax(0, 1fr);
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: #0b1620;
+  box-shadow: none;
+}
+
+.campaign-rooted-shell .campaign-header {
+  position: relative;
+  z-index: 30;
+  min-height: 72px;
+  height: 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  padding: 8px 300px 8px 120px;
+  border-bottom: 1px solid rgb(226 190 120 / 20%);
+  background:
+    linear-gradient(180deg, rgb(5 12 18 / 98%), rgb(7 17 25 / 94%)),
+    #071019;
+  box-shadow: 0 8px 26px rgb(0 0 0 / 24%);
+}
+
+.campaign-rooted-shell .campaign-header > .nav-button,
+.campaign-rooted-shell .campaign-header-actions,
+.campaign-rooted-shell .sandbox-launch {
+  display: none;
+}
+
+.campaign-rooted-shell .campaign-title-block {
+  min-width: 0;
+  justify-self: center;
+  text-align: center;
+}
+
+.campaign-rooted-shell .campaign-title-block > span {
+  display: block;
+  color: rgb(226 190 120 / 82%);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.campaign-rooted-shell .campaign-title-block h1 {
+  margin: 3px 0 0;
+  color: #fff4dc;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-weight: 500;
+  line-height: 1.04;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 45%);
+}
+
+.campaign-root-navigation {
+  z-index: 60;
+  top: 13px;
+  left: 18px;
+  right: 18px;
+  gap: 8px;
+  align-items: center;
+}
+
+.campaign-root-navigation button {
+  min-width: 72px;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgb(226 190 120 / 26%);
+  border-radius: 3px;
+  color: rgb(244 240 231 / 88%);
+  background: linear-gradient(180deg, rgb(18 35 48 / 96%), rgb(7 16 24 / 96%));
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 4%),
+    0 8px 20px rgb(0 0 0 / 28%);
+  font-weight: 700;
+}
+
+.campaign-root-navigation button:hover {
+  border-color: rgb(226 190 120 / 62%);
+  background: linear-gradient(180deg, rgb(27 48 64 / 98%), rgb(9 21 31 / 98%));
+}
+
+.campaign-rooted-shell .campaign-body {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+  background: #16261f;
+}
+
+.campaign-rooted-shell .campaign-map-panel {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  min-height: 0;
+  display: block;
+  overflow: hidden;
+  background: #16261f;
+}
+
+.campaign-rooted-shell .campaign-map-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background:
+    radial-gradient(ellipse at 18% 75%, rgb(128 112 69 / 21%), transparent 27%),
+    radial-gradient(ellipse at 72% 28%, rgb(76 106 78 / 26%), transparent 34%),
+    radial-gradient(ellipse at 54% 62%, rgb(37 67 54 / 30%), transparent 38%),
+    repeating-linear-gradient(31deg, transparent 0 92px, rgb(247 231 193 / 1.5%) 93px 94px),
+    linear-gradient(148deg, #395043 0%, #2a4035 35%, #26382f 67%, #1b2b25 100%);
+  box-shadow:
+    inset 0 0 120px rgb(0 0 0 / 42%),
+    inset 0 0 0 1px rgb(226 190 120 / 8%);
+}
+
+.campaign-rooted-shell .campaign-map-art::before {
+  background:
+    repeating-linear-gradient(27deg, transparent 0 54px, rgb(243 233 207 / 1.8%) 55px 56px),
+    radial-gradient(circle at 50% 50%, transparent 44%, rgb(8 13 18 / 42%) 100%);
+}
+
+.campaign-rooted-shell .map-landmark {
+  display: none;
+}
+
+.campaign-rooted-shell .map-river {
+  opacity: 0.76;
+}
+
+.campaign-rooted-shell .campaign-map-heading {
+  position: absolute;
+  z-index: 24;
+  top: 16px;
+  right: 404px;
+  left: 16px;
+  min-height: 58px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 9px 11px 9px 14px;
+  border: 1px solid rgb(226 190 120 / 24%);
+  border-radius: 3px;
+  background: linear-gradient(100deg, rgb(8 20 29 / 92%), rgb(7 16 24 / 78%));
+  box-shadow: 0 14px 32px rgb(0 0 0 / 27%);
+  backdrop-filter: blur(12px);
+}
+
+.campaign-rooted-shell .campaign-map-heading p {
+  margin: 0;
+}
+
+.campaign-rooted-shell .campaign-map-heading .hud-eyebrow {
+  color: var(--ui-accent);
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+}
+
+.campaign-rooted-shell .campaign-map-heading > div:first-child > p:last-child {
+  margin-top: 2px;
+  color: rgb(187 198 210 / 72%);
+  font-size: 0.72rem;
+}
+
+.campaign-rooted-shell .map-toolbar {
+  flex-wrap: nowrap;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.campaign-rooted-shell .map-toolbar button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-color: rgb(226 190 120 / 24%);
+  background: rgb(10 23 33 / 84%);
+  box-shadow: inset 0 1px rgb(255 255 255 / 3%);
+}
+
+.campaign-rooted-shell .map-toolbar button:hover:not(:disabled) {
+  border-color: rgb(226 190 120 / 58%);
+  background: rgb(25 45 60 / 94%);
+}
+
+.campaign-rooted-shell .campaign-map-footer {
+  position: absolute;
+  z-index: 18;
+  right: 404px;
+  bottom: 16px;
+  left: 16px;
+  width: auto;
+  min-height: 38px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 6px 11px;
+  border: 1px solid rgb(226 190 120 / 16%);
+  border-radius: 3px;
+  color: rgb(187 198 210 / 68%);
+  background: rgb(5 14 21 / 78%);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 20%);
+  backdrop-filter: blur(9px);
+  font-size: 0.72rem;
+  pointer-events: none;
+}
+
+.campaign-rooted-shell .stage-list {
+  position: absolute;
+  z-index: 27;
+  top: 88px;
+  left: 16px;
+  width: min(300px, 25vw);
+  max-height: calc(100% - 158px);
+  overflow: auto;
+  border: 1px solid rgb(226 190 120 / 22%);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgb(15 31 43 / 94%), rgb(7 17 25 / 92%));
+  box-shadow: 0 18px 44px rgb(0 0 0 / 34%);
+  backdrop-filter: blur(13px);
+}
+
+.campaign-rooted-shell .stage-list-heading {
+  padding: 12px 13px;
+  border-bottom: 1px solid rgb(226 190 120 / 13%);
+  background: rgb(7 17 25 / 36%);
+}
+
+.campaign-rooted-shell .stage-list-heading .hud-eyebrow {
+  font-size: 0.61rem;
+}
+
+.campaign-rooted-shell .stage-list-heading strong {
+  display: block;
+  margin-top: 2px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.campaign-rooted-shell .stage-list-entry {
+  min-height: 58px;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  padding: 7px 10px;
+  border-bottom-color: rgb(226 190 120 / 9%);
+  background: rgb(5 14 22 / 22%);
+}
+
+.campaign-rooted-shell .stage-list-entry:hover,
+.campaign-rooted-shell .stage-list-entry.is-selected {
+  background: linear-gradient(90deg, rgb(226 190 120 / 11%), rgb(30 52 68 / 76%));
+}
+
+.campaign-rooted-shell .stage-list-entry strong {
+  font-size: 0.82rem;
+  line-height: 1.16;
+}
+
+.campaign-rooted-shell .stage-list-entry small {
+  margin-top: 2px;
+  font-size: 0.66rem;
+}
+
+.campaign-rooted-shell .campaign-inspector {
+  position: absolute;
+  z-index: 28;
+  top: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: clamp(320px, 26vw, 372px);
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid rgb(226 190 120 / 28%);
+  border-top-color: rgb(226 190 120 / 52%);
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 88% 3%, rgb(226 190 120 / 6%), transparent 24%),
+    linear-gradient(160deg, rgb(19 37 50 / 96%), rgb(7 17 25 / 96%));
+  box-shadow:
+    0 24px 64px rgb(0 0 0 / 38%),
+    inset 0 1px rgb(255 255 255 / 3%);
+  backdrop-filter: blur(14px);
+}
+
+.campaign-rooted-shell .campaign-inspector::before {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  border-top: 1px solid rgb(226 190 120 / 58%);
+  border-left: 1px solid rgb(226 190 120 / 58%);
+  pointer-events: none;
+  content: "";
+}
+
+.campaign-rooted-shell .inspector-scroll {
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 3px 10px 0;
+}
+
+.campaign-rooted-shell .campaign-inspector h2 {
+  margin: 7px 0 12px;
+  color: #fff4dc;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.55rem, 2.15vw, 2rem);
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.campaign-rooted-shell .campaign-inspector p {
+  color: rgb(187 198 210 / 78%);
+  line-height: 1.52;
+}
+
+.campaign-rooted-shell .inspector-section {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid rgb(226 190 120 / 12%);
+}
+
+.campaign-rooted-shell .inspector-section h3 {
+  margin-bottom: 6px;
+  color: rgb(226 190 120 / 88%);
+  font-size: 0.66rem;
+}
+
+.campaign-rooted-shell .entry-reason {
+  margin-top: 18px;
+  padding: 11px 12px;
+  border-left-color: rgb(226 190 120 / 48%);
+  color: rgb(187 198 210 / 80%);
+  background: rgb(29 49 65 / 60%);
+}
+
+.campaign-rooted-shell .campaign-enter {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 14px;
+  border-color: #efd08b;
+  color: #18202a;
+  background: linear-gradient(180deg, #efd18c, #d9ad58);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 34%),
+    0 10px 24px rgb(0 0 0 / 25%);
+  font-weight: 800;
+}
+
+.campaign-rooted-shell .campaign-enter:hover {
+  filter: brightness(1.055);
+}
+
+.campaign-rooted-shell .campaign-node {
+  width: 60px;
+  height: 60px;
+}
+
+.campaign-rooted-shell .campaign-node .node-glyph {
+  width: 44px;
+  height: 44px;
+}
+
+.campaign-rooted-shell .node-label {
+  max-width: 168px;
+  border-color: rgb(226 190 120 / 26%);
+  background: rgb(5 14 22 / 96%);
+}
+
+.campaign-rooted-shell button:focus-visible {
+  outline: 2px solid var(--ui-focus, #9acbff);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1120px) and (min-height: 500px) {
+  .campaign-rooted-shell .campaign-header {
+    padding-right: 250px;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading,
+  .campaign-rooted-shell .campaign-map-footer {
+    right: 344px;
+  }
+
+  .campaign-rooted-shell .campaign-inspector {
+    width: 312px;
+    padding: 18px;
+  }
+
+  .campaign-rooted-shell .stage-list {
+    width: 270px;
+  }
+}
+
+@media (max-width: 900px) and (min-height: 500px) and (orientation: landscape) {
+  .campaign-rooted-shell .campaign-header {
+    padding-right: 210px;
+    padding-left: 86px;
+  }
+
+  .campaign-root-navigation {
+    left: 10px;
+    right: 10px;
+  }
+
+  .campaign-root-navigation button {
+    min-width: 54px;
+    padding: 0 9px;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading,
+  .campaign-rooted-shell .campaign-map-footer {
+    right: 286px;
+  }
+
+  .campaign-rooted-shell .campaign-inspector {
+    right: 10px;
+    width: 260px;
+    padding: 16px;
+  }
+
+  .campaign-rooted-shell .stage-list {
+    left: 10px;
+    width: 240px;
+  }
+}
+
+@media (max-height: 499px) and (orientation: landscape) {
+  .saga-campaign-screen,
+  .saga-campaign-screen > .saga-war-table,
+  .campaign-rooted-shell,
+  .campaign-rooted-shell > .campaign-screen,
+  .campaign-rooted-shell > .campaign-screen > .campaign-shell {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .campaign-rooted-shell > .campaign-screen > .campaign-shell {
+    grid-template-rows: 54px minmax(0, 1fr);
+  }
+
+  .campaign-rooted-shell .campaign-header {
+    min-height: 54px;
+    height: 54px;
+    padding: 4px 230px 4px 76px;
+  }
+
+  .campaign-rooted-shell .campaign-title-block > span {
+    display: none;
+  }
+
+  .campaign-rooted-shell .campaign-title-block h1 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .campaign-root-navigation {
+    top: 4px;
+    left: 6px;
+    right: 6px;
+    gap: 5px;
+  }
+
+  .campaign-root-navigation button {
+    min-width: 46px;
+    min-height: 46px;
+    padding: 0 8px;
+    font-size: 0.7rem;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading {
+    top: 8px;
+    right: 268px;
+    left: 8px;
+    min-height: 46px;
+    padding: 4px 6px 4px 9px;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading > div:first-child {
+    display: none;
+  }
+
+  .campaign-rooted-shell .map-toolbar {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .campaign-rooted-shell .map-toolbar button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 8px;
+    font-size: 0.68rem;
+  }
+
+  .campaign-rooted-shell .campaign-map-footer {
+    right: 268px;
+    bottom: 122px;
+    left: 8px;
+    min-height: 30px;
+    padding: 4px 8px;
+    font-size: 0.61rem;
+  }
+
+  .campaign-rooted-shell .stage-list {
+    top: auto;
+    right: 268px;
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    max-height: 106px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .campaign-rooted-shell .stage-list-heading {
+    display: none;
+  }
+
+  .campaign-rooted-shell .stage-list-items {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .campaign-rooted-shell .stage-list-entry {
+    width: 186px;
+    min-width: 186px;
+    min-height: 52px;
+    align-content: center;
+    padding: 6px 8px;
+    border-right: 1px solid rgb(226 190 120 / 9%);
+    border-bottom: 0;
+  }
+
+  .campaign-rooted-shell .stage-list-entry strong {
+    font-size: 0.72rem;
+  }
+
+  .campaign-rooted-shell .stage-list-entry small {
+    font-size: 0.57rem;
+  }
+
+  .campaign-rooted-shell .campaign-inspector {
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: 250px;
+    padding: 12px;
+  }
+
+  .campaign-rooted-shell .campaign-inspector h2 {
+    margin: 4px 0 7px;
+    font-size: 1.05rem;
+  }
+
+  .campaign-rooted-shell .campaign-inspector p {
+    font-size: 0.66rem;
+    line-height: 1.35;
+  }
+
+  .campaign-rooted-shell .inspector-section {
+    margin-top: 8px;
+    padding-top: 7px;
+  }
+
+  .campaign-rooted-shell .inspector-section h3 {
+    margin-bottom: 3px;
+    font-size: 0.55rem;
+  }
+
+  .campaign-rooted-shell .entry-reason {
+    margin-top: 8px;
+    padding: 7px 8px;
+  }
+
+  .campaign-rooted-shell .campaign-enter {
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 0 10px;
+    font-size: 0.72rem;
+  }
+
+  .campaign-rooted-shell .campaign-node {
+    width: 46px;
+    height: 46px;
+  }
+
+  .campaign-rooted-shell .campaign-node .node-glyph {
+    width: 34px;
+    height: 34px;
+  }
+
+  .campaign-rooted-shell .node-label {
+    max-width: 116px;
+    font-size: 0.62rem;
+  }
+}
+
+html[data-ui-text-scale="200"] .campaign-rooted-shell .campaign-inspector,
+html[data-ui-text-scale="200"] .campaign-rooted-shell .stage-list {
+  overflow: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campaign-rooted-shell button {
+    transition: none;
+  }
+}
