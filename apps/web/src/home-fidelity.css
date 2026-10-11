@@ -1,0 +1,148 @@
+/* GAME-UI12 — final Home fidelity correction against the approved cinematic reference.
+ * Keep this layer last: it only refines Home presentation geometry and material treatment.
+ */
+
+@media (min-width: 1181px) and (min-height: 650px) {
+  .home-screen::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgb(3 9 15 / 58%) 0%,
+        rgb(3 9 15 / 42%) 19%,
+        rgb(3 9 15 / 17%) 35%,
+        rgb(3 9 15 / 4%) 53%,
+        rgb(3 9 15 / 5%) 100%
+      ),
+      linear-gradient(180deg, rgb(4 10 16 / 5%), transparent 54%, rgb(4 10 16 / 24%)),
+      url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center 52% / cover no-repeat;
+  }
+
+  .home-main-layout {
+    padding: 0 clamp(70px, 5.5vw, 94px) 0 clamp(128px, 11.25vw, 188px);
+    grid-template-columns: minmax(0, 58fr) minmax(410px, 30fr);
+    gap: clamp(48px, 4.7vw, 76px);
+  }
+
+  .home-hero-copy {
+    width: min(100%, 760px);
+    padding-top: clamp(20px, 3.2vh, 34px);
+  }
+
+  .home-hero-copy::before {
+    top: -64px;
+    right: -125px;
+    bottom: -46px;
+    left: -76px;
+    background: radial-gradient(ellipse at 26% 49%, rgb(3 9 15 / 56%), transparent 69%);
+  }
+
+  .home-kicker.fantasia-ornament {
+    margin-bottom: 13px;
+  }
+
+  .home-hero-title {
+    max-width: 740px;
+    font-size: clamp(4rem, 5.8vw, 6.35rem);
+    line-height: 0.9;
+    letter-spacing: -0.042em;
+  }
+
+  .home-hero-lede {
+    max-width: 600px;
+    margin-top: 21px;
+    font-size: clamp(0.98rem, 1.05vw, 1.12rem);
+    line-height: 1.55;
+  }
+
+  .home-story-card {
+    width: min(44.7vw, 750px);
+    min-height: 158px;
+    margin-top: clamp(30px, 4vh, 43px);
+    padding: 21px 21px 21px 22px;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    gap: 18px;
+    background:
+      radial-gradient(circle at 72% 20%, rgb(227 189 114 / 4%), transparent 25%),
+      linear-gradient(112deg, rgb(9 27 42 / 92%), rgb(7 19 30 / 86%));
+    backdrop-filter: blur(10px);
+  }
+
+  .home-story-seal {
+    width: 66px;
+    height: 66px;
+  }
+
+  .home-story-copy h2 {
+    font-size: clamp(1.72rem, 2vw, 2.3rem);
+  }
+
+  .home-story-continue {
+    min-width: 140px;
+    min-height: 56px;
+    padding-inline: 22px;
+  }
+
+  .home-command-column {
+    width: min(29.7vw, 490px);
+    padding: 20px 18px 17px;
+    background:
+      radial-gradient(circle at 78% 8%, rgb(227 189 114 / 4%), transparent 22%),
+      linear-gradient(160deg, rgb(8 21 32 / 91%), rgb(5 14 22 / 87%));
+    box-shadow:
+      0 24px 60px rgb(0 0 0 / 35%),
+      inset 0 1px rgb(255 255 255 / 4%);
+    backdrop-filter: blur(10px);
+  }
+
+  .home-command-heading {
+    min-height: 62px;
+    padding-bottom: 14px;
+  }
+
+  .home-command-heading h2 {
+    font-size: clamp(1.55rem, 1.72vw, 1.92rem);
+  }
+
+  .home-command-heading > p {
+    max-width: 132px;
+    font-size: 0.66rem;
+  }
+
+  .home-primary-nav {
+    gap: 9px;
+    margin-top: 14px;
+  }
+
+  .home-primary-nav button {
+    min-height: 76px;
+    grid-template-columns: 50px minmax(0, 1fr) 26px;
+    gap: 14px;
+    padding: 10px 14px;
+  }
+
+  .home-primary-nav button > span:first-child {
+    width: 48px;
+    height: 48px;
+    background-size: 126% 126%;
+  }
+
+  .home-nav-copy strong {
+    font-size: 1.04rem;
+  }
+
+  .home-nav-copy small {
+    margin-top: 4px;
+    font-size: 0.69rem;
+  }
+
+  .home-nav-arrow {
+    font-size: 1.42rem;
+  }
+}
+
+@media (min-width: 1500px) and (min-height: 820px) {
+  .home-main-layout {
+    padding-left: clamp(168px, 11.4vw, 205px);
+    padding-right: clamp(82px, 5.8vw, 108px);
+  }
+}
