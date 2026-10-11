@@ -20,6 +20,7 @@ import "./root-shell.css";
 import "./detail-polish.css";
 import "./detail-polish-fixes.css";
 import "./art-integration.css";
+import "./home-reference.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
