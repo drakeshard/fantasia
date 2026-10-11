@@ -66,3 +66,18 @@ jobs:
 
       - name: Browser smoke
         run: pnpm test:e2e
+
+      - name: Pre-deploy visual capture
+        run: pnpm test:visual
+
+      - name: Upload visual review evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fantasia-visual-review-${{ github.sha }}
+          path: |
+            visual-artifacts/
+            playwright-visual-report/
+            test-results-visual/
+          if-no-files-found: warn
+          retention-days: 7
