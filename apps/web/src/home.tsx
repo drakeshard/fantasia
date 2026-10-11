@@ -75,7 +75,9 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
         </section>
 
         <aside class="home-command-column" aria-label="Main menu">
-          <div class="home-command-crown" aria-hidden="true">✦</div>
+          <div class="home-command-crown" aria-hidden="true">
+            ✦
+          </div>
           <div class="home-command-heading">
             <div>
               <p class="home-kicker">Main menu</p>
