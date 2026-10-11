@@ -577,8 +577,7 @@
                       "type": "dialogue",
                       "text": "Just call me Traveler. I'm from Primora.",
                       "speaker": "MC",
-                      "displayLabel": "MC",
-                      "tokenized": true
+                      "displayLabel": "MC"
                     },
                     {
                       "id": "S01-CH01-N01-L350",
@@ -739,8 +738,7 @@
                       "type": "dialogue",
                       "text": "Traveler. At least for now.",
                       "speaker": "MC",
-                      "displayLabel": "MC",
-                      "tokenized": true
+                      "displayLabel": "MC"
                     },
                     {
                       "id": "S01-CH01-N01-L710",
