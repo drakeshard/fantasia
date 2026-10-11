@@ -41,7 +41,8 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
         <section class="home-hero-copy" aria-labelledby="home-hero-title">
           <p class="home-kicker fantasia-ornament">Current journey</p>
           <h1 id="home-hero-title" class="home-hero-title">
-            Step beyond <em>history.</em>
+            <span>Step beyond</span>
+            <em>history.</em>
           </h1>
           <p class="home-hero-lede">
             Follow the current campaign, review the active saga, and return to the chapter exactly
@@ -67,12 +68,14 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
               aria-label="Continue current story"
               onClick={onContinue}
             >
-              Continue
+              <span>Continue</span>
+              <span aria-hidden="true">›</span>
             </button>
           </section>
         </section>
 
         <aside class="home-command-column" aria-label="Main menu">
+          <div class="home-command-crown" aria-hidden="true">✦</div>
           <div class="home-command-heading">
             <div>
               <p class="home-kicker">Main menu</p>
