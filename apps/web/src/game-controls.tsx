@@ -56,6 +56,42 @@ export function GameButton({
   );
 }
 
+interface GameUtilityClusterProps {
+  readonly onHome?: () => void;
+  readonly onSettings?: (trigger: HTMLElement) => void;
+  readonly homeLabel?: string;
+  readonly class?: string;
+}
+
+export function GameUtilityCluster({
+  onHome,
+  onSettings,
+  homeLabel = "Home",
+  class: className,
+}: GameUtilityClusterProps) {
+  if (!onHome && !onSettings) return null;
+
+  return (
+    <div class={`game-global-utilities${className ? ` ${className}` : ""}`}>
+      {onHome ? (
+        <GameButton icon="home" compactLabel="Home" onClick={onHome} aria-label={homeLabel}>
+          {homeLabel}
+        </GameButton>
+      ) : null}
+      {onSettings ? (
+        <GameButton
+          icon="settings"
+          compactLabel="Settings"
+          onClick={(event) => onSettings(event.currentTarget)}
+          aria-label="Settings"
+        >
+          Settings
+        </GameButton>
+      ) : null}
+    </div>
+  );
+}
+
 interface GameScreenHeaderProps {
   readonly eyebrow: string;
   readonly title: string;
@@ -86,10 +122,6 @@ export function GameScreenHeader({
           <GameButton icon="back" onClick={onBack} aria-label={backLabel ?? "Back"}>
             {backLabel ?? "Back"}
           </GameButton>
-        ) : onHome ? (
-          <GameButton icon="home" onClick={onHome} aria-label={homeLabel}>
-            {homeLabel}
-          </GameButton>
         ) : null}
       </div>
 
@@ -105,22 +137,12 @@ export function GameScreenHeader({
         </div>
       </div>
 
-      <div class="game-screen-header-end">
-        {onHome && onBack ? (
-          <GameButton icon="home" onClick={onHome} aria-label={homeLabel}>
-            {homeLabel}
-          </GameButton>
-        ) : null}
-        {onSettings ? (
-          <GameButton
-            icon="settings"
-            onClick={(event) => onSettings(event.currentTarget)}
-            aria-label="Settings"
-          >
-            Settings
-          </GameButton>
-        ) : null}
-      </div>
+      <GameUtilityCluster
+        onHome={onHome}
+        onSettings={onSettings}
+        homeLabel={homeLabel}
+        class="game-screen-header-end"
+      />
     </header>
   );
 }
