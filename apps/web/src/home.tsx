@@ -75,9 +75,6 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
         </section>
 
         <aside class="home-command-column" aria-label="Main menu">
-          <div class="home-command-crown" aria-hidden="true">
-            ✦
-          </div>
           <div class="home-command-heading">
             <div>
               <p class="home-kicker">Main menu</p>
@@ -127,11 +124,6 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
               </span>
             </button>
           </nav>
-
-          <p class="home-quiet-note">
-            Unsupported account, currency, reward, mail, shop, and live-event systems are omitted
-            rather than represented with fabricated values.
-          </p>
         </aside>
       </div>
 

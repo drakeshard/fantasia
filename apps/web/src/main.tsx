@@ -21,6 +21,7 @@ import "./detail-polish.css";
 import "./detail-polish-fixes.css";
 import "./art-integration.css";
 import "./home-reference.css";
+import "./home-fidelity.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
