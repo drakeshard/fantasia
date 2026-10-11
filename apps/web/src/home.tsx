@@ -8,7 +8,12 @@ interface HomeAppProps {
 }
 
 function UiIcon({ name, className = "" }: { readonly name: string; readonly className?: string }) {
-  return <span class={`fantasia-ui-icon fantasia-ui-icon-${name} ${className}`.trim()} aria-hidden="true" />;
+  return (
+    <span
+      class={`fantasia-ui-icon fantasia-ui-icon-${name} ${className}`.trim()}
+      aria-hidden="true"
+    />
+  );
 }
 
 export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
@@ -82,7 +87,9 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
             </div>
             <div class="home-feature-rule" aria-hidden="true" />
             <div class="home-feature-footer">
-              <span class="home-feature-sequence">Saga {String(view.sagaSequence).padStart(2, "0")}</span>
+              <span class="home-feature-sequence">
+                Saga {String(view.sagaSequence).padStart(2, "0")}
+              </span>
               <span class="home-feature-state">Campaign ready</span>
             </div>
           </section>
