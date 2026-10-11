@@ -95,9 +95,7 @@ test("capture controlled player-facing UI for review", async ({ page }, testInfo
   const portrait = Boolean(viewport && viewport.height > viewport.width);
 
   if (portrait) {
-    await expect(
-      page.getByRole("main", { name: "Landscape orientation required" }),
-    ).toBeVisible();
+    await expect(page.getByRole("main", { name: "Landscape orientation required" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Rotate your device" })).toBeVisible();
     await captureViewport(page, testInfo, "orientation-gate");
     return;
