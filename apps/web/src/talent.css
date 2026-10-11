@@ -1,0 +1,565 @@
+/* GAME-UI22 — player-facing account Talent browser. */
+
+.talent-screen {
+  --talent-gold: #e2be78;
+  --talent-ivory: #f4f0e7;
+  --talent-muted: #bbc6d2;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 390px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 72px minmax(0, 1fr);
+  color: var(--talent-ivory);
+  background:
+    radial-gradient(circle at 62% 22%, rgb(33 58 79 / 38%), transparent 42%),
+    linear-gradient(145deg, #07111b, #101923 55%, #071019);
+}
+
+.talent-hud {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 clamp(20px, 3vw, 46px);
+  border-bottom: 1px solid rgb(226 190 120 / 24%);
+  background: rgb(6 14 22 / 86%);
+  backdrop-filter: blur(12px);
+}
+
+.talent-heading {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.talent-heading-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgb(226 190 120 / 46%);
+  border-radius: 50%;
+  background: rgb(13 28 42 / 80%);
+}
+
+.talent-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.talent-heading small,
+.talent-heading h1 {
+  margin: 0;
+}
+
+.talent-heading small,
+.talent-tree-heading small,
+.talent-rail-title small,
+.talent-doctrine header small,
+.talent-empty-family > small {
+  color: var(--talent-gold);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.talent-heading h1 {
+  margin-top: 1px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.65rem;
+  font-weight: 500;
+}
+
+.talent-workspace {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(250px, 294px) minmax(0, 1fr);
+}
+
+.talent-family-rail {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px 20px;
+  border-right: 1px solid rgb(226 190 120 / 18%);
+  background: linear-gradient(180deg, rgb(10 24 36 / 92%), rgb(7 17 27 / 88%));
+}
+
+.talent-rail-title {
+  display: grid;
+  gap: 4px;
+}
+
+.talent-rail-title strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.talent-family-tabs {
+  display: grid;
+  gap: 9px;
+}
+
+.talent-family-tab {
+  width: 100%;
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid rgb(113 131 148 / 38%);
+  border-radius: 4px;
+  color: var(--talent-ivory);
+  background: rgb(20 38 54 / 56%);
+  text-align: left;
+  cursor: pointer;
+}
+
+.talent-family-tab:hover {
+  border-color: rgb(226 190 120 / 52%);
+  background: rgb(28 48 66 / 68%);
+}
+
+.talent-family-tab:focus-visible,
+.talent-node:focus-visible {
+  outline: 2px solid #9acbff;
+  outline-offset: 2px;
+}
+
+.talent-family-tab.is-selected {
+  border-color: rgb(226 190 120 / 78%);
+  background: linear-gradient(105deg, rgb(55 48 37 / 58%), rgb(24 42 58 / 72%));
+  box-shadow: inset 3px 0 var(--talent-gold);
+}
+
+.talent-family-mark {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgb(226 190 120 / 45%);
+  border-radius: 50%;
+  color: var(--talent-gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.92rem;
+}
+
+.talent-family-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.talent-family-copy strong {
+  font-size: 0.9rem;
+}
+
+.talent-family-copy small {
+  color: rgb(187 198 210 / 78%);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.talent-family-state {
+  grid-column: 2;
+  width: fit-content;
+  padding: 2px 7px;
+  border: 1px solid rgb(113 131 148 / 36%);
+  color: rgb(187 198 210 / 76%);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.talent-family-state.is-available {
+  border-color: rgb(130 207 189 / 36%);
+  color: #9ddccc;
+}
+
+.talent-account-note {
+  margin-top: auto;
+  display: grid;
+  gap: 5px;
+  padding: 13px;
+  border: 1px solid rgb(226 190 120 / 20%);
+  background: rgb(6 15 24 / 48%);
+}
+
+.talent-account-note strong {
+  color: var(--talent-gold);
+  font-size: 0.76rem;
+}
+
+.talent-account-note span {
+  color: rgb(187 198 210 / 78%);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.talent-content {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: clamp(20px, 2.6vw, 38px);
+}
+
+.talent-tree-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.talent-tree-heading h2 {
+  margin: 3px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 3vw, 3.1rem);
+  font-weight: 500;
+}
+
+.talent-tree-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.talent-tree-meta span {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid rgb(113 131 148 / 34%);
+  color: var(--talent-muted);
+  background: rgb(10 22 33 / 66%);
+  font-size: 0.72rem;
+}
+
+.talent-production-boundary {
+  margin: 16px 0 20px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 14px;
+  padding: 12px 14px;
+  border: 1px solid rgb(226 190 120 / 30%);
+  border-left: 3px solid var(--talent-gold);
+  background: rgb(35 31 25 / 42%);
+}
+
+.talent-production-boundary strong {
+  color: var(--talent-gold);
+  font-size: 0.78rem;
+}
+
+.talent-production-boundary span {
+  color: rgb(244 240 231 / 80%);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.talent-doctrine-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.talent-doctrine {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid rgb(113 131 148 / 24%);
+  background: linear-gradient(180deg, rgb(16 34 49 / 72%), rgb(8 20 31 / 64%));
+}
+
+.talent-doctrine header {
+  min-height: 50px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(226 190 120 / 18%);
+}
+
+.talent-doctrine h3 {
+  margin: 2px 0 0;
+  color: var(--talent-ivory);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  font-weight: 500;
+}
+
+.talent-node-stack {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+}
+
+.talent-node {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid rgb(113 131 148 / 34%);
+  border-radius: 4px;
+  background: rgb(7 17 27 / 70%);
+}
+
+.talent-node.is-approved {
+  border-color: rgb(226 190 120 / 56%);
+  box-shadow: inset 0 2px rgb(226 190 120 / 30%);
+}
+
+.talent-node.is-proposed {
+  opacity: 0.88;
+}
+
+.talent-node-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 7px;
+  align-items: center;
+}
+
+.talent-node-type,
+.talent-node-status {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.talent-node-type {
+  color: var(--talent-muted);
+}
+
+.talent-node-status {
+  color: #d7b56f;
+}
+
+.talent-node h4 {
+  margin: 2px 0 0;
+  font-size: 0.93rem;
+}
+
+.talent-node-reward {
+  color: #e8d19c;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.talent-node-ranks,
+.talent-node p,
+.talent-node code {
+  color: rgb(187 198 210 / 72%);
+  font-size: 0.67rem;
+}
+
+.talent-node p {
+  margin: 2px 0 0;
+  line-height: 1.4;
+}
+
+.talent-node code {
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.talent-empty-family {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.talent-empty-emblem {
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+  border: 1px solid rgb(226 190 120 / 38%);
+  border-radius: 50%;
+  background: rgb(10 24 36 / 72%);
+}
+
+.talent-empty-emblem .talent-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.talent-empty-family h2 {
+  max-width: 640px;
+  margin: 8px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  font-weight: 500;
+}
+
+.talent-empty-family p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--talent-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 1050px) {
+  .talent-workspace {
+    grid-template-columns: 230px minmax(0, 1fr);
+  }
+
+  .talent-doctrine-grid {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+}
+
+@media (max-height: 499px) {
+  .talent-screen {
+    grid-template-rows: 54px minmax(0, 1fr);
+  }
+
+  .talent-hud {
+    padding: 0 12px;
+  }
+
+  .talent-heading-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .talent-heading small {
+    display: none;
+  }
+
+  .talent-heading h1 {
+    font-size: 1.22rem;
+  }
+
+  .talent-hud .game-control {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .talent-hud .game-control-label,
+  .talent-hud .game-control-compact-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .talent-workspace {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .talent-family-rail {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .talent-rail-title strong {
+    font-size: 0.92rem;
+  }
+
+  .talent-family-tab {
+    min-height: 52px;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 7px;
+    padding: 7px;
+  }
+
+  .talent-family-mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .talent-family-copy small,
+  .talent-family-state,
+  .talent-account-note,
+  .talent-production-boundary span,
+  .talent-node p,
+  .talent-node code {
+    display: none;
+  }
+
+  .talent-family-copy strong {
+    font-size: 0.72rem;
+  }
+
+  .talent-content {
+    padding: 10px 12px;
+  }
+
+  .talent-tree-heading h2 {
+    font-size: 1.55rem;
+  }
+
+  .talent-tree-meta span {
+    min-height: 26px;
+    font-size: 0.62rem;
+  }
+
+  .talent-production-boundary {
+    margin: 7px 0 9px;
+    padding: 6px 9px;
+  }
+
+  .talent-production-boundary strong {
+    font-size: 0.66rem;
+  }
+
+  .talent-doctrine-grid {
+    grid-template-columns: repeat(4, minmax(132px, 1fr));
+    gap: 7px;
+  }
+
+  .talent-doctrine {
+    padding: 7px;
+  }
+
+  .talent-doctrine header {
+    min-height: 34px;
+    padding-bottom: 5px;
+  }
+
+  .talent-doctrine header small {
+    display: none;
+  }
+
+  .talent-doctrine h3 {
+    font-size: 0.83rem;
+  }
+
+  .talent-node-stack {
+    gap: 6px;
+    padding-top: 6px;
+  }
+
+  .talent-node {
+    gap: 3px;
+    padding: 7px;
+  }
+
+  .talent-node-type,
+  .talent-node-status {
+    font-size: 0.5rem;
+  }
+
+  .talent-node h4 {
+    font-size: 0.72rem;
+  }
+
+  .talent-node-reward,
+  .talent-node-ranks {
+    font-size: 0.58rem;
+  }
+}
