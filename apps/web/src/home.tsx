@@ -7,6 +7,17 @@ interface HomeAppProps {
   readonly onSettings: (trigger: HTMLElement) => void;
 }
 
+const uiAsset = (name: string) => `/assets/ui/core/${name}`;
+
+interface HomeIconProps {
+  readonly src: string;
+  readonly className?: string;
+}
+
+function HomeIcon({ src, className }: HomeIconProps) {
+  return <img class={`home-icon${className ? ` ${className}` : ""}`} src={uiAsset(src)} alt="" />;
+}
+
 export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
   const session = useMemo(() => new CampaignSession(), []);
   const view = session.view();
@@ -17,7 +28,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
       <header class="home-lobby-hud">
         <div class="home-wordmark">
           <span class="home-wordmark-mark" aria-hidden="true">
-            <span>✦</span>
+            <HomeIcon src="fantasia_ui_brand_crest_v001.svg" />
           </span>
           <span class="home-wordmark-copy">
             <strong>FANTASIA</strong>
@@ -39,7 +50,8 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
 
           <section class="home-current-story" aria-label="Continue current story">
             <div class="home-current-story-mark" aria-hidden="true">
-              {view.sagaSequence}
+              <HomeIcon src="fantasia_ui_icon_campaign_default_v001.svg" />
+              <span>{view.sagaSequence}</span>
             </div>
             <div class="home-current-story-copy">
               <span class="home-current-story-kicker">
@@ -59,7 +71,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
               onClick={onContinue}
             >
               <span>Continue</span>
-              <span aria-hidden="true">›</span>
+              <HomeIcon src="fantasia_ui_icon_chevron_right_v001.svg" className="home-action-chevron" />
             </button>
           </section>
         </section>
@@ -68,7 +80,8 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
           <section class="home-feature-card home-feature-current">
             <span class="home-feature-kicker">Current Saga</span>
             <div class="home-feature-emblem" aria-hidden="true">
-              I
+              <HomeIcon src="fantasia_ui_icon_campaign_default_v001.svg" />
+              <span>I</span>
             </div>
             <h2>{view.sagaTitle}</h2>
             <p>{view.selectedChapterTitle}</p>
@@ -80,22 +93,25 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
           <section class="home-feature-card home-feature-locked" aria-label="Summon unavailable">
             <span class="home-feature-kicker">Summon</span>
             <div class="home-feature-emblem summon" aria-hidden="true">
-              ✦
+              <HomeIcon src="fantasia_ui_icon_summon_default_v001.svg" />
             </div>
             <h2>Summon</h2>
             <p>Character summoning is not available in this production slice.</p>
-            <span class="home-feature-state unavailable">Unavailable</span>
+            <span class="home-feature-state unavailable">
+              <HomeIcon src="fantasia_ui_icon_lock_v001.svg" />
+              <span>Unavailable</span>
+            </span>
           </section>
         </aside>
       </div>
 
       <nav class="home-game-dock" aria-label="Primary navigation">
         <span class="home-dock-item is-active" aria-current="page">
-          <span aria-hidden="true">⌂</span>
+          <HomeIcon src="fantasia_ui_icon_home_default_v001.svg" />
           <strong>Home</strong>
         </span>
         <button type="button" class="home-dock-item" aria-label="Campaign" onClick={onCampaign}>
-          <span aria-hidden="true">▤</span>
+          <HomeIcon src="fantasia_ui_icon_campaign_default_v001.svg" />
           <strong>Campaign</strong>
         </button>
         <button
@@ -105,7 +121,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
           disabled
           title="Summon is not implemented yet"
         >
-          <span aria-hidden="true">✦</span>
+          <HomeIcon src="fantasia_ui_icon_summon_default_v001.svg" />
           <strong>Summon</strong>
         </button>
         <button
@@ -114,7 +130,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
           aria-label="Settings"
           onClick={(event) => onSettings(event.currentTarget)}
         >
-          <span aria-hidden="true">⚙</span>
+          <HomeIcon src="fantasia_ui_icon_settings_default_v001.svg" />
           <strong>Settings</strong>
         </button>
       </nav>
