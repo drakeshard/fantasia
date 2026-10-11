@@ -24,6 +24,7 @@ import "./home-reference.css";
 import "./home-fidelity.css";
 import "./home-lobby.css";
 import "./home-detail.css";
+import "./saga-detail.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
