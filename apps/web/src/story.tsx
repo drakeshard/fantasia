@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
 import storyContent from "virtual:fantasia-story-content";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import { GameButton } from "./game-controls.js";
 import "./story.css";
 
@@ -90,7 +90,11 @@ export function StoryApp({
           <p class="story-line">{event.text}</p>
           <div
             class="story-progress"
-            aria-label={`Story event ${eventIndex + 1} of ${playback.events.length}`}
+            role="progressbar"
+            aria-label="Story progress"
+            aria-valuemin={1}
+            aria-valuemax={playback.events.length}
+            aria-valuenow={eventIndex + 1}
           >
             <span>{String(eventIndex + 1).padStart(2, "0")}</span>
             <span aria-hidden="true">/</span>
