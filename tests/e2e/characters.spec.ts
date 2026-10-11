@@ -11,7 +11,10 @@ test("Characters exposes only production-safe protagonist facts and returns Home
   await expect(page.getByRole("heading", { name: "Traveler", exact: true })).toBeVisible();
   await expect(page.getByText("Primora · Vaelkrath", { exact: true })).toBeVisible();
   await expect(page.getByText("Infantry", { exact: true })).toBeVisible();
-  await expect(page.getByText("More entries appear through the story.", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("More entries can be revealed through the story.", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Known", { exact: true })).toBeVisible();
 
   for (const unrevealedName of ["Julie", "Hangaku", "La Hire", "Jeanne"]) {
     await expect(page.getByText(new RegExp(unrevealedName, "i"))).toHaveCount(0);
