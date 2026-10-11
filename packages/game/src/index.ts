@@ -11,5 +11,9 @@ export * from "./composition/tactical/actor-identity.js";
 export * from "./encounter/loop.js";
 export * from "./encounter/persistence.js";
 export * from "./encounter/turns.js";
+export * from "./talent/effects.js";
+export * from "./talent/lancer.js";
+export * from "./talent/model.js";
+export * from "./talent/progression.js";
 
 export const gameDomainStatus = (): string => "Authoritative Fantasia domain boundary ready.";
