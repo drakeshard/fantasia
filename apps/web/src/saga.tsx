@@ -82,13 +82,12 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
               <p>Known chapters only. Route styling is progression presentation, not geography.</p>
             </div>
 
-            <div class="saga-route-track" role="list" aria-label="Saga chapters">
+            <ol class="saga-route-track" aria-label="Saga chapters">
               {view.chapters.map((chapter, index) => {
                 const current = chapter.current;
                 return (
-                  <div
+                  <li
                     class={`saga-route-step${current ? " is-current" : " is-unavailable"}`}
-                    role="listitem"
                     key={chapter.id}
                   >
                     {index > 0 ? <span class="saga-route-connector" aria-hidden="true" /> : null}
@@ -133,19 +132,16 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                         )}
                       </span>
                     </button>
-                  </div>
+                  </li>
                 );
               })}
-            </div>
+            </ol>
           </section>
 
           <aside class="saga-current-mission" aria-label="Current chapter">
             <div class="saga-current-heading">
               <span class="saga-current-icon" aria-hidden="true">
-                <img
-                  src={`${UI_ASSET_ROOT}/fantasia_ui_icon_campaign_default_v001.svg`}
-                  alt=""
-                />
+                <img src={`${UI_ASSET_ROOT}/fantasia_ui_icon_campaign_default_v001.svg`} alt="" />
               </span>
               <div>
                 <p class="saga-kicker">Current chapter</p>
@@ -159,7 +155,9 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
             </div>
 
             <p class="saga-current-note">
-              Continue into the existing Chapter {String(view.selectedChapterSequence).padStart(2, "0")} context. Stage access and progression remain campaign-owned.
+              Continue into the existing Chapter{" "}
+              {String(view.selectedChapterSequence).padStart(2, "0")} context. Stage access and
+              progression remain campaign-owned.
             </p>
 
             <button
