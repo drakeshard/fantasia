@@ -163,7 +163,7 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
             <button
               type="button"
               class="saga-continue-button"
-              aria-label={`Continue ${view.selectedChapterTitle}`}
+              aria-label="Continue current chapter"
               onClick={onContinue}
             >
               <span>
