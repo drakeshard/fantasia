@@ -20,6 +20,7 @@ jobs:
         with:
           node-version-file: .node-version
       - run: corepack enable
+      - run: node scripts/prepare-shared-packages.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec biome format --write content/narrative/story.json content/narrative/story-production.json
       - name: Commit formatting and remove temporary workflow
