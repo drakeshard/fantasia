@@ -28,7 +28,12 @@
 
 .battle-screen .pixi-battlefield::after {
   background:
-    linear-gradient(180deg, rgb(7 13 18 / 68%) 0, rgb(9 17 24 / 18%) 17%, transparent 38%),
+    linear-gradient(
+      180deg,
+      rgb(7 13 18 / 68%) 0,
+      rgb(9 17 24 / 18%) 17%,
+      transparent 38%
+    ),
     linear-gradient(0deg, rgb(7 13 18 / 76%) 0, rgb(9 17 24 / 18%) 22%, transparent 44%),
     radial-gradient(ellipse at center, transparent 52%, rgb(4 8 12 / 38%) 100%);
 }
@@ -41,8 +46,7 @@
 .battle-screen .unit-details-sheet,
 .battle-screen .battle-menu .menu-sheet {
   border-color: rgb(226 190 120 / 38%);
-  background:
-    linear-gradient(180deg, rgb(31 47 63 / 96%), rgb(18 31 43 / 96%));
+  background: linear-gradient(180deg, rgb(31 47 63 / 96%), rgb(18 31 43 / 96%));
   box-shadow:
     0 16px 42px rgb(0 0 0 / 36%),
     inset 0 0 0 1px rgb(255 255 255 / 3%);
@@ -62,11 +66,12 @@
 .battle-screen .active-unit-card::before,
 .battle-screen .turn-order-card::before,
 .battle-screen .command-preview::before {
-  content: "";
   position: absolute;
   pointer-events: none;
   opacity: 0.5;
-  background: url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") center / contain no-repeat;
+  content: "";
+  background:
+    url("/assets/ui/core/fantasia_ui_ornament_corner_v001.svg") center / contain no-repeat;
 }
 
 .battle-screen .battle-statusbar::before {
@@ -90,14 +95,15 @@
 }
 
 .battle-screen .battle-brand strong::before {
-  content: "";
   position: absolute;
   top: 50%;
   left: 0;
   width: 26px;
   height: 26px;
+  content: "";
   transform: translateY(-50%);
-  background: url("/assets/ui/core/fantasia_ui_brand_crest_v001.svg") center / contain no-repeat;
+  background:
+    url("/assets/ui/core/fantasia_ui_brand_crest_v001.svg") center / contain no-repeat;
 }
 
 .battle-screen .battle-brand span {
@@ -297,10 +303,6 @@
 
 .battle-screen .unit-details-sheet[open] > summary {
   border-bottom: 1px solid rgb(226 190 120 / 24%);
-}
-
-.battle-screen .global-settings-launcher.battle {
-  z-index: 12;
 }
 
 @media (max-width: 1199px) {
