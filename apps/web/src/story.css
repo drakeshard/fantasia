@@ -19,7 +19,16 @@
   inset: 10px;
   pointer-events: none;
   border: 1px solid rgba(226, 190, 120, 0.28);
-  clip-path: polygon(0 16px, 16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px));
+  clip-path: polygon(
+    0 16px,
+    16px 0,
+    calc(100% - 16px) 0,
+    100% 16px,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    16px 100%,
+    0 calc(100% - 16px)
+  );
 }
 
 .story-hud {
@@ -83,8 +92,18 @@
 
 .story-stage::before {
   background:
-    linear-gradient(115deg, transparent 0 18%, rgba(226, 190, 120, 0.035) 18.2% 18.6%, transparent 18.8%),
-    linear-gradient(245deg, transparent 0 21%, rgba(226, 190, 120, 0.03) 21.2% 21.6%, transparent 21.8%);
+    linear-gradient(
+      115deg,
+      transparent 0 18%,
+      rgba(226, 190, 120, 0.035) 18.2% 18.6%,
+      transparent 18.8%
+    ),
+    linear-gradient(
+      245deg,
+      transparent 0 21%,
+      rgba(226, 190, 120, 0.03) 21.2% 21.6%,
+      transparent 21.8%
+    );
 }
 
 .story-stage::after {
@@ -149,9 +168,10 @@
   border: 1px solid rgba(226, 190, 120, 0.5);
   border-left-width: 3px;
   background:
-    linear-gradient(90deg, rgba(226, 190, 120, 0.08), transparent 24%),
-    rgba(15, 25, 35, 0.95);
-  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.34), inset 0 0 0 1px rgba(244, 240, 231, 0.04);
+    linear-gradient(90deg, rgba(226, 190, 120, 0.08), transparent 24%), rgba(15, 25, 35, 0.95);
+  box-shadow:
+    0 16px 46px rgba(0, 0, 0, 0.34),
+    inset 0 0 0 1px rgba(244, 240, 231, 0.04);
 }
 
 .story-caption::before {
@@ -295,15 +315,5 @@
   .story-controls .game-button {
     min-width: 132px;
     min-height: 44px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .story-screen *,
-  .story-screen *::before,
-  .story-screen *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
   }
 }
