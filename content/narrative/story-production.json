@@ -4621,6 +4621,463 @@
           "text": "Continue to FIN."
         }
       ]
+    },
+    "FIN-N01-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 30
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché approaches",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Crowds compress the streets around Vieux-Marché while Jeanne is moved under guard. MC’s group stays split among ordinary movement until they can see the custody route clearly."
+        },
+        {
+          "type": "dialogue",
+          "text": "Keep the opening human and immediate. Nobody knows a cosmic event is coming; the only goal is reaching Jeanne before the execution proceeds."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-N01-BEAT-02."
+        }
+      ]
+    },
+    "FIN-N01-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 30
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché approaches",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The outer lane is still open, but the guard formation is tightening around Jeanne. Waiting any longer improves the guards’ position rather than the party’s."
+        },
+        {
+          "type": "dialogue",
+          "text": "Turn the chapter handoff into a clear voluntary commitment, not a surprise encounter or miracle opening."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-B01."
+        }
+      ]
+    },
+    "FIN-B01-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 120
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party breaks from the crowd and opens one narrow route toward Jeanne. The goal is contact, not defeating every guard in the square."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the first phase focused and legible: one road to Jeanne, with the group covering different pressures rather than becoming an army."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-B01-BEAT-02."
+        }
+      ]
+    },
+    "FIN-B01-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 120
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party reaches Jeanne. The objective changes immediately from approach to freeing her and preserving the retreat lane."
+        },
+        {
+          "type": "dialogue",
+          "text": "Let the reunion land quickly without stopping the battle for a long speech."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-B01-BEAT-03."
+        }
+      ]
+    },
+    "FIN-B01-BEAT-03": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 120
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HAN",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "With Jeanne free, the party stops trying to control the square and fights only for enough space to move her beyond the execution point."
+        },
+        {
+          "type": "dialogue",
+          "text": "The rescue must genuinely succeed. The expected death is prevented before anything supernatural interrupts."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-B02."
+        }
+      ]
+    },
+    "FIN-B02-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 30
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché and fractured overlap",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Light, distance, and sound stop agreeing with one another. The distortion gathers into a presence that refuses to hold one stable shape."
+        },
+        {
+          "type": "dialogue",
+          "text": "Reveal only the contradiction: Jeanne was expected to die here, MC was not expected to be present, and the changed outcome is treated as a problem. Explain nothing beyond that."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-B02-BEAT-02."
+        }
+      ]
+    },
+    "FIN-B02-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 120
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché and fractured overlap",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Hostile forms peel out of the distortion without settling into consistent bodies. They close on Jeanne and the escape route rather than behaving like an ordinary army."
+        },
+        {
+          "type": "dialogue",
+          "text": "Turn the mystery into immediate survival gameplay without defining a final creature taxonomy or deeper antagonist."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-B02-BEAT-03."
+        }
+      ]
+    },
+    "FIN-B02-BEAT-03": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 120
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché and fractured overlap",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Pieces of Rouen briefly overlap with places nobody recognizes: another sky, unfamiliar stone, a distant waterline. The fragments vanish before they can become destinations or explanations."
+        },
+        {
+          "type": "dialogue",
+          "text": "Tease the scale of the fracture without identifying Saga II, naming future worlds, or explaining why the overlap happens."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-B02-BEAT-04."
+        }
+      ]
+    },
+    "FIN-B02-BEAT-04": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 120
+      },
+      "staging": {
+        "background": "Rouen — Vieux-Marché and fractured overlap",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party stops treating the Manifestation as something that can be defeated here. They hold together until the Fracture becomes a usable route."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the finale victory survival and protection, not killing or permanently solving the deeper phenomenon."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-N03."
+        }
+      ]
+    },
+    "FIN-N03-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 30
+      },
+      "staging": {
+        "background": "Fractured Rouen — edge of the new Fracture",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The Fracture remains open but shows no readable destination. The Correction closes behind the party, turning an unknown crossing into the only route that is not collapsing."
+        },
+        {
+          "type": "dialogue",
+          "text": "Return to MC’s original home problem without pretending the new Fracture solves it."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN-N03-BEAT-02."
+        }
+      ]
+    },
+    "FIN-N03-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 30
+      },
+      "staging": {
+        "background": "Fractured Rouen — edge of the new Fracture",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "MC",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JEA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JUL",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "MC refuses to decide for Jeanne. Jeanne considers the unknown Fracture and the world behind her, then steps toward the crossing by her own choice. The distortion surges before any additional crossings are confirmed."
+        },
+        {
+          "type": "dialogue",
+          "text": "End Saga I on agency and consequence. Do not reveal Saga II, guarantee home, or resolve which supporting companions cross."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to TBD-SAGA-II."
+        }
+      ]
     }
   }
 }
