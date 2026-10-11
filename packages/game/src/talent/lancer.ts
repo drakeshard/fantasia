@@ -31,7 +31,8 @@ export const LANCER_CLASS_TALENT_SCAFFOLD: TalentTreeDefinition = {
         },
       ],
       layoutBand: "early",
-      notes: "Entry offensive progression; proposed sample record from GAME-TALENT-001.",
+      notes:
+        "Proposed sample only. Physical-only Power is obsolete as a final-content pattern under GAME-D245 and requires paired or mirrored Magical Power parity before approval.",
     },
     {
       nodeId: "LAN-CC-BRACE-01",
