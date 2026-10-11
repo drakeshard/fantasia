@@ -15,9 +15,7 @@ describe("GAME-EXEC01 approved story playback", () => {
     );
     expect(playback?.events.some((event) => event.displayLabel === "Young Woman")).toBe(true);
     expect(
-      playback?.events.some((event) =>
-        event.text.includes("Player regains movement control"),
-      ),
+      playback?.events.some((event) => event.text.includes("Player regains movement control")),
     ).toBe(false);
   });
 
