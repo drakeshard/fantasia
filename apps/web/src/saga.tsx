@@ -1,6 +1,8 @@
 import { CampaignSession } from "@fantasia/runtime";
 import { useMemo } from "preact/hooks";
 
+const UI_ASSET_ROOT = "/assets/ui/core";
+
 interface SagaAppProps {
   readonly onHome: () => void;
   readonly onContinue: () => void;
@@ -14,129 +16,175 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
 
   return (
     <main class="campaign-screen saga-campaign-screen">
-      <section class="campaign-shell overview-shell saga-reference-screen">
-        <aside class="saga-reference-rail" aria-label="Saga chapters">
-          <div class="saga-brand-row">
-            <span class="saga-banner-mark" aria-hidden="true">
-              ⚜
+      <section class="campaign-shell saga-reference-screen saga-war-table">
+        <header class="saga-top-hud">
+          <button type="button" class="saga-utility-button" onClick={onHome} aria-label="Home">
+            <img
+              src={`${UI_ASSET_ROOT}/fantasia_ui_icon_home_default_v001.svg`}
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Home</span>
+          </button>
+
+          <div class="saga-title-lockup">
+            <span class="saga-title-crest" aria-hidden="true">
+              <img src={`${UI_ASSET_ROOT}/fantasia_ui_brand_crest_v001.svg`} alt="" />
             </span>
             <div>
-              <p class="hud-eyebrow">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
+              <p class="saga-kicker">Saga {String(view.sagaSequence).padStart(2, "0")}</p>
               <h1>{view.sagaTitle}</h1>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="saga-utility-button"
+            onClick={(event) => onSettings(event.currentTarget)}
+            aria-label="Settings"
+          >
+            <img
+              src={`${UI_ASSET_ROOT}/fantasia_ui_icon_settings_default_v001.svg`}
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Settings</span>
+          </button>
+        </header>
+
+        <div class="saga-war-table-body">
+          <section class="saga-identity-panel" aria-labelledby="saga-story-heading">
+            <div class="saga-identity-emblem" aria-hidden="true">
+              <img
+                class="saga-identity-ring"
+                src={`${UI_ASSET_ROOT}/fantasia_ui_ornament_crest_ring_v001.svg`}
+                alt=""
+              />
+              <img
+                class="saga-identity-crest"
+                src={`${UI_ASSET_ROOT}/fantasia_ui_brand_crest_v001.svg`}
+                alt=""
+              />
+            </div>
+            <div class="saga-identity-copy">
+              <p class="saga-kicker">Current campaign</p>
+              <h2 id="saga-story-heading">{view.sagaTitle}</h2>
               <p>{view.sagaSynopsis}</p>
             </div>
-          </div>
+          </section>
 
-          <div class="saga-chapter-list">
-            {view.chapters.map((chapter) => {
-              const current = chapter.current;
-              return (
-                <button
-                  type="button"
-                  class={`saga-chapter-row${current ? " is-current" : ""}`}
-                  onClick={() => {
-                    if (current) onContinue();
-                  }}
-                  disabled={!current}
-                  aria-label={`${chapter.title}${current ? ", current chapter" : ", not implemented"}`}
-                >
-                  <span class="saga-chapter-number">
-                    {String(chapter.sequence).padStart(2, "0")}
-                  </span>
-                  <span class="saga-chapter-copy">
-                    <strong class="saga-chapter-title">{chapter.title}</strong>
-                    <small class="saga-chapter-meta">
-                      {current
-                        ? "Current chapter"
-                        : chapter.stageCount > 0
-                          ? `${chapter.stageCount} stages available`
-                          : "Production stages not implemented"}
-                    </small>
-                  </span>
-                  <span class="saga-chapter-arrow" aria-hidden="true">
-                    {current ? "›" : "—"}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </aside>
-
-        <section class="saga-main-field" aria-label="Saga overview">
-          <header class="saga-field-header">
-            <div>
-              <p class="hud-eyebrow">Campaign archive</p>
-              <h2>Saga overview</h2>
-              <p>
-                Review the visible chapter route and continue from the active campaign context.
-                Unimplemented chapters remain unavailable rather than implying progression.
-              </p>
+          <section class="saga-chapter-route" aria-labelledby="saga-route-heading">
+            <div class="saga-route-heading">
+              <div>
+                <p class="saga-kicker">Chapter path</p>
+                <h2 id="saga-route-heading">Your current journey</h2>
+              </div>
+              <p>Known chapters only. Route styling is progression presentation, not geography.</p>
             </div>
-            <div class="saga-index">
-              <span>Saga {String(view.sagaSequence).padStart(2, "0")}</span>
-              <span>{view.chapters.length} chapters visible</span>
-            </div>
-          </header>
 
-          <div class="saga-route-panel">
-            <div class="saga-route-mark" aria-hidden="true">
-              <div class="saga-route-emblem">
-                <span class="emblem-glyph">⚜</span>
-                <strong>The current route</strong>
-                <small>
-                  One active chapter is exposed by the present production campaign state.
-                </small>
+            <div class="saga-route-track" role="list" aria-label="Saga chapters">
+              {view.chapters.map((chapter, index) => {
+                const current = chapter.current;
+                return (
+                  <div
+                    class={`saga-route-step${current ? " is-current" : " is-unavailable"}`}
+                    role="listitem"
+                    key={chapter.id}
+                  >
+                    {index > 0 ? <span class="saga-route-connector" aria-hidden="true" /> : null}
+                    <button
+                      type="button"
+                      class="saga-chapter-node"
+                      onClick={() => {
+                        if (current) onContinue();
+                      }}
+                      disabled={!current}
+                      aria-label={`${chapter.title}${current ? ", current chapter" : ", not implemented"}`}
+                    >
+                      <span class="saga-node-medallion" aria-hidden="true">
+                        {current ? (
+                          <img
+                            src={`${UI_ASSET_ROOT}/fantasia_ui_icon_campaign_default_v001.svg`}
+                            alt=""
+                          />
+                        ) : (
+                          <img src={`${UI_ASSET_ROOT}/fantasia_ui_icon_lock_v001.svg`} alt="" />
+                        )}
+                      </span>
+                      <span class="saga-node-copy">
+                        <small>Chapter {String(chapter.sequence).padStart(2, "0")}</small>
+                        <strong>{chapter.title}</strong>
+                        <span>
+                          {current
+                            ? "Current chapter"
+                            : chapter.stageCount > 0
+                              ? `${chapter.stageCount} stages available`
+                              : "Production stages not implemented"}
+                        </span>
+                      </span>
+                      <span class="saga-node-action" aria-hidden="true">
+                        {current ? (
+                          <img
+                            src={`${UI_ASSET_ROOT}/fantasia_ui_icon_chevron_right_v001.svg`}
+                            alt=""
+                          />
+                        ) : (
+                          <span>Unavailable</span>
+                        )}
+                      </span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <aside class="saga-current-mission" aria-label="Current chapter">
+            <div class="saga-current-heading">
+              <span class="saga-current-icon" aria-hidden="true">
+                <img
+                  src={`${UI_ASSET_ROOT}/fantasia_ui_icon_campaign_default_v001.svg`}
+                  alt=""
+                />
+              </span>
+              <div>
+                <p class="saga-kicker">Current chapter</p>
+                <h2>{view.selectedChapterTitle}</h2>
               </div>
             </div>
 
-            <article class="saga-current-card">
-              <p class="hud-eyebrow">Current route</p>
-              <h3>{view.selectedChapterTitle}</h3>
-              <p>
-                Continue from the selected Chapter I context. Chapter availability and stage state
-                remain driven by the campaign model.
-              </p>
+            <div class="saga-current-stage">
+              <small>Current stage</small>
+              <strong>{currentStage?.title ?? "No stage exposed"}</strong>
+            </div>
 
-              <div class="saga-current-meta">
-                <span>
-                  <small>Chapter</small>
-                  <strong>{String(view.selectedChapterSequence).padStart(2, "0")}</strong>
-                </span>
-                <span>
-                  <small>Current stage</small>
-                  <strong>{currentStage?.title ?? "No stage exposed"}</strong>
-                </span>
-              </div>
+            <p class="saga-current-note">
+              Continue into the existing Chapter {String(view.selectedChapterSequence).padStart(2, "0")} context. Stage access and progression remain campaign-owned.
+            </p>
 
-              <button
-                type="button"
-                class="saga-next-objective"
-                aria-label="Continue current chapter"
-                onClick={onContinue}
-              >
-                <span>
-                  <small class="saga-objective-label">Continue chapter</small>
-                  <strong class="saga-objective-title">{view.selectedChapterTitle}</strong>
-                </span>
-                <span class="saga-objective-arrow" aria-hidden="true">
-                  ›
-                </span>
-              </button>
-            </article>
-          </div>
+            <button
+              type="button"
+              class="saga-continue-button"
+              aria-label={`Continue ${view.selectedChapterTitle}`}
+              onClick={onContinue}
+            >
+              <span>
+                <small>Continue chapter</small>
+                <strong>{view.selectedChapterTitle}</strong>
+              </span>
+              <img
+                src={`${UI_ASSET_ROOT}/fantasia_ui_icon_chevron_right_v001.svg`}
+                alt=""
+                aria-hidden="true"
+              />
+            </button>
+          </aside>
+        </div>
 
-          <nav class="saga-bottom-nav" aria-label="Saga navigation">
-            <button type="button" onClick={onHome}>
-              Home
-            </button>
-            <button type="button" onClick={onContinue}>
-              Campaign
-            </button>
-            <button type="button" onClick={(event) => onSettings(event.currentTarget)}>
-              Settings
-            </button>
-          </nav>
-        </section>
+        <footer class="saga-footer-status">
+          <span>Fantasia / Saga {String(view.sagaSequence).padStart(2, "0")}</span>
+          <span>{view.chapters.length} known chapters in the production campaign view</span>
+        </footer>
       </section>
     </main>
   );
