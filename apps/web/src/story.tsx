@@ -1,49 +1,7 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
-import storySource from "../../../content/narrative/story.json";
+import storyContent from "virtual:fantasia-story-content";
 import { GameButton } from "./game-controls.js";
 import "./story.css";
-
-type ScriptStatus = "draft" | "proposed" | "approved" | "production-ready";
-type StoryEventType = "action" | "dialogue" | "thought" | "narration" | "control" | "transition";
-
-type StoryScriptEvent = Readonly<{
-  id: string;
-  type: StoryEventType;
-  text: string;
-  speaker?: string;
-  displayLabel?: string;
-}>;
-
-type StoryBeat = Readonly<{
-  id: string;
-  order: number;
-  scriptStatus?: ScriptStatus;
-  script?: readonly StoryScriptEvent[];
-}>;
-
-type StoryNode = Readonly<{
-  id: string;
-  title: string;
-  type: "story" | "battle";
-  scriptStatus?: ScriptStatus;
-  location?: string;
-  time?: string;
-  summary?: string;
-  beats: readonly StoryBeat[];
-}>;
-
-type StoryChapter = Readonly<{
-  id: string;
-  title: string;
-  nodes: readonly StoryNode[];
-}>;
-
-type StoryDocument = Readonly<{
-  sagas: readonly Readonly<{
-    id: string;
-    chapters: readonly StoryChapter[];
-  }>[];
-}>;
 
 type PlaybackEvent = Readonly<{
   id: string;
@@ -61,53 +19,10 @@ type ApprovedStoryPlayback = Readonly<{
   events: readonly PlaybackEvent[];
 }>;
 
-const story = storySource as unknown as StoryDocument;
-
-function isApproved(status: ScriptStatus | undefined): boolean {
-  return status === "approved" || status === "production-ready";
-}
-
-function playerFacingEvent(event: StoryScriptEvent): PlaybackEvent | undefined {
-  if (event.type === "control" || event.type === "transition") return undefined;
-  if (event.type === "dialogue" || event.type === "thought") {
-    if (!event.displayLabel) return undefined;
-    return {
-      id: event.id,
-      type: event.type,
-      text: event.text,
-      displayLabel: event.displayLabel,
-    };
-  }
-  return { id: event.id, type: event.type, text: event.text };
-}
+const approvedStories = storyContent as Readonly<Record<string, ApprovedStoryPlayback>>;
 
 export function approvedChapterOneStory(nodeId: string): ApprovedStoryPlayback | undefined {
-  const saga = story.sagas.find((candidate) => candidate.id === "S01");
-  const chapter = saga?.chapters.find((candidate) => candidate.id === "CH01");
-  const node = chapter?.nodes.find((candidate) => candidate.id === nodeId);
-  if (!chapter || !node || node.type !== "story" || !isApproved(node.scriptStatus)) return undefined;
-
-  const orderedBeats = [...node.beats].sort((left, right) => left.order - right.order);
-  if (orderedBeats.length === 0 || orderedBeats.some((beat) => !isApproved(beat.scriptStatus))) {
-    return undefined;
-  }
-
-  const events = orderedBeats.flatMap((beat) =>
-    (beat.script ?? []).flatMap((event) => {
-      const visible = playerFacingEvent(event);
-      return visible ? [visible] : [];
-    }),
-  );
-  if (events.length === 0) return undefined;
-
-  return {
-    chapterTitle: chapter.title,
-    nodeTitle: node.title,
-    ...(node.location === undefined ? {} : { location: node.location }),
-    ...(node.time === undefined ? {} : { time: node.time }),
-    ...(node.summary === undefined ? {} : { summary: node.summary }),
-    events,
-  };
+  return approvedStories[nodeId];
 }
 
 export function StoryApp({
@@ -173,7 +88,10 @@ export function StoryApp({
         <section class={`story-caption story-event-${event.type}`} aria-live="polite">
           {speaker ? <p class="story-speaker">{speaker}</p> : <p class="story-speaker">Scene</p>}
           <p class="story-line">{event.text}</p>
-          <div class="story-progress" aria-label={`Story event ${eventIndex + 1} of ${playback.events.length}`}>
+          <div
+            class="story-progress"
+            aria-label={`Story event ${eventIndex + 1} of ${playback.events.length}`}
+          >
             <span>{String(eventIndex + 1).padStart(2, "0")}</span>
             <span aria-hidden="true">/</span>
             <span>{String(playback.events.length).padStart(2, "0")}</span>
