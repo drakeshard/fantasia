@@ -145,17 +145,28 @@ function App() {
           aria-label="Campaign root navigation"
         >
           <div class="game-navigation-start">
-            <GameButton icon="back" compactLabel="Back" onClick={() => setScreen("saga")}>
+            <GameButton
+              icon="back"
+              compactLabel="Back"
+              aria-label="Back"
+              onClick={() => setScreen("saga")}
+            >
               Back to Saga
             </GameButton>
           </div>
           <div class="game-navigation-end">
-            <GameButton icon="home" compactLabel="Home" onClick={() => setScreen("home")}>
+            <GameButton
+              icon="home"
+              compactLabel="Home"
+              aria-label="Home"
+              onClick={() => setScreen("home")}
+            >
               Home
             </GameButton>
             <GameButton
               icon="settings"
               compactLabel="Settings"
+              aria-label="Settings"
               onClick={(event) => openSettings(event.currentTarget)}
             >
               Settings
