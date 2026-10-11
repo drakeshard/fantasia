@@ -3231,6 +3231,1396 @@
           "text": "Continue to CH03-N05."
         }
       ]
+    },
+    "CH04-N01-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 24
+      },
+      "staging": {
+        "background": "Road from Reims toward the Île-de-France",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The army leaves Reims behind. Jeanne is already thinking about Paris, while MC discovers that coronation celebrations produced no new clue about Primora or Vaelkrath."
+        },
+        {
+          "type": "dialogue",
+          "text": "Turn the coronation high into forward pressure. MC stays because relationships now matter, not because the home problem vanished."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N01-BEAT-02."
+        }
+      ]
+    },
+    "CH04-N01-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 24
+      },
+      "staging": {
+        "background": "Road from Reims toward the Île-de-France",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "At a roadside halt, light bends for an instant across a wagon's metal rim. This time Julie catches enough of the distortion to know MC did not simply imagine it."
+        },
+        {
+          "type": "dialogue",
+          "text": "Increase the anomaly clue slightly without naming, explaining, or making it useful."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-B01."
+        }
+      ]
+    },
+    "CH04-B01-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Paris — Saint-Honoré approach",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The assault presses toward the Saint-Honoré defenses under heavy missile fire. The immediate problem is crossing exposed ground and finding a workable approach, not defeating every defender."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make Paris feel harder and less inevitable than the Loire victories."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-B01-BEAT-02."
+        }
+      ]
+    },
+    "CH04-B01-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Paris — Saint-Honoré approach",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "During the stalled assault Jeanne is struck in the thigh and can no longer keep pressing the ditch. d’Aulon and nearby fighters move to get her clear while the line remains exposed."
+        },
+        {
+          "type": "dialogue",
+          "text": "Turn the battle honestly. The injury is serious enough to change the objective but is not supernatural or fatal."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-B01-BEAT-03."
+        }
+      ]
+    },
+    "CH04-B01-BEAT-03": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Paris — Saint-Honoré approach",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The assault is called off. The player must disengage the exposed forward group rather than continue an attack that no longer has a workable objective."
+        },
+        {
+          "type": "dialogue",
+          "text": "Let the loss remain a loss. Success means bringing people back after the assault fails."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N03."
+        }
+      ]
+    },
+    "CH04-N03-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Northern France — campaign roads and winter quarters",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The story compresses months of reduced momentum: Paris is not retaken, large formations disperse, Jeanne recovers, and campaigning becomes smaller and less certain."
+        },
+        {
+          "type": "dialogue",
+          "text": "Show a real strategic slowdown without reducing it to one villainous decision or a simple betrayal narrative."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N03-BEAT-02."
+        }
+      ]
+    },
+    "CH04-N03-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 20
+      },
+      "staging": {
+        "background": "Northern France — campaign roads and winter quarters",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "During a quiet halt, MC and Jeanne compare two problems neither can simply solve: MC still cannot find home, and Jeanne cannot force the war to keep moving at the pace everyone once expected."
+        },
+        {
+          "type": "dialogue",
+          "text": "Deepen friendship through shared frustration rather than prophecy, romance, or cosmology exposition."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N03-BEAT-03."
+        }
+      ]
+    },
+    "CH04-N03-BEAT-03": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 20
+      },
+      "staging": {
+        "background": "Northern France — campaign roads and winter quarters",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "In May 1430, reports arrive that Compiègne is under Burgundian pressure. Jeanne prepares to move with a much smaller force than the army that marched to Reims."
+        },
+        {
+          "type": "dialogue",
+          "text": "Move causally into the capture campaign without pretending it has the resources or certainty of 1429."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N04."
+        }
+      ]
+    },
+    "CH04-N04-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Compiègne",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Inside Compiègne, preparations are urgent and compact. There is no huge royal army waiting behind Jeanne this time."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the reduced scale visible before the sortie and keep local defenders important."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N04-BEAT-02."
+        }
+      ]
+    },
+    "CH04-N04-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Compiègne",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The group crosses out toward the Burgundian positions near Margny with the return route visibly behind them."
+        },
+        {
+          "type": "dialogue",
+          "text": "Put the retreat route on screen before it matters so the later failure is legible rather than arbitrary."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-B02."
+        }
+      ]
+    },
+    "CH04-B02-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Compiègne / Margny approaches",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The sortie attacks Burgundian pressure near Margny with a limited goal: disrupt the position and return before reinforcements can seal the route."
+        },
+        {
+          "type": "dialogue",
+          "text": "Start with an achievable limited objective, not a doomed battle disguised as a normal victory map."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-B02-BEAT-02."
+        }
+      ]
+    },
+    "CH04-B02-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Compiègne / Margny approaches",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Reinforcements press the sortie back. Jeanne and d’Aulon remain near the rear while other units stream toward the fortified crossing."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the capture emerge from a collapsing retreat, not from a cutscene that ignores a successful map objective."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-B02-BEAT-03."
+        }
+      ]
+    },
+    "CH04-B02-BEAT-03": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Compiègne / Margny approaches",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The rear guard loses practical access to the crossing. MC tries to reach Jeanne, but Burgundian troops split the field and the available path closes faster than the party can reopen it."
+        },
+        {
+          "type": "dialogue",
+          "text": "The player is allowed to try. The game then states plainly when the rescue route is no longer achievable in this encounter."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-B02-BEAT-04."
+        }
+      ]
+    },
+    "CH04-B02-BEAT-04": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 20
+      },
+      "staging": {
+        "background": "Compiègne / Margny approaches",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Jean d’Aulon",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "From beyond the severed route, MC sees Jeanne pulled from her horse and taken. d’Aulon is captured with the remaining rear group. The surviving party must leave before it is surrounded as well."
+        },
+        {
+          "type": "dialogue",
+          "text": "End on an earned failure state. John of Luxembourg enters through the custody chain, not as a theatrical personal captor."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N06."
+        }
+      ]
+    },
+    "CH04-N06-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Road south of Compiègne",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The survivors regroup far enough from Compiègne to stop running. Nobody celebrates surviving the map."
+        },
+        {
+          "type": "dialogue",
+          "text": "Let the failure remain emotionally and mechanically legible."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH04-N06-BEAT-02."
+        }
+      ]
+    },
+    "CH04-N06-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 24
+      },
+      "staging": {
+        "background": "Road south of Compiègne",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "A report identifies Jeanne as a high-value Burgundian prisoner associated with John of Luxembourg's forces. MC stops thinking in terms of rejoining the campaign and starts thinking in terms of finding her."
+        },
+        {
+          "type": "dialogue",
+          "text": "Turn the saga from campaign adventure into personal rescue pressure without pretending the party can immediately storm the captors."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05."
+        }
+      ]
+    },
+    "CH05-N01-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Northern France",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party tracks contradictory reports as Jeanne is moved through Burgundian custody. Leads arrive late, routes change, and every castle rumor is already old by the time they reach it."
+        },
+        {
+          "type": "dialogue",
+          "text": "Replace open-field campaign certainty with frustrating information work."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N01-BEAT-02."
+        }
+      ]
+    },
+    "CH05-N01-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 20
+      },
+      "staging": {
+        "background": "Northern France",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Informant",
+            "shortLabel": "I",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party confirms that the English have acquired Jeanne from the Burgundian custody chain for a large ransom-equivalent payment and are taking her toward Rouen."
+        },
+        {
+          "type": "dialogue",
+          "text": "Keep John of Luxembourg and the transfer political and transactional rather than melodramatic personal villainy."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N01-BEAT-03."
+        }
+      ]
+    },
+    "CH05-N01-BEAT-03": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Northern France",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The group reduces what it carries and plans for a hostile city controlled by the English. A marching army would end the attempt before it starts."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the genre shift explicit: information, access, and escape routes matter more than battlefield strength."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-B01."
+        }
+      ]
+    },
+    "CH05-B01-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Road and river approaches outside Rouen",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Local Contact",
+            "shortLabel": "LC",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "A local contact has papers that can place part of the group inside Rouen, but a patrol sweep closes across the approach before they reach the gate traffic."
+        },
+        {
+          "type": "dialogue",
+          "text": "Frame the fictional operation around access. Killing the patrol is neither necessary nor desirable."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-B01-BEAT-02."
+        }
+      ]
+    },
+    "CH05-B01-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Road and river approaches outside Rouen",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The group uses terrain and traffic to separate from the patrol instead of turning the approach into an open battle that would close the city to them."
+        },
+        {
+          "type": "dialogue",
+          "text": "Reward restraint and route control, fitting the smaller Rouen chapter scale."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-B01-BEAT-03."
+        }
+      ]
+    },
+    "CH05-B01-BEAT-03": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Road and river approaches outside Rouen",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Local Contact",
+            "shortLabel": "LC",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The papers and contact get part of the group through ordinary gate traffic. Weapons are concealed or left with the outer support team as planned."
+        },
+        {
+          "type": "dialogue",
+          "text": "End with access gained, not an implausible military victory over Rouen."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N03."
+        }
+      ]
+    },
+    "CH05-N03-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Rouen",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Local Contact",
+            "shortLabel": "LC",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The group maps ordinary traffic around the English castle and learns that Jeanne is held under English military guard rather than in a normal church prison."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the physical rescue problem concrete before the trial scenes begin."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N03-BEAT-02."
+        }
+      ]
+    },
+    "CH05-N03-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Rouen",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Pierre Cauchon",
+            "shortLabel": "PC",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Richard Beauchamp, Earl of Warwick",
+            "shortLabel": "RBE",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Through public movement and overheard official business, the party identifies Pierre Cauchon as the bishop directing the case and Warwick as a major English authority over the castle environment. They do not gain private access to either man."
+        },
+        {
+          "type": "dialogue",
+          "text": "Introduce only the named authorities needed for the next conflict; avoid a villain roll-call."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N04."
+        }
+      ]
+    },
+    "CH05-N04-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 20
+      },
+      "staging": {
+        "background": "Rouen Castle",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Pierre Cauchon",
+            "shortLabel": "PC",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Clerks",
+            "shortLabel": "C",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "On 21 February Jeanne is brought before Cauchon and a large body of assessors in the castle chapel. The scene focuses on pressure, procedure, and Jeanne's refusal to hand over every private conviction on demand."
+        },
+        {
+          "type": "dialogue",
+          "text": "Preserve religious ambiguity. Her voices are her claims and faith experience; the narrative does not re-label them as Fracture messages."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N04-BEAT-02."
+        }
+      ]
+    },
+    "CH05-N04-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 20
+      },
+      "staging": {
+        "background": "Rouen Castle",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Local Contact",
+            "shortLabel": "LC",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "MC cannot simply attend every proceeding. The group reconstructs what it can from public sessions, clerks, servants, guards, and city rumor while continuing to study prison access."
+        },
+        {
+          "type": "dialogue",
+          "text": "Keep MC's access earned and partial. The historical trial remains larger than the protagonist's viewpoint."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N05."
+        }
+      ]
+    },
+    "CH05-N05-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Rouen Castle — service corridor near Jeanne's cell",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Local Contact",
+            "shortLabel": "LC",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party uses a service movement window to place MC near Jeanne's cell while Julie watches the corridor. The route is too exposed to move a prisoner through it."
+        },
+        {
+          "type": "dialogue",
+          "text": "Make the reunion costly and limited before it becomes emotional."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N05-BEAT-02."
+        }
+      ]
+    },
+    "CH05-N05-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 32
+      },
+      "staging": {
+        "background": "Rouen Castle — service corridor near Jeanne's cell",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Jeanne d’Arc",
+            "shortLabel": "JA",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "MC and Jeanne see each other through the secured cell boundary. Jeanne is worn down by confinement and questioning but refuses to become a passive object in MC's rescue fantasy."
+        },
+        {
+          "type": "dialogue",
+          "text": "Reunite them as friends. Jeanne can be afraid and tired while still retaining agency, faith, and judgment."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N05-BEAT-03."
+        }
+      ]
+    },
+    "CH05-N05-BEAT-03": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 16
+      },
+      "staging": {
+        "background": "Rouen Castle — service corridor near Jeanne's cell",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "English guards",
+            "shortLabel": "EG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The guard rhythm changes early and the group abandons the service route before it is exposed. The meeting proves Jeanne is reachable, but not yet extractable."
+        },
+        {
+          "type": "dialogue",
+          "text": "End with a concrete problem to solve rather than false hope."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-B02."
+        }
+      ]
+    },
+    "CH05-B02-BEAT-01": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Rouen Castle service approaches",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party enters through the one service route it has mapped and tries to reach the inner corridor before the next guard rotation."
+        },
+        {
+          "type": "dialogue",
+          "text": "Treat this as a desperate covert extraction, not an invented siege of Rouen Castle."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-B02-BEAT-02."
+        }
+      ]
+    },
+    "CH05-B02-BEAT-02": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Rouen Castle service approaches",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "A reinforced guard movement seals the corridor needed to reach Jeanne's cell, while another patrol begins closing the route behind the party."
+        },
+        {
+          "type": "dialogue",
+          "text": "Fail the extraction because the physical route becomes untenable, not because a cutscene arbitrarily cancels a successful objective."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-B02-BEAT-03."
+        }
+      ]
+    },
+    "CH05-B02-BEAT-03": {
+      "timing": {
+        "mode": "player",
+        "minSeconds": 25,
+        "maxSeconds": 150
+      },
+      "staging": {
+        "background": "Rouen Castle service approaches",
+        "camera": "Tactical overview → event focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The party fights only enough to reopen its exit and breaks away before a full castle alarm traps everyone inside Rouen."
+        },
+        {
+          "type": "dialogue",
+          "text": "The attempt fails, but preserving the rescue team leaves one final desperate option for the next chapter."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N07."
+        }
+      ]
+    },
+    "CH05-N07-BEAT-01": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 20
+      },
+      "staging": {
+        "background": "Rouen",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "Before sunrise the contact brings the news the party feared: Jeanne is to be taken out for execution that morning."
+        },
+        {
+          "type": "dialogue",
+          "text": "Collapse the remaining timetable without beginning the Finale early."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to CH05-N07-BEAT-02."
+        }
+      ]
+    },
+    "CH05-N07-BEAT-02": {
+      "timing": {
+        "mode": "advance",
+        "estimatedSeconds": 28
+      },
+      "staging": {
+        "background": "Rouen",
+        "camera": "Scene framing → character focus",
+        "slots": {
+          "left": {
+            "character": "MC",
+            "shortLabel": "M",
+            "pose": "active"
+          },
+          "center": {
+            "character": "Julie d’Aubigny",
+            "shortLabel": "JA",
+            "pose": "active"
+          },
+          "right": {
+            "character": "Hangaku Gozen",
+            "shortLabel": "HG",
+            "pose": "active"
+          }
+        }
+      },
+      "events": [
+        {
+          "type": "action",
+          "text": "The group abandons every remaining assumption about a clean extraction and prepares to intercept the execution movement itself. The scene ends before they reach Jeanne or the stake."
+        },
+        {
+          "type": "dialogue",
+          "text": "Hand cleanly into the Finale. Do not reveal the First Manifestation or resolve Jeanne's expected death here."
+        },
+        {
+          "type": "transition",
+          "text": "Continue to FIN."
+        }
+      ]
     }
   }
 }
