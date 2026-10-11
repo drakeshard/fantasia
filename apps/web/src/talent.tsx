@@ -94,7 +94,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                   <small>Class Talent · controlled scaffold</small>
                   <h2>{lancer.className}</h2>
                 </span>
-                <div class="talent-tree-meta" aria-label="Current scaffold size">
+                <div class="talent-tree-meta" role="group" aria-label="Current scaffold size">
                   <span>{lancer.nodeCount} nodes shown</span>
                   <span>{lancer.totalRankCapacity} rank capacity</span>
                 </div>
