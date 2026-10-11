@@ -46,8 +46,8 @@ export interface CampaignState {
   readonly currentStageId: string;
 }
 
-const stageExecutionUnavailable =
-  "Canonical story and battle execution is not implemented in the current production slice.";
+const battleExecutionUnavailable =
+  "Canonical battle execution is unavailable until the reviewed CH01 encounter geometry and content are implemented.";
 
 const chapterOneStages: readonly CampaignStageDefinition[] = [
   {
@@ -59,7 +59,7 @@ const chapterOneStages: readonly CampaignStageDefinition[] = [
     synopsis: "The injured traveler emerges into an unfamiliar countryside after the rupture.",
     access: { kind: "available" },
     completion: "not-cleared",
-    entry: { kind: "unavailable", reason: stageExecutionUnavailable },
+    entry: { kind: "available", destination: "CH01-N01" },
   },
   {
     id: "s01-ch01-b01-strangers-road",
@@ -73,7 +73,7 @@ const chapterOneStages: readonly CampaignStageDefinition[] = [
       "The protagonist is injured and carries a broken sword. Normal attacks are unavailable.",
     access: { kind: "available" },
     completion: "not-cleared",
-    entry: { kind: "unavailable", reason: stageExecutionUnavailable },
+    entry: { kind: "unavailable", reason: battleExecutionUnavailable },
   },
   {
     id: "s01-ch01-n03-shelter",
@@ -83,7 +83,7 @@ const chapterOneStages: readonly CampaignStageDefinition[] = [
     title: "Shelter Before Nightfall",
     access: { kind: "available" },
     completion: "not-cleared",
-    entry: { kind: "unavailable", reason: stageExecutionUnavailable },
+    entry: { kind: "available", destination: "CH01-N03" },
   },
   {
     id: "s01-ch01-n04-names",
@@ -93,7 +93,7 @@ const chapterOneStages: readonly CampaignStageDefinition[] = [
     title: "Names That Should Mean Nothing",
     access: { kind: "available" },
     completion: "not-cleared",
-    entry: { kind: "unavailable", reason: stageExecutionUnavailable },
+    entry: { kind: "available", destination: "CH01-N04" },
   },
   {
     id: "s01-ch01-b02-road-orleans",
@@ -103,7 +103,7 @@ const chapterOneStages: readonly CampaignStageDefinition[] = [
     title: "The Road to Orléans",
     access: { kind: "available" },
     completion: "not-cleared",
-    entry: { kind: "unavailable", reason: stageExecutionUnavailable },
+    entry: { kind: "unavailable", reason: battleExecutionUnavailable },
   },
   {
     id: "s01-ch01-n06-maid-coming",
@@ -113,7 +113,7 @@ const chapterOneStages: readonly CampaignStageDefinition[] = [
     title: "The Maid Is Coming",
     access: { kind: "available" },
     completion: "not-cleared",
-    entry: { kind: "unavailable", reason: stageExecutionUnavailable },
+    entry: { kind: "available", destination: "CH01-N06" },
   },
 ];
 
