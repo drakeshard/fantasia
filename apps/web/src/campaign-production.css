@@ -62,9 +62,7 @@
   align-items: center;
   padding: 8px 300px 8px 120px;
   border-bottom: 1px solid rgb(226 190 120 / 20%);
-  background:
-    linear-gradient(180deg, rgb(5 12 18 / 98%), rgb(7 17 25 / 94%)),
-    #071019;
+  background: linear-gradient(180deg, rgb(5 12 18 / 98%), rgb(7 17 25 / 94%)), #071019;
   box-shadow: 0 8px 26px rgb(0 0 0 / 24%);
 }
 
