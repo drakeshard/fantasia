@@ -16,6 +16,7 @@ import { SettingsDialog } from "./settings-dialog.js";
 import "./styles.css";
 import "./production.css";
 import "./battle-production.css";
+import "./battle-production-fixes.css";
 import "./settings.css";
 import "./root-shell.css";
 import "./detail-polish.css";
