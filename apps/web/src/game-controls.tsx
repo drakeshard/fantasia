@@ -38,12 +38,17 @@ export function GameButton({
   compactLabel,
   ...buttonProps
 }: GameButtonProps) {
+  const classes = [
+    "game-control",
+    `game-control-${tone}`,
+    compactLabel ? "has-compact-label" : "",
+    className ?? "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <button
-      {...buttonProps}
-      type="button"
-      class={`game-control game-control-${tone}${className ? ` ${className}` : ""}`}
-    >
+    <button {...buttonProps} type="button" class={classes}>
       {icon ? <GameControlIconView icon={icon} /> : null}
       <span class="game-control-label">{children}</span>
       {compactLabel ? <span class="game-control-compact-label">{compactLabel}</span> : null}
