@@ -22,7 +22,12 @@
   background:
     radial-gradient(circle at 46% 40%, rgb(46 76 98 / 23%), transparent 32%),
     radial-gradient(circle at 82% 24%, rgb(226 190 120 / 7%), transparent 22%),
-    linear-gradient(118deg, rgb(7 13 20 / 96%) 0 17%, rgb(10 20 29 / 91%) 36%, rgb(8 15 23 / 94%) 100%);
+    linear-gradient(
+      118deg,
+      rgb(7 13 20 / 96%) 0 17%,
+      rgb(10 20 29 / 91%) 36%,
+      rgb(8 15 23 / 94%) 100%
+    );
 }
 
 .saga-war-table::before {
@@ -34,7 +39,12 @@
   background:
     linear-gradient(90deg, transparent 0 14.9%, rgb(226 190 120 / 5%) 15%, transparent 15.1%),
     linear-gradient(180deg, transparent 0 72%, rgb(154 177 198 / 4%) 72.1%, transparent 72.2%),
-    repeating-linear-gradient(135deg, transparent 0 68px, rgb(154 177 198 / 2.5%) 69px, transparent 70px);
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 68px,
+      rgb(154 177 198 / 2.5%) 69px,
+      transparent 70px
+    );
 }
 
 .saga-war-table::after {
@@ -213,6 +223,7 @@
 }
 
 .saga-chapter-route {
+  position: relative;
   min-width: 0;
   align-self: stretch;
   display: flex;
@@ -220,9 +231,7 @@
   justify-content: center;
   padding: clamp(22px, 3vw, 40px);
   border: 1px solid rgb(226 190 120 / 17%);
-  background:
-    linear-gradient(135deg, rgb(15 28 39 / 86%), rgb(8 16 24 / 73%)),
-    var(--saga-panel);
+  background: linear-gradient(135deg, rgb(15 28 39 / 86%), rgb(8 16 24 / 73%)), var(--saga-panel);
   box-shadow:
     0 24px 70px rgb(0 0 0 / 28%),
     inset 0 1px rgb(244 240 231 / 3%);
@@ -237,10 +246,6 @@
   border-left: 1px solid var(--saga-edge-strong);
   content: "";
   pointer-events: none;
-}
-
-.saga-chapter-route {
-  position: relative;
 }
 
 .saga-chapter-route::before {
@@ -278,7 +283,9 @@
   display: grid;
   gap: 18px;
   align-content: center;
+  margin: 0;
   padding: 24px 0 2px;
+  list-style: none;
 }
 
 .saga-route-step {
@@ -429,8 +436,7 @@
   border: 1px solid rgb(226 190 120 / 26%);
   border-top-color: rgb(226 190 120 / 52%);
   background:
-    linear-gradient(160deg, rgb(18 34 46 / 95%), rgb(8 17 25 / 94%)),
-    var(--saga-panel-raised);
+    linear-gradient(160deg, rgb(18 34 46 / 95%), rgb(8 17 25 / 94%)), var(--saga-panel-raised);
   box-shadow: 0 24px 62px rgb(0 0 0 / 30%);
 }
 
