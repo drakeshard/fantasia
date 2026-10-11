@@ -31,7 +31,11 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
             </div>
           </div>
 
-          <GameUtilityCluster onHome={onHome} onSettings={onSettings} class="saga-global-utilities" />
+          <GameUtilityCluster
+            onHome={onHome}
+            onSettings={onSettings}
+            class="saga-global-utilities"
+          />
         </header>
 
         <div class="saga-war-table-body">
