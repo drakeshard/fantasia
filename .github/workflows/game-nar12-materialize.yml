@@ -1,0 +1,387 @@
+name: GAME-NAR12 Materialize
+
+on:
+  push:
+    branches:
+      - game-nar12/mc-titles-finale-revision
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: game-nar12/mc-titles-finale-revision
+          fetch-depth: 0
+
+      - name: Apply narrative revision
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          STORY = Path('content/narrative/story.json')
+          PROD = Path('content/narrative/story-production.json')
+
+          story = json.loads(STORY.read_text(encoding='utf-8'))
+          saga = next(s for s in story['sagas'] if s['id'] == 'S01')
+
+          def chapter(cid):
+              return next(c for c in saga['chapters'] if c['id'] == cid)
+
+          def node(cid, nid):
+              return next(n for n in chapter(cid)['nodes'] if n['id'] == nid)
+
+          def beat(cid, nid, bid):
+              return next(b for b in node(cid, nid)['beats'] if b['id'] == bid)
+
+          def event_by_id(eid):
+              found = []
+              for c in saga['chapters']:
+                  for n in c.get('nodes', []):
+                      for b in n.get('beats', []):
+                          for e in b.get('script', []):
+                              if e.get('id') == eid:
+                                  found.append(e)
+              assert len(found) == 1, (eid, len(found))
+              return found[0]
+
+          # Voice-safe player-address progression. Internal MC identity stays unchanged.
+          replacements = {
+              'S01-CH01-N01-L340': "Just call me Traveler. I'm from Primora.",
+              'S01-CH01-N01-L700': 'Traveler. At least for now.',
+              'S01-CH03-N02-L040': 'Rookie. Your group stays with the forward column tomorrow.',
+              'S01-CH03-N05-L070': "So you're the Rookie. You appear in an unreasonable number of reports for someone with no rank.",
+              'S01-CH05-N05-L040': 'Rookie?',
+              'S01-FIN-B01-L060': 'Rookie?',
+          }
+          for eid, text in replacements.items():
+              event_by_id(eid)['text'] = text
+
+          # CH05 hands off to the revised Finale without pre-revealing its supernatural turn.
+          ch05_n07 = node('CH05', 'CH05-N07')
+          ch05_n07['summary'] = (
+              "The party learns that Jeanne is to be taken to the Vieux-Marché that morning. "
+              "The prison route is gone and ordinary rescue planning has failed. Chapter 5 ends before the stake rescue itself, "
+              "handing the final attempt to the Finale without revealing what follows a successful rescue."
+          )
+          ch05_b2 = beat('CH05', 'CH05-N07', 'CH05-N07-BEAT-02')
+          ch05_b2['dialogueIntent'] = (
+              "Hand cleanly into the Finale. Do not reveal the later world-like call, unknown antagonist, or Fracture before the rescue succeeds."
+          )
+          ch05_b2['result'] = "Chapter 5 ends with the final rescue attempt beginning; the supernatural turn remains unrevealed."
+          event_by_id('S01-CH05-N07-L120')['text'] = 'Next: Finale — The Broken Horizon.'
+
+          fin = chapter('FIN')
+          fin['title'] = 'The Broken Horizon'
+
+          fin_b01_3 = beat('FIN', 'FIN-B01', 'FIN-B01-BEAT-03')
+          fin_b01_3['screenAction'] = (
+              "With Jeanne free, the party stops trying to control the square and fights only for enough space to move her beyond the execution point. "
+              "Once they clear it, an impossible distant tone begins beneath the ordinary noise of Rouen."
+          )
+          fin_b01_3['dialogueIntent'] = (
+              "The rescue must genuinely succeed before the supernatural turn. Let the first strange sound arrive only after Jeanne is safely beyond the expected execution point."
+          )
+          fin_b01_3['result'] = (
+              "Jeanne survives the expected execution point. The party clears the square, and a strange world-like call begins from somewhere beyond it."
+          )
+          event_by_id('S01-FIN-B01-L170')['text'] = (
+              "The group clears the execution point with Jeanne alive. For one heartbeat, the square sounds impossibly far away. "
+              "Then a low, impossible tone rises beneath the city noise."
+          )
+          event_by_id('S01-FIN-B01-L180')['text'] = 'FIN-B02 — The Broken Horizon.'
+
+          fin_b02 = node('FIN', 'FIN-B02')
+          fin_b02['title'] = 'The Broken Horizon'
+          fin_b02['location'] = 'Rouen — streets beyond Vieux-Marché and the fractured horizon'
+          fin_b02['time'] = '30 May 1431 — moments later'
+          fin_b02['summary'] = (
+              "After Jeanne is safely rescued, a world-like call guides the party away from the square to a broad final view. "
+              "There an unknown antagonist deliberately opens a Fracture and crosses it. Hostile fractured pressure remains in the passage's wake. "
+              "The voice asks the Rookie for help because the world is breaking, and MC chooses pursuit rather than taking a random escape route."
+          )
+
+          b1 = beat('FIN', 'FIN-B02', 'FIN-B02-BEAT-01')
+          b1.update({
+              'title': 'The Call',
+              'presentation': 'story-event',
+              'characters': ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'World Voice'],
+              'screenAction': (
+                  "Beyond the execution point, the noise of pursuit thins beneath an impossible tone. The sound seems both distant and inside hearing itself, "
+                  "drawing MC toward a quieter route that opens onto a broad view beyond the square."
+              ),
+              'dialogueIntent': (
+                  "Introduce the world-like voice as a plea or guidance, not prophecy. It uses the current voiced address Rookie and explains nothing about cosmology yet."
+              ),
+              'playerControl': 'dialogue advance / guided movement',
+              'trigger': 'rescue_escape_complete',
+              'result': 'The party follows the call far enough from the square to see its apparent destination.',
+              'next': 'FIN-B02-BEAT-02',
+              'scriptStatus': 'draft',
+              'script': [
+                  {'id': 'S01-FIN-B02-L010', 'type': 'action', 'text': "Behind them, Vieux-Marché is still shouting. Ahead, a low tone cuts through the noise without coming from any visible source."},
+                  {'id': 'S01-FIN-B02-L020', 'type': 'dialogue', 'text': 'Do you hear that?', 'speaker': 'Julie d’Aubigny', 'displayLabel': 'Julie'},
+                  {'id': 'S01-FIN-B02-L030', 'type': 'dialogue', 'text': 'Yeah.', 'speaker': 'MC', 'displayLabel': 'MC'},
+                  {'id': 'S01-FIN-B02-L040', 'type': 'dialogue', 'text': 'Rookie...', 'speaker': 'World Voice', 'displayLabel': 'Unknown Voice'},
+                  {'id': 'S01-FIN-B02-L050', 'type': 'dialogue', 'text': 'Hear me.', 'speaker': 'World Voice', 'displayLabel': 'Unknown Voice'},
+                  {'id': 'S01-FIN-B02-L060', 'type': 'action', 'text': "MC turns toward a quieter street. The strange tone strengthens in that direction while the ordinary pursuit noise falls behind."},
+                  {'id': 'S01-FIN-B02-L070', 'type': 'dialogue', 'text': 'Where is that coming from?', 'speaker': 'Jeanne d’Arc', 'displayLabel': 'Jeanne'},
+                  {'id': 'S01-FIN-B02-L080', 'type': 'dialogue', 'text': "I don't know.", 'speaker': 'MC', 'displayLabel': 'MC'},
+                  {'id': 'S01-FIN-B02-L090', 'type': 'action', 'text': "The route opens into a broader view across Rouen. Something is already waiting at the far edge of it."},
+                  {'id': 'S01-FIN-B02-L100', 'type': 'control', 'text': 'Keep Jeanne moving and follow the call away from the square.'},
+                  {'id': 'S01-FIN-B02-L110', 'type': 'transition', 'text': 'The party reaches the sourceward vista.'},
+              ],
+          })
+
+          b2 = beat('FIN', 'FIN-B02', 'FIN-B02-BEAT-02')
+          b2.update({
+              'title': 'The Figure at the Horizon',
+              'presentation': 'cinematic',
+              'characters': ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'Unknown Figure'],
+              'screenAction': (
+                  "An unknown figure stands at the far edge of the view and deliberately opens a large refractive Fracture. "
+                  "The figure notices the arriving party, gives no explanation, and crosses through."
+              ),
+              'dialogueIntent': (
+                  "Reveal deliberate agency behind this portal without naming the main antagonist, defining their form, or explaining motive. The point is that someone chose to open the way."
+              ),
+              'playerControl': 'none / cinematic reveal',
+              'trigger': 'call_vista_reached',
+              'result': 'The unknown antagonist crosses the deliberately opened Fracture; the passage remains unstable behind them.',
+              'next': 'FIN-B02-BEAT-03',
+              'scriptStatus': 'draft',
+              'script': [
+                  {'id': 'S01-FIN-B02-L120', 'type': 'action', 'text': "At the edge of the view, an unknown figure raises one hand. Light folds inward around it instead of appearing by accident."},
+                  {'id': 'S01-FIN-B02-L130', 'type': 'action', 'text': "A broad refractive Fracture opens deliberately. The figure looks back once toward the arriving party."},
+                  {'id': 'S01-FIN-B02-L140', 'type': 'dialogue', 'text': 'That one did it.', 'speaker': 'Julie d’Aubigny', 'displayLabel': 'Julie'},
+                  {'id': 'S01-FIN-B02-L150', 'type': 'action', 'text': "The figure steps through the light and vanishes. The Fracture does not close cleanly behind them."},
+                  {'id': 'S01-FIN-B02-L160', 'type': 'dialogue', 'text': 'After them.', 'speaker': 'MC', 'displayLabel': 'MC'},
+              ],
+          })
+
+          b3 = beat('FIN', 'FIN-B02', 'FIN-B02-BEAT-03')
+          b3.update({
+              'title': 'What the Passage Leaves',
+              'presentation': 'battle-event',
+              'characters': ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'Fractured forms'],
+              'screenAction': (
+                  "Unstable hostile shapes and pressure spill out around the antagonist-opened passage. They obstruct the route without behaving like ordinary soldiers, "
+                  "forcing the party to protect Jeanne and push toward the still-open Fracture."
+              ),
+              'dialogueIntent': (
+                  "Keep supernatural pressure as immediate gameplay without calling it Correction, claiming the world wants Jeanne dead, or defining a final creature taxonomy."
+              ),
+              'playerControl': 'battle control',
+              'trigger': 'antagonist_crosses_fracture',
+              'result': 'The party survives the residual fractured pressure and secures a path toward the antagonist-opened Fracture.',
+              'next': 'FIN-B02-BEAT-04',
+              'scriptStatus': 'draft',
+              'script': [
+                  {'id': 'S01-FIN-B02-L170', 'type': 'action', 'text': "The passage shudders. Hostile shapes peel out of the warped light and close across the route before their bodies can settle into anything familiar."},
+                  {'id': 'S01-FIN-B02-L180', 'type': 'dialogue', 'text': "Those aren't soldiers.", 'speaker': 'Hangaku Gozen', 'displayLabel': 'Hangaku Gozen'},
+                  {'id': 'S01-FIN-B02-L190', 'type': 'dialogue', 'text': "They're still in the way.", 'speaker': 'Julie d’Aubigny', 'displayLabel': 'Julie'},
+                  {'id': 'S01-FIN-B02-L200', 'type': 'dialogue', 'text': 'Then keep Jeanne moving.', 'speaker': 'MC', 'displayLabel': 'MC'},
+                  {'id': 'S01-FIN-B02-L210', 'type': 'control', 'text': 'Objective: PROTECT JEANNE. Reach the antagonist-opened Fracture.'},
+                  {'id': 'S01-FIN-B02-L220', 'type': 'action', 'text': "Fragments of unfamiliar light flash around the route, but the deliberately opened passage remains the only stable direction."},
+              ],
+          })
+
+          b4 = beat('FIN', 'FIN-B02', 'FIN-B02-BEAT-04')
+          b4.update({
+              'title': 'Follow',
+              'presentation': 'battle-climax',
+              'characters': ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'World Voice'],
+              'screenAction': (
+                  "As the party reaches the passage, the voice becomes clearer. It says the world is breaking and asks for help. "
+                  "MC chooses to pursue the figure through the path they deliberately opened."
+              ),
+              'dialogueIntent': (
+                  "Give MC a reason to continue beyond finding home while avoiding chosen-one language. The world asks for help; MC chooses to answer."
+              ),
+              'playerControl': 'battle control / dialogue advance',
+              'trigger': 'fracture_route_reached',
+              'result': 'MC commits to following the unknown antagonist through the Fracture; Jeanne still gets an independent choice before crossing.',
+              'next': 'FIN-N03',
+              'scriptStatus': 'draft',
+              'script': [
+                  {'id': 'S01-FIN-B02-L230', 'type': 'dialogue', 'text': 'Rookie...', 'speaker': 'World Voice', 'displayLabel': 'Unknown Voice'},
+                  {'id': 'S01-FIN-B02-L240', 'type': 'dialogue', 'text': 'This world is breaking.', 'speaker': 'World Voice', 'displayLabel': 'Unknown Voice'},
+                  {'id': 'S01-FIN-B02-L250', 'type': 'dialogue', 'text': 'I cannot stop them alone.', 'speaker': 'World Voice', 'displayLabel': 'Unknown Voice'},
+                  {'id': 'S01-FIN-B02-L260', 'type': 'dialogue', 'text': 'Please... follow.', 'speaker': 'World Voice', 'displayLabel': 'Unknown Voice'},
+                  {'id': 'S01-FIN-B02-L270', 'type': 'dialogue', 'text': 'That thing opened the way.', 'speaker': 'MC', 'displayLabel': 'MC'},
+                  {'id': 'S01-FIN-B02-L280', 'type': 'dialogue', 'text': 'And went through it.', 'speaker': 'Julie d’Aubigny', 'displayLabel': 'Julie'},
+                  {'id': 'S01-FIN-B02-L290', 'type': 'transition', 'text': 'FIN-N03 — A Road With No Name.'},
+              ],
+          })
+
+          fin_n03 = node('FIN', 'FIN-N03')
+          fin_n03['summary'] = (
+              "The antagonist-opened Fracture remains available only briefly. Its destination is unknown, but MC now has a concrete trail and a plea for help rather than a random escape route. "
+              "MC chooses pursuit; Jeanne is explicitly free to decide whether to follow."
+          )
+          n3b1 = beat('FIN', 'FIN-N03', 'FIN-N03-BEAT-01')
+          n3b1['title'] = 'The Trail Ahead'
+          n3b1['screenAction'] = (
+              "The Fracture opened by the unknown figure is still active but already narrowing. It shows no readable destination; the only certainty is that the antagonist went through it."
+          )
+          n3b1['dialogueIntent'] = (
+              "Frame the crossing as a chosen pursuit and unanswered responsibility, not a random escape or guaranteed route home."
+          )
+          n3b1['result'] = 'MC decides that the antagonist-opened Fracture is the first real lead worth following; time to choose is short.'
+          n3b1['script'] = [
+              {'id': 'S01-FIN-N03-L010', 'type': 'action', 'text': "The Fracture hangs across the view as a broad sheet of bent light. It is already beginning to narrow."},
+              {'id': 'S01-FIN-N03-L020', 'type': 'dialogue', 'text': "I still don't know where it goes.", 'speaker': 'MC', 'displayLabel': 'MC'},
+              {'id': 'S01-FIN-N03-L030', 'type': 'dialogue', 'text': 'But this time you know someone went through it.', 'speaker': 'Julie d’Aubigny', 'displayLabel': 'Julie'},
+              {'id': 'S01-FIN-N03-L040', 'type': 'dialogue', 'text': "Yeah. That's enough.", 'speaker': 'MC', 'displayLabel': 'MC'},
+              {'id': 'S01-FIN-N03-L050', 'type': 'dialogue', 'text': "Then don't stand here admiring it.", 'speaker': 'Hangaku Gozen', 'displayLabel': 'Hangaku Gozen'},
+              {'id': 'S01-FIN-N03-L060', 'type': 'action', 'text': "The edge of the Fracture contracts another step. Whatever path the unknown figure opened will not stay available."},
+          ]
+
+          n3b2 = beat('FIN', 'FIN-N03', 'FIN-N03-BEAT-02')
+          n3b2['dialogueIntent'] = (
+              "End Saga I on agency and consequence. Jeanne chooses the pursuit herself. Do not reveal Saga II, guarantee home, identify the antagonist, or confirm which supporting companions cross."
+          )
+          n3b2['result'] = (
+              "MC and Jeanne enter the antagonist-opened Fracture by choice. The scene cuts before confirming which supporting companions also cross; the destination remains unknown."
+          )
+
+          # Assert the old dynamic player-name token is gone from voiced story dialogue.
+          remaining = []
+          for c in saga['chapters']:
+              for n in c.get('nodes', []):
+                  for b in n.get('beats', []):
+                      for e in b.get('script', []):
+                          if e.get('type') == 'dialogue' and '{{MC_NAME}}' in e.get('text', ''):
+                              remaining.append(e['id'])
+          assert not remaining, remaining
+
+          STORY.write_text(json.dumps(story, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          prod = json.loads(PROD.read_text(encoding='utf-8'))
+          pbeats = prod['beats']
+
+          pbeats['CH05-N07-BEAT-02']['events'] = [
+              {'type': 'action', 'text': 'The group abandons every remaining assumption about a clean extraction and prepares to intercept the execution movement itself.'},
+              {'type': 'dialogue', 'text': 'Hand cleanly into the revised Finale. Do not reveal the later world-like call, unknown antagonist, or Fracture before Jeanne is rescued.'},
+              {'type': 'transition', 'text': 'Continue to FIN.'},
+          ]
+          pbeats['FIN-B01-BEAT-03']['events'] = [
+              {'type': 'action', 'text': 'Jeanne is freed and the party clears the execution point. Only after the human rescue succeeds does an impossible distant tone begin beneath the city noise.'},
+              {'type': 'dialogue', 'text': 'The rescue is real. The supernatural turn starts afterward rather than revoking success.'},
+              {'type': 'transition', 'text': 'Continue to FIN-B02.'},
+          ]
+
+          pbeats['FIN-B02-BEAT-01'] = {
+              'timing': {'mode': 'advance', 'estimatedSeconds': 30},
+              'staging': {
+                  'background': 'Rouen — streets beyond Vieux-Marché',
+                  'camera': 'Retreating street frame → guided horizon reveal',
+                  'slots': {
+                      'left': {'character': 'MC', 'shortLabel': 'MC', 'pose': 'active'},
+                      'center': {'character': 'Jeanne d’Arc', 'shortLabel': 'JEA', 'pose': 'active'},
+                      'right': {'character': 'Julie d’Aubigny', 'shortLabel': 'JUL', 'pose': 'active'},
+                  },
+              },
+              'events': [
+                  {'type': 'action', 'text': 'A low impossible tone cuts through the ordinary pursuit and guides the party toward a quieter route and broad final view.'},
+                  {'type': 'dialogue', 'text': 'The unknown world-like voice addresses MC as Rookie and asks only to be heard; no prophecy or cosmology explanation.'},
+                  {'type': 'transition', 'text': 'Continue to FIN-B02-BEAT-02.'},
+              ],
+          }
+          pbeats['FIN-B02-BEAT-02'] = {
+              'timing': {'mode': 'advance', 'estimatedSeconds': 26},
+              'staging': {
+                  'background': 'Rouen — fractured horizon vista',
+                  'camera': 'Wide antagonist silhouette → deliberate Fracture opening',
+                  'slots': {
+                      'left': {'character': 'MC', 'shortLabel': 'MC', 'pose': 'active'},
+                      'center': {'character': 'Unknown Figure', 'shortLabel': '???', 'pose': 'active'},
+                      'right': {'character': 'Jeanne d’Arc', 'shortLabel': 'JEA', 'pose': 'active'},
+                  },
+              },
+              'events': [
+                  {'type': 'action', 'text': 'An unknown figure deliberately opens a large refractive Fracture, notices the arriving party, and crosses without explanation.'},
+                  {'type': 'dialogue', 'text': 'Do not name, explain, or assign a final form to the main antagonist here.'},
+                  {'type': 'transition', 'text': 'Continue to FIN-B02-BEAT-03.'},
+              ],
+          }
+          pbeats['FIN-B02-BEAT-03'] = {
+              'timing': {'mode': 'player', 'minSeconds': 25, 'maxSeconds': 120},
+              'staging': {
+                  'background': 'Rouen — fractured horizon vista',
+                  'camera': 'Tactical overview → unstable passage pressure',
+                  'slots': {
+                      'left': {'character': 'MC', 'shortLabel': 'MC', 'pose': 'active'},
+                      'center': {'character': 'Jeanne d’Arc', 'shortLabel': 'JEA', 'pose': 'active'},
+                      'right': {'character': 'Julie d’Aubigny', 'shortLabel': 'JUL', 'pose': 'active'},
+                  },
+              },
+              'events': [
+                  {'type': 'action', 'text': 'Hostile fractured forms and pressure spill into the route after the antagonist crosses.'},
+                  {'type': 'dialogue', 'text': 'Preserve supernatural gameplay pressure without calling it Correction or saying the world is enforcing Jeanne’s death.'},
+                  {'type': 'transition', 'text': 'Continue to FIN-B02-BEAT-04.'},
+              ],
+          }
+          pbeats['FIN-B02-BEAT-04'] = {
+              'timing': {'mode': 'player', 'minSeconds': 25, 'maxSeconds': 120},
+              'staging': {
+                  'background': 'Rouen — edge of the antagonist-opened Fracture',
+                  'camera': 'Battle pressure → voice/portal focus',
+                  'slots': {
+                      'left': {'character': 'MC', 'shortLabel': 'MC', 'pose': 'active'},
+                      'center': {'character': 'Jeanne d’Arc', 'shortLabel': 'JEA', 'pose': 'active'},
+                      'right': {'character': 'Julie d’Aubigny', 'shortLabel': 'JUL', 'pose': 'active'},
+                  },
+              },
+              'events': [
+                  {'type': 'action', 'text': 'The party reaches the still-open passage while the world-like voice becomes clearer.'},
+                  {'type': 'dialogue', 'text': 'The voice says the world is breaking, cannot stop them alone, and asks the Rookie to follow. MC chooses pursuit.'},
+                  {'type': 'transition', 'text': 'Continue to FIN-N03.'},
+              ],
+          }
+          pbeats['FIN-N03-BEAT-01'] = {
+              'timing': {'mode': 'advance', 'estimatedSeconds': 30},
+              'staging': {
+                  'background': 'Rouen — edge of the antagonist-opened Fracture',
+                  'camera': 'Scene framing → narrowing passage',
+                  'slots': {
+                      'left': {'character': 'MC', 'shortLabel': 'MC', 'pose': 'active'},
+                      'center': {'character': 'Jeanne d’Arc', 'shortLabel': 'JEA', 'pose': 'active'},
+                      'right': {'character': 'Julie d’Aubigny', 'shortLabel': 'JUL', 'pose': 'active'},
+                  },
+              },
+              'events': [
+                  {'type': 'action', 'text': 'The antagonist-opened Fracture is narrowing. Its destination is unknown, but the antagonist’s route through it is certain.'},
+                  {'type': 'dialogue', 'text': 'Frame the crossing as chosen pursuit and the first concrete lead, not random escape or guaranteed home.'},
+                  {'type': 'transition', 'text': 'Continue to FIN-N03-BEAT-02.'},
+              ],
+          }
+          pbeats['FIN-N03-BEAT-02']['events'] = [
+              {'type': 'action', 'text': 'MC refuses to decide for Jeanne. Jeanne considers the narrowing antagonist-opened Fracture and chooses to step beside MC.'},
+              {'type': 'dialogue', 'text': 'End Saga I on Jeanne’s independent agency and MC’s chosen pursuit; supporting crossings and destination remain unresolved.'},
+              {'type': 'transition', 'text': 'Continue to TBD-SAGA-II.'},
+          ]
+
+          PROD.write_text(json.dumps(prod, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+          python3 -m json.tool content/narrative/story.json >/dev/null
+          python3 -m json.tool content/narrative/story-production.json >/dev/null
+          git diff --check
+
+      - name: Commit materialized narrative
+        shell: bash
+        run: |
+          git config user.name "Drakeshard Narrative Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/game-nar12-materialize.yml
+          git add content/narrative/story.json content/narrative/story-production.json
+          git commit -m "feat(narrative): revise MC titles and Saga I finale"
+          git push origin HEAD:game-nar12/mc-titles-finale-revision
