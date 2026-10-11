@@ -2,6 +2,7 @@ import { render } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { BattleApp } from "./battle.js";
 import { CampaignApp } from "./campaign.js";
+import { GameButton } from "./game-controls.js";
 import { HomeApp } from "./home.js";
 import {
   applyUiPreferences,
@@ -29,6 +30,7 @@ import "./saga-detail.css";
 import "./campaign-production.css";
 import "./campaign-production-fixes.css";
 import "./battle-production-fixes.css";
+import "./game-controls.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "battle";
 
@@ -138,16 +140,27 @@ function App() {
 
       <div class="campaign-rooted-shell" hidden={screen !== "campaign"}>
         <CampaignApp onOpenBattle={() => setScreen("battle")} />
-        <nav class="campaign-root-navigation" aria-label="Campaign root navigation">
-          <button type="button" onClick={() => setScreen("saga")}>
-            Back
-          </button>
-          <button type="button" onClick={() => setScreen("home")}>
-            Home
-          </button>
-          <button type="button" onClick={(event) => openSettings(event.currentTarget)}>
-            Settings
-          </button>
+        <nav
+          class="campaign-root-navigation game-navigation-cluster"
+          aria-label="Campaign root navigation"
+        >
+          <div class="game-navigation-start">
+            <GameButton icon="back" compactLabel="Back" onClick={() => setScreen("saga")}>
+              Back to Saga
+            </GameButton>
+          </div>
+          <div class="game-navigation-end">
+            <GameButton icon="home" compactLabel="Home" onClick={() => setScreen("home")}>
+              Home
+            </GameButton>
+            <GameButton
+              icon="settings"
+              compactLabel="Settings"
+              onClick={(event) => openSettings(event.currentTarget)}
+            >
+              Settings
+            </GameButton>
+          </div>
         </nav>
       </div>
 
