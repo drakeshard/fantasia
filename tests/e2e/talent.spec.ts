@@ -20,7 +20,9 @@ test("Talent menu exposes controlled account-wide progression without inventing 
     "aria-selected",
     "true",
   );
-  await expect(page.getByRole("tab", { name: /Faction Rule Talent/ })).toContainText("Not authored");
+  await expect(page.getByRole("tab", { name: /Faction Rule Talent/ })).toContainText(
+    "Not authored",
+  );
   await expect(page.getByRole("tab", { name: /Faction Playstyle Talent/ })).toContainText(
     "Not authored",
   );
@@ -45,9 +47,13 @@ test("Talent menu exposes controlled account-wide progression without inventing 
   await expect(page.getByText(/talent points/i)).toHaveCount(0);
 
   await page.getByRole("tab", { name: /Faction Rule Talent/ }).click();
-  await expect(page.getByRole("heading", { name: "No production tree is authored yet." })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "No production tree is authored yet." }),
+  ).toBeVisible();
   await page.getByRole("tab", { name: /Faction Playstyle Talent/ }).click();
-  await expect(page.getByRole("heading", { name: "No production tree is authored yet." })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "No production tree is authored yet." }),
+  ).toBeVisible();
 
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   const settingsDialog = page.getByRole("dialog", { name: "Settings", exact: true });

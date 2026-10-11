@@ -11,11 +11,7 @@ const uiAsset = (name: string) => `/assets/ui/core/${name}`;
 
 function TalentIcon() {
   return (
-    <img
-      class="talent-icon"
-      src={uiAsset("fantasia_ui_icon_talent_default_v001.svg")}
-      alt=""
-    />
+    <img class="talent-icon" src={uiAsset("fantasia_ui_icon_talent_default_v001.svg")} alt="" />
   );
 }
 

@@ -90,7 +90,8 @@ function formatReward(effect: TalentNodeEffect): string {
 
   const reward = effect.rewardKey.replaceAll("_", " ");
   if (effect.kind === "stat") {
-    const amount = effect.mode === "percent" ? `+${effect.valuePerRank}%` : `+${effect.valuePerRank}`;
+    const amount =
+      effect.mode === "percent" ? `+${effect.valuePerRank}%` : `+${effect.valuePerRank}`;
     return `${amount} ${reward} / rank`;
   }
 
