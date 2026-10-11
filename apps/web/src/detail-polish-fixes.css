@@ -16,3 +16,8 @@
     padding: var(--ui-s1) var(--ui-s3);
   }
 }
+
+/* The Saga footer is status-only and must never intercept player controls after browser scrolling. */
+.saga-footer-status {
+  pointer-events: none;
+}
