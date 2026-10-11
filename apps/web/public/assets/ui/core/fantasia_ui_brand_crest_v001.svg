@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Fantasia crest</title>
   <path d="M32 3 61 32 32 61 3 32 32 3Z" stroke="#E2BE78" stroke-width="1.45" opacity=".86"/>
   <circle cx="32" cy="32" r="18.5" stroke="#E2BE78" stroke-width="1.15" opacity=".66"/>
   <circle cx="32" cy="32" r="11" stroke="#F4F0E7" stroke-width=".85" opacity=".46"/>
