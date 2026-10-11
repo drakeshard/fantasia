@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Panel corner ornament</title>
   <path d="M4 36V8h28" stroke="#E2BE78" stroke-width="1.35" stroke-linecap="square"/>
   <path d="M10 31V14h17" stroke="#E2BE78" stroke-width=".9" opacity=".42"/>
   <path d="m4 8 8 8M32 8l-6 6M4 36l6-6" stroke="#E2BE78" stroke-width="1" opacity=".7"/>
