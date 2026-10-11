@@ -1,5 +1,6 @@
 import { CampaignSession } from "@fantasia/runtime";
 import { useMemo } from "preact/hooks";
+import { GameUtilityCluster } from "./game-controls.js";
 
 interface HomeAppProps {
   readonly onContinue: () => void;
@@ -36,9 +37,12 @@ export function HomeApp({ onContinue, onCampaign, onCharacters, onSettings }: Ho
             <small>Chronicles beyond the fracture</small>
           </span>
         </div>
-        <div class="home-lobby-status">
-          <span class="home-status-dot" aria-hidden="true" />
-          <span>Story campaign</span>
+        <div class="home-lobby-hud-end">
+          <div class="home-lobby-status">
+            <span class="home-status-dot" aria-hidden="true" />
+            <span>Story campaign</span>
+          </div>
+          <GameUtilityCluster onSettings={onSettings} />
         </div>
       </header>
 
@@ -131,15 +135,6 @@ export function HomeApp({ onContinue, onCampaign, onCharacters, onSettings }: Ho
         >
           <HomeIcon src="fantasia_ui_icon_summon_default_v001.svg" />
           <strong>Summon</strong>
-        </button>
-        <button
-          type="button"
-          class="home-dock-item"
-          aria-label="Settings"
-          onClick={(event) => onSettings(event.currentTarget)}
-        >
-          <HomeIcon src="fantasia_ui_icon_settings_default_v001.svg" />
-          <strong>Settings</strong>
         </button>
       </nav>
     </main>
