@@ -2,7 +2,10 @@ node_modules/
 dist/
 coverage/
 playwright-report/
+playwright-visual-report/
 test-results/
+test-results-visual/
+visual-artifacts/
 .vite/
 .cache/
 .artifacts/shared/*.tgz

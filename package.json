@@ -24,6 +24,7 @@
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
+    "test:visual": "playwright test --config=playwright.visual.config.ts",
     "build": "pnpm -r build && pnpm story:build",
     "verify": "pnpm audit && pnpm foundation:consumer && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
   },
