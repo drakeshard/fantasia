@@ -34,6 +34,7 @@ import "./campaign-production-fixes.css";
 import "./battle-production-fixes.css";
 import "./game-controls.css";
 import "./characters.css";
+import "./navigation-placement.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "characters" | "story" | "battle";
 
@@ -193,6 +194,7 @@ function App() {
         <StoryApp
           nodeId={storyNodeId}
           onReturnCampaign={() => setScreen("campaign")}
+          onHome={() => setScreen("home")}
           onSettings={openSettings}
         />
       ) : null}

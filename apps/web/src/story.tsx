@@ -1,6 +1,6 @@
 import storyContent from "virtual:fantasia-story-content";
 import { useEffect, useMemo, useState } from "preact/hooks";
-import { GameButton } from "./game-controls.js";
+import { GameButton, GameUtilityCluster } from "./game-controls.js";
 import "./story.css";
 
 type PlaybackEvent = Readonly<{
@@ -28,10 +28,12 @@ export function approvedChapterOneStory(nodeId: string): ApprovedStoryPlayback |
 export function StoryApp({
   nodeId,
   onReturnCampaign,
+  onHome,
   onSettings,
 }: {
   readonly nodeId: string;
   readonly onReturnCampaign: () => void;
+  readonly onHome: () => void;
   readonly onSettings: (trigger: HTMLElement) => void;
 }) {
   const playback = useMemo(() => approvedChapterOneStory(nodeId), [nodeId]);
@@ -68,14 +70,7 @@ export function StoryApp({
           <span>{playback.chapterTitle}</span>
           <h1>{playback.nodeTitle}</h1>
         </div>
-        <GameButton
-          icon="settings"
-          compactLabel="Settings"
-          aria-label="Settings"
-          onClick={(clickEvent) => onSettings(clickEvent.currentTarget)}
-        >
-          Settings
-        </GameButton>
+        <GameUtilityCluster onHome={onHome} onSettings={onSettings} />
       </header>
 
       <section class="story-stage" aria-label={`${playback.nodeTitle} scene`}>

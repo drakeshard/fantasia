@@ -1,4 +1,4 @@
-import { GameButton } from "./game-controls.js";
+import { GameUtilityCluster } from "./game-controls.js";
 
 interface CharactersAppProps {
   readonly onHome: () => void;
@@ -24,21 +24,7 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
             <h1>Characters</h1>
           </span>
         </div>
-        <div class="game-navigation-cluster">
-          <div class="game-navigation-end">
-            <GameButton icon="home" compactLabel="Home" aria-label="Home" onClick={onHome}>
-              Home
-            </GameButton>
-            <GameButton
-              icon="settings"
-              compactLabel="Settings"
-              aria-label="Settings"
-              onClick={(event) => onSettings(event.currentTarget)}
-            >
-              Settings
-            </GameButton>
-          </div>
-        </div>
+        <GameUtilityCluster onHome={onHome} onSettings={onSettings} />
       </header>
 
       <section class="characters-layout" aria-label="Character archive">
