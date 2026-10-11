@@ -1,0 +1,59 @@
+/* GAME-UI15 final visual-review corrections. */
+
+.home-feature-current {
+  background:
+    radial-gradient(circle at 82% 28%, rgb(226 190 120 / 7%), transparent 28%),
+    linear-gradient(145deg, rgb(226 190 120 / 3%), transparent 27%),
+    linear-gradient(150deg, rgb(8 20 30 / 92%), rgb(6 15 24 / 80%));
+}
+
+.home-feature-current::before {
+  right: clamp(20px, 2vw, 32px);
+  bottom: clamp(64px, 8vh, 86px);
+  width: clamp(150px, 13vw, 205px);
+  height: clamp(150px, 13vw, 205px);
+  background: var(--lobby-gold);
+  -webkit-mask: url("/assets/ui/fantasia_ui_icon_campaign_default_v001.svg") center / contain no-repeat;
+  mask: url("/assets/ui/fantasia_ui_icon_campaign_default_v001.svg") center / contain no-repeat;
+  transform: none;
+  opacity: 0.035;
+}
+
+.home-feature-current .home-feature-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.home-feature-current .home-feature-emblem {
+  position: relative;
+  z-index: 1;
+}
+
+.home-feature-current .home-feature-rule,
+.home-feature-current .home-feature-footer,
+.home-feature-current .home-feature-kicker {
+  position: relative;
+  z-index: 1;
+}
+
+.home-feature-current .home-feature-rule {
+  box-shadow: 0 1px rgb(255 255 255 / 2%);
+}
+
+@media (max-height: 499px) and (orientation: landscape) {
+  .home-feature-current::before {
+    right: 10px;
+    bottom: 30px;
+    width: 92px;
+    height: 92px;
+    opacity: 0.025;
+  }
+
+  .home-feature-locked .home-feature-kicker {
+    display: none;
+  }
+
+  .home-feature-locked .home-feature-copy {
+    gap: 0;
+  }
+}
