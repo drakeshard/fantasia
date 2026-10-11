@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   type AccountTalentState,
-  type TalentTreeDefinition,
-  LANCER_CLASS_TALENT_SCAFFOLD,
   advanceTalentRank,
   createAccountTalentState,
   deserializeAccountTalentState,
+  LANCER_CLASS_TALENT_SCAFFOLD,
   projectClassTalentProfile,
   serializeAccountTalentState,
+  type TalentTreeDefinition,
   talentNodeRank,
   unlockedTalentRewardKeys,
   validateTalentTreeDefinition,
@@ -140,7 +140,8 @@ function advanceOrThrow(
   nodeId: string,
 ): AccountTalentState {
   const result = advanceTalentRank(tree, state, nodeId);
-  if (result.kind !== "advanced") throw new Error(`Expected ${nodeId} to advance: ${result.reason}`);
+  if (result.kind !== "advanced")
+    throw new Error(`Expected ${nodeId} to advance: ${result.reason}`);
   return result.state;
 }
 

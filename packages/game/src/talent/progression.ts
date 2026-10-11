@@ -12,7 +12,11 @@ import type {
 const positiveInteger = (value: number): boolean => Number.isInteger(value) && value > 0;
 const nonNegativeFinite = (value: number): boolean => Number.isFinite(value) && value >= 0;
 
-function validateEffect(treeId: string, node: TalentNodeDefinition, effect: TalentNodeEffect): void {
+function validateEffect(
+  treeId: string,
+  node: TalentNodeDefinition,
+  effect: TalentNodeEffect,
+): void {
   if (effect.rewardKey.trim().length === 0) {
     throw new RangeError(`Talent node ${node.nodeId} in ${treeId} has an empty reward key`);
   }
@@ -103,38 +107,51 @@ function rejectCycles(tree: TalentTreeDefinition): void {
 export function validateTalentTreeDefinition(tree: TalentTreeDefinition): void {
   if (tree.schemaVersion !== 1) throw new RangeError(`Unsupported Talent schema in ${tree.treeId}`);
   if (tree.treeId.trim().length === 0) throw new RangeError("Talent tree ID cannot be empty");
-  if (tree.scopeKey.trim().length === 0) throw new RangeError(`Talent tree ${tree.treeId} has empty scope`);
+  if (tree.scopeKey.trim().length === 0)
+    throw new RangeError(`Talent tree ${tree.treeId} has empty scope`);
 
   const nodeIds = new Set<string>();
   for (const node of tree.nodes) {
-    if (node.nodeId.trim().length === 0) throw new RangeError(`Talent tree ${tree.treeId} has empty node ID`);
+    if (node.nodeId.trim().length === 0)
+      throw new RangeError(`Talent tree ${tree.treeId} has empty node ID`);
     if (nodeIds.has(node.nodeId)) throw new RangeError(`Duplicate Talent node ID: ${node.nodeId}`);
     nodeIds.add(node.nodeId);
-    if (node.doctrine.trim().length === 0) throw new RangeError(`Talent node ${node.nodeId} has empty doctrine`);
-    if (node.name.trim().length === 0) throw new RangeError(`Talent node ${node.nodeId} has empty name`);
-    if (!positiveInteger(node.ranks)) throw new RangeError(`Talent node ${node.nodeId} has invalid ranks`);
+    if (node.doctrine.trim().length === 0)
+      throw new RangeError(`Talent node ${node.nodeId} has empty doctrine`);
+    if (node.name.trim().length === 0)
+      throw new RangeError(`Talent node ${node.nodeId} has empty name`);
+    if (!positiveInteger(node.ranks))
+      throw new RangeError(`Talent node ${node.nodeId} has invalid ranks`);
     for (const effect of node.effects) validateEffect(tree.treeId, node, effect);
   }
 
   const costCurveIds = new Set<string>();
   for (const curve of tree.costCurves ?? []) {
-    if (curve.costCurveId.trim().length === 0) throw new RangeError(`Talent tree ${tree.treeId} has empty cost curve ID`);
-    if (costCurveIds.has(curve.costCurveId)) throw new RangeError(`Duplicate Talent cost curve: ${curve.costCurveId}`);
+    if (curve.costCurveId.trim().length === 0)
+      throw new RangeError(`Talent tree ${tree.treeId} has empty cost curve ID`);
+    if (costCurveIds.has(curve.costCurveId))
+      throw new RangeError(`Duplicate Talent cost curve: ${curve.costCurveId}`);
     costCurveIds.add(curve.costCurveId);
-    if (curve.costsByRank.length === 0 || curve.costsByRank.some((cost) => !nonNegativeFinite(cost))) {
+    if (
+      curve.costsByRank.length === 0 ||
+      curve.costsByRank.some((cost) => !nonNegativeFinite(cost))
+    ) {
       throw new RangeError(`Talent cost curve ${curve.costCurveId} is invalid`);
     }
   }
 
   for (const node of tree.nodes) {
     if (node.costCurveId !== undefined && !costCurveIds.has(node.costCurveId)) {
-      throw new RangeError(`Talent node ${node.nodeId} references unknown cost curve ${node.costCurveId}`);
+      throw new RangeError(
+        `Talent node ${node.nodeId} references unknown cost curve ${node.costCurveId}`,
+      );
     }
     for (const group of node.prerequisites ?? []) {
       if (group.requirements.length === 0) {
         throw new RangeError(`Talent node ${node.nodeId} has an empty prerequisite group`);
       }
-      for (const requirement of group.requirements) validateRequirement(tree, nodeIds, node, requirement);
+      for (const requirement of group.requirements)
+        validateRequirement(tree, nodeIds, node, requirement);
     }
   }
 
@@ -154,7 +171,10 @@ export function createAccountTalentState(): AccountTalentState {
   return { trees: [] };
 }
 
-function treeInvestment(state: AccountTalentState, treeId: string): TalentTreeInvestment | undefined {
+function treeInvestment(
+  state: AccountTalentState,
+  treeId: string,
+): TalentTreeInvestment | undefined {
   return state.trees.find((tree) => tree.treeId === treeId);
 }
 
@@ -266,7 +286,9 @@ export function advanceTalentRank(
   return { kind: "advanced", state: nextState, rank: currentRank + 1 };
 }
 
-export function serializeAccountTalentState(state: AccountTalentState): SerializedAccountTalentState {
+export function serializeAccountTalentState(
+  state: AccountTalentState,
+): SerializedAccountTalentState {
   return {
     trees: state.trees
       .map((tree) => ({
@@ -294,7 +316,8 @@ export function deserializeAccountTalentState(
     }
     seenTreeIds.add(serializedTree.treeId);
     const definition = definitionsById.get(serializedTree.treeId);
-    if (definition === undefined) throw new RangeError(`Unknown serialized Talent tree: ${serializedTree.treeId}`);
+    if (definition === undefined)
+      throw new RangeError(`Unknown serialized Talent tree: ${serializedTree.treeId}`);
     const nodesById = new Map(definition.nodes.map((node) => [node.nodeId, node]));
     const seenNodeIds = new Set<string>();
     const nodes = serializedTree.nodes.map((investment) => {
@@ -303,7 +326,8 @@ export function deserializeAccountTalentState(
       }
       seenNodeIds.add(investment.nodeId);
       const node = nodesById.get(investment.nodeId);
-      if (node === undefined) throw new RangeError(`Unknown serialized Talent node: ${investment.nodeId}`);
+      if (node === undefined)
+        throw new RangeError(`Unknown serialized Talent node: ${investment.nodeId}`);
       if (!positiveInteger(investment.rank) || investment.rank > node.ranks) {
         throw new RangeError(`Invalid serialized Talent rank: ${investment.nodeId}`);
       }

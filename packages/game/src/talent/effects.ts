@@ -38,7 +38,10 @@ function statKey(stat: PermanentTalentStat): keyof ClassTalentStatModifiers {
   }
 }
 
-function resolvedNodeEffects(node: TalentNodeDefinition, rank: number): readonly TalentNodeEffect[] {
+function resolvedNodeEffects(
+  node: TalentNodeDefinition,
+  rank: number,
+): readonly TalentNodeEffect[] {
   return rank > 0 ? node.effects : [];
 }
 

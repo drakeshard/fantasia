@@ -1,10 +1,6 @@
 export type TalentFamily = "class" | "faction-rule" | "faction-playstyle";
 
-export type TalentNodeStatus =
-  | "proposed"
-  | "approved"
-  | "prototype-validated"
-  | "superseded";
+export type TalentNodeStatus = "proposed" | "approved" | "prototype-validated" | "superseded";
 
 export type TalentNodeType =
   | "stat"
