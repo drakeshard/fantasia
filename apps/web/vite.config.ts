@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
+import { fantasiaStoryContentPlugin } from "./story-content-plugin.js";
 
 export default defineConfig({
-  build: {
-    sourcemap: true,
-  },
+  plugins: [fantasiaStoryContentPlugin()],
 });
