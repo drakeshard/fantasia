@@ -5,7 +5,7 @@ import {
 } from "../../packages/game/src/index.ts";
 import { CampaignSession } from "../../packages/runtime/src/index.ts";
 
-describe("GAME-UI04 campaign presentation session", () => {
+describe("GAME-EXEC01 campaign presentation session", () => {
   it("exposes controlled saga, chapter, and stage facts deterministically", () => {
     const first = new CampaignSession().view();
     const second = new CampaignSession().view();
@@ -63,22 +63,53 @@ describe("GAME-UI04 campaign presentation session", () => {
     expect(visible.some((stage) => stage.title === "Secret title")).toBe(false);
   });
 
-  it("keeps selection transient and makes canonical entry explicit and truthful", () => {
+  it("accepts approved story entry while keeping battle execution explicitly unavailable", () => {
     const campaign = new CampaignSession();
     const baseline = campaign.view();
-    const selected = campaign.selectStage("s01-ch01-b01-strangers-road");
 
-    expect(selected?.selectedStageId).toBe("s01-ch01-b01-strangers-road");
-    expect(selected?.stages.find((stage) => stage.selected)?.title).toBe("Strangers on the Road");
+    const storyEntry = campaign.enterSelectedStage();
+    expect(storyEntry.kind).toBe("accepted");
+    if (storyEntry.kind === "accepted") {
+      expect(storyEntry.destination).toBe("CH01-N01");
+      expect(storyEntry.view.selectedStageId).toBe("s01-ch01-n01-other-side");
+    }
     expect(baseline.selectedStageId).toBe("s01-ch01-n01-other-side");
 
-    const entry = campaign.enterSelectedStage();
-    expect(entry.kind).toBe("rejected");
-    if (entry.kind !== "rejected") return;
-    expect(entry.reason).toBe(
-      "Canonical story and battle execution is not implemented in the current production slice.",
+    const selectedBattle = campaign.selectStage("s01-ch01-b01-strangers-road");
+    expect(selectedBattle?.selectedStageId).toBe("s01-ch01-b01-strangers-road");
+    expect(selectedBattle?.stages.find((stage) => stage.selected)?.title).toBe(
+      "Strangers on the Road",
     );
-    expect(entry.view.selectedStageId).toBe("s01-ch01-b01-strangers-road");
+
+    const battleEntry = campaign.enterSelectedStage();
+    expect(battleEntry.kind).toBe("rejected");
+    if (battleEntry.kind !== "rejected") return;
+    expect(battleEntry.reason).toBe(
+      "Canonical battle execution is unavailable until the reviewed CH01 encounter geometry and content are implemented.",
+    );
+    expect(battleEntry.view.selectedStageId).toBe("s01-ch01-b01-strangers-road");
+  });
+
+  it("exposes canonical story destinations only for the approved CH01 story stages", () => {
+    const campaign = new CampaignSession();
+    const expected = new Map([
+      ["s01-ch01-n01-other-side", "CH01-N01"],
+      ["s01-ch01-n03-shelter", "CH01-N03"],
+      ["s01-ch01-n04-names", "CH01-N04"],
+      ["s01-ch01-n06-maid-coming", "CH01-N06"],
+    ]);
+
+    for (const [stageId, destination] of expected) {
+      campaign.selectStage(stageId);
+      const entry = campaign.enterSelectedStage();
+      expect(entry.kind).toBe("accepted");
+      if (entry.kind === "accepted") expect(entry.destination).toBe(destination);
+    }
+
+    for (const stageId of ["s01-ch01-b01-strangers-road", "s01-ch01-b02-road-orleans"]) {
+      campaign.selectStage(stageId);
+      expect(campaign.enterSelectedStage().kind).toBe("rejected");
+    }
   });
 
   it("does not invent stages for a controlled chapter whose production content is not wired", () => {
