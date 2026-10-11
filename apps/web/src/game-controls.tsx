@@ -22,7 +22,7 @@ function GameControlIconView({ icon }: { readonly icon: GameControlIcon }) {
 }
 
 interface GameButtonProps
-  extends Omit<JSX.HTMLAttributes<HTMLButtonElement>, "class" | "className"> {
+  extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, "class" | "className"> {
   readonly children: ComponentChildren;
   readonly class?: string;
   readonly icon?: GameControlIcon;
