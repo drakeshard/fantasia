@@ -71,7 +71,10 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
               onClick={onContinue}
             >
               <span>Continue</span>
-              <HomeIcon src="fantasia_ui_icon_chevron_right_v001.svg" className="home-action-chevron" />
+              <HomeIcon
+                src="fantasia_ui_icon_chevron_right_v001.svg"
+                className="home-action-chevron"
+              />
             </button>
           </section>
         </section>
