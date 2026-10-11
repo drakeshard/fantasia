@@ -1,0 +1,470 @@
+name: GAME-NAR11 Materialize
+
+on:
+  push:
+    branches:
+      - game-nar11/dialogue-finale
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: game-nar11/dialogue-finale
+          fetch-depth: 0
+
+      - name: Polish CH04/CH05 dialogue and add Finale
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          const storyPath = 'content/narrative/story.json';
+          const productionPath = 'content/narrative/story-production.json';
+          const story = JSON.parse(fs.readFileSync(storyPath, 'utf8'));
+          const production = JSON.parse(fs.readFileSync(productionPath, 'utf8'));
+          const saga = story.sagas.find((entry) => entry.id === 'S01');
+          if (!saga) throw new Error('S01 not found');
+          if (saga.chapters.some((chapter) => chapter.id === 'FIN')) {
+            throw new Error('FIN already exists; materializer expected current main without Finale');
+          }
+
+          function naturalizeDialogue(text) {
+            return text
+              .replace(/\bDo not\b/g, "Don't")
+              .replace(/\bdo not\b/g, "don't")
+              .replace(/\bDoes not\b/g, "Doesn't")
+              .replace(/\bdoes not\b/g, "doesn't")
+              .replace(/\bDid not\b/g, "Didn't")
+              .replace(/\bdid not\b/g, "didn't")
+              .replace(/\bCannot\b/g, "Can't")
+              .replace(/\bcannot\b/g, "can't")
+              .replace(/\bCan not\b/g, "Can't")
+              .replace(/\bcan not\b/g, "can't")
+              .replace(/\bWill not\b/g, "Won't")
+              .replace(/\bwill not\b/g, "won't")
+              .replace(/\bWould not\b/g, "Wouldn't")
+              .replace(/\bwould not\b/g, "wouldn't")
+              .replace(/\bShould not\b/g, "Shouldn't")
+              .replace(/\bshould not\b/g, "shouldn't")
+              .replace(/\bCould not\b/g, "Couldn't")
+              .replace(/\bcould not\b/g, "couldn't")
+              .replace(/\bIs not\b/g, "Isn't")
+              .replace(/\bis not\b/g, "isn't")
+              .replace(/\bAre not\b/g, "Aren't")
+              .replace(/\bare not\b/g, "aren't")
+              .replace(/\bWas not\b/g, "Wasn't")
+              .replace(/\bwas not\b/g, "wasn't")
+              .replace(/\bWere not\b/g, "Weren't")
+              .replace(/\bwere not\b/g, "weren't")
+              .replace(/\bHave not\b/g, "Haven't")
+              .replace(/\bhave not\b/g, "haven't")
+              .replace(/\bHas not\b/g, "Hasn't")
+              .replace(/\bhas not\b/g, "hasn't")
+              .replace(/\bHad not\b/g, "Hadn't")
+              .replace(/\bhad not\b/g, "hadn't")
+              .replace(/\bI am\b/g, "I'm")
+              .replace(/\bWe are\b/g, "We're")
+              .replace(/\bwe are\b/g, "we're")
+              .replace(/\bYou are\b/g, "You're")
+              .replace(/\byou are\b/g, "you're")
+              .replace(/\bThey are\b/g, "They're")
+              .replace(/\bthey are\b/g, "they're")
+              .replace(/\bThat is\b/g, "That's")
+              .replace(/\bthat is\b/g, "that's")
+              .replace(/\bThere is\b/g, "There's")
+              .replace(/\bthere is\b/g, "there's")
+              .replace(/\bIt is\b/g, "It's")
+              .replace(/\bit is\b/g, "it's");
+          }
+
+          let polishedLines = 0;
+          for (const chapterId of ['CH04', 'CH05']) {
+            const chapter = saga.chapters.find((entry) => entry.id === chapterId);
+            if (!chapter) throw new Error(`${chapterId} not found`);
+            for (const node of chapter.nodes) {
+              for (const beat of node.beats ?? []) {
+                for (const event of beat.script ?? []) {
+                  if (event.type !== 'dialogue' || event.speaker === 'Pierre Cauchon') continue;
+                  const revised = naturalizeDialogue(event.text);
+                  if (revised !== event.text) {
+                    event.text = revised;
+                    polishedLines += 1;
+                  }
+                }
+              }
+            }
+          }
+          if (polishedLines === 0) throw new Error('Dialogue polish changed no lines');
+
+          const finale = {
+            id: 'FIN',
+            title: 'The First Manifestation',
+            status: 'draft',
+            nodes: [
+              {
+                id: 'FIN-N01',
+                title: 'Vieux-Marché',
+                type: 'story',
+                status: 'draft',
+                scriptStatus: 'draft',
+                location: 'Rouen — Vieux-Marché approaches',
+                time: '30 May 1431 — morning',
+                summary: 'The party follows Jeanne toward the expected execution point and commits to one final rescue. They still know nothing about any larger rule governing her fate; this is a personal choice made because ordinary plans have run out.',
+                beats: [
+                  {
+                    id: 'FIN-N01-BEAT-01',
+                    order: 1,
+                    title: 'The Procession',
+                    presentation: 'finale-opening',
+                    characters: ['MC', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'Jeanne d’Arc', 'English guards'],
+                    screenAction: 'Crowds compress the streets around Vieux-Marché while Jeanne is moved under guard. MC’s group stays split among ordinary movement until they can see the custody route clearly.',
+                    dialogueIntent: 'Keep the opening human and immediate. Nobody knows a cosmic event is coming; the only goal is reaching Jeanne before the execution proceeds.',
+                    playerControl: 'dialogue advance',
+                    trigger: 'finale_start',
+                    result: 'The party identifies Jeanne’s route and the last usable approach through the crowd.',
+                    next: 'FIN-N01-BEAT-02',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-N01-L010', type: 'narration', text: 'Rouen — 30 May 1431, morning' },
+                      { id: 'S01-FIN-N01-L020', type: 'action', text: 'Crowds press toward Vieux-Marché. English guards move Jeanne through the square while the party keeps to separate edges of the street.' },
+                      { id: 'S01-FIN-N01-L030', type: 'dialogue', text: "Once we move, there's no clean way back.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-N01-L040', type: 'dialogue', text: "There hasn't been one for a while.", speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-N01-L050', type: 'dialogue', text: "Then choose the moment. Don't let the crowd choose it for you.", speaker: 'Hangaku Gozen', displayLabel: 'Hangaku Gozen' },
+                      { id: 'S01-FIN-N01-L060', type: 'action', text: 'MC catches sight of Jeanne between two moving lines of guards.' },
+                      { id: 'S01-FIN-N01-L070', type: 'dialogue', text: 'There.', speaker: 'MC', displayLabel: 'MC' }
+                    ]
+                  },
+                  {
+                    id: 'FIN-N01-BEAT-02',
+                    order: 2,
+                    title: 'The Moment',
+                    presentation: 'pre-battle',
+                    characters: ['MC', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante'],
+                    screenAction: 'The outer lane is still open, but the guard formation is tightening around Jeanne. Waiting any longer improves the guards’ position rather than the party’s.',
+                    dialogueIntent: 'Turn the chapter handoff into a clear voluntary commitment, not a surprise encounter or miracle opening.',
+                    playerControl: 'dialogue advance',
+                    trigger: 'jeanne_route_visible',
+                    result: 'The party commits to the rescue and moves before the outer lane closes.',
+                    next: 'FIN-B01',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-N01-L080', type: 'dialogue', text: "West lane's still open.", speaker: 'Bradamante', displayLabel: 'Bradamante' },
+                      { id: 'S01-FIN-N01-L090', type: 'dialogue', text: 'For how long?', speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-N01-L100', type: 'dialogue', text: 'Long enough if we stop talking.', speaker: 'Bradamante', displayLabel: 'Bradamante' },
+                      { id: 'S01-FIN-N01-L110', type: 'dialogue', text: 'We reach Jeanne. Then we get out.', speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-N01-L120', type: 'transition', text: 'FIN-B01 — Before the Fire.' }
+                    ]
+                  }
+                ]
+              },
+              {
+                id: 'FIN-B01',
+                title: 'Before the Fire',
+                type: 'battle',
+                status: 'draft',
+                scriptStatus: 'draft',
+                location: 'Rouen — Vieux-Marché',
+                time: '30 May 1431 — morning',
+                summary: 'The final human rescue succeeds through explicit phases: reach Jeanne, free Jeanne, then escape the execution point. The victory is real; the story does not revoke it in a cutscene. Jeanne survives the point where the expected ending says she should die.',
+                beats: [
+                  {
+                    id: 'FIN-B01-BEAT-01',
+                    order: 1,
+                    title: 'Reach Jeanne',
+                    presentation: 'battle-preview',
+                    characters: ['MC', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'Jeanne d’Arc', 'English guards'],
+                    screenAction: 'The party breaks from the crowd and opens one narrow route toward Jeanne. The goal is contact, not defeating every guard in the square.',
+                    dialogueIntent: 'Make the first phase focused and legible: one road to Jeanne, with the group covering different pressures rather than becoming an army.',
+                    playerControl: 'battle control',
+                    trigger: 'rescue_begins',
+                    result: 'The party reaches the custody ring around Jeanne.',
+                    next: 'FIN-B01-BEAT-02',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-B01-L010', type: 'control', text: 'Objective: REACH JEANNE. Defeating every guard is not required.' },
+                      { id: 'S01-FIN-B01-L020', type: 'dialogue', text: "Don't spread out. We only need one road to her.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-B01-L030', type: 'dialogue', text: 'Then make it ours.', speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-B01-L040', type: 'action', text: 'Hangaku suppresses one side of the route while Bradamante forces space on the other. MC and Julie push toward Jeanne.' }
+                    ]
+                  },
+                  {
+                    id: 'FIN-B01-BEAT-02',
+                    order: 2,
+                    title: 'Free Jeanne',
+                    presentation: 'battle-event',
+                    characters: ['MC', 'Julie d’Aubigny', 'Jeanne d’Arc', 'English guards'],
+                    screenAction: 'The party reaches Jeanne. The objective changes immediately from approach to freeing her and preserving the retreat lane.',
+                    dialogueIntent: 'Let the reunion land quickly without stopping the battle for a long speech.',
+                    playerControl: 'battle control',
+                    trigger: 'jeanne_reached',
+                    result: 'Jeanne is freed from immediate custody and can move with the party.',
+                    next: 'FIN-B01-BEAT-03',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-B01-L050', type: 'control', text: 'Objective update: FREE JEANNE and keep the retreat lane open.' },
+                      { id: 'S01-FIN-B01-L060', type: 'dialogue', text: '{{MC_NAME}}?', speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-B01-L070', type: 'dialogue', text: 'Yeah.', speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-B01-L080', type: 'dialogue', text: 'You came.', speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-B01-L090', type: 'dialogue', text: 'Of course I came.', speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-B01-L100', type: 'dialogue', text: 'Reunion later. Move.', speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-B01-L110', type: 'action', text: 'Jeanne is pulled clear of the immediate custody line while the outer escape lane is still barely open.' }
+                    ]
+                  },
+                  {
+                    id: 'FIN-B01-BEAT-03',
+                    order: 3,
+                    title: 'Escape the Square',
+                    presentation: 'battle-climax',
+                    characters: ['MC', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'Jeanne d’Arc', 'English guards'],
+                    screenAction: 'With Jeanne free, the party stops trying to control the square and fights only for enough space to move her beyond the execution point.',
+                    dialogueIntent: 'The rescue must genuinely succeed. The expected death is prevented before anything supernatural interrupts.',
+                    playerControl: 'battle control / escape',
+                    trigger: 'jeanne_freed',
+                    result: 'Jeanne leaves the execution point alive. The expected historical ending has been changed.',
+                    next: 'FIN-B02',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-B01-L120', type: 'control', text: 'Objective update: ESCAPE THE SQUARE with Jeanne.' },
+                      { id: 'S01-FIN-B01-L130', type: 'dialogue', text: "You still don't have a plan.", speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-B01-L140', type: 'dialogue', text: "I have the part where you're alive.", speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-B01-L150', type: 'dialogue', text: "That's not a plan.", speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-B01-L160', type: 'dialogue', text: "It's more than we had yesterday.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-B01-L170', type: 'action', text: 'The group clears the execution point with Jeanne alive. For one heartbeat, the square sounds impossibly far away.' },
+                      { id: 'S01-FIN-B01-L180', type: 'transition', text: 'FIN-B02 — The First Manifestation.' }
+                    ]
+                  }
+                ]
+              },
+              {
+                id: 'FIN-B02',
+                title: 'The First Manifestation',
+                type: 'battle',
+                status: 'draft',
+                scriptStatus: 'draft',
+                location: 'Rouen — Vieux-Marché and fractured overlap',
+                time: '30 May 1431 — moments later',
+                summary: 'Reality reacts to Jeanne surviving her expected ending. A presence manifests without a stable final form, states only the minimum contradiction, and a Correction begins. The party cannot solve or defeat the deeper phenomenon; the tactical goal is to protect Jeanne and survive until a new Fracture creates an escape route.',
+                beats: [
+                  {
+                    id: 'FIN-B02-BEAT-01',
+                    order: 1,
+                    title: 'Reality Reacts',
+                    presentation: 'manifestation-event',
+                    characters: ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'First Manifestation'],
+                    screenAction: 'Light, distance, and sound stop agreeing with one another. The distortion gathers into a presence that refuses to hold one stable shape.',
+                    dialogueIntent: 'Reveal only the contradiction: Jeanne was expected to die here, MC was not expected to be present, and the changed outcome is treated as a problem. Explain nothing beyond that.',
+                    playerControl: 'dialogue advance',
+                    trigger: 'jeanne_survives_expected_end',
+                    result: 'The First Manifestation identifies the broken expected outcome and initiates a Correction.',
+                    next: 'FIN-B02-BEAT-02',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-B02-L010', type: 'action', text: 'The noise of the square drops away for one impossible heartbeat. Light bends across walls, armor, paving stones, and empty air at the same time.' },
+                      { id: 'S01-FIN-B02-L020', type: 'dialogue', text: "Tell me that's the thing from the road.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-B02-L030', type: 'dialogue', text: 'It was never this big.', speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-B02-L040', type: 'action', text: 'The distortion gathers into a presence the eye cannot keep in one shape.' },
+                      { id: 'S01-FIN-B02-L050', type: 'dialogue', text: "Jeanne d'Arc was meant to die here.", speaker: 'First Manifestation', displayLabel: 'Manifestation' },
+                      { id: 'S01-FIN-B02-L060', type: 'dialogue', text: 'What are you?', speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-B02-L070', type: 'dialogue', text: 'You were not meant to be present.', speaker: 'First Manifestation', displayLabel: 'Manifestation' },
+                      { id: 'S01-FIN-B02-L080', type: 'action', text: 'The presence turns toward MC.' },
+                      { id: 'S01-FIN-B02-L090', type: 'dialogue', text: 'Too late.', speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-B02-L100', type: 'dialogue', text: 'The changed ending cannot remain.', speaker: 'First Manifestation', displayLabel: 'Manifestation' },
+                      { id: 'S01-FIN-B02-L110', type: 'dialogue', text: 'Correction.', speaker: 'First Manifestation', displayLabel: 'Manifestation' }
+                    ]
+                  },
+                  {
+                    id: 'FIN-B02-BEAT-02',
+                    order: 2,
+                    title: 'Correction',
+                    presentation: 'battle-event',
+                    characters: ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'Correction forms'],
+                    screenAction: 'Hostile forms peel out of the distortion without settling into consistent bodies. They close on Jeanne and the escape route rather than behaving like an ordinary army.',
+                    dialogueIntent: 'Turn the mystery into immediate survival gameplay without defining a final creature taxonomy or deeper antagonist.',
+                    playerControl: 'battle control',
+                    trigger: 'correction_begins',
+                    result: 'The party survives the first surge and keeps Jeanne moving.',
+                    next: 'FIN-B02-BEAT-03',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-B02-L120', type: 'control', text: 'Objective: PROTECT JEANNE. Survive the Correction.' },
+                      { id: 'S01-FIN-B02-L130', type: 'action', text: 'Unstable hostile shapes pull free of the bent light and cut across the route.' },
+                      { id: 'S01-FIN-B02-L140', type: 'dialogue', text: "Those aren't soldiers.", speaker: 'Hangaku Gozen', displayLabel: 'Hangaku Gozen' },
+                      { id: 'S01-FIN-B02-L150', type: 'dialogue', text: "They're still in the way.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-B02-L160', type: 'dialogue', text: 'Then keep Jeanne moving.', speaker: 'MC', displayLabel: 'MC' }
+                    ]
+                  },
+                  {
+                    id: 'FIN-B02-BEAT-03',
+                    order: 3,
+                    title: 'The Street Breaks',
+                    presentation: 'battle-escalation',
+                    characters: ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'Correction forms'],
+                    screenAction: 'Pieces of Rouen briefly overlap with places nobody recognizes: another sky, unfamiliar stone, a distant waterline. The fragments vanish before they can become destinations or explanations.',
+                    dialogueIntent: 'Tease the scale of the fracture without identifying Saga II, naming future worlds, or explaining why the overlap happens.',
+                    playerControl: 'battle control',
+                    trigger: 'correction_escalates',
+                    result: 'A larger refractive tear begins opening near the group while the battlefield remains unstable.',
+                    next: 'FIN-B02-BEAT-04',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-B02-L170', type: 'action', text: 'For seconds at a time, parts of the street are replaced by places nobody present recognizes. Each fragment disappears before the eye can settle on it.' },
+                      { id: 'S01-FIN-B02-L180', type: 'dialogue', text: 'The street moved.', speaker: 'Bradamante', displayLabel: 'Bradamante' },
+                      { id: 'S01-FIN-B02-L190', type: 'dialogue', text: 'I noticed.', speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-B02-L200', type: 'dialogue', text: 'There. That light—', speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-B02-L210', type: 'action', text: 'A broad refractive tear opens across the far side of the broken street.' },
+                      { id: 'S01-FIN-B02-L220', type: 'control', text: 'Objective update: keep Jeanne protected and survive until the Fracture stabilizes enough to reach.' }
+                    ]
+                  },
+                  {
+                    id: 'FIN-B02-BEAT-04',
+                    order: 4,
+                    title: 'Survive, Don’t Win',
+                    presentation: 'battle-climax',
+                    characters: ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante', 'First Manifestation', 'Correction forms'],
+                    screenAction: 'The party stops treating the Manifestation as something that can be defeated here. They hold together until the Fracture becomes a usable route.',
+                    dialogueIntent: 'Make the finale victory survival and protection, not killing or permanently solving the deeper phenomenon.',
+                    playerControl: 'battle control / survive',
+                    trigger: 'fracture_forming',
+                    result: 'The party survives long enough for the Fracture to become reachable. The Manifestation remains unresolved.',
+                    next: 'FIN-N03',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-B02-L230', type: 'dialogue', text: "We can't beat this.", speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-B02-L240', type: 'dialogue', text: 'Then stop trying.', speaker: 'Hangaku Gozen', displayLabel: 'Hangaku Gozen' },
+                      { id: 'S01-FIN-B02-L250', type: 'dialogue', text: "Best order I've heard all day.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-B02-L260', type: 'control', text: 'Survive the final Correction surge. The Manifestation is not a defeat objective.' },
+                      { id: 'S01-FIN-B02-L270', type: 'dialogue', text: 'Deviation persists.', speaker: 'First Manifestation', displayLabel: 'Manifestation' },
+                      { id: 'S01-FIN-B02-L280', type: 'action', text: 'The Fracture widens just enough to become a route instead of a flash of light.' },
+                      { id: 'S01-FIN-B02-L290', type: 'transition', text: 'FIN-N03 — A Road With No Name.' }
+                    ]
+                  }
+                ]
+              },
+              {
+                id: 'FIN-N03',
+                title: 'A Road With No Name',
+                type: 'story',
+                status: 'draft',
+                scriptStatus: 'draft',
+                location: 'Fractured Rouen — edge of the new Fracture',
+                time: '30 May 1431 — moments later',
+                summary: 'The new Fracture offers no promise of home or safety. MC prepares to take the unknown route. Jeanne is explicitly given the choice to stay or cross and chooses for herself. The distortion surges before the story confirms which additional companions cross, preserving the open handoff into Saga II.',
+                beats: [
+                  {
+                    id: 'FIN-N03-BEAT-01',
+                    order: 1,
+                    title: 'No Promise of Home',
+                    presentation: 'saga-end-scene',
+                    characters: ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante'],
+                    screenAction: 'The Fracture remains open but shows no readable destination. The Correction closes behind the party, turning an unknown crossing into the only route that is not collapsing.',
+                    dialogueIntent: 'Return to MC’s original home problem without pretending the new Fracture solves it.',
+                    playerControl: 'dialogue advance',
+                    trigger: 'fracture_reachable',
+                    result: 'MC accepts that the route may not lead home and prepares to cross anyway.',
+                    next: 'FIN-N03-BEAT-02',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-N03-L010', type: 'action', text: 'The Fracture holds as a broad sheet of bent light. Nothing beyond it looks like a place anyone can name.' },
+                      { id: 'S01-FIN-N03-L020', type: 'dialogue', text: "I don't know where it goes.", speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-N03-L030', type: 'dialogue', text: "You didn't know the first time either.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-N03-L040', type: 'dialogue', text: 'That worked out terribly.', speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-N03-L050', type: 'dialogue', text: "And yet we're here.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-N03-L060', type: 'dialogue', text: "It won't stay open.", speaker: 'Hangaku Gozen', displayLabel: 'Hangaku Gozen' }
+                    ]
+                  },
+                  {
+                    id: 'FIN-N03-BEAT-02',
+                    order: 2,
+                    title: 'Jeanne Chooses',
+                    presentation: 'saga-end',
+                    characters: ['MC', 'Jeanne d’Arc', 'Julie d’Aubigny', 'Hangaku Gozen', 'Bradamante'],
+                    screenAction: 'MC refuses to decide for Jeanne. Jeanne considers the unknown Fracture and the world behind her, then steps toward the crossing by her own choice. The distortion surges before any additional crossings are confirmed.',
+                    dialogueIntent: 'End Saga I on agency and consequence. Do not reveal Saga II, guarantee home, or resolve which supporting companions cross.',
+                    playerControl: 'dialogue advance',
+                    trigger: 'crossing_choice',
+                    result: 'MC and Jeanne commit to the unknown crossing. Additional crossings and the Saga II destination remain unresolved.',
+                    next: 'TBD-SAGA-II',
+                    scriptStatus: 'draft',
+                    script: [
+                      { id: 'S01-FIN-N03-L070', type: 'dialogue', text: "You don't have to come.", speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-N03-L080', type: 'action', text: 'Jeanne looks back toward Rouen, then at the unstable light.' },
+                      { id: 'S01-FIN-N03-L090', type: 'dialogue', text: 'I know.', speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-N03-L100', type: 'dialogue', text: "I don't know what's beyond that light. I know what's behind us.", speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-N03-L110', type: 'dialogue', text: "That's not much of a reason.", speaker: 'MC', displayLabel: 'MC' },
+                      { id: 'S01-FIN-N03-L120', type: 'dialogue', text: 'It was enough for you.', speaker: 'Jeanne d’Arc', displayLabel: 'Jeanne' },
+                      { id: 'S01-FIN-N03-L130', type: 'action', text: 'Jeanne steps beside MC. Behind them, the broken street folds again.' },
+                      { id: 'S01-FIN-N03-L140', type: 'dialogue', text: "Decide fast. It's closing.", speaker: 'Julie d’Aubigny', displayLabel: 'Julie' },
+                      { id: 'S01-FIN-N03-L150', type: 'action', text: 'MC and Jeanne enter the bent light. The distortion surges outward across the street before anyone can tell who else it catches.' },
+                      { id: 'S01-FIN-N03-L160', type: 'narration', text: 'SAGA I — THE MAID OF FRANCE COMPLETE' },
+                      { id: 'S01-FIN-N03-L170', type: 'transition', text: 'Whiteout. The destination is unknown.' }
+                    ]
+                  }
+                ]
+              }
+            ]
+          };
+
+          saga.chapters.push(finale);
+
+          const shortLabels = new Map([
+            ['MC', 'MC'],
+            ['Julie d’Aubigny', 'JUL'],
+            ['Hangaku Gozen', 'HAN'],
+            ['Bradamante', 'BRA'],
+            ['Jeanne d’Arc', 'JEA'],
+            ['English guards', 'ENG'],
+            ['First Manifestation', 'MAN'],
+            ['Correction forms', 'COR']
+          ]);
+
+          function addProductionBeat(node, beat) {
+            const isPlayer = /battle|escape|survive/i.test(beat.playerControl);
+            const slots = {};
+            for (const [index, character] of (beat.characters ?? []).slice(0, 3).entries()) {
+              const slot = ['left', 'center', 'right'][index];
+              slots[slot] = {
+                character,
+                shortLabel: shortLabels.get(character) ?? character.slice(0, 3).toUpperCase(),
+                pose: 'active'
+              };
+            }
+            production.beats[beat.id] = {
+              timing: isPlayer
+                ? { mode: 'player', minSeconds: 25, maxSeconds: 120 }
+                : { mode: 'advance', estimatedSeconds: 30 },
+              staging: {
+                background: node.location ?? 'Rouen',
+                camera: node.type === 'battle' ? 'Tactical overview → event focus' : 'Scene framing → character focus',
+                slots
+              },
+              events: [
+                { type: 'action', text: beat.screenAction },
+                { type: 'dialogue', text: beat.dialogueIntent },
+                { type: 'transition', text: `Continue to ${beat.next}.` }
+              ]
+            };
+          }
+
+          for (const node of finale.nodes) {
+            for (const beat of node.beats) addProductionBeat(node, beat);
+          }
+
+          fs.writeFileSync(storyPath, `${JSON.stringify(story, null, 2)}\n`);
+          fs.writeFileSync(productionPath, `${JSON.stringify(production, null, 2)}\n`);
+          console.log(`Polished ${polishedLines} CH04/CH05 dialogue lines and added ${finale.nodes.length} Finale nodes.`);
+          NODE
+
+      - name: Commit generated narrative change and remove materializer
+        shell: bash
+        run: |
+          rm .github/workflows/game-nar11-materialize.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/narrative/story.json content/narrative/story-production.json .github/workflows/game-nar11-materialize.yml
+          git commit -m "GAME-NAR11: polish dialogue and add Saga I finale"
+          git push origin HEAD:game-nar11/dialogue-finale
