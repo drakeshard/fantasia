@@ -24,7 +24,7 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
             <small>Chronicles beyond the fracture</small>
           </span>
         </div>
-        <div class="home-lobby-status" aria-label="Current game mode">
+        <div class="home-lobby-status">
           <span class="home-status-dot" aria-hidden="true" />
           <span>Story campaign</span>
         </div>
