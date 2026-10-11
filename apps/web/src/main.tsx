@@ -16,6 +16,7 @@ import {
 import { SagaApp } from "./saga.js";
 import { SettingsDialog } from "./settings-dialog.js";
 import { StoryApp } from "./story.js";
+import { TalentApp } from "./talent.js";
 import "./styles.css";
 import "./production.css";
 import "./battle-production.css";
@@ -34,9 +35,10 @@ import "./campaign-production-fixes.css";
 import "./battle-production-fixes.css";
 import "./game-controls.css";
 import "./characters.css";
+import "./talent.css";
 import "./navigation-placement.css";
 
-type AppScreen = "home" | "saga" | "campaign" | "characters" | "story" | "battle";
+type AppScreen = "home" | "saga" | "campaign" | "characters" | "talent" | "story" | "battle";
 
 function browserStorage(): Storage | undefined {
   try {
@@ -132,12 +134,17 @@ function App() {
           onContinue={() => setScreen("campaign")}
           onCampaign={() => setScreen("saga")}
           onCharacters={() => setScreen("characters")}
+          onTalent={() => setScreen("talent")}
           onSettings={openSettings}
         />
       ) : null}
 
       {screen === "characters" ? (
         <CharactersApp onHome={() => setScreen("home")} onSettings={openSettings} />
+      ) : null}
+
+      {screen === "talent" ? (
+        <TalentApp onHome={() => setScreen("home")} onSettings={openSettings} />
       ) : null}
 
       {screen === "saga" ? (

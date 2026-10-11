@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <title>Talent</title>
+  <circle cx="12" cy="5" r="2" stroke="#E2BE78" stroke-width="1.3"/>
+  <circle cx="6.2" cy="13.2" r="2" stroke="#F4F0E7" stroke-width="1.3"/>
+  <circle cx="17.8" cy="13.2" r="2" stroke="#F4F0E7" stroke-width="1.3"/>
+  <circle cx="12" cy="19" r="2" stroke="#E2BE78" stroke-width="1.3"/>
+  <path d="M10.8 6.6 7.4 11.5M13.2 6.6l3.4 4.9M7.9 14.6l2.6 2.9M16.1 14.6l-2.6 2.9M8.3 13.2h7.4" stroke="#E2BE78" stroke-width="1.15" stroke-linecap="round" opacity=".78"/>
+</svg>

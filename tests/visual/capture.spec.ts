@@ -104,6 +104,17 @@ async function captureCharactersGeometry(page: Page, testInfo: TestInfo) {
   ]);
 }
 
+async function captureTalentGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "talent-geometry.json", [
+    ".talent-screen",
+    ".talent-hud",
+    ".talent-workspace",
+    ".talent-family-rail",
+    ".talent-content",
+    ".talent-doctrine-grid",
+  ]);
+}
+
 async function captureSagaGeometry(page: Page, testInfo: TestInfo) {
   await captureGeometry(page, testInfo, "saga-geometry.json", [
     ".saga-campaign-screen",
@@ -173,6 +184,13 @@ test("capture controlled player-facing UI for review", async ({ page }, testInfo
   await expect(page.getByRole("main", { name: "Characters" })).toBeVisible();
   await captureViewport(page, testInfo, "characters");
   await captureCharactersGeometry(page, testInfo);
+  await page.getByRole("button", { name: "Home", exact: true }).click();
+  await expect(page.getByRole("main", { name: "Fantasia home" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Talent", exact: true }).click();
+  await expect(page.getByRole("main", { name: "Talents" })).toBeVisible();
+  await captureViewport(page, testInfo, "talent");
+  await captureTalentGeometry(page, testInfo);
   await page.getByRole("button", { name: "Home", exact: true }).click();
   await expect(page.getByRole("main", { name: "Fantasia home" })).toBeVisible();
 

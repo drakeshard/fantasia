@@ -39,6 +39,11 @@ test("global Home and Settings utilities stay predictable across player screens"
     page.locator(".home-game-dock").getByRole("button", { name: "Settings" }),
   ).toHaveCount(0);
 
+  await page.getByRole("button", { name: "Talent", exact: true }).click();
+  const talentHud = page.locator(".talent-hud");
+  await expectHomeBeforeSettings(talentHud, page);
+  await talentHud.getByRole("button", { name: "Home", exact: true }).click();
+
   await page.getByRole("button", { name: "Campaign", exact: true }).click();
   const sagaHud = page.locator(".saga-top-hud");
   await expectHomeBeforeSettings(sagaHud, page);

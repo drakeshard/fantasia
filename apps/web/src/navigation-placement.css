@@ -28,7 +28,7 @@
 }
 
 .home-game-dock {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .saga-top-hud {
@@ -44,7 +44,8 @@
 }
 
 .story-hud .game-global-utilities,
-.characters-hud .game-global-utilities {
+.characters-hud .game-global-utilities,
+.talent-hud .game-global-utilities {
   justify-self: end;
 }
 
@@ -77,6 +78,7 @@
 
   .home-lobby-hud .game-control,
   .characters-hud .game-control,
+  .talent-hud .game-control,
   .story-hud .game-control {
     min-width: 44px;
     min-height: 44px;
@@ -84,12 +86,14 @@
   }
 
   .home-lobby-hud .game-control.has-compact-label .game-control-label,
-  .characters-hud .game-control.has-compact-label .game-control-label {
+  .characters-hud .game-control.has-compact-label .game-control-label,
+  .talent-hud .game-control.has-compact-label .game-control-label {
     display: none;
   }
 
   .home-lobby-hud .game-control.has-compact-label .game-control-compact-label,
-  .characters-hud .game-control.has-compact-label .game-control-compact-label {
+  .characters-hud .game-control.has-compact-label .game-control-compact-label,
+  .talent-hud .game-control.has-compact-label .game-control-compact-label {
     display: inline;
   }
 
