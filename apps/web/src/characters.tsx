@@ -60,11 +60,14 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
           </div>
 
           <div class="characters-roster-note">
-            <span class="characters-note-mark" aria-hidden="true">+</span>
+            <span class="characters-note-mark" aria-hidden="true">
+              +
+            </span>
             <span>
               <strong>More entries can be revealed through the story.</strong>
               <small>
-                Future characters stay hidden here until production story state can reveal them safely.
+                Future characters stay hidden here until production story state can reveal them
+                safely.
               </small>
             </span>
           </div>
@@ -82,8 +85,8 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
             <span class="character-profile-kicker">Protagonist profile</span>
             <h2>Traveler</h2>
             <p>
-              An aspiring adventurer from Primora in Vaelkrath, stranded far from home after crossing a
-              Fracture.
+              An aspiring adventurer from Primora in Vaelkrath, stranded far from home after
+              crossing a Fracture.
             </p>
 
             <dl class="character-profile-facts">
@@ -108,8 +111,8 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
             <div class="character-profile-boundary" role="note">
               <strong>Character systems are still opening up.</strong>
               <span>
-                Levels, numeric stats, skills, equipment, class paths, rarity and recruitment are not
-                shown until their production data is authoritative.
+                Levels, numeric stats, skills, equipment, class paths, rarity and recruitment are
+                not shown until their production data is authoritative.
               </span>
             </div>
           </div>
