@@ -41,20 +41,15 @@ async function captureViewport(page: Page, testInfo: TestInfo, name: string) {
   });
 }
 
-async function captureHomeGeometry(page: Page, testInfo: TestInfo) {
-  const geometry = await page.evaluate(() => {
-    const selectors = [
-      ".home-screen",
-      ".home-lobby-hud",
-      ".home-lobby-field",
-      ".home-lobby-stage",
-      ".home-current-story",
-      ".home-feature-rail",
-      ".home-game-dock",
-    ];
-
+async function captureGeometry(
+  page: Page,
+  testInfo: TestInfo,
+  filename: string,
+  selectors: readonly string[],
+) {
+  const geometry = await page.evaluate((requestedSelectors) => {
     const regions = Object.fromEntries(
-      selectors.map((selector) => {
+      requestedSelectors.map((selector) => {
         const element = document.querySelector<HTMLElement>(selector);
         if (!element) return [selector, null];
         const rect = element.getBoundingClientRect();
@@ -80,13 +75,46 @@ async function captureHomeGeometry(page: Page, testInfo: TestInfo) {
       },
       regions,
     };
-  });
+  }, selectors);
 
   const directory = await projectDirectory(testInfo);
-  await writeFile(
-    path.join(directory, "home-geometry.json"),
-    `${JSON.stringify(geometry, null, 2)}\n`,
-  );
+  await writeFile(path.join(directory, filename), `${JSON.stringify(geometry, null, 2)}\n`);
+}
+
+async function captureHomeGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "home-geometry.json", [
+    ".home-screen",
+    ".home-lobby-hud",
+    ".home-lobby-field",
+    ".home-lobby-stage",
+    ".home-current-story",
+    ".home-feature-rail",
+    ".home-game-dock",
+  ]);
+}
+
+async function captureSagaGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "saga-geometry.json", [
+    ".saga-campaign-screen",
+    ".saga-war-table",
+    ".saga-top-hud",
+    ".saga-war-table-body",
+    ".saga-chapter-route",
+    ".saga-current-mission",
+  ]);
+}
+
+async function captureChapterGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "chapter-geometry.json", [
+    ".campaign-rooted-shell",
+    ".campaign-screen",
+    ".campaign-shell",
+    ".campaign-header",
+    ".campaign-map-panel",
+    ".campaign-map-viewport",
+    ".stage-list",
+    ".campaign-inspector",
+  ]);
 }
 
 test("capture controlled player-facing UI for review", async ({ page }, testInfo) => {
@@ -108,12 +136,14 @@ test("capture controlled player-facing UI for review", async ({ page }, testInfo
   await page.getByRole("button", { name: "Campaign", exact: true }).click();
   await expect(page.getByRole("main").locator(".saga-reference-screen")).toBeVisible();
   await captureViewport(page, testInfo, "saga");
+  await captureSagaGeometry(page, testInfo);
 
   await page.goto("/");
   await page.getByRole("button", { name: "Continue current story", exact: true }).click();
   await expect(page.getByText("Loire approaches", { exact: true })).toBeVisible();
   await expect(page.locator(".campaign-node").first()).toBeVisible();
   await captureViewport(page, testInfo, "chapter");
+  await captureChapterGeometry(page, testInfo);
 
   await page.goto("/");
   await page.getByRole("button", { name: "Settings", exact: true }).click();
