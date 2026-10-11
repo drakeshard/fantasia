@@ -90,7 +90,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                   <small>Class Talent · controlled scaffold</small>
                   <h2>{lancer.className}</h2>
                 </span>
-                <div class="talent-tree-meta" role="group" aria-label="Current scaffold size">
+                <div class="talent-tree-meta">
                   <span>{lancer.nodeCount} nodes shown</span>
                   <span>{lancer.totalRankCapacity} rank capacity</span>
                 </div>
@@ -105,7 +105,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                 </span>
               </div>
 
-              <div class="talent-doctrine-grid" aria-label="Lancer Talent doctrines">
+              <div class="talent-doctrine-grid">
                 {lancer.doctrines.map((doctrine) => (
                   <section class="talent-doctrine" key={doctrine.name}>
                     <header>
