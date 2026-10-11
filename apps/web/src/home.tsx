@@ -6,6 +6,7 @@ interface HomeAppProps {
   readonly onContinue: () => void;
   readonly onCampaign: () => void;
   readonly onCharacters: () => void;
+  readonly onTalent: () => void;
   readonly onSettings: (trigger: HTMLElement) => void;
 }
 
@@ -20,7 +21,13 @@ function HomeIcon({ src, className }: HomeIconProps) {
   return <img class={`home-icon${className ? ` ${className}` : ""}`} src={uiAsset(src)} alt="" />;
 }
 
-export function HomeApp({ onContinue, onCampaign, onCharacters, onSettings }: HomeAppProps) {
+export function HomeApp({
+  onContinue,
+  onCampaign,
+  onCharacters,
+  onTalent,
+  onSettings,
+}: HomeAppProps) {
   const session = useMemo(() => new CampaignSession(), []);
   const view = session.view();
   const currentStage = view.stages.find((stage) => stage.current) ?? view.stages[0];
@@ -125,6 +132,10 @@ export function HomeApp({ onContinue, onCampaign, onCharacters, onSettings }: Ho
         <button type="button" class="home-dock-item" aria-label="Characters" onClick={onCharacters}>
           <HomeIcon src="fantasia_ui_icon_characters_default_v001.svg" />
           <strong>Characters</strong>
+        </button>
+        <button type="button" class="home-dock-item" aria-label="Talent" onClick={onTalent}>
+          <HomeIcon src="fantasia_ui_icon_talent_default_v001.svg" />
+          <strong>Talent</strong>
         </button>
         <button
           type="button"
