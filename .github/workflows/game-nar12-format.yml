@@ -1,0 +1,54 @@
+name: GAME-NAR12 Format
+
+on:
+  push:
+    branches:
+      - game-nar12/mc-titles-finale-revision
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: game-nar12/mc-titles-finale-revision
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Format repository
+        run: pnpm check:write
+
+      - name: Commit formatting and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "Drakeshard Narrative Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/game-nar12-format.yml
+          git add content/narrative/story.json content/narrative/story-production.json
+          OTHER=$(git diff --cached --name-only | grep -vE '^(content/narrative/story.json|content/narrative/story-production.json|.github/workflows/game-nar12-format.yml)$' || true)
+          if [ -n "$OTHER" ]; then
+            echo "Unexpected formatted paths:"
+            echo "$OTHER"
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "chore(narrative): format GAME-NAR12 data"
+          git push origin HEAD:game-nar12/mc-titles-finale-revision
