@@ -138,8 +138,8 @@ export function GameScreenHeader({
       </div>
 
       <GameUtilityCluster
-        onHome={onHome}
-        onSettings={onSettings}
+        {...(onHome ? { onHome } : {})}
+        {...(onSettings ? { onSettings } : {})}
         homeLabel={homeLabel}
         class="game-screen-header-end"
       />
