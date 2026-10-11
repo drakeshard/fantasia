@@ -55,6 +55,15 @@ export {
   ProductionBattleSession,
   type ProductionBattleView,
 } from "./production-battle.js";
+export {
+  type ClassTalentTreeView,
+  type TalentDoctrineView,
+  type TalentFamilyView,
+  type TalentFamilyViewId,
+  TalentMenuSession,
+  type TalentMenuView,
+  type TalentNodeView,
+} from "./talent-session.js";
 
 export const runtimeStatus = (): string =>
   `${gameDomainStatus()} Foundation 0.1.2 runtime integration ready.`;
