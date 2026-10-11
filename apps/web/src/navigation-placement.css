@@ -1,0 +1,106 @@
+/* GAME-UI21 — predictable player navigation placement.
+ * Back is screen-left when distinct; root Home then Settings occupy the top-right utility cluster.
+ */
+
+.game-global-utilities {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.home-lobby-hud-end {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.home-lobby-hud .game-global-utilities {
+  flex: 0 0 auto;
+}
+
+.home-lobby-hud .game-control {
+  min-height: 46px;
+}
+
+.home-game-dock {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.saga-top-hud {
+  grid-template-columns: minmax(190px, 1fr) minmax(0, auto) minmax(190px, 1fr);
+}
+
+.saga-navigation-start {
+  min-width: 0;
+}
+
+.saga-global-utilities {
+  justify-self: end;
+}
+
+.story-hud .game-global-utilities,
+.characters-hud .game-global-utilities {
+  justify-self: end;
+}
+
+/* The current battle is development-only and has no production leave/save contract.
+ * Keep its existing Menu/Return behavior, but anchor Settings to the same top-right utility zone.
+ */
+.global-settings-launcher.battle {
+  position: fixed;
+  z-index: 90;
+  top: 12px;
+  right: 14px;
+  bottom: auto;
+  left: auto;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+@media (max-height: 499px) {
+  .game-global-utilities {
+    gap: 6px;
+  }
+
+  .home-lobby-hud-end {
+    gap: 6px;
+  }
+
+  .home-lobby-status {
+    display: none;
+  }
+
+  .home-lobby-hud .game-control,
+  .characters-hud .game-control,
+  .story-hud .game-control {
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 8px;
+  }
+
+  .home-lobby-hud .game-control.has-compact-label .game-control-label,
+  .characters-hud .game-control.has-compact-label .game-control-label,
+  .story-hud .game-control.has-compact-label .game-control-label {
+    display: none;
+  }
+
+  .home-lobby-hud .game-control.has-compact-label .game-control-compact-label,
+  .characters-hud .game-control.has-compact-label .game-control-compact-label,
+  .story-hud .game-control.has-compact-label .game-control-compact-label {
+    display: inline;
+  }
+
+  .saga-top-hud {
+    grid-template-columns: minmax(92px, 1fr) minmax(0, auto) minmax(92px, 1fr);
+  }
+
+  .global-settings-launcher.battle {
+    top: 5px;
+    right: 8px;
+  }
+}
