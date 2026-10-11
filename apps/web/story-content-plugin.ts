@@ -39,11 +39,16 @@ export function buildApprovedChapterOneStoryContent(source: unknown) {
   const output: Record<string, unknown> = {};
 
   for (const candidate of nodes.map(record)) {
-    if (!candidate || candidate.type !== "story" || !approved(candidate.scriptStatus)) continue;
+    if (candidate?.type !== "story" || !approved(candidate.scriptStatus)) continue;
     const nodeId = stringValue(candidate.id);
     const nodeTitle = stringValue(candidate.title);
     const beats = Array.isArray(candidate.beats) ? candidate.beats.map(record) : [];
-    if (!nodeId || !nodeTitle || beats.length === 0 || beats.some((beat) => !approved(beat?.scriptStatus))) {
+    if (
+      !nodeId ||
+      !nodeTitle ||
+      beats.length === 0 ||
+      beats.some((beat) => !approved(beat?.scriptStatus))
+    ) {
       continue;
     }
 
@@ -72,12 +77,15 @@ export function buildApprovedChapterOneStoryContent(source: unknown) {
     }
 
     if (events.length === 0) continue;
+    const location = stringValue(candidate.location);
+    const time = stringValue(candidate.time);
+    const summary = stringValue(candidate.summary);
     output[nodeId] = {
       chapterTitle,
       nodeTitle,
-      ...(stringValue(candidate.location) ? { location: stringValue(candidate.location) } : {}),
-      ...(stringValue(candidate.time) ? { time: stringValue(candidate.time) } : {}),
-      ...(stringValue(candidate.summary) ? { summary: stringValue(candidate.summary) } : {}),
+      ...(location ? { location } : {}),
+      ...(time ? { time } : {}),
+      ...(summary ? { summary } : {}),
       events,
     };
   }
