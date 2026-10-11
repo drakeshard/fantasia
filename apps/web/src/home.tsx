@@ -4,6 +4,7 @@ import { useMemo } from "preact/hooks";
 interface HomeAppProps {
   readonly onContinue: () => void;
   readonly onCampaign: () => void;
+  readonly onCharacters: () => void;
   readonly onSettings: (trigger: HTMLElement) => void;
 }
 
@@ -18,7 +19,7 @@ function HomeIcon({ src, className }: HomeIconProps) {
   return <img class={`home-icon${className ? ` ${className}` : ""}`} src={uiAsset(src)} alt="" />;
 }
 
-export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
+export function HomeApp({ onContinue, onCampaign, onCharacters, onSettings }: HomeAppProps) {
   const session = useMemo(() => new CampaignSession(), []);
   const view = session.view();
   const currentStage = view.stages.find((stage) => stage.current) ?? view.stages[0];
@@ -116,6 +117,10 @@ export function HomeApp({ onContinue, onCampaign, onSettings }: HomeAppProps) {
         <button type="button" class="home-dock-item" aria-label="Campaign" onClick={onCampaign}>
           <HomeIcon src="fantasia_ui_icon_campaign_default_v001.svg" />
           <strong>Campaign</strong>
+        </button>
+        <button type="button" class="home-dock-item" aria-label="Characters" onClick={onCharacters}>
+          <HomeIcon src="fantasia_ui_icon_characters_default_v001.svg" />
+          <strong>Characters</strong>
         </button>
         <button
           type="button"

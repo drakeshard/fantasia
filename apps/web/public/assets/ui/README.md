@@ -17,6 +17,7 @@ These files are presentation assets owned by `apps/web`. They do not define camp
 | `core/fantasia_ui_brand_crest_v001.svg` | Fantasia wordmark/brand crest | production presentation |
 | `core/fantasia_ui_icon_home_default_v001.svg` | Home dock glyph | production presentation |
 | `core/fantasia_ui_icon_campaign_default_v001.svg` | Campaign/current-Saga glyph | production presentation |
+| `core/fantasia_ui_icon_characters_default_v001.svg` | Characters/archive glyph | production presentation; added by GAME-UI20 |
 | `core/fantasia_ui_icon_summon_default_v001.svg` | Summon glyph | production presentation; feature may remain unavailable |
 | `core/fantasia_ui_icon_settings_default_v001.svg` | Settings utility glyph | production presentation |
 | `core/fantasia_ui_icon_chevron_right_v001.svg` | Primary forward-action cue | production presentation |

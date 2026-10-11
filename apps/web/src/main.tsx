@@ -2,6 +2,7 @@ import { render } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { BattleApp } from "./battle.js";
 import { CampaignApp } from "./campaign.js";
+import { CharactersApp } from "./characters.js";
 import { GameButton } from "./game-controls.js";
 import { HomeApp } from "./home.js";
 import {
@@ -32,8 +33,9 @@ import "./campaign-production.css";
 import "./campaign-production-fixes.css";
 import "./battle-production-fixes.css";
 import "./game-controls.css";
+import "./characters.css";
 
-type AppScreen = "home" | "saga" | "campaign" | "story" | "battle";
+type AppScreen = "home" | "saga" | "campaign" | "characters" | "story" | "battle";
 
 function browserStorage(): Storage | undefined {
   try {
@@ -128,8 +130,13 @@ function App() {
         <HomeApp
           onContinue={() => setScreen("campaign")}
           onCampaign={() => setScreen("saga")}
+          onCharacters={() => setScreen("characters")}
           onSettings={openSettings}
         />
+      ) : null}
+
+      {screen === "characters" ? (
+        <CharactersApp onHome={() => setScreen("home")} onSettings={openSettings} />
       ) : null}
 
       {screen === "saga" ? (
