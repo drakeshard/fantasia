@@ -22,7 +22,9 @@ export type RosterRestoreResult =
   | Readonly<{ kind: "restored"; state: RosterState; snapshot: RosterSnapshot }>
   | Readonly<{ kind: "rejected"; reason: string }>;
 
-function parsePersistedRows(rows: readonly PersistedUnitInstanceRow[]): readonly SerializedUnitInstance[] {
+function parsePersistedRows(
+  rows: readonly PersistedUnitInstanceRow[],
+): readonly SerializedUnitInstance[] {
   return rows.map((row) => {
     if (row.schemaVersion !== FANTASIA_ROSTER_SCHEMA_VERSION) {
       throw new Error("Unsupported roster unit-instance schema version.");
