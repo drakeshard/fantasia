@@ -1,10 +1,10 @@
 import {
+  type AccountTalentState,
   createAccountTalentState,
   deserializeAccountTalentState,
   LANCER_CLASS_TALENT_SCAFFOLD,
-  serializeAccountTalentState,
-  type AccountTalentState,
   type SerializedAccountTalentState,
+  serializeAccountTalentState,
   type TalentTreeDefinition,
 } from "@fantasia/game";
 
