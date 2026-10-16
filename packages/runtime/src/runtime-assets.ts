@@ -20,7 +20,9 @@ function isSafeObjectPath(path: string): boolean {
   if (path.includes("\\") || path.includes("?") || path.includes("#") || path.includes("://")) {
     return false;
   }
-  return path.split("/").every((segment) => segment.length > 0 && segment !== "." && segment !== "..");
+  return path
+    .split("/")
+    .every((segment) => segment.length > 0 && segment !== "." && segment !== "..");
 }
 
 function parseAssetDefinition(value: unknown, index: number): RuntimeAssetDefinition {
@@ -73,7 +75,9 @@ export function parseRuntimeAssetManifest(value: unknown): RuntimeAssetManifest 
   const paths = new Set<string>();
   for (const asset of assets) {
     if (ids.has(asset.id)) throw new RangeError(`Duplicate runtime asset id: ${asset.id}.`);
-    if (paths.has(asset.path)) throw new RangeError(`Duplicate runtime asset path: ${asset.path}.`);
+    if (paths.has(asset.path)) {
+      throw new RangeError(`Duplicate runtime asset path: ${asset.path}.`);
+    }
     ids.add(asset.id);
     paths.add(asset.path);
   }
