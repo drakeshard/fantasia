@@ -58,6 +58,13 @@ export {
   type ProductionBattleView,
 } from "./production-battle.js";
 export {
+  emptyTalentProgressSnapshot,
+  FANTASIA_TALENT_PROGRESS_SCHEMA_VERSION,
+  restoreTalentProgress,
+  type TalentProgressRestoreResult,
+  type TalentProgressSnapshot,
+} from "./talent-progress.js";
+export {
   type ClassTalentTreeView,
   type TalentDoctrineView,
   type TalentFamilyView,
