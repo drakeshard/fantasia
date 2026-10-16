@@ -19,6 +19,7 @@ Do not move canonical characters, classes, skills, Talent definitions, equipment
 - Auth-linked `accounts` and `account_profiles`.
 - `campaign_progress`, containing only the account's current saga/chapter/stage identifiers plus schema version, revision, and timestamps.
 - `account_talent_progress`, containing only serialized account-wide Talent investment state plus schema version, revision, and timestamps.
+- Private trusted-command idempotency receipts containing normalized request/result snapshots only; these are infrastructure records, not canonical gameplay definitions.
 
 Campaign identifiers loaded from Supabase must be validated against the current repository-owned campaign definition before runtime restoration. Temporary campaign-map selection is presentation/session state and is not persisted as campaign progress.
 
@@ -35,6 +36,17 @@ GAME-BACKEND04 creates one public Files bucket named `runtime-assets` for shippe
 - No `storage.objects` policy is created for browser upload, update, delete, or listing. Public bucket object retrieval remains direct/public; publishing stays a trusted deployment/admin action.
 - `pnpm assets:verify` checks that every currently declared manifest object exists in the repository source mirror. `pnpm assets:publish` is server/CI-only and requires `SUPABASE_URL` plus an unexposed modern `SUPABASE_SECRET_KEY`.
 - Asset object paths are versioned/immutable by convention. Publish a new versioned path instead of overwriting an already-cached production object.
+
+## Trusted command boundary
+
+GAME-BACKEND05 establishes the reusable boundary for future sensitive player-state mutations without inventing unresolved gameplay/economy semantics.
+
+- Browser callers send an authenticated user JWT to the `trusted-command` Edge Function. The function validates the caller against Supabase Auth before selecting any command handler.
+- Elevated database access exists only inside the Edge Function through an unexposed modern Supabase secret key. No service-role/secret credential is committed or returned to clients.
+- Privileged database mutation is performed by narrowly scoped `SECURITY INVOKER` RPCs executable only by `service_role`; `anon` and `authenticated` receive no EXECUTE grant.
+- `private.trusted_command_receipts` records per-account command name, idempotency key, normalized request, and first successful result. Same-key retries return that stored result without reapplying the mutation. Reusing a key for a different normalized request is rejected.
+- The initial proof command is `profile.update_display_name`, an already-approved account mutation. It exists to prove authentication, authorization, atomic mutation, and idempotency; it does not imply that ordinary profile edits must become sensitive commands.
+- No Talent purchase/currency, stage reward, item grant, roster, inventory, equipment, summon, or economy semantics are introduced by this infrastructure slice.
 
 ## Security baseline
 
@@ -54,4 +66,4 @@ GAME-BACKEND04 creates one public Files bucket named `runtime-assets` for shippe
 4. Verify RLS, grants, bucket visibility, Storage policies, and function security mode explicitly.
 5. Update controlled Fantasia Working Context when backend state materially changes.
 
-Account/profile, campaign, Talent persistence, and the initial Storage/semantic asset-delivery foundation are complete through GAME-BACKEND04. Trusted commands, roster, inventory, equipment, economy, and summon state remain separate follow-up slices.
+Account/profile, campaign, Talent persistence, Storage/semantic asset delivery, and the trusted-command infrastructure are complete through GAME-BACKEND05. Roster, inventory, equipment, economy, and summon state remain separate follow-up slices.
