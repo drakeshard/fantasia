@@ -12,6 +12,7 @@ export * from "./composition/tactical/actor-identity.js";
 export * from "./encounter/loop.js";
 export * from "./encounter/persistence.js";
 export * from "./encounter/turns.js";
+export * from "./roster/model.js";
 export * from "./talent/effects.js";
 export * from "./talent/lancer.js";
 export * from "./talent/model.js";
