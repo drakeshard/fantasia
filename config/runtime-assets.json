@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "id": "ui.brand.crest",
+      "path": "ui/core/fantasia_ui_brand_crest_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.home",
+      "path": "ui/core/fantasia_ui_icon_home_default_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.campaign",
+      "path": "ui/core/fantasia_ui_icon_campaign_default_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.characters",
+      "path": "ui/core/fantasia_ui_icon_characters_default_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.talent",
+      "path": "ui/core/fantasia_ui_icon_talent_default_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.summon",
+      "path": "ui/core/fantasia_ui_icon_summon_default_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.settings",
+      "path": "ui/core/fantasia_ui_icon_settings_default_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.chevron-right",
+      "path": "ui/core/fantasia_ui_icon_chevron_right_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    },
+    {
+      "id": "ui.icon.lock",
+      "path": "ui/core/fantasia_ui_icon_lock_v001.svg",
+      "mediaType": "image/svg+xml",
+      "version": 1
+    }
+  ]
+}
