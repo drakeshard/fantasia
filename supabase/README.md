@@ -12,7 +12,14 @@ This directory contains Fantasia's repository-authoritative Supabase schema and 
 
 The repository remains authoritative for schema, migrations, game code, and canonical game/content definitions. Supabase stores runtime player/account state only.
 
-Do not move canonical characters, classes, skills, Talent definitions, equipment definitions, narrative, maps, encounters, combat rules, or balance values into mutable database authority.
+Do not move canonical characters, classes, skills, Talent definitions, equipment definitions, narrative, maps, encounters, combat rules, balance values, campaign titles, stage definitions, unlock rules, or rewards into mutable database authority.
+
+## Current persisted slices
+
+- Auth-linked `accounts` and `account_profiles`.
+- `campaign_progress`, containing only the account's current saga/chapter/stage identifiers plus schema version, revision, and timestamps.
+
+Campaign identifiers loaded from Supabase must be validated against the current repository-owned campaign definition before runtime restoration. Temporary campaign-map selection is presentation/session state and is not persisted as campaign progress.
 
 ## Security baseline
 
@@ -31,4 +38,4 @@ Do not move canonical characters, classes, skills, Talent definitions, equipment
 4. Verify RLS, grants, and function security mode explicitly.
 5. Update controlled Fantasia Working Context when backend state materially changes.
 
-The first slice is intentionally limited to Auth-linked account/profile persistence. Campaign, Talent, Storage/assets, trusted commands, roster, inventory, equipment, economy, and summon state are separate follow-up slices.
+Account/profile persistence is complete. GAME-BACKEND02 adds campaign progress persistence without inventing stage-clear, unlock, reward, or progression-advance semantics. Talent persistence, Storage/assets, trusted commands, roster, inventory, equipment, economy, and summon state remain separate follow-up slices.

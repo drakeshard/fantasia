@@ -1,9 +1,11 @@
 import { gameDomainStatus } from "@fantasia/game";
 
+export type { CampaignProgressSnapshot } from "@fantasia/game";
 export {
   type CampaignChapterView,
   type CampaignEntryResult,
   CampaignSession,
+  type CampaignSessionOptions,
   type CampaignStageView,
   type CampaignView,
 } from "./campaign-session.js";
