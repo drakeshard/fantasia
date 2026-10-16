@@ -8,7 +8,10 @@ These files are presentation assets owned by `apps/web`. They do not define camp
 - Prefer one semantic derivative over loading a whole generated/source sheet.
 - Reusable asset names follow `fantasia_ui_<component>_<variant>_<state>_v###.<ext>` where the omitted segments are not meaningful.
 - SVG is preferred for interface glyphs and ornaments so the same asset survives responsive scaling.
-- The current repository path is the runtime origin. A future CDN migration should preserve these semantic filenames/asset roles and only change the URL resolver/origin.
+- GAME-BACKEND04 makes `config/runtime-assets.json` authoritative for semantic runtime asset IDs, provider-neutral object paths, media types, and versions.
+- This repository directory remains the local development/fallback source mirror. `pnpm assets:verify` checks manifest entries against it.
+- Browser UI resolves manifest IDs through the runtime asset resolver. Production may change only the delivery base URL to Supabase Storage or a future cache/CDN; canonical UI code and content must not embed provider URLs.
+- Published production objects use versioned semantic filenames. Publish a new path/version rather than silently overwriting an immutable cached object.
 
 ## GAME-UI15 core family
 
