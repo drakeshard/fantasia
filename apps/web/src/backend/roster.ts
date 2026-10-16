@@ -39,24 +39,10 @@ async function parseError(response: Response): Promise<FantasiaBackendError> {
 
 const rosterSelect = "id,schema_version,character_definition_id,created_at";
 
-export async function loadRosterUnitInstances(
-  accessToken: string,
+export function parseRosterUnitInstanceRows(
+  rows: readonly RawUnitInstance[],
   knownCharacterDefinitionIds: readonly string[],
-): Promise<FantasiaRosterRecord> {
-  const config = backendConfig();
-  const response = await fetch(
-    `${config.url}/rest/v1/account_unit_instances?select=${rosterSelect}&order=created_at.asc,id.asc`,
-    {
-      method: "GET",
-      headers: {
-        apikey: config.publishableKey,
-        authorization: `Bearer ${accessToken}`,
-      },
-    },
-  );
-  if (!response.ok) throw await parseError(response);
-
-  const rows = (await response.json()) as RawUnitInstance[];
+): FantasiaRosterRecord {
   const createdAtByInstanceId: Record<string, string> = {};
   const persisted = rows.map((row) => {
     if (typeof row.created_at !== "string") {
@@ -79,4 +65,27 @@ export async function loadRosterUnitInstances(
   }
 
   return { snapshot: restored.snapshot, createdAtByInstanceId };
+}
+
+export async function loadRosterUnitInstances(
+  accessToken: string,
+  knownCharacterDefinitionIds: readonly string[],
+): Promise<FantasiaRosterRecord> {
+  const config = backendConfig();
+  const response = await fetch(
+    `${config.url}/rest/v1/account_unit_instances?select=${rosterSelect}&order=created_at.asc,id.asc`,
+    {
+      method: "GET",
+      headers: {
+        apikey: config.publishableKey,
+        authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+  if (!response.ok) throw await parseError(response);
+
+  return parseRosterUnitInstanceRows(
+    (await response.json()) as RawUnitInstance[],
+    knownCharacterDefinitionIds,
+  );
 }
