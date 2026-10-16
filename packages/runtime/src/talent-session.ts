@@ -100,6 +100,8 @@ function formatReward(effect: TalentNodeEffect): string {
 
 function nodeView(node: TalentNodeDefinition): TalentNodeView {
   const rewards = node.effects.map(formatReward).join(" · ");
+  const rewardLabel =
+    rewards.length > 0 ? rewards : node.status === "superseded" ? "No active reward" : "Reward pending";
   return {
     nodeId: node.nodeId,
     name: node.name,
@@ -108,7 +110,7 @@ function nodeView(node: TalentNodeDefinition): TalentNodeView {
     status: node.status,
     statusLabel: statusLabel(node.status),
     ranks: node.ranks,
-    rewardLabel: rewards.length > 0 ? rewards : "Reward pending",
+    rewardLabel,
     ...(node.layoutBand === undefined ? {} : { layoutBand: node.layoutBand }),
     ...(node.notes === undefined ? {} : { notes: node.notes }),
   };
