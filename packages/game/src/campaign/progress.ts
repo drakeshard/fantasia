@@ -1,8 +1,4 @@
-import {
-  campaignChapter,
-  campaignStage,
-  fantasiaCampaignFixture,
-} from "./state.js";
+import { campaignChapter, campaignStage, fantasiaCampaignFixture } from "./state.js";
 
 export const FANTASIA_CAMPAIGN_PROGRESS_SCHEMA_VERSION = 1 as const;
 
