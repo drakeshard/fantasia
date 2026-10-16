@@ -27,7 +27,9 @@ function validateEffect(
       throw new RangeError(`Talent node ${node.nodeId} attempts to modify permanent Base Speed`);
     }
     if (stat === "stability") {
-      throw new RangeError(`Talent node ${node.nodeId} attempts to modify permanent Base Stability`);
+      throw new RangeError(
+        `Talent node ${node.nodeId} attempts to modify permanent Base Stability`,
+      );
     }
     if (effect.valuePerRank !== null && !Number.isFinite(effect.valuePerRank)) {
       throw new RangeError(`Talent node ${node.nodeId} has an invalid stat value`);
