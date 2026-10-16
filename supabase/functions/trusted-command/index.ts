@@ -55,10 +55,7 @@ Deno.serve(async (request: Request) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")?.replace(/\/$/, "");
     if (!supabaseUrl) throw new Error("Missing SUPABASE_URL.");
-    const publishableKey = environmentKey(
-      "SUPABASE_PUBLISHABLE_KEY",
-      "SUPABASE_PUBLISHABLE_KEYS",
-    );
+    const publishableKey = environmentKey("SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEYS");
     const secretKey = environmentKey("SUPABASE_SECRET_KEY", "SUPABASE_SECRET_KEYS");
 
     const userResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
