@@ -1,4 +1,4 @@
-import { restoreRosterUnitInstances, type RosterSnapshot } from "@fantasia/runtime";
+import { type RosterSnapshot, restoreRosterUnitInstances } from "@fantasia/runtime";
 import { FantasiaBackendError } from "./supabase.js";
 
 export interface FantasiaRosterRecord {
