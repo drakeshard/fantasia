@@ -280,7 +280,7 @@ describe("GAME-PROG01 account-wide Talent progression", () => {
           doctrine: "One",
           name: "Pending",
           status: "approved",
-          type: "custom" as TalentTreeDefinition["nodes"][number]["type"],
+          type: "mechanic-mastery",
           ranks: 1,
           effects: [{ kind: "custom", rewardKey: "pending", valuePerRank: null }],
         },
