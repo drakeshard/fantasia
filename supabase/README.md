@@ -18,8 +18,11 @@ Do not move canonical characters, classes, skills, Talent definitions, equipment
 
 - Auth-linked `accounts` and `account_profiles`.
 - `campaign_progress`, containing only the account's current saga/chapter/stage identifiers plus schema version, revision, and timestamps.
+- `account_talent_progress`, containing only serialized account-wide Talent investment state plus schema version, revision, and timestamps.
 
 Campaign identifiers loaded from Supabase must be validated against the current repository-owned campaign definition before runtime restoration. Temporary campaign-map selection is presentation/session state and is not persisted as campaign progress.
+
+Talent state loaded from Supabase must be validated against the current repository-owned Talent catalog before use. Canonical tree/node definitions, statuses, prerequisites, effects, and balance remain in Git. Direct browser rank mutation is intentionally unavailable: authenticated clients may read their own Talent state and may only initialize their own row with the server default empty state. Talent purchase/upgrade remains a future trusted transactional command.
 
 ## Security baseline
 
@@ -38,4 +41,4 @@ Campaign identifiers loaded from Supabase must be validated against the current 
 4. Verify RLS, grants, and function security mode explicitly.
 5. Update controlled Fantasia Working Context when backend state materially changes.
 
-Account/profile persistence is complete. GAME-BACKEND02 adds campaign progress persistence without inventing stage-clear, unlock, reward, or progression-advance semantics. Talent persistence, Storage/assets, trusted commands, roster, inventory, equipment, economy, and summon state remain separate follow-up slices.
+Account/profile and campaign persistence are complete. GAME-BACKEND03 adds read-only account Talent persistence and deterministic empty bootstrap without inventing currency, purchase, reset/refund, or unlock-timing semantics. Storage/assets, trusted commands, roster, inventory, equipment, economy, and summon state remain separate follow-up slices.
