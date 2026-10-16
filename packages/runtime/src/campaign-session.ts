@@ -3,10 +3,13 @@ import {
   type CampaignChapterDefinition,
   type CampaignCompletion,
   type CampaignEntry,
+  type CampaignProgressSnapshot,
   type CampaignStageKind,
   campaignChapter,
   campaignStage,
+  currentCampaignProgressSnapshot,
   fantasiaCampaignFixture,
+  restoreCampaignProgress,
   visibleCampaignChapters,
   visibleCampaignStages,
 } from "@fantasia/game";
@@ -48,6 +51,10 @@ export interface CampaignView {
   readonly selectedStageId?: string;
 }
 
+export interface CampaignSessionOptions {
+  readonly progress?: CampaignProgressSnapshot;
+}
+
 export type CampaignEntryResult =
   | Readonly<{ kind: "accepted"; destination: string; view: CampaignView }>
   | Readonly<{ kind: "rejected"; reason: string; view: CampaignView }>;
@@ -55,20 +62,38 @@ export type CampaignEntryResult =
 function chapterView(
   chapter: CampaignChapterDefinition,
   selectedChapterId: string,
+  currentChapterId: string,
 ): CampaignChapterView {
   return {
     id: chapter.id,
     sequence: chapter.sequence,
     title: chapter.title,
-    current: chapter.id === fantasiaCampaignFixture.currentChapterId,
+    current: chapter.id === currentChapterId,
     selected: chapter.id === selectedChapterId,
     stageCount: visibleCampaignStages(chapter).length,
   };
 }
 
 export class CampaignSession {
-  #selectedChapterId = fantasiaCampaignFixture.currentChapterId;
-  #selectedStageId: string | undefined = fantasiaCampaignFixture.currentStageId;
+  readonly #progress: CampaignProgressSnapshot;
+  #selectedChapterId: string;
+  #selectedStageId: string | undefined;
+
+  constructor(options: CampaignSessionOptions = {}) {
+    const candidate = options.progress ?? currentCampaignProgressSnapshot();
+    const restored = restoreCampaignProgress(candidate);
+    if (restored.kind === "rejected") {
+      throw new Error(restored.reason);
+    }
+
+    this.#progress = restored.snapshot;
+    this.#selectedChapterId = restored.snapshot.chapterId;
+    this.#selectedStageId = restored.snapshot.stageId;
+  }
+
+  progressSnapshot(): CampaignProgressSnapshot {
+    return { ...this.#progress };
+  }
 
   view(): CampaignView {
     const chapters = visibleCampaignChapters(fantasiaCampaignFixture);
@@ -88,7 +113,9 @@ export class CampaignSession {
       sagaSequence: fantasiaCampaignFixture.saga.sequence,
       sagaTitle: fantasiaCampaignFixture.saga.title,
       sagaSynopsis: fantasiaCampaignFixture.saga.synopsis,
-      chapters: chapters.map((chapter) => chapterView(chapter, selectedChapter.id)),
+      chapters: chapters.map((chapter) =>
+        chapterView(chapter, selectedChapter.id, this.#progress.chapterId),
+      ),
       selectedChapterId: selectedChapter.id,
       selectedChapterSequence: selectedChapter.sequence,
       selectedChapterTitle: selectedChapter.title,
@@ -104,8 +131,7 @@ export class CampaignSession {
         completion: stage.completion,
         entry: stage.entry,
         current:
-          selectedChapter.id === fantasiaCampaignFixture.currentChapterId &&
-          stage.id === fantasiaCampaignFixture.currentStageId,
+          selectedChapter.id === this.#progress.chapterId && stage.id === this.#progress.stageId,
         selected: selectedStage?.id === stage.id,
       })),
       ...(selectedStage === undefined ? {} : { selectedStageId: selectedStage.id }),
@@ -131,8 +157,8 @@ export class CampaignSession {
   }
 
   continueCurrent(): CampaignView {
-    this.#selectedChapterId = fantasiaCampaignFixture.currentChapterId;
-    this.#selectedStageId = fantasiaCampaignFixture.currentStageId;
+    this.#selectedChapterId = this.#progress.chapterId;
+    this.#selectedStageId = this.#progress.stageId;
     return this.view();
   }
 
