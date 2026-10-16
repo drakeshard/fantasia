@@ -167,7 +167,8 @@ export async function refreshAuthSession(refreshToken: string): Promise<Fantasia
     body: JSON.stringify({ refresh_token: refreshToken }),
   });
   const session = parseSession((await response.json()) as RawAuthResponse);
-  if (!session) throw new FantasiaBackendError("Supabase returned an invalid refreshed session.", 502);
+  if (!session)
+    throw new FantasiaBackendError("Supabase returned an invalid refreshed session.", 502);
   return session;
 }
 
