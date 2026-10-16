@@ -58,6 +58,13 @@ export {
   type ProductionBattleView,
 } from "./production-battle.js";
 export {
+  FANTASIA_ROSTER_SCHEMA_VERSION,
+  type PersistedUnitInstanceRow,
+  type RosterRestoreResult,
+  type RosterSnapshot,
+  restoreRosterUnitInstances,
+} from "./roster-progress.js";
+export {
   createRuntimeAssetResolver,
   FANTASIA_RUNTIME_ASSET_MANIFEST_SCHEMA_VERSION,
   parseRuntimeAssetManifest,
