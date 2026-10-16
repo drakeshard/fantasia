@@ -123,7 +123,8 @@ function advanceOrThrow(
   nodeId: string,
 ): AccountTalentState {
   const result = advanceTalentRank(tree, state, nodeId);
-  if (result.kind !== "advanced") throw new Error(`Expected ${nodeId} to advance: ${result.reason}`);
+  if (result.kind !== "advanced")
+    throw new Error(`Expected ${nodeId} to advance: ${result.reason}`);
   return result.state;
 }
 
@@ -134,11 +135,7 @@ describe("GAME-PROG01 account-wide Talent progression", () => {
       LANCER_CLASS_TALENT_SCAFFOLD.nodes.find((node) => node.nodeId === "LAN-AN-STB-01"),
     ).toMatchObject({ status: "superseded", effects: [] });
     expect(
-      advanceTalentRank(
-        LANCER_CLASS_TALENT_SCAFFOLD,
-        createAccountTalentState(),
-        "LAN-AN-STB-01",
-      ),
+      advanceTalentRank(LANCER_CLASS_TALENT_SCAFFOLD, createAccountTalentState(), "LAN-AN-STB-01"),
     ).toMatchObject({ kind: "rejected", reason: "not-approved" });
   });
 
