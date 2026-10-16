@@ -22,8 +22,12 @@ function validateEffect(
   }
 
   if (effect.kind === "stat") {
-    if ((effect as { stat?: string }).stat === "speed") {
-      throw new RangeError(`Talent node ${node.nodeId} attempts to modify permanent Speed`);
+    const stat = (effect as { stat?: string }).stat;
+    if (stat === "speed") {
+      throw new RangeError(`Talent node ${node.nodeId} attempts to modify permanent Base Speed`);
+    }
+    if (stat === "stability") {
+      throw new RangeError(`Talent node ${node.nodeId} attempts to modify permanent Base Stability`);
     }
     if (effect.valuePerRank !== null && !Number.isFinite(effect.valuePerRank)) {
       throw new RangeError(`Talent node ${node.nodeId} has an invalid stat value`);
