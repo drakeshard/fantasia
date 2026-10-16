@@ -7,7 +7,10 @@ import {
 describe("GAME-BACKEND03 Talent persistence restoration", () => {
   it("round-trips the deterministic empty account Talent state", () => {
     const empty = emptyTalentProgressSnapshot();
-    const restored = restoreTalentProgress(empty.schemaVersion, JSON.parse(JSON.stringify(empty.state)));
+    const restored = restoreTalentProgress(
+      empty.schemaVersion,
+      JSON.parse(JSON.stringify(empty.state)),
+    );
     expect(restored).toMatchObject({ kind: "restored", snapshot: empty, state: { trees: [] } });
   });
 
@@ -27,7 +30,10 @@ describe("GAME-BACKEND03 Talent persistence restoration", () => {
       restoreTalentProgress(1, {
         trees: [{ treeId: "class:unknown", nodes: [] }],
       }),
-    ).toMatchObject({ kind: "rejected", reason: expect.stringMatching(/Unknown serialized Talent tree/) });
+    ).toMatchObject({
+      kind: "rejected",
+      reason: expect.stringMatching(/Unknown serialized Talent tree/),
+    });
 
     expect(
       restoreTalentProgress(1, {
@@ -38,7 +44,10 @@ describe("GAME-BACKEND03 Talent persistence restoration", () => {
           },
         ],
       }),
-    ).toMatchObject({ kind: "rejected", reason: expect.stringMatching(/Unknown serialized Talent node/) });
+    ).toMatchObject({
+      kind: "rejected",
+      reason: expect.stringMatching(/Unknown serialized Talent node/),
+    });
 
     expect(
       restoreTalentProgress(1, {
@@ -49,7 +58,10 @@ describe("GAME-BACKEND03 Talent persistence restoration", () => {
           },
         ],
       }),
-    ).toMatchObject({ kind: "rejected", reason: expect.stringMatching(/Invalid serialized Talent rank/) });
+    ).toMatchObject({
+      kind: "rejected",
+      reason: expect.stringMatching(/Invalid serialized Talent rank/),
+    });
 
     expect(
       restoreTalentProgress(1, {
