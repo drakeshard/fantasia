@@ -4,8 +4,9 @@ import type { TalentTreeDefinition } from "./model.js";
  * Controlled GAME-TALENT-001 scaffold only.
  *
  * Proposed nodes remain non-purchasable through the production transition until their
- * design status is approved. The Anchor sample intentionally retains a null value while
- * its Stability scale is unresolved. This is not the proposed 51-node full tree.
+ * design status is approved. GAME-D264 supersedes permanent Base Stability Talent growth;
+ * the historical Anchor sample keeps its stable ID but is no longer a live stat reward.
+ * This is not the proposed 51-node full tree.
  */
 export const LANCER_CLASS_TALENT_SCAFFOLD: TalentTreeDefinition = {
   schemaVersion: 1,
@@ -75,20 +76,13 @@ export const LANCER_CLASS_TALENT_SCAFFOLD: TalentTreeDefinition = {
       nodeId: "LAN-AN-STB-01",
       doctrine: "Anchor",
       name: "Firm Footing I",
-      status: "proposed",
+      status: "superseded",
       type: "stat",
       ranks: 5,
-      effects: [
-        {
-          kind: "stat",
-          rewardKey: "stability_flat",
-          stat: "stability",
-          mode: "flat",
-          valuePerRank: null,
-        },
-      ],
+      effects: [],
       layoutBand: "early",
-      notes: "Stability value remains balance-pending in GAME-TALENT-001.",
+      notes:
+        "Historical scaffold node superseded by GAME-D264. Anchor progression must use conditional Effective Stability or displacement/collision mechanics instead of permanent Base Stability.",
     },
     {
       nodeId: "LAN-GM-RES-01",
