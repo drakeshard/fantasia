@@ -22,7 +22,11 @@ describe("GAME-BACKEND05 trusted command contract", () => {
 
   it("rejects unsupported commands, malformed idempotency keys, and invalid names", () => {
     expect(() =>
-      parseTrustedCommandRequest({ type: "talent.purchase", idempotencyKey: "request-123456", payload: {} }),
+      parseTrustedCommandRequest({
+        type: "talent.purchase",
+        idempotencyKey: "request-123456",
+        payload: {},
+      }),
     ).toThrow(/Unsupported trusted command/);
     expect(() =>
       parseTrustedCommandRequest({
