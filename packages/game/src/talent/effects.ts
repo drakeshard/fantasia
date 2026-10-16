@@ -33,8 +33,6 @@ function statKey(stat: PermanentTalentStat): keyof ClassTalentStatModifiers {
       return "defense";
     case "resistance":
       return "resistance";
-    case "stability":
-      return "stability";
   }
 }
 
@@ -100,7 +98,7 @@ export function projectClassTalentProfile(
       defense: applyPermanentModifier(profile.attributes.defense, modifiers.defense),
       resistance: applyPermanentModifier(profile.attributes.resistance, modifiers.resistance),
       speed: profile.attributes.speed,
-      stability: applyPermanentModifier(profile.attributes.stability, modifiers.stability),
+      stability: profile.attributes.stability,
     },
   };
 }

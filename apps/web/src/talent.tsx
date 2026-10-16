@@ -77,7 +77,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
             <strong>Shared by the account</strong>
             <span>
               Matching current and future units receive these permanent Talent benefits. Base Speed
-              is never increased by permanent Talent.
+              and Base Stability are never increased by permanent Talent.
             </span>
           </div>
         </aside>
