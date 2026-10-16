@@ -1,6 +1,7 @@
 import { CampaignSession } from "@fantasia/runtime";
 import { useMemo } from "preact/hooks";
 import { GameUtilityCluster } from "./game-controls.js";
+import { runtimeAssetUrl } from "./runtime-assets.js";
 
 interface HomeAppProps {
   readonly onContinue: () => void;
@@ -10,15 +11,19 @@ interface HomeAppProps {
   readonly onSettings: (trigger: HTMLElement) => void;
 }
 
-const uiAsset = (name: string) => `/assets/ui/core/${name}`;
-
 interface HomeIconProps {
-  readonly src: string;
+  readonly assetId: string;
   readonly className?: string;
 }
 
-function HomeIcon({ src, className }: HomeIconProps) {
-  return <img class={`home-icon${className ? ` ${className}` : ""}`} src={uiAsset(src)} alt="" />;
+function HomeIcon({ assetId, className }: HomeIconProps) {
+  return (
+    <img
+      class={`home-icon${className ? ` ${className}` : ""}`}
+      src={runtimeAssetUrl(assetId)}
+      alt=""
+    />
+  );
 }
 
 export function HomeApp({
@@ -37,7 +42,7 @@ export function HomeApp({
       <header class="home-lobby-hud">
         <div class="home-wordmark">
           <span class="home-wordmark-mark" aria-hidden="true">
-            <HomeIcon src="fantasia_ui_brand_crest_v001.svg" />
+            <HomeIcon assetId="ui.brand.crest" />
           </span>
           <span class="home-wordmark-copy">
             <strong>FANTASIA</strong>
@@ -62,7 +67,7 @@ export function HomeApp({
 
           <section class="home-current-story" aria-label="Continue current story">
             <div class="home-current-story-mark" aria-hidden="true">
-              <HomeIcon src="fantasia_ui_icon_campaign_default_v001.svg" />
+              <HomeIcon assetId="ui.icon.campaign" />
               <span>{view.sagaSequence}</span>
             </div>
             <div class="home-current-story-copy">
@@ -83,10 +88,7 @@ export function HomeApp({
               onClick={onContinue}
             >
               <span>Continue</span>
-              <HomeIcon
-                src="fantasia_ui_icon_chevron_right_v001.svg"
-                className="home-action-chevron"
-              />
+              <HomeIcon assetId="ui.icon.chevron-right" className="home-action-chevron" />
             </button>
           </section>
         </section>
@@ -95,7 +97,7 @@ export function HomeApp({
           <section class="home-feature-card home-feature-current">
             <span class="home-feature-kicker">Current Saga</span>
             <div class="home-feature-emblem" aria-hidden="true">
-              <HomeIcon src="fantasia_ui_icon_campaign_default_v001.svg" />
+              <HomeIcon assetId="ui.icon.campaign" />
               <span>I</span>
             </div>
             <h2>{view.sagaTitle}</h2>
@@ -108,12 +110,12 @@ export function HomeApp({
           <section class="home-feature-card home-feature-locked" aria-label="Summon unavailable">
             <span class="home-feature-kicker">Summon</span>
             <div class="home-feature-emblem summon" aria-hidden="true">
-              <HomeIcon src="fantasia_ui_icon_summon_default_v001.svg" />
+              <HomeIcon assetId="ui.icon.summon" />
             </div>
             <h2>Summon</h2>
             <p>Character summoning is not available in this production slice.</p>
             <span class="home-feature-state unavailable">
-              <HomeIcon src="fantasia_ui_icon_lock_v001.svg" />
+              <HomeIcon assetId="ui.icon.lock" />
               <span>Unavailable</span>
             </span>
           </section>
@@ -122,19 +124,19 @@ export function HomeApp({
 
       <nav class="home-game-dock" aria-label="Primary navigation">
         <span class="home-dock-item is-active" aria-current="page">
-          <HomeIcon src="fantasia_ui_icon_home_default_v001.svg" />
+          <HomeIcon assetId="ui.icon.home" />
           <strong>Home</strong>
         </span>
         <button type="button" class="home-dock-item" aria-label="Campaign" onClick={onCampaign}>
-          <HomeIcon src="fantasia_ui_icon_campaign_default_v001.svg" />
+          <HomeIcon assetId="ui.icon.campaign" />
           <strong>Campaign</strong>
         </button>
         <button type="button" class="home-dock-item" aria-label="Characters" onClick={onCharacters}>
-          <HomeIcon src="fantasia_ui_icon_characters_default_v001.svg" />
+          <HomeIcon assetId="ui.icon.characters" />
           <strong>Characters</strong>
         </button>
         <button type="button" class="home-dock-item" aria-label="Talent" onClick={onTalent}>
-          <HomeIcon src="fantasia_ui_icon_talent_default_v001.svg" />
+          <HomeIcon assetId="ui.icon.talent" />
           <strong>Talent</strong>
         </button>
         <button
@@ -144,7 +146,7 @@ export function HomeApp({
           disabled
           title="Summon is not implemented yet"
         >
-          <HomeIcon src="fantasia_ui_icon_summon_default_v001.svg" />
+          <HomeIcon assetId="ui.icon.summon" />
           <strong>Summon</strong>
         </button>
       </nav>
