@@ -25,6 +25,13 @@ export {
   type EncounterRuntimeSnapshot,
 } from "./encounter-runner.js";
 export {
+  type EquipmentRestoreResult,
+  type EquipmentSnapshot,
+  FANTASIA_EQUIPMENT_SCHEMA_VERSION,
+  type PersistedEquipmentInstanceRow,
+  restoreEquipmentInstances,
+} from "./equipment-progress.js";
+export {
   createFantasiaSaveService,
   FANTASIA_GAME_ID,
   FANTASIA_SAVE_FORMAT_VERSION,
