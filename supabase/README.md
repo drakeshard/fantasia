@@ -20,6 +20,7 @@ Do not move canonical characters, classes, skills, Talent definitions, equipment
 - `campaign_progress`, containing only the account's current saga/chapter/stage identifiers plus schema version, revision, and timestamps.
 - `account_talent_progress`, containing only serialized account-wide Talent investment state plus schema version, revision, and timestamps.
 - `account_unit_instances`, containing immutable account-owned unit-instance identity: an instance UUID, schema version, Git-owned character-definition reference, and creation timestamp.
+- `account_equipment_instances`, containing immutable account-owned equipment-instance identity: an instance UUID, schema version, Git-owned equipment-definition reference, and creation timestamp.
 - Private trusted-command idempotency receipts containing normalized request/result snapshots only; these are infrastructure records, not canonical gameplay definitions.
 
 Campaign identifiers loaded from Supabase must be validated against the current repository-owned campaign definition before runtime restoration. Temporary campaign-map selection is presentation/session state and is not persisted as campaign progress.
@@ -27,6 +28,8 @@ Campaign identifiers loaded from Supabase must be validated against the current 
 Talent state loaded from Supabase must be validated against the current repository-owned Talent catalog before use. Canonical tree/node definitions, statuses, prerequisites, effects, and balance remain in Git. Direct browser rank mutation is intentionally unavailable: authenticated clients may read their own Talent state and may only initialize their own row with the server default empty state. Talent purchase/upgrade remains a future trusted transactional command.
 
 Roster unit instances loaded from Supabase must be validated against a repository-owned character-definition catalog before use. Authenticated clients may read only their own unit instances and receive no direct INSERT, UPDATE, or DELETE privilege. GAME-BACKEND06 does not auto-grant the protagonist and does not define recruitment, grants, duplicate-copy conversion, rarity, levels, stars, class paths, skills, equipment, economy, or summon semantics. Multiple stored instances may reference the same definition because duplicate-character gameplay policy is intentionally still unresolved.
+
+Equipment instances loaded from Supabase must be validated against a repository-owned equipment-definition catalog before use. Authenticated clients may read only their own equipment instances and receive no direct INSERT, UPDATE, or DELETE privilege. GAME-BACKEND07 does not auto-grant starter equipment and does not define generic consumable/material inventory, equipment acquisition/drop/reward grants, equip/loadout assignment, enhancement, enchant generation or reroll state, rarity, stars, durability, quantity/stack semantics, salvage/sell, economy, or summon semantics. Multiple stored instances may reference the same equipment definition because duplicate-item gameplay policy is intentionally not frozen by persistence.
 
 ## Runtime asset delivery
 
@@ -47,7 +50,7 @@ GAME-BACKEND05 establishes the reusable boundary for future sensitive player-sta
 - Browser callers send an authenticated user JWT to the `trusted-command` Edge Function. The function validates the caller against Supabase Auth before selecting any command handler.
 - Elevated database access exists only inside the Edge Function through an unexposed modern Supabase secret key. No service-role/secret credential is committed or returned to clients.
 - Privileged database mutation is performed by narrowly scoped `SECURITY INVOKER` RPCs executable only by `service_role`; `anon` and `authenticated` receive no EXECUTE grant.
-- `private.trusted_command_receipts` records per-account command name, idempotency key, normalized request, and first successful result. Same-key retries return that stored result without reapplying the mutation. Reusing a key for a different normalized request is rejected.
+- `private.trusted_command_receipts` records per-account command name, idempotency key, normalized request/result snapshots only. Same-key retries return that stored result without reapplying the mutation. Reusing a key for a different normalized request is rejected.
 - The initial proof command is `profile.update_display_name`, an already-approved account mutation. It exists to prove authentication, authorization, atomic mutation, and idempotency; it does not imply that ordinary profile edits must become sensitive commands.
 - No Talent purchase/currency, stage reward, item grant, roster grant, inventory, equipment, summon, or economy semantics are introduced by this infrastructure slice.
 
@@ -59,7 +62,7 @@ GAME-BACKEND05 establishes the reusable boundary for future sensitive player-sta
 - Client code may use only the project URL and publishable key.
 - Never commit or expose a service-role/secret key.
 - Do not create browser Storage write policies for canonical shipped runtime assets.
-- Sensitive future mutations such as currency spend, reward claim, item grant, roster acquisition, summon, and Talent purchase must use trusted validated transactional command boundaries rather than direct browser writes.
+- Sensitive future mutations such as currency spend, reward claim, item grant, roster acquisition, equipment acquisition, summon, and Talent purchase must use trusted validated transactional command boundaries rather than direct browser writes.
 
 ## Workflow
 
@@ -69,4 +72,4 @@ GAME-BACKEND05 establishes the reusable boundary for future sensitive player-sta
 4. Verify RLS, grants, bucket visibility, Storage policies, and function security mode explicitly.
 5. Update controlled Fantasia Working Context when backend state materially changes.
 
-Account/profile, campaign, Talent persistence, Storage/semantic asset delivery, trusted-command infrastructure, and roster unit-instance identity persistence are complete through GAME-BACKEND06. Inventory/equipment, economy, and summon state remain separate follow-up slices.
+Account/profile, campaign, Talent persistence, Storage/semantic asset delivery, trusted-command infrastructure, roster unit-instance identity persistence, and equipment-instance identity persistence are complete through GAME-BACKEND07. Generic inventory taxonomy, economy, and summon state remain separate follow-up slices.
