@@ -4,13 +4,13 @@
 
 `apps/web` → `packages/runtime` → `packages/game` → selected Drakeshard RPG/Tactical package contracts.
 
-Foundation is consumed as exact public `@drakeshard/foundation@0.1.2` infrastructure. Browser-only Foundation adapters stay in `apps/web`; renderer-neutral timing, RNG, input handoff, and aggregate persistence orchestration stay in `packages/runtime`. `packages/game` does not depend on Foundation.
+Foundation is consumed as exact public `@drakeshard/foundation@0.1.2` infrastructure. Browser-only Foundation adapters stay in `apps/web`; renderer-neutral timing, RNG, input handoff, aggregate persistence orchestration, and semantic runtime-asset resolution stay in `packages/runtime`. `packages/game` does not depend on Foundation or asset-delivery providers.
 
 ## Ownership
 
 - `packages/game` owns authoritative Fantasia domain state, commands, validation, deterministic simulation, title policy, combat/action semantics, jobs/skills/statuses, objectives, AI, encounter rules, and RPG↔Tactical composition.
-- `packages/runtime` owns application/session orchestration around Foundation fixed-step time, deterministic RNG, normalized input handoff, and aggregate save services. It is not a renderer or browser owner.
-- `apps/web` owns browser presentation, HTML/CSS/Preact UI, browser input adapters, IndexedDB storage adapters, future renderer adapters, camera/animation/effects/audio, and input mapping to game intentions.
+- `packages/runtime` owns application/session orchestration around Foundation fixed-step time, deterministic RNG, normalized input handoff, aggregate save services, and provider-neutral validation/resolution of Git-owned runtime asset manifests. It is not a renderer, browser owner, or binary asset authority.
+- `apps/web` owns browser presentation, HTML/CSS/Preact UI, browser input adapters, IndexedDB storage adapters, runtime asset delivery-origin configuration, future renderer adapters, camera/animation/effects/audio, and input mapping to game intentions.
 - Drakeshard RPG and Tactical remain sibling dependencies. Fantasia may consume selected package subpaths, but neither library may depend on the other because Fantasia uses both.
 
 ## Foundation boundary
@@ -20,6 +20,14 @@ Fantasia imports Foundation only through supported package subpaths. Package-roo
 The application or future renderer supplies elapsed frame time to `FixedStepDriver`; Foundation does not own the browser frame loop. `DeterministicRng` state is part of runtime state and can be snapshotted for later aggregate persistence. Physical browser input is normalized by Foundation browser adapters and enters authoritative processing only through `TickInputHandoff.consumeTick()` at a simulation tick.
 
 Foundation validates save envelopes and save-format migration mechanics. Fantasia owns aggregate payload structure, game/content/schema versions, payload validation, and when a migrated payload is saved again. IndexedDB and wall-clock save timestamps remain browser/application concerns.
+
+## Runtime asset delivery boundary
+
+Git owns semantic runtime asset meaning through `config/runtime-assets.json`: stable semantic IDs, provider-neutral object paths, media types, and versions. Canonical game/content/UI definitions must not embed Supabase Storage URLs or future CDN URLs.
+
+`packages/runtime` validates the manifest and resolves a semantic ID against a caller-supplied delivery base URL. `apps/web` supplies that browser delivery origin, defaulting to the repository-local `/assets` mirror for development and fallback. Production may point the same resolver at the public Supabase `runtime-assets` bucket; a future CDN may cache the same immutable object paths without becoming authoritative.
+
+Supabase Storage owns published runtime binary objects only. The public bucket is appropriate for shipped non-secret game media, but browser upload/update/delete/list authority is intentionally absent. Publishing is a trusted deployment/admin action using server-only credentials. Versioned object paths are treated as immutable once published.
 
 ## Renderer boundary
 
