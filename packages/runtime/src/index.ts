@@ -58,6 +58,14 @@ export {
   type ProductionBattleView,
 } from "./production-battle.js";
 export {
+  createRuntimeAssetResolver,
+  FANTASIA_RUNTIME_ASSET_MANIFEST_SCHEMA_VERSION,
+  parseRuntimeAssetManifest,
+  type RuntimeAssetDefinition,
+  type RuntimeAssetManifest,
+  RuntimeAssetResolver,
+} from "./runtime-assets.js";
+export {
   emptyTalentProgressSnapshot,
   FANTASIA_TALENT_PROGRESS_SCHEMA_VERSION,
   restoreTalentProgress,
