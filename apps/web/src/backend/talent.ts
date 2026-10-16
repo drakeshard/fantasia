@@ -1,7 +1,4 @@
-import {
-  restoreTalentProgress,
-  type TalentProgressSnapshot,
-} from "@fantasia/runtime";
+import { restoreTalentProgress, type TalentProgressSnapshot } from "@fantasia/runtime";
 import { FantasiaBackendError } from "./supabase.js";
 
 export interface FantasiaTalentProgressRecord {
@@ -70,7 +67,10 @@ function parseTalentProgress(raw: RawTalentProgress): FantasiaTalentProgressReco
 
   const restored = restoreTalentProgress(raw.schema_version, raw.state);
   if (restored.kind === "rejected") {
-    throw new FantasiaBackendError(`Supabase returned invalid Talent progress: ${restored.reason}`, 502);
+    throw new FantasiaBackendError(
+      `Supabase returned invalid Talent progress: ${restored.reason}`,
+      502,
+    );
   }
 
   return {
