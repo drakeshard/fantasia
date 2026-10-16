@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  createRosterState,
-  serializeRosterState,
-} from "../../packages/game/src/index.ts";
+import { createRosterState, serializeRosterState } from "../../packages/game/src/index.ts";
 import {
   FANTASIA_ROSTER_SCHEMA_VERSION,
   restoreRosterUnitInstances,
