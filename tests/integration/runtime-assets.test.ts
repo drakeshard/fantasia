@@ -36,9 +36,9 @@ describe("GAME-BACKEND04 runtime asset manifest", () => {
       mediaType: "image/svg+xml",
       version: 1,
     };
-    expect(() =>
-      parseRuntimeAssetManifest({ schemaVersion: 1, assets: [entry, entry] }),
-    ).toThrow(/Duplicate runtime asset id/);
+    expect(() => parseRuntimeAssetManifest({ schemaVersion: 1, assets: [entry, entry] })).toThrow(
+      /Duplicate runtime asset id/,
+    );
     expect(() =>
       parseRuntimeAssetManifest({
         schemaVersion: 1,
