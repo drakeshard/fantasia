@@ -18,7 +18,7 @@ const approvedLancerTree: TalentTreeDefinition = {
   treeId: "class:lancer:test",
   family: "class",
   scopeKey: "Lancer",
-  doctrines: ["Counter-Charge", "Iron Wall", "Anchor", "General Mastery"],
+  doctrines: ["Counter-Charge", "Iron Wall", "General Mastery"],
   nodes: [
     {
       nodeId: "LAN-T-DEF",
@@ -78,23 +78,6 @@ const approvedLancerTree: TalentTreeDefinition = {
       ],
     },
     {
-      nodeId: "LAN-T-STB",
-      doctrine: "Anchor",
-      name: "Firm Footing",
-      status: "approved",
-      type: "stat",
-      ranks: 1,
-      effects: [
-        {
-          kind: "stat",
-          rewardKey: "stability_percent",
-          stat: "stability",
-          mode: "percent",
-          valuePerRank: 10,
-        },
-      ],
-    },
-    {
       nodeId: "LAN-T-BRACE",
       doctrine: "Counter-Charge",
       name: "Set Against the Charge",
@@ -140,20 +123,23 @@ function advanceOrThrow(
   nodeId: string,
 ): AccountTalentState {
   const result = advanceTalentRank(tree, state, nodeId);
-  if (result.kind !== "advanced")
-    throw new Error(`Expected ${nodeId} to advance: ${result.reason}`);
+  if (result.kind !== "advanced") throw new Error(`Expected ${nodeId} to advance: ${result.reason}`);
   return result.state;
 }
 
 describe("GAME-PROG01 account-wide Talent progression", () => {
-  it("validates the controlled Lancer scaffold without promoting proposed nodes", () => {
+  it("validates the controlled Lancer scaffold and keeps obsolete Stability history superseded", () => {
     expect(() => validateTalentTreeDefinition(LANCER_CLASS_TALENT_SCAFFOLD)).not.toThrow();
-    const result = advanceTalentRank(
-      LANCER_CLASS_TALENT_SCAFFOLD,
-      createAccountTalentState(),
-      "LAN-CC-PWR-01",
-    );
-    expect(result).toMatchObject({ kind: "rejected", reason: "not-approved" });
+    expect(
+      LANCER_CLASS_TALENT_SCAFFOLD.nodes.find((node) => node.nodeId === "LAN-AN-STB-01"),
+    ).toMatchObject({ status: "superseded", effects: [] });
+    expect(
+      advanceTalentRank(
+        LANCER_CLASS_TALENT_SCAFFOLD,
+        createAccountTalentState(),
+        "LAN-AN-STB-01",
+      ),
+    ).toMatchObject({ kind: "rejected", reason: "not-approved" });
   });
 
   it("advances approved ranks immutably and enforces ALL/ANY plus investment gates", () => {
@@ -210,13 +196,12 @@ describe("GAME-PROG01 account-wide Talent progression", () => {
     ).toThrow(/Invalid serialized Talent rank/);
   });
 
-  it("automatically projects one account investment onto current and future matching Lancers only", () => {
+  it("projects account investment onto matching Classes while preserving Base Speed and Stability", () => {
     let state = createAccountTalentState();
     state = advanceOrThrow(state, approvedLancerTree, "LAN-T-DEF");
     state = advanceOrThrow(state, approvedLancerTree, "LAN-T-DEF");
     state = advanceOrThrow(state, approvedLancerTree, "LAN-T-HP");
     state = advanceOrThrow(state, approvedLancerTree, "LAN-T-PWR");
-    state = advanceOrThrow(state, approvedLancerTree, "LAN-T-STB");
 
     const lancerProfile = {
       activeClass: "Lancer",
@@ -226,14 +211,9 @@ describe("GAME-PROG01 account-wide Talent progression", () => {
         magicalPower: 20,
         defense: 100,
         resistance: 60,
-        speed: 17,
-        stability: 40,
+        speed: 217,
+        stability: 6,
       },
-    };
-    const futureLancer = {
-      ...lancerProfile,
-      hp: { current: 120, capacity: 150 },
-      attributes: { ...lancerProfile.attributes, defense: 80, speed: 21 },
     };
     const infantryProfile = { ...lancerProfile, activeClass: "Infantry" };
 
@@ -245,20 +225,16 @@ describe("GAME-PROG01 account-wide Talent progression", () => {
         magicalPower: 20,
         defense: 102,
         resistance: 60,
-        speed: 17,
-        stability: 44,
+        speed: 217,
+        stability: 6,
       },
-    });
-    expect(projectClassTalentProfile(futureLancer, [approvedLancerTree], state)).toMatchObject({
-      hp: { current: 120, capacity: 170 },
-      attributes: { defense: 81.6, speed: 21 },
     });
     expect(projectClassTalentProfile(infantryProfile, [approvedLancerTree], state)).toEqual(
       infantryProfile,
     );
   });
 
-  it("rejects cycles, malformed gates, unresolved approved purchases, and permanent Speed effects", () => {
+  it("rejects cycles, unresolved approved purchases, and permanent Base Speed/Stability effects", () => {
     const cyclic: TalentTreeDefinition = {
       schemaVersion: 1,
       treeId: "class:test:cycle",
@@ -304,17 +280,9 @@ describe("GAME-PROG01 account-wide Talent progression", () => {
           doctrine: "One",
           name: "Pending",
           status: "approved",
-          type: "stat",
+          type: "custom" as TalentTreeDefinition["nodes"][number]["type"],
           ranks: 1,
-          effects: [
-            {
-              kind: "stat",
-              rewardKey: "stability_flat",
-              stat: "stability",
-              mode: "flat",
-              valuePerRank: null,
-            },
-          ],
+          effects: [{ kind: "custom", rewardKey: "pending", valuePerRank: null }],
         },
       ],
     };
@@ -323,31 +291,33 @@ describe("GAME-PROG01 account-wide Talent progression", () => {
       reason: "balance-pending",
     });
 
-    const speedTree = {
-      schemaVersion: 1,
-      treeId: "class:test:speed",
-      family: "class",
-      scopeKey: "Test",
-      nodes: [
-        {
-          nodeId: "SPEED",
-          doctrine: "Forbidden",
-          name: "Forbidden Speed",
-          status: "approved",
-          type: "stat",
-          ranks: 1,
-          effects: [
-            {
-              kind: "stat",
-              rewardKey: "speed_percent",
-              stat: "speed",
-              mode: "percent",
-              valuePerRank: 1,
-            },
-          ],
-        },
-      ],
-    } as unknown as TalentTreeDefinition;
-    expect(() => validateTalentTreeDefinition(speedTree)).toThrow(/permanent Speed/);
+    for (const forbiddenStat of ["speed", "stability"] as const) {
+      const forbiddenTree = {
+        schemaVersion: 1,
+        treeId: `class:test:${forbiddenStat}`,
+        family: "class",
+        scopeKey: "Test",
+        nodes: [
+          {
+            nodeId: forbiddenStat.toUpperCase(),
+            doctrine: "Forbidden",
+            name: `Forbidden ${forbiddenStat}`,
+            status: "approved",
+            type: "stat",
+            ranks: 1,
+            effects: [
+              {
+                kind: "stat",
+                rewardKey: `${forbiddenStat}_percent`,
+                stat: forbiddenStat,
+                mode: "percent",
+                valuePerRank: 1,
+              },
+            ],
+          },
+        ],
+      } as unknown as TalentTreeDefinition;
+      expect(() => validateTalentTreeDefinition(forbiddenTree)).toThrow(/permanent Base/);
+    }
   });
 });
