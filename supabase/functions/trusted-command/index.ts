@@ -28,7 +28,9 @@ function environmentKey(directName: string, collectionName: string): string {
     if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
   }
 
-  throw new Error(`Missing required Edge Function environment key: ${directName}/${collectionName}`);
+  throw new Error(
+    `Missing required Edge Function environment key: ${directName}/${collectionName}`,
+  );
 }
 
 async function parseJsonResponse(response: Response): Promise<unknown> {
@@ -41,7 +43,9 @@ async function parseJsonResponse(response: Response): Promise<unknown> {
 
 Deno.serve(async (request: Request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (request.method !== "POST") return jsonResponse({ message: "Method not allowed." }, 405);
+  if (request.method !== "POST") {
+    return jsonResponse({ message: "Method not allowed." }, 405);
+  }
 
   try {
     const authorization = request.headers.get("authorization");
@@ -51,7 +55,10 @@ Deno.serve(async (request: Request) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")?.replace(/\/$/, "");
     if (!supabaseUrl) throw new Error("Missing SUPABASE_URL.");
-    const publishableKey = environmentKey("SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEYS");
+    const publishableKey = environmentKey(
+      "SUPABASE_PUBLISHABLE_KEY",
+      "SUPABASE_PUBLISHABLE_KEYS",
+    );
     const secretKey = environmentKey("SUPABASE_SECRET_KEY", "SUPABASE_SECRET_KEYS");
 
     const userResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
@@ -60,9 +67,13 @@ Deno.serve(async (request: Request) => {
         authorization,
       },
     });
-    if (!userResponse.ok) return jsonResponse({ message: "Authentication required." }, 401);
+    if (!userResponse.ok) {
+      return jsonResponse({ message: "Authentication required." }, 401);
+    }
     const user = (await userResponse.json()) as { id?: unknown };
-    if (typeof user.id !== "string") return jsonResponse({ message: "Authentication required." }, 401);
+    if (typeof user.id !== "string") {
+      return jsonResponse({ message: "Authentication required." }, 401);
+    }
 
     const command = parseTrustedCommandRequest(await request.json());
     if (command.type !== TRUSTED_PROFILE_DISPLAY_NAME_COMMAND) {
@@ -98,7 +109,10 @@ Deno.serve(async (request: Request) => {
     if (error instanceof TrustedCommandContractError) {
       return jsonResponse({ message: error.message }, error.status);
     }
-    console.error("trusted-command failed", error instanceof Error ? error.message : "unknown error");
+    console.error(
+      "trusted-command failed",
+      error instanceof Error ? error.message : "unknown error",
+    );
     return jsonResponse({ message: "Trusted command service failed." }, 500);
   }
 });
