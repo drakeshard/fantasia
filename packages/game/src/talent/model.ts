@@ -15,8 +15,7 @@ export type PermanentTalentStat =
   | "physical-power"
   | "magical-power"
   | "defense"
-  | "resistance"
-  | "stability";
+  | "resistance";
 
 export interface TalentStatEffect {
   readonly kind: "stat";
@@ -129,7 +128,6 @@ export interface ClassTalentStatModifiers {
   readonly magicalPower: TalentStatModifier;
   readonly defense: TalentStatModifier;
   readonly resistance: TalentStatModifier;
-  readonly stability: TalentStatModifier;
 }
 
 const emptyModifier = (): TalentStatModifier => ({ flat: 0, percent: 0 });
@@ -141,6 +139,5 @@ export function emptyClassTalentStatModifiers(): ClassTalentStatModifiers {
     magicalPower: emptyModifier(),
     defense: emptyModifier(),
     resistance: emptyModifier(),
-    stability: emptyModifier(),
   };
 }
