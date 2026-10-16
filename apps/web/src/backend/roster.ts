@@ -1,7 +1,4 @@
-import {
-  restoreRosterUnitInstances,
-  type RosterSnapshot,
-} from "@fantasia/runtime";
+import { restoreRosterUnitInstances, type RosterSnapshot } from "@fantasia/runtime";
 import { FantasiaBackendError } from "./supabase.js";
 
 export interface FantasiaRosterRecord {
@@ -75,7 +72,10 @@ export async function loadRosterUnitInstances(
 
   const restored = restoreRosterUnitInstances(persisted, knownCharacterDefinitionIds);
   if (restored.kind === "rejected") {
-    throw new FantasiaBackendError(`Supabase returned invalid roster state: ${restored.reason}`, 502);
+    throw new FantasiaBackendError(
+      `Supabase returned invalid roster state: ${restored.reason}`,
+      502,
+    );
   }
 
   return { snapshot: restored.snapshot, createdAtByInstanceId };
