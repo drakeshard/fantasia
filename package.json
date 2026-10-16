@@ -11,7 +11,9 @@
   "scripts": {
     "dev": "pnpm --filter @fantasia/web dev",
     "story:build": "node apps/story-studio/build.mjs",
-    "check": "pnpm check:format && pnpm check:architecture && pnpm check:determinism",
+    "assets:verify": "node scripts/runtime-assets.mjs",
+    "assets:publish": "node scripts/runtime-assets.mjs --publish",
+    "check": "pnpm check:format && pnpm check:architecture && pnpm check:determinism && pnpm assets:verify",
     "check:write": "biome check --write .",
     "check:format": "biome check .",
     "check:architecture": "node scripts/check-architecture.mjs",
