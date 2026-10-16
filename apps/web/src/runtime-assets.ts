@@ -8,7 +8,10 @@ function runtimeAssetBaseUrl(): string {
   return configured || localAssetBaseUrl;
 }
 
-const runtimeAssetResolver = createRuntimeAssetResolver(runtimeAssetManifest, runtimeAssetBaseUrl());
+const runtimeAssetResolver = createRuntimeAssetResolver(
+  runtimeAssetManifest,
+  runtimeAssetBaseUrl(),
+);
 
 export function runtimeAssetUrl(assetId: string): string {
   return runtimeAssetResolver.resolve(assetId);
