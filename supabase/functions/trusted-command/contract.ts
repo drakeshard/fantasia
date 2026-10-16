@@ -40,12 +40,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 export function parseTrustedCommandRequest(value: unknown): TrustedCommandRequest {
-  if (!isRecord(value)) throw new TrustedCommandContractError("Request body must be an object.");
+  if (!isRecord(value)) {
+    throw new TrustedCommandContractError("Request body must be an object.");
+  }
   if (value.type !== TRUSTED_PROFILE_DISPLAY_NAME_COMMAND) {
     throw new TrustedCommandContractError("Unsupported trusted command.", 404);
   }
 
-  const idempotencyKey = typeof value.idempotencyKey === "string" ? value.idempotencyKey.trim() : "";
+  const idempotencyKey =
+    typeof value.idempotencyKey === "string" ? value.idempotencyKey.trim() : "";
   if (idempotencyKey.length < 8 || idempotencyKey.length > 128) {
     throw new TrustedCommandContractError("Idempotency key must be 8 to 128 characters.");
   }
