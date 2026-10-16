@@ -58,6 +58,8 @@ describe("GAME-BACKEND06 roster backend transport", () => {
         ],
         [protagonist],
       ),
-    ).toThrow("Supabase returned invalid roster state: Roster references an unknown character definition.");
+    ).toThrow(
+      "Supabase returned invalid roster state: Roster references an unknown character definition.",
+    );
   });
 });
