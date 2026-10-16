@@ -38,15 +38,18 @@ test("Talent menu exposes controlled account-wide progression without inventing 
   await expect(page.getByText("Firm Footing I", { exact: true })).toBeVisible();
   await expect(page.getByText("Tempered Mind I", { exact: true })).toBeVisible();
   await expect(page.getByText("Approved principle", { exact: true })).toBeVisible();
-  await expect(page.getByText("Value pending", { exact: true })).toBeVisible();
+  await expect(page.getByText("Superseded", { exact: true })).toBeVisible();
+  await expect(page.getByText("No active reward", { exact: true })).toBeVisible();
 
-  const speedBoundary = page.getByText(/Base Speed is never increased by permanent Talent/);
+  const permanentBaseStatBoundary = page.getByText(
+    /Base Speed and Base Stability are never increased by permanent Talent/,
+  );
   const purchaseBoundary = page.getByText(/Purchasing is not available yet/);
   if ((page.viewportSize()?.height ?? 0) >= 500) {
-    await expect(speedBoundary).toBeVisible();
+    await expect(permanentBaseStatBoundary).toBeVisible();
     await expect(purchaseBoundary).toBeVisible();
   } else {
-    await expect(speedBoundary).toHaveCount(1);
+    await expect(permanentBaseStatBoundary).toHaveCount(1);
     await expect(purchaseBoundary).toHaveCount(1);
   }
 
