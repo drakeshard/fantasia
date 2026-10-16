@@ -38,7 +38,9 @@ export function unitInstanceId(value: string): UnitInstanceId {
 
 export function characterDefinitionId(value: string): CharacterDefinitionId {
   if (!isDefinitionId(value)) {
-    throw new Error("Character definition ID must be a trimmed non-empty string up to 128 characters.");
+    throw new Error(
+      "Character definition ID must be a trimmed non-empty string up to 128 characters.",
+    );
   }
   return value as CharacterDefinitionId;
 }
@@ -52,7 +54,8 @@ export function createRosterState(
   const restored = units.map((unit) => {
     const instanceId = unitInstanceId(unit.instanceId);
     const definitionId = characterDefinitionId(unit.characterDefinitionId);
-    if (instanceIds.has(instanceId)) throw new Error("Roster contains a duplicate unit instance ID.");
+    if (instanceIds.has(instanceId))
+      throw new Error("Roster contains a duplicate unit instance ID.");
     if (!known.has(definitionId)) {
       throw new Error("Roster references an unknown character definition.");
     }
