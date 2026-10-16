@@ -50,10 +50,7 @@ jobs:
         run: pnpm shared:consumer
 
       - name: Formatting, lint, architecture, and determinism
-        run: |
-          mkdir -p visual-artifacts
-          set -o pipefail
-          pnpm check 2>&1 | tee visual-artifacts/quality-check.log
+        run: pnpm check
 
       - name: Typecheck
         run: pnpm typecheck
