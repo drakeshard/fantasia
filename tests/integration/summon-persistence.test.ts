@@ -103,7 +103,10 @@ describe("GAME-BACKEND09 summon persistence contract", () => {
         [],
         [standard],
       ),
-    ).toEqual({ kind: "rejected", reason: "Summon state references an unknown summon definition." });
+    ).toEqual({
+      kind: "rejected",
+      reason: "Summon state references an unknown summon definition.",
+    });
 
     expect(
       restoreSummonState(
@@ -111,7 +114,15 @@ describe("GAME-BACKEND09 summon persistence contract", () => {
           { schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: {} },
           { schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: {} },
         ],
-        [{ entryId: entry1, schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: {} }],
+        [
+          {
+            entryId: entry1,
+            schemaVersion: 1,
+            summonDefinitionId: standard,
+            revision: 1,
+            state: {},
+          },
+        ],
         [standard],
       ),
     ).toEqual({ kind: "rejected", reason: "Summon persistence contains duplicate current state." });
@@ -120,20 +131,46 @@ describe("GAME-BACKEND09 summon persistence contract", () => {
       restoreSummonState(
         [{ schemaVersion: 1, summonDefinitionId: standard, revision: 2, state: { value: 2 } }],
         [
-          { entryId: entry1, schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: { value: 1 } },
-          { entryId: entry2, schemaVersion: 1, summonDefinitionId: standard, revision: 3, state: { value: 2 } },
+          {
+            entryId: entry1,
+            schemaVersion: 1,
+            summonDefinitionId: standard,
+            revision: 1,
+            state: { value: 1 },
+          },
+          {
+            entryId: entry2,
+            schemaVersion: 1,
+            summonDefinitionId: standard,
+            revision: 3,
+            state: { value: 2 },
+          },
         ],
         [standard],
       ),
-    ).toEqual({ kind: "rejected", reason: "Summon history revisions must be contiguous from revision 1." });
+    ).toEqual({
+      kind: "rejected",
+      reason: "Summon history revisions must be contiguous from revision 1.",
+    });
 
     expect(
       restoreSummonState(
         [{ schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: { value: 2 } }],
-        [{ entryId: entry1, schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: { value: 1 } }],
+        [
+          {
+            entryId: entry1,
+            schemaVersion: 1,
+            summonDefinitionId: standard,
+            revision: 1,
+            state: { value: 1 },
+          },
+        ],
         [standard],
       ),
-    ).toEqual({ kind: "rejected", reason: "Summon current state does not match the latest history entry." });
+    ).toEqual({
+      kind: "rejected",
+      reason: "Summon current state does not match the latest history entry.",
+    });
   });
 
   it("rejects unsupported schemas, malformed JSON shapes, unsafe revisions, and invalid UUIDs", () => {
@@ -155,16 +192,34 @@ describe("GAME-BACKEND09 summon persistence contract", () => {
 
     expect(
       restoreSummonState(
-        [{ schemaVersion: 1, summonDefinitionId: standard, revision: Number.MAX_SAFE_INTEGER + 1, state: {} }],
+        [
+          {
+            schemaVersion: 1,
+            summonDefinitionId: standard,
+            revision: Number.MAX_SAFE_INTEGER + 1,
+            state: {},
+          },
+        ],
         [],
         [standard],
       ),
-    ).toEqual({ kind: "rejected", reason: "Summon state revision must be a positive safe integer." });
+    ).toEqual({
+      kind: "rejected",
+      reason: "Summon state revision must be a positive safe integer.",
+    });
 
     expect(
       restoreSummonState(
         [{ schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: {} }],
-        [{ entryId: "not-a-uuid", schemaVersion: 1, summonDefinitionId: standard, revision: 1, state: {} }],
+        [
+          {
+            entryId: "not-a-uuid",
+            schemaVersion: 1,
+            summonDefinitionId: standard,
+            revision: 1,
+            state: {},
+          },
+        ],
         [standard],
       ),
     ).toEqual({ kind: "rejected", reason: "Summon history entry ID must be a canonical UUID." });
