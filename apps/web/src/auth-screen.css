@@ -167,11 +167,22 @@
 }
 
 .auth-mode-switch {
+  min-inline-size: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 26px;
+  margin: 26px 0 0;
+  padding: 0;
   border: 1px solid rgb(226 190 120 / 24%);
   background: rgb(2 7 12 / 38%);
+}
+
+.auth-mode-switch legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .auth-mode-switch button {
@@ -240,7 +251,7 @@
 
 .auth-field input:focus,
 .auth-mode-switch button:focus-visible,
-.auth-password-field button:focus-visible,
+.auth-password-field .auth-password-toggle:focus-visible,
 .auth-submit:focus-visible {
   outline: 3px solid #7aa7ff;
   outline-offset: 2px;
@@ -255,7 +266,7 @@
   border-right: 0;
 }
 
-.auth-password-field button {
+.auth-password-field .auth-password-toggle {
   min-width: 64px;
   min-height: 48px;
   border: 1px solid rgb(226 190 120 / 24%);
@@ -308,7 +319,7 @@
 
 .auth-submit:disabled,
 .auth-mode-switch button:disabled,
-.auth-password-field button:disabled {
+.auth-password-field .auth-password-toggle:disabled {
   cursor: default;
   opacity: 0.58;
 }
@@ -324,7 +335,7 @@
   font-size: 0.75rem;
 }
 
-.auth-panel-footer small {
+.auth-panel-footer .auth-panel-footnote {
   display: block;
   margin-top: 4px;
   color: rgb(174 187 200 / 58%);
