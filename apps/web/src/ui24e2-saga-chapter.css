@@ -1,0 +1,337 @@
+/* GAME-UI24E2 — focused production normalization for Saga + Chapter/Campaign.
+ * Loaded after historical campaign CSS so frozen UI24A-D tokens/primitives own
+ * reusable material/state while spatial map geometry stays campaign-profile local.
+ */
+
+/* Saga overview: world/saga presentation stays primary; navigation and commitment
+ * use the shared primitive state grammar without changing campaign truth. */
+.saga-war-table {
+  --saga-edge: var(--ui-border-subtle);
+  --saga-edge-strong: var(--ui-border-strong);
+  --saga-panel: rgb(7 16 25 / 84%);
+  --saga-panel-raised: rgb(25 39 54 / 94%);
+  color: var(--ui-text);
+  background:
+    radial-gradient(circle at 46% 40%, rgb(46 76 98 / 20%), transparent 33%),
+    radial-gradient(circle at 82% 24%, rgb(226 190 120 / 5%), transparent 23%),
+    linear-gradient(118deg, var(--ui-canvas-deep) 0 17%, var(--ui-canvas) 44%, var(--ui-canvas-deep));
+}
+
+.saga-war-table::after {
+  border-color: var(--ui-border-subtle);
+}
+
+.saga-top-hud {
+  border-bottom-color: var(--ui-border-subtle);
+  background: linear-gradient(180deg, rgb(7 16 25 / 96%), rgb(7 16 25 / 82%));
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+}
+
+.saga-kicker {
+  color: var(--ui-accent);
+}
+
+.saga-identity-copy > p:last-child,
+.saga-route-heading > p,
+.saga-node-copy > span,
+.saga-current-note,
+.saga-footer-status {
+  color: var(--ui-text-secondary);
+}
+
+.saga-chapter-route.ui-primitive-panel,
+.saga-current-mission.ui-primitive-panel {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 88%);
+  box-shadow: var(--ui-shadow-panel);
+  backdrop-filter: blur(8px);
+}
+
+.saga-current-mission.ui-primitive-panel {
+  border-top-color: var(--ui-border-strong);
+  background: rgb(25 39 54 / 92%);
+}
+
+.saga-chapter-route.ui-primitive-panel::before,
+.saga-current-mission.ui-primitive-panel::before {
+  inset: var(--ui-space-2);
+  border-top-color: color-mix(in srgb, var(--ui-accent) 14%, transparent);
+  border-left-color: transparent;
+}
+
+.saga-route-heading {
+  border-bottom-color: var(--ui-divider);
+}
+
+.saga-chapter-node.ui-primitive-button {
+  width: 100%;
+  min-height: 108px;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  justify-content: stretch;
+  padding: 15px 18px 15px 12px;
+  overflow: visible;
+  border-color: var(--ui-border-subtle);
+  border-left: var(--ui-border-width-emphasis) solid var(--ui-border);
+  color: var(--ui-text);
+  background: rgb(7 16 25 / 68%);
+  box-shadow: var(--ui-highlight-inset);
+  text-align: left;
+}
+
+.saga-chapter-node.ui-primitive-button .ui-primitive-button-content,
+.saga-continue-button.ui-primitive-button .ui-primitive-button-content {
+  display: contents;
+}
+
+.saga-chapter-node.ui-primitive-button::after,
+.saga-continue-button.ui-primitive-button::after {
+  display: none;
+}
+
+.saga-route-step.is-current .saga-chapter-node.ui-primitive-button,
+.saga-chapter-node.ui-primitive-button.is-selected {
+  border-color: var(--ui-accent);
+  border-left-color: var(--ui-accent-strong);
+  background:
+    radial-gradient(circle at 8% 50%, rgb(226 190 120 / 9%), transparent 28%),
+    rgb(25 39 54 / 88%);
+  box-shadow: var(--ui-highlight-inset), var(--ui-shadow-control);
+}
+
+.saga-route-step.is-current .saga-chapter-node.ui-primitive-button:hover:not(:disabled) {
+  border-color: var(--ui-accent-strong);
+  background:
+    radial-gradient(circle at 8% 50%, rgb(226 190 120 / 12%), transparent 30%),
+    rgb(36 55 73 / 92%);
+  transform: translateX(2px);
+}
+
+.saga-chapter-node.ui-primitive-button:disabled {
+  border-color: var(--ui-disabled-border);
+  border-left-color: var(--ui-disabled-border);
+  color: var(--ui-disabled-text);
+  background: rgb(7 16 25 / 58%);
+  box-shadow: none;
+}
+
+.saga-node-medallion,
+.saga-current-icon {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 76%);
+  box-shadow: none;
+}
+
+.saga-route-step.is-current .saga-node-medallion {
+  border-color: var(--ui-accent);
+  box-shadow: inset 0 0 0 var(--ui-border-width) rgb(226 190 120 / 10%);
+}
+
+.saga-current-stage {
+  border-color: var(--ui-divider);
+  background: rgb(7 16 25 / 56%);
+}
+
+.saga-continue-button.ui-primitive-button {
+  width: 100%;
+  min-height: var(--ui-control-height-primary);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  justify-content: stretch;
+  text-align: left;
+}
+
+.saga-continue-button.ui-primitive-button > .ui-primitive-button-content > span,
+.saga-continue-button.ui-primitive-button span > small,
+.saga-continue-button.ui-primitive-button span > strong {
+  text-align: left;
+}
+
+.saga-footer-status {
+  border-top-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 84%);
+}
+
+/* Chapter/Campaign: preserve accepted full-screen spatial geometry. Reusable
+ * material/state comes from tokens/GameButton while map nodes remain a justified
+ * campaign-profile component because their anchors, labels and independent states
+ * are spatial behavior rather than a generic button layout. */
+.campaign-rooted-shell,
+.campaign-rooted-shell > .campaign-screen,
+.campaign-rooted-shell > .campaign-screen > .campaign-shell {
+  background: var(--ui-canvas-deep);
+}
+
+.campaign-rooted-shell .campaign-header {
+  border-bottom-color: var(--ui-border-subtle);
+  background: linear-gradient(180deg, rgb(7 16 25 / 98%), rgb(7 16 25 / 94%));
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
+}
+
+.campaign-rooted-shell .campaign-title-block > span,
+.campaign-rooted-shell .campaign-map-heading .hud-eyebrow,
+.campaign-rooted-shell .inspector-section h3 {
+  color: var(--ui-accent);
+}
+
+.campaign-rooted-shell .campaign-title-block h1,
+.campaign-rooted-shell .campaign-inspector h2 {
+  color: var(--ui-text-heading);
+}
+
+.campaign-rooted-shell .campaign-map-heading {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 86%);
+  box-shadow: var(--ui-shadow-control);
+  backdrop-filter: blur(8px);
+}
+
+.campaign-rooted-shell .campaign-map-heading > div:first-child > p:last-child,
+.campaign-rooted-shell .campaign-inspector p,
+.campaign-rooted-shell .campaign-map-footer {
+  color: var(--ui-text-secondary);
+}
+
+.campaign-rooted-shell .map-toolbar button {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 84%);
+}
+
+.campaign-rooted-shell .map-toolbar button:hover:not(:disabled) {
+  border-color: var(--ui-border-strong);
+  background: rgb(25 39 54 / 90%);
+}
+
+.campaign-rooted-shell .campaign-map-footer {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 82%);
+  box-shadow: var(--ui-shadow-control);
+  backdrop-filter: blur(8px);
+}
+
+.campaign-rooted-shell .stage-list {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 90%);
+  box-shadow: var(--ui-shadow-panel);
+  backdrop-filter: blur(8px);
+}
+
+.campaign-rooted-shell .stage-list-entry {
+  border-right-color: var(--ui-divider);
+  border-bottom-color: var(--ui-divider);
+  color: var(--ui-text);
+  background: rgb(7 16 25 / 50%);
+}
+
+.campaign-rooted-shell .stage-list-entry:hover {
+  background: rgb(25 39 54 / 84%);
+}
+
+.campaign-rooted-shell .stage-list-entry.is-selected {
+  border-color: var(--ui-accent);
+  background: color-mix(in srgb, var(--ui-accent) 9%, rgb(25 39 54 / 88%));
+  box-shadow: inset 0 0 0 var(--ui-border-width) rgb(226 190 120 / 14%);
+}
+
+.campaign-rooted-shell .stage-list-entry:focus-visible,
+.campaign-rooted-shell .campaign-node:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+
+.campaign-rooted-shell .campaign-inspector {
+  border-color: var(--ui-border-subtle);
+  border-top-color: var(--ui-border-strong);
+  background: rgb(7 16 25 / 94%);
+  box-shadow: var(--ui-shadow-panel);
+  backdrop-filter: blur(8px);
+}
+
+.campaign-rooted-shell .campaign-inspector::before {
+  border-top-color: color-mix(in srgb, var(--ui-accent) 26%, transparent);
+  border-left-color: color-mix(in srgb, var(--ui-accent) 16%, transparent);
+}
+
+.campaign-rooted-shell .inspector-section {
+  border-top-color: var(--ui-divider);
+}
+
+.campaign-rooted-shell .entry-reason {
+  border-left-color: var(--ui-accent);
+  color: var(--ui-text-secondary);
+  background: rgb(25 39 54 / 70%);
+}
+
+.campaign-rooted-shell .campaign-enter.ui-primitive-button {
+  border-color: var(--ui-accent-strong);
+  color: var(--ui-on-accent);
+  background: linear-gradient(180deg, var(--ui-accent-strong), var(--ui-accent));
+  box-shadow: var(--ui-shadow-control);
+}
+
+.campaign-rooted-shell .campaign-enter.ui-primitive-button:hover:not(:disabled) {
+  border-color: var(--ui-text-heading);
+  background: linear-gradient(180deg, var(--ui-text-heading), var(--ui-accent-strong));
+  filter: none;
+}
+
+.campaign-rooted-shell .campaign-node {
+  border-color: var(--ui-border);
+  color: var(--ui-text);
+  background: rgb(7 16 25 / 88%);
+  box-shadow: var(--ui-shadow-control);
+}
+
+.campaign-rooted-shell .campaign-node.is-current {
+  border-color: var(--ui-border-strong);
+}
+
+.campaign-rooted-shell .campaign-node.is-selected {
+  border-color: var(--ui-accent);
+  box-shadow:
+    inset 0 0 0 var(--ui-border-width) rgb(226 190 120 / 16%),
+    var(--ui-shadow-control);
+}
+
+.campaign-rooted-shell .campaign-node.is-complete::after {
+  border-color: var(--ui-positive);
+  color: var(--ui-positive);
+}
+
+.campaign-rooted-shell .node-label {
+  border-color: var(--ui-border-subtle);
+  color: var(--ui-text);
+  background: rgb(7 16 25 / 96%);
+}
+
+@media (max-height: 499px) and (orientation: landscape) {
+  .saga-chapter-route.ui-primitive-panel,
+  .saga-current-mission.ui-primitive-panel,
+  .campaign-rooted-shell .campaign-inspector,
+  .campaign-rooted-shell .stage-list,
+  .campaign-rooted-shell .campaign-map-heading,
+  .campaign-rooted-shell .campaign-map-footer {
+    backdrop-filter: none;
+  }
+
+  .saga-chapter-node.ui-primitive-button {
+    min-height: var(--ui-target-min);
+    padding-block: var(--ui-space-2);
+  }
+
+  .saga-continue-button.ui-primitive-button {
+    min-height: var(--ui-target-min);
+  }
+
+  .campaign-rooted-shell .campaign-enter.ui-primitive-button {
+    min-height: var(--ui-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saga-route-step.is-current .saga-chapter-node.ui-primitive-button:hover:not(:disabled) {
+    transform: none;
+  }
+}
