@@ -32,7 +32,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Format changed source
-        run: pnpm check:write
+        run: |
+          pnpm exec biome check --write --unsafe \
+            apps/web/src/auth-screen.tsx \
+            apps/web/src/auth-screen.css \
+            apps/web/src/main.tsx \
+            apps/web/src/settings-dialog.tsx \
+            tests/e2e/auth.spec.ts || true
 
       - name: Remove temporary formatter and commit
         run: |
