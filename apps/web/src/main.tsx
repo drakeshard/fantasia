@@ -1,5 +1,19 @@
 import { render } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
+import { type AuthMessage, AuthScreen } from "./auth-screen.js";
+import {
+  clearPersistedAuthSession,
+  persistAuthSession,
+  restoreAccountSession,
+  type RestoredFantasiaAccount,
+} from "./backend/session.js";
+import {
+  bootstrapAccount,
+  isFantasiaBackendConfigured,
+  signInWithPassword,
+  signOut,
+  signUpWithPassword,
+} from "./backend/supabase.js";
 import { BattleApp } from "./battle.js";
 import { CampaignApp } from "./campaign.js";
 import { CharactersApp } from "./characters.js";
@@ -37,8 +51,10 @@ import "./game-controls.css";
 import "./characters.css";
 import "./talent.css";
 import "./navigation-placement.css";
+import "./auth-screen.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "characters" | "talent" | "story" | "battle";
+type AuthGateStatus = "bypassed" | "checking" | "guest" | "authenticated";
 
 function browserStorage(): Storage | undefined {
   try {
@@ -48,12 +64,21 @@ function browserStorage(): Storage | undefined {
   }
 }
 
+function queryDevMode(): string | null {
+  return new URLSearchParams(window.location.search).get("dev");
+}
+
 function initialScreen(): AppScreen {
-  return new URLSearchParams(window.location.search).get("dev") === "battle" ? "battle" : "home";
+  return queryDevMode() === "battle" ? "battle" : "home";
 }
 
 function isLandscapeViewport() {
   return window.innerWidth >= window.innerHeight;
+}
+
+function authErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message.trim()) return error.message;
+  return "Fantasia could not complete the account request. Please try again.";
 }
 
 function OrientationGate() {
@@ -73,6 +98,8 @@ function OrientationGate() {
 
 function App() {
   const initialPreferences = loadUiPreferences(browserStorage());
+  const backendConfigured = isFantasiaBackendConfigured();
+  const authPreview = queryDevMode() === "auth";
   const [screen, setScreen] = useState<AppScreen>(() => initialScreen());
   const [storyNodeId, setStoryNodeId] = useState<string>();
   const [preferences, setPreferences] = useState<UiPreferences>(initialPreferences.preferences);
@@ -81,6 +108,14 @@ function App() {
   );
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [landscape, setLandscape] = useState(() => isLandscapeViewport());
+  const [account, setAccount] = useState<RestoredFantasiaAccount | null>(null);
+  const [authStatus, setAuthStatus] = useState<AuthGateStatus>(() => {
+    if (authPreview) return "guest";
+    return backendConfigured ? "checking" : "bypassed";
+  });
+  const [authBusy, setAuthBusy] = useState(false);
+  const [authMessage, setAuthMessage] = useState<AuthMessage>();
+  const [signOutBusy, setSignOutBusy] = useState(false);
   const settingsTrigger = useRef<HTMLElement>();
 
   useEffect(() => {
@@ -96,6 +131,31 @@ function App() {
       window.removeEventListener("orientationchange", updateOrientation);
     };
   }, []);
+
+  useEffect(() => {
+    if (!backendConfigured || authPreview) return;
+    let active = true;
+
+    void restoreAccountSession()
+      .then((restored) => {
+        if (!active) return;
+        if (restored) {
+          setAccount(restored);
+          setAuthStatus("authenticated");
+          return;
+        }
+        setAuthStatus("guest");
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        setAuthMessage({ tone: "error", text: authErrorMessage(error) });
+        setAuthStatus("guest");
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [authPreview, backendConfigured]);
 
   function openSettings(trigger: HTMLElement) {
     settingsTrigger.current = trigger;
@@ -125,7 +185,115 @@ function App() {
     setStorageMessage(result.message ?? "Interface preferences are saved in this browser.");
   }
 
+  async function enterAuthenticatedSession(
+    session: RestoredFantasiaAccount["session"],
+    displayName?: string,
+  ) {
+    const profile = await bootstrapAccount(session.accessToken, displayName);
+    const remembered = persistAuthSession(session);
+    setAccount({ session, profile });
+    setAuthStatus("authenticated");
+    setAuthMessage(
+      remembered
+        ? undefined
+        : {
+            tone: "info",
+            text: "Signed in for this session, but this browser could not save the login for automatic restore.",
+          },
+    );
+  }
+
+  async function handleSignIn(email: string, password: string) {
+    setAuthBusy(true);
+    setAuthMessage(undefined);
+    try {
+      const session = await signInWithPassword(email, password);
+      await enterAuthenticatedSession(session);
+    } catch (error) {
+      setAuthMessage({ tone: "error", text: authErrorMessage(error) });
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+
+  async function handleCreateAccount(email: string, password: string, displayName?: string) {
+    setAuthBusy(true);
+    setAuthMessage(undefined);
+    try {
+      const result = await signUpWithPassword(email, password);
+      if (!result.session) {
+        setAuthMessage({
+          tone: "success",
+          text: "Account request accepted. Check your email for a confirmation link if confirmation is required, then return here and sign in.",
+        });
+        return;
+      }
+      await enterAuthenticatedSession(result.session, displayName);
+    } catch (error) {
+      setAuthMessage({ tone: "error", text: authErrorMessage(error) });
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+
+  async function handleSignOut() {
+    if (!account || signOutBusy) return;
+    setSignOutBusy(true);
+    let remoteRevocationConfirmed = true;
+    try {
+      await signOut(account.session.accessToken);
+    } catch {
+      remoteRevocationConfirmed = false;
+    } finally {
+      clearPersistedAuthSession();
+      setAccount(null);
+      setSettingsOpen(false);
+      setScreen("home");
+      setAuthStatus("guest");
+      setAuthMessage({
+        tone: remoteRevocationConfirmed ? "success" : "info",
+        text: remoteRevocationConfirmed
+          ? "Signed out successfully."
+          : "Signed out on this browser. Server session revocation could not be confirmed.",
+      });
+      setSignOutBusy(false);
+    }
+  }
+
+  if (authStatus === "checking") {
+    return (
+      <AuthScreen
+        backendConfigured={backendConfigured}
+        busy={false}
+        restoring
+        onSignIn={() => {}}
+        onCreateAccount={() => {}}
+      />
+    );
+  }
+
+  if (authStatus === "guest") {
+    return (
+      <AuthScreen
+        backendConfigured={backendConfigured}
+        busy={authBusy}
+        {...(authMessage === undefined ? {} : { message: authMessage })}
+        onSignIn={(email, password) => void handleSignIn(email, password)}
+        onCreateAccount={(email, password, displayName) =>
+          void handleCreateAccount(email, password, displayName)
+        }
+      />
+    );
+  }
+
   if (!landscape) return <OrientationGate />;
+
+  const accountSettings = account
+    ? {
+        displayName: account.profile.displayName,
+        ...(account.session.user.email === undefined ? {} : { email: account.session.user.email }),
+      }
+    : undefined;
 
   return (
     <>
@@ -223,6 +391,13 @@ function App() {
         open={settingsOpen}
         preferences={preferences}
         {...(storageMessage === undefined ? {} : { storageMessage })}
+        {...(accountSettings === undefined
+          ? {}
+          : {
+              account: accountSettings,
+              signOutBusy,
+              onSignOut: () => void handleSignOut(),
+            })}
         onChange={changePreferences}
         onReset={resetPreferences}
         onRetryStorage={retryPreferenceStorage}
