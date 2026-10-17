@@ -248,25 +248,29 @@ type InspectorProps = {
 };
 
 function WorkspaceInspector({ label, open, onOpenChange, children }: InspectorProps) {
-  const openerRef = useRef<HTMLButtonElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const openerContainerRef = useRef<HTMLDivElement>(null);
+  const closeContainerRef = useRef<HTMLDivElement>(null);
   const shouldRestoreFocusRef = useRef(false);
 
   useEffect(() => {
     if (open) {
-      queueMicrotask(() => closeRef.current?.focus());
+      queueMicrotask(() =>
+        closeContainerRef.current?.querySelector<HTMLButtonElement>("button")?.focus(),
+      );
       return;
     }
     if (shouldRestoreFocusRef.current) {
       shouldRestoreFocusRef.current = false;
-      queueMicrotask(() => openerRef.current?.focus());
+      queueMicrotask(() =>
+        openerContainerRef.current?.querySelector<HTMLButtonElement>("button")?.focus(),
+      );
     }
   }, [open]);
 
   if (!open) {
     return (
-      <div class="studio-template__inspector-toggle">
-        <Button ref={openerRef} variant="quiet" onClick={() => onOpenChange(true)}>
+      <div ref={openerContainerRef} class="studio-template__inspector-toggle">
+        <Button variant="quiet" onClick={() => onOpenChange(true)}>
           Show inspector
         </Button>
       </div>
@@ -275,10 +279,9 @@ function WorkspaceInspector({ label, open, onOpenChange, children }: InspectorPr
 
   return (
     <aside class="studio-template__inspector" aria-label={label} data-testid="workspace-inspector">
-      <div class="studio-template__inspector-heading">
+      <div ref={closeContainerRef} class="studio-template__inspector-heading">
         <strong>{label}</strong>
         <Button
-          ref={closeRef}
           variant="quiet"
           aria-label="Close inspector"
           onClick={() => {
