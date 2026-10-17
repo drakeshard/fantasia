@@ -37,6 +37,11 @@ jobs:
       - name: Require committed lockfile
         run: test -f pnpm-lock.yaml
 
+      - name: Diagnose generated lockfile delta
+        run: |
+          pnpm install --lockfile-only --no-frozen-lockfile
+          git diff -- pnpm-lock.yaml
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
