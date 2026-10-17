@@ -12,7 +12,7 @@ This directory contains Fantasia's repository-authoritative Supabase schema and 
 
 The repository remains authoritative for schema, migrations, game code, canonical game/content definitions, and the semantic runtime-asset manifest. Supabase stores runtime player/account state and serves published runtime binary assets.
 
-Do not move canonical characters, classes, skills, Talent definitions, equipment definitions, currency definitions, narrative, maps, encounters, combat rules, balance values, campaign titles, stage definitions, unlock rules, rewards, or semantic asset meaning into mutable database/Storage authority.
+Do not move canonical characters, classes, skills, Talent definitions, equipment definitions, currency definitions, summon definitions, narrative, maps, encounters, combat rules, balance values, campaign titles, stage definitions, unlock rules, rewards, or semantic asset meaning into mutable database/Storage authority.
 
 ## Current persisted slices
 
@@ -23,6 +23,8 @@ Do not move canonical characters, classes, skills, Talent definitions, equipment
 - `account_equipment_instances`, containing immutable account-owned equipment-instance identity: an instance UUID, schema version, Git-owned equipment-definition reference, and creation timestamp.
 - `account_currency_balances`, containing the current account balance and monotonic balance revision for each repository-owned currency-definition reference that has actually received a transaction.
 - `account_currency_ledger`, containing append-only revisioned currency deltas and resulting balances for each account currency.
+- `account_summon_state`, containing the current revisioned JSON state snapshot for each repository-owned summon-definition reference that has actually received a state transition.
+- `account_summon_history`, containing append-only revisioned summon state snapshots for each account summon definition.
 - Private trusted-command idempotency receipts containing normalized request/result snapshots only; these are infrastructure records, not canonical gameplay definitions.
 
 Campaign identifiers loaded from Supabase must be validated against the current repository-owned campaign definition before runtime restoration. Temporary campaign-map selection is presentation/session state and is not persisted as campaign progress.
@@ -46,6 +48,18 @@ GAME-BACKEND08 establishes only the title-local persistence and integrity bounda
 - The private primitive is not routed through the public `trusted-command` Edge Function. Actual gameplay earn/spend operations must be introduced later as narrow, validated, idempotent trusted commands once their title semantics are approved; do not expose a generic browser currency-adjust command.
 - Authenticated browser clients receive owner-scoped SELECT only on balances and ledger rows. They receive no direct currency INSERT, UPDATE, or DELETE path.
 - No shop, reward grant/claim, stage reward, Talent purchase, summon currency/rate/cost, stamina, premium currency, paid entitlement, mail/gift, item sale/salvage, or exchange semantics are introduced here.
+
+## Summon state and history
+
+GAME-BACKEND09 establishes only the title-local persistence envelope for a future account summon/acquisition system. It does not define the summon system itself and is separate from Fantasia's combat-summon battlefield mechanics.
+
+- Canonical summon-definition IDs and the meaning/schema of each definition's state object remain Git/controlled-design authority. Stored definition references must be validated against the caller-supplied repository catalog before runtime restoration.
+- `account_summon_state` stores one current JSON-object snapshot plus a positive JavaScript-safe revision for each account/summon definition that has actually transitioned. Missing rows mean no summon state exists; no starter state is seeded.
+- `account_summon_history` stores immutable application-level history snapshots with contiguous per-definition revisions. Runtime restoration canonicalizes JSON object keys, checks history begins at revision 1 without gaps, and requires the current projection to exactly match the latest history entry.
+- `private.advance_summon_state` is a low-level service-role-only `SECURITY INVOKER` database primitive. It serializes one account/summon-definition with a transaction-scoped advisory lock, advances a JavaScript-safe revision, updates the current snapshot, and appends the matching immutable history row in the same database transaction.
+- The private primitive is not routed through the public `trusted-command` Edge Function. A future real summon operation must be a narrow, validated, idempotent trusted command that transactionally owns any approved currency spend, deterministic RNG/rate evaluation, pity/guarantee changes, result generation, and roster/equipment/item grants.
+- Authenticated browser clients receive owner-scoped SELECT only on summon state and history. They receive no direct summon INSERT, UPDATE, or DELETE path.
+- No production banner/pool catalog, visible offer naming, rates, rarity odds, pity, guarantee, spark/exchange, featured-unit rules, reset schedules, shared-pity semantics, summon currency/cost, premium currency, payment/monetization, RNG execution, roll result, roster/equipment/item grant, duplicate conversion, shard reward, or player-facing summon UI is introduced here.
 
 ## Runtime asset delivery
 
@@ -88,4 +102,4 @@ GAME-BACKEND05 establishes the reusable boundary for future sensitive player-sta
 4. Verify RLS, grants, bucket visibility, Storage policies, and function security mode explicitly.
 5. Update controlled Fantasia Working Context when backend state materially changes.
 
-Account/profile, campaign, Talent persistence, Storage/semantic asset delivery, trusted-command infrastructure, roster unit-instance identity persistence, equipment-instance identity persistence, and currency balance/ledger persistence are complete through GAME-BACKEND08. Generic non-equipment inventory taxonomy and summon state remain separate follow-up slices.
+Account/profile, campaign, Talent persistence, Storage/semantic asset delivery, trusted-command infrastructure, roster unit-instance identity persistence, equipment-instance identity persistence, currency balance/ledger persistence, and summon state/history persistence are complete through GAME-BACKEND09. Generic non-equipment inventory taxonomy and concrete reward/acquisition/economy command semantics remain separate follow-up work until title rules are approved.
