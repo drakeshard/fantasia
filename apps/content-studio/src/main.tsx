@@ -70,9 +70,13 @@ function App() {
         <button class="foundation-action" type="button">
           Focus preview
         </button>
-        <div class="spacing-row" aria-label="Spacing scale samples">
+        <div class="spacing-row">
           {[4, 8, 12, 16, 24, 32, 48].map((space) => (
-            <span style={{ width: `var(--studio-space-${space})` }} title={`${space}px`} key={space} />
+            <span
+              style={{ width: `var(--studio-space-${space})` }}
+              title={`${space}px`}
+              key={space}
+            />
           ))}
         </div>
       </section>
