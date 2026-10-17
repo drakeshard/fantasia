@@ -50,8 +50,7 @@ export interface SummonPersistenceState {
   readonly history: readonly SummonHistoryEntry[];
 }
 
-const UUID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function assertPositiveSafeInteger(value: number, label: string): void {
   if (!Number.isSafeInteger(value) || value <= 0) {
@@ -190,9 +189,7 @@ export function createSummonPersistenceState(
   return { states: restoredStates, history: restoredHistory };
 }
 
-export function serializeSummonPersistenceState(
-  state: SummonPersistenceState,
-): Readonly<{
+export function serializeSummonPersistenceState(state: SummonPersistenceState): Readonly<{
   states: readonly SerializedSummonState[];
   history: readonly SerializedSummonHistoryEntry[];
 }> {
