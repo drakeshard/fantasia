@@ -18,10 +18,7 @@ if (foundationMigrationNames.length !== 1) {
   );
 }
 
-const foundationSql = await readFile(
-  path.join(migrationsDir, foundationMigrationNames[0]),
-  "utf8",
-);
+const foundationSql = await readFile(path.join(migrationsDir, foundationMigrationNames[0]), "utf8");
 const sql = (
   await Promise.all(
     studioMigrationNames.map((name) => readFile(path.join(migrationsDir, name), "utf8")),
@@ -103,11 +100,7 @@ const readinessDimensions = [
   "Published",
 ];
 for (const dimension of readinessDimensions) {
-  requireText(
-    `'${dimension}'`,
-    `Missing frozen readiness dimension: ${dimension}.`,
-    foundationSql,
-  );
+  requireText(`'${dimension}'`, `Missing frozen readiness dimension: ${dimension}.`, foundationSql);
 }
 
 requireText(
@@ -199,6 +192,4 @@ forbid(
   "Registry readiness must derive from validation evidence, not a ready boolean.",
 );
 
-console.log(
-  `Studio registry contract check passed (${studioMigrationNames.join(", ")}).`,
-);
+console.log(`Studio registry contract check passed (${studioMigrationNames.join(", ")}).`);
