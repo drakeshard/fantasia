@@ -44,7 +44,8 @@ export interface EconomyState {
   readonly ledger: readonly CurrencyLedgerEntry[];
 }
 
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function assertSafeNonNegativeInteger(value: number, label: string): void {
   if (!Number.isSafeInteger(value) || value < 0) {
@@ -60,7 +61,9 @@ function assertPositiveSafeInteger(value: number, label: string): void {
 
 export function currencyDefinitionId(value: string): CurrencyDefinitionId {
   if (value.length === 0 || value.length > 128 || value !== value.trim()) {
-    throw new Error("Currency definition ID must be a trimmed non-empty string up to 128 characters.");
+    throw new Error(
+      "Currency definition ID must be a trimmed non-empty string up to 128 characters.",
+    );
   }
   return value as CurrencyDefinitionId;
 }
@@ -124,7 +127,9 @@ export function createEconomyState(
       };
     })
     .sort((left, right) => {
-      const definitionOrder = left.currencyDefinitionId.localeCompare(right.currencyDefinitionId);
+      const definitionOrder = left.currencyDefinitionId.localeCompare(
+        right.currencyDefinitionId,
+      );
       if (definitionOrder !== 0) return definitionOrder;
       return left.balanceRevision - right.balanceRevision;
     });
@@ -133,10 +138,11 @@ export function createEconomyState(
     const previous = lastByCurrency.get(entry.currencyDefinitionId);
     const expectedRevision = previous ? previous.balanceRevision + 1 : 1;
     const previousBalance = previous?.balanceAfter ?? 0;
+    const expectedBalance = previousBalance + entry.delta;
     if (entry.balanceRevision !== expectedRevision) {
       throw new Error("Currency ledger balance revisions must be contiguous from revision 1.");
     }
-    if (previousBalance + entry.delta !== entry.balanceAfter) {
+    if (!Number.isSafeInteger(expectedBalance) || expectedBalance !== entry.balanceAfter) {
       throw new Error("Currency ledger arithmetic does not match its balance-after value.");
     }
     lastByCurrency.set(entry.currencyDefinitionId, entry);
@@ -150,7 +156,11 @@ export function createEconomyState(
   }
   for (const [definitionId, latest] of lastByCurrency) {
     const balance = balancesByCurrency.get(definitionId);
-    if (!balance || balance.balance !== latest.balanceAfter || balance.revision !== latest.balanceRevision) {
+    if (
+      !balance ||
+      balance.balance !== latest.balanceAfter ||
+      balance.revision !== latest.balanceRevision
+    ) {
       throw new Error("Currency balance does not match the latest ledger entry.");
     }
   }
@@ -172,7 +182,9 @@ export function serializeEconomyState(state: EconomyState): Readonly<{
       })),
     ledger: [...state.ledger]
       .sort((left, right) => {
-        const definitionOrder = left.currencyDefinitionId.localeCompare(right.currencyDefinitionId);
+        const definitionOrder = left.currencyDefinitionId.localeCompare(
+          right.currencyDefinitionId,
+        );
         if (definitionOrder !== 0) return definitionOrder;
         return left.balanceRevision - right.balanceRevision;
       })
