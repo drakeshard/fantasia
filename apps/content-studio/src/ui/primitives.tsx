@@ -54,7 +54,15 @@ type FieldBaseProps = {
   disabled?: boolean;
 };
 
-function FieldMessage({ id, hint, error }: { id: string; hint?: string; error?: string }) {
+function FieldMessage({
+  id,
+  hint,
+  error,
+}: {
+  id: string;
+  hint?: string | undefined;
+  error?: string | undefined;
+}) {
   if (error) {
     return (
       <span class="ui-field__message ui-field__message--error" id={`${id}-error`}>
