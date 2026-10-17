@@ -43,18 +43,15 @@ function TalentGraphNode({ node }: { readonly node: TalentNodeView }) {
   return (
     <div class="talent-graph-step">
       {requirements.length > 0 ? (
-        <div
-          class="talent-graph-prerequisites"
-          role="group"
-          aria-label={`Prerequisites for ${node.name}`}
-        >
+        <fieldset class="talent-graph-prerequisites">
+          <legend class="talent-visually-hidden">Prerequisites for {node.name}</legend>
           <span class="talent-graph-connector" aria-hidden="true" />
           {requirements.map((requirement) => (
             <span class="talent-requirement" key={prerequisiteLabel(requirement)}>
               {prerequisiteLabel(requirement)}
             </span>
           ))}
-        </div>
+        </fieldset>
       ) : null}
       <article class={nodeClass(node)} data-talent-node={node.nodeId}>
         <div class="talent-node-topline">
@@ -139,7 +136,10 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
           {familyId === "class" && lancer ? (
             <>
               <div class="talent-tree-heading">
-                <UiTitleLockup eyebrow="Class Talent · controlled scaffold" title={lancer.className} />
+                <UiTitleLockup
+                  eyebrow="Class Talent · controlled scaffold"
+                  title={lancer.className}
+                />
                 <div class="talent-tree-meta">
                   <UiBadge>{lancer.nodeCount} nodes shown</UiBadge>
                   <UiBadge>{lancer.totalRankCapacity} rank capacity</UiBadge>
@@ -159,11 +159,8 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                 </span>
               </UiPanel>
 
-              <div
-                class="talent-doctrine-grid talent-graph"
-                role="group"
-                aria-label="Lancer Talent graph"
-              >
+              <fieldset class="talent-doctrine-grid talent-graph">
+                <legend class="talent-visually-hidden">Lancer Talent graph</legend>
                 {lancer.doctrines.map((doctrine) => (
                   <section class="talent-doctrine" key={doctrine.name}>
                     <header>
@@ -177,7 +174,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                     </div>
                   </section>
                 ))}
-              </div>
+              </fieldset>
             </>
           ) : (
             <div class="talent-empty-family">
