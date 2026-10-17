@@ -17,7 +17,7 @@ test("account access preview exposes truthful sign-in and account creation state
       { exact: true },
     ),
   ).toBeVisible();
-  await expect(page.getByText(/social login/i)).toBeVisible();
+  await expect(page.getByText(/social login/i)).toHaveCount(1);
   await expect(page.getByRole("button", { name: /google/i })).toHaveCount(0);
 
   await page.getByRole("button", { name: "Create account", exact: true }).first().click();
