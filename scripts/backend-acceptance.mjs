@@ -57,10 +57,7 @@ function createClient(config, fetchImpl = fetch) {
     const body = await response.json();
     assert(typeof body.access_token === "string", "Sign-in response is missing access_token");
     assert(typeof body.refresh_token === "string", "Sign-in response is missing refresh_token");
-    assert(
-      typeof body.user?.id === "string",
-      "Sign-in response is missing the authenticated user",
-    );
+    assert(typeof body.user?.id === "string", "Sign-in response is missing the authenticated user");
     return {
       accessToken: body.access_token,
       refreshToken: body.refresh_token,
@@ -178,10 +175,7 @@ function parseTrustedCommand(value) {
     "Invalid trusted-command response",
   );
   assertEqual(value.command, TRUSTED_COMMAND, "Trusted-command type mismatch");
-  assert(
-    typeof value.idempotencyKey === "string",
-    "Trusted command is missing idempotencyKey",
-  );
+  assert(typeof value.idempotencyKey === "string", "Trusted command is missing idempotencyKey");
   assert(typeof value.replayed === "boolean", "Trusted command is missing replayed");
   const result = value.result;
   assert(
@@ -189,10 +183,7 @@ function parseTrustedCommand(value) {
     "Trusted command is missing result",
   );
   assert(typeof result.accountId === "string", "Trusted command result is missing accountId");
-  assert(
-    typeof result.displayName === "string",
-    "Trusted command result is missing displayName",
-  );
+  assert(typeof result.displayName === "string", "Trusted command result is missing displayName");
   assert(Number.isSafeInteger(result.revision), "Trusted command result has invalid revision");
   assert(typeof result.createdAt === "string", "Trusted command result is missing createdAt");
   assert(typeof result.updatedAt === "string", "Trusted command result is missing updatedAt");
