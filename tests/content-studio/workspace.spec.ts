@@ -36,9 +36,20 @@ test("shell exposes exactly the frozen top-level modules without fake routing", 
   await expect(page).toHaveURL(/\/$/);
 });
 
-test("sidebar collapse preserves usable navigation and selection", async ({ page }) => {
+test("sidebar collapse preserves usable navigation and narrow layouts keep mobile navigation", async ({
+  page,
+}) => {
   const shell = page.getByTestId("studio-shell");
   const collapse = shell.getByRole("button", { name: "Collapse navigation" });
+  const viewportWidth = page.viewportSize()?.width ?? 0;
+
+  if (viewportWidth <= 768) {
+    await expect(collapse).toBeHidden();
+    await expect(shell.getByRole("button", { name: "Characters" })).toBeVisible();
+    await expect(shell.getByRole("button", { name: "Releases" })).toBeVisible();
+    return;
+  }
+
   await collapse.click();
   await expect(shell).toHaveClass(/studio-shell--collapsed/);
   await expect(shell.getByRole("button", { name: "Characters" })).toBeVisible();
