@@ -92,7 +92,7 @@ export function AuthScreen({
               <fieldset class="auth-mode-switch">
                 <legend>Account access mode</legend>
                 <UiButton
-                  class={!createMode ? "is-active" : undefined}
+                  class={!createMode ? "is-active" : ""}
                   tone="quiet"
                   selected={!createMode}
                   onClick={() => setMode("sign-in")}
@@ -101,7 +101,7 @@ export function AuthScreen({
                   Sign in
                 </UiButton>
                 <UiButton
-                  class={createMode ? "is-active" : undefined}
+                  class={createMode ? "is-active" : ""}
                   tone="quiet"
                   selected={createMode}
                   onClick={() => setMode("create-account")}
