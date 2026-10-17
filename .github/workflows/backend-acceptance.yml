@@ -1,0 +1,42 @@
+name: Backend Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-acceptance
+  cancel-in-progress: false
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      FANTASIA_ACCEPTANCE_EMAIL: ${{ secrets.FANTASIA_ACCEPTANCE_EMAIL }}
+      FANTASIA_ACCEPTANCE_PASSWORD: ${{ secrets.FANTASIA_ACCEPTANCE_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+
+      - name: Validate acceptance configuration
+        run: |
+          test -n "$VITE_SUPABASE_URL" || { echo "Missing VITE_SUPABASE_URL repository variable"; exit 1; }
+          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "Missing VITE_SUPABASE_PUBLISHABLE_KEY repository variable"; exit 1; }
+          test -n "$FANTASIA_ACCEPTANCE_EMAIL" || { echo "Missing FANTASIA_ACCEPTANCE_EMAIL repository secret"; exit 1; }
+          test -n "$FANTASIA_ACCEPTANCE_PASSWORD" || { echo "Missing FANTASIA_ACCEPTANCE_PASSWORD repository secret"; exit 1; }
+
+      - name: Deterministic runner self-test
+        run: node scripts/backend-acceptance.mjs --self-test
+
+      - name: Hosted Fantasia backend acceptance
+        run: node scripts/backend-acceptance.mjs
