@@ -335,6 +335,25 @@
     margin-top: var(--ui-space-3);
   }
 
+  .home-current-story {
+    grid-template-columns: 54px minmax(0, 1fr) 128px;
+  }
+
+  .home-current-story-continue.ui-primitive-button {
+    min-width: 128px;
+    padding-inline: 10px;
+  }
+
+  .home-current-story-continue .ui-primitive-button-content {
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .home-current-story-continue .home-action-chevron {
+    width: 16px;
+    height: 16px;
+  }
+
   .home-feature-card.ui-primitive-panel,
   .home-current-story.ui-primitive-panel {
     backdrop-filter: none;
