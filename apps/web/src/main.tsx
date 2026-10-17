@@ -266,8 +266,8 @@ function App() {
         backendConfigured={backendConfigured}
         busy={false}
         restoring
-        onSignIn={() => {}}
-        onCreateAccount={() => {}}
+        onSignIn={() => undefined}
+        onCreateAccount={() => undefined}
       />
     );
   }
