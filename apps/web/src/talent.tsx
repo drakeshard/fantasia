@@ -43,15 +43,17 @@ function TalentGraphNode({ node }: { readonly node: TalentNodeView }) {
   return (
     <div class="talent-graph-step">
       {requirements.length > 0 ? (
-        <fieldset class="talent-graph-prerequisites">
-          <legend class="talent-visually-hidden">Prerequisites for {node.name}</legend>
+        <section
+          class="talent-graph-prerequisites"
+          aria-label={`Prerequisites for ${node.name}`}
+        >
           <span class="talent-graph-connector" aria-hidden="true" />
           {requirements.map((requirement) => (
             <span class="talent-requirement" key={prerequisiteLabel(requirement)}>
               {prerequisiteLabel(requirement)}
             </span>
           ))}
-        </fieldset>
+        </section>
       ) : null}
       <article class={nodeClass(node)} data-talent-node={node.nodeId}>
         <div class="talent-node-topline">
@@ -159,8 +161,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                 </span>
               </UiPanel>
 
-              <fieldset class="talent-doctrine-grid talent-graph">
-                <legend class="talent-visually-hidden">Lancer Talent graph</legend>
+              <section class="talent-doctrine-grid talent-graph" aria-label="Lancer Talent graph">
                 {lancer.doctrines.map((doctrine) => (
                   <section class="talent-doctrine" key={doctrine.name}>
                     <header>
@@ -174,7 +175,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                     </div>
                   </section>
                 ))}
-              </fieldset>
+              </section>
             </>
           ) : (
             <div class="talent-empty-family">
