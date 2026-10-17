@@ -249,13 +249,34 @@
   },
   "deployment": {
     "initial": [
-      { "id": "mc", "side": "allied", "label": "MC", "cell": { "x": 3, "y": 7 }, "storyConstraint": "normal Attack disabled" },
+      {
+        "id": "mc",
+        "side": "allied",
+        "label": "MC",
+        "cell": { "x": 3, "y": 7 },
+        "storyConstraint": "normal Attack disabled"
+      },
       { "id": "julie", "side": "allied", "label": "Julie", "cell": { "x": 6, "y": 5 } },
       { "id": "local-escort-a", "side": "allied", "label": "Escort A", "cell": { "x": 5, "y": 7 } },
       { "id": "local-escort-b", "side": "allied", "label": "Escort B", "cell": { "x": 4, "y": 4 } },
-      { "id": "civilian-a", "side": "protected", "label": "Civilian A", "cell": { "x": 2, "y": 5 } },
-      { "id": "civilian-b", "side": "protected", "label": "Civilian B", "cell": { "x": 2, "y": 7 } },
-      { "id": "civilian-c", "side": "protected", "label": "Civilian C", "cell": { "x": 4, "y": 8 } },
+      {
+        "id": "civilian-a",
+        "side": "protected",
+        "label": "Civilian A",
+        "cell": { "x": 2, "y": 5 }
+      },
+      {
+        "id": "civilian-b",
+        "side": "protected",
+        "label": "Civilian B",
+        "cell": { "x": 2, "y": 7 }
+      },
+      {
+        "id": "civilian-c",
+        "side": "protected",
+        "label": "Civilian C",
+        "cell": { "x": 4, "y": 8 }
+      },
       { "id": "forager-a", "side": "enemy", "label": "Forager A", "cell": { "x": 7, "y": 4 } },
       { "id": "forager-b", "side": "enemy", "label": "Forager B", "cell": { "x": 8, "y": 5 } },
       { "id": "forager-c", "side": "enemy", "label": "Forager C", "cell": { "x": 7, "y": 8 } },
