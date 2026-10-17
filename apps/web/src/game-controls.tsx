@@ -57,8 +57,8 @@ export function GameButton({
       {...buttonProps}
       class={classes}
       tone={tone === "primary" ? "primary" : tone === "utility" ? "quiet" : "neutral"}
-      busy={busy}
-      selected={selected}
+      {...(busy === undefined ? {} : { busy })}
+      {...(selected === undefined ? {} : { selected })}
     >
       {icon ? <GameControlIconView icon={icon} /> : null}
       <span class="game-control-label">{children}</span>
