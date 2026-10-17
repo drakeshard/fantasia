@@ -1,6 +1,7 @@
 import storyContent from "virtual:fantasia-story-content";
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { GameButton, GameUtilityCluster } from "./game-controls.js";
+import { UiBadge, UiPanel, UiTitleLockup } from "./ui/primitives.js";
 import "./story.css";
 
 type PlaybackEvent = Readonly<{
@@ -44,13 +45,15 @@ export function StoryApp({
   if (!playback) {
     return (
       <main class="story-screen story-unavailable" aria-label="Story playback">
-        <section class="story-unavailable-card">
-          <p class="hud-eyebrow">Story unavailable</p>
-          <h1>This story stage is not approved for production playback.</h1>
+        <UiPanel class="story-unavailable-card" tone="overlay" ariaLabel="Story unavailable">
+          <UiTitleLockup
+            eyebrow="Story unavailable"
+            title="This story stage is not approved for production playback."
+          />
           <GameButton icon="back" onClick={onReturnCampaign}>
             Return to Chapter
           </GameButton>
-        </section>
+        </UiPanel>
       </main>
     );
   }
@@ -66,21 +69,27 @@ export function StoryApp({
         <GameButton icon="back" compactLabel="Back" aria-label="Back" onClick={onReturnCampaign}>
           Back to Chapter
         </GameButton>
-        <div class="story-title-block">
-          <span>{playback.chapterTitle}</span>
-          <h1>{playback.nodeTitle}</h1>
-        </div>
+        <UiTitleLockup
+          class="story-title-block"
+          eyebrow={playback.chapterTitle}
+          title={playback.nodeTitle}
+          align="center"
+        />
         <GameUtilityCluster onHome={onHome} onSettings={onSettings} />
       </header>
 
       <section class="story-stage" aria-label={`${playback.nodeTitle} scene`}>
         <div class="story-stage-ornament" aria-hidden="true" />
         <div class="story-scene-context">
-          {playback.location ? <span>{playback.location}</span> : null}
-          {playback.time ? <span>{playback.time}</span> : null}
+          {playback.location ? <UiBadge>{playback.location}</UiBadge> : null}
+          {playback.time ? <UiBadge>{playback.time}</UiBadge> : null}
         </div>
 
-        <section class={`story-caption story-event-${event.type}`} aria-live="polite">
+        <UiPanel
+          class={`story-caption story-event-${event.type}`}
+          tone="overlay"
+          ariaLabel="Current story line"
+        >
           {speaker ? <p class="story-speaker">{speaker}</p> : <p class="story-speaker">Scene</p>}
           <p class="story-line">{event.text}</p>
           <div
@@ -95,7 +104,7 @@ export function StoryApp({
             <span aria-hidden="true">/</span>
             <span>{String(playback.events.length).padStart(2, "0")}</span>
           </div>
-        </section>
+        </UiPanel>
       </section>
 
       <nav class="story-controls" aria-label="Story controls">
