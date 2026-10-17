@@ -1,0 +1,48 @@
+/* GAME-UI24E5 visual-review corrections. */
+
+/* Reserve the status-strip utility slot so Battle Menu and global Settings
+ * never occupy the same pixels. */
+.battle-screen .battle-statusbar {
+  padding-right: 122px;
+}
+
+/* Beat later generic launcher placement without changing the global rule. */
+.battle-screen ~ .global-settings-launcher.battle {
+  top: 17px;
+  right: 18px;
+}
+
+@media (max-height: 499px) and (min-width: 600px) {
+  .battle-screen .battle-statusbar {
+    padding-right: 112px;
+  }
+
+  .battle-screen ~ .global-settings-launcher.battle {
+    top: 9px;
+    right: 16px;
+  }
+
+  .battle-screen .active-unit-card .budget-grid {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+
+  .battle-screen .active-unit-card .budget-grid > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .battle-screen .active-unit-card .budget-grid dt,
+  .battle-screen .active-unit-card .budget-grid dd {
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .battle-screen .active-unit-card .budget-grid dd {
+    text-align: right;
+  }
+}
