@@ -2,6 +2,7 @@ import { CampaignSession } from "@fantasia/runtime";
 import { useMemo } from "preact/hooks";
 import { GameUtilityCluster } from "./game-controls.js";
 import { runtimeAssetUrl } from "./runtime-assets.js";
+import { UiBadge, UiButton, UiPanel } from "./ui/primitives.js";
 
 interface HomeAppProps {
   readonly onContinue: () => void;
@@ -50,10 +51,10 @@ export function HomeApp({
           </span>
         </div>
         <div class="home-lobby-hud-end">
-          <div class="home-lobby-status">
+          <UiBadge class="home-lobby-status" tone="neutral">
             <span class="home-status-dot" aria-hidden="true" />
             <span>Story campaign</span>
-          </div>
+          </UiBadge>
           <GameUtilityCluster onSettings={onSettings} />
         </div>
       </header>
@@ -65,7 +66,7 @@ export function HomeApp({
             <strong>{view.sagaTitle}</strong>
           </div>
 
-          <section class="home-current-story" aria-label="Continue current story">
+          <UiPanel class="home-current-story" tone="overlay" ariaLabel="Continue current story">
             <div class="home-current-story-mark" aria-hidden="true">
               <HomeIcon assetId="ui.icon.campaign" />
               <span>{view.sagaSequence}</span>
@@ -81,20 +82,20 @@ export function HomeApp({
               </p>
               {currentStage ? <small>Current stage · {currentStage.title}</small> : null}
             </div>
-            <button
-              type="button"
+            <UiButton
               class="home-current-story-continue"
+              tone="primary"
               aria-label="Continue current story"
               onClick={onContinue}
             >
               <span>Continue</span>
               <HomeIcon assetId="ui.icon.chevron-right" className="home-action-chevron" />
-            </button>
-          </section>
+            </UiButton>
+          </UiPanel>
         </section>
 
         <aside class="home-feature-rail" aria-label="Home highlights">
-          <section class="home-feature-card home-feature-current">
+          <UiPanel class="home-feature-card home-feature-current" tone="overlay">
             <span class="home-feature-kicker">Current Saga</span>
             <div class="home-feature-emblem" aria-hidden="true">
               <HomeIcon assetId="ui.icon.campaign" />
@@ -104,21 +105,27 @@ export function HomeApp({
             <p>{view.selectedChapterTitle}</p>
             {currentStage ? <small>{currentStage.title}</small> : null}
             <div class="home-feature-rule" aria-hidden="true" />
-            <span class="home-feature-state">Campaign ready</span>
-          </section>
+            <UiBadge class="home-feature-state" tone="positive">
+              Campaign ready
+            </UiBadge>
+          </UiPanel>
 
-          <section class="home-feature-card home-feature-locked" aria-label="Summon unavailable">
+          <UiPanel
+            class="home-feature-card home-feature-locked"
+            tone="overlay"
+            ariaLabel="Summon unavailable"
+          >
             <span class="home-feature-kicker">Summon</span>
             <div class="home-feature-emblem summon" aria-hidden="true">
               <HomeIcon assetId="ui.icon.summon" />
             </div>
             <h2>Summon</h2>
             <p>Character summoning is not available in this production slice.</p>
-            <span class="home-feature-state unavailable">
+            <UiBadge class="home-feature-state unavailable" tone="neutral">
               <HomeIcon assetId="ui.icon.lock" />
               <span>Unavailable</span>
-            </span>
-          </section>
+            </UiBadge>
+          </UiPanel>
         </aside>
       </div>
 
@@ -127,28 +134,33 @@ export function HomeApp({
           <HomeIcon assetId="ui.icon.home" />
           <strong>Home</strong>
         </span>
-        <button type="button" class="home-dock-item" aria-label="Campaign" onClick={onCampaign}>
+        <UiButton class="home-dock-item" tone="quiet" aria-label="Campaign" onClick={onCampaign}>
           <HomeIcon assetId="ui.icon.campaign" />
           <strong>Campaign</strong>
-        </button>
-        <button type="button" class="home-dock-item" aria-label="Characters" onClick={onCharacters}>
+        </UiButton>
+        <UiButton
+          class="home-dock-item"
+          tone="quiet"
+          aria-label="Characters"
+          onClick={onCharacters}
+        >
           <HomeIcon assetId="ui.icon.characters" />
           <strong>Characters</strong>
-        </button>
-        <button type="button" class="home-dock-item" aria-label="Talent" onClick={onTalent}>
+        </UiButton>
+        <UiButton class="home-dock-item" tone="quiet" aria-label="Talent" onClick={onTalent}>
           <HomeIcon assetId="ui.icon.talent" />
           <strong>Talent</strong>
-        </button>
-        <button
-          type="button"
+        </UiButton>
+        <UiButton
           class="home-dock-item"
+          tone="quiet"
           aria-label="Summon"
           disabled
           title="Summon is not implemented yet"
         >
           <HomeIcon assetId="ui.icon.summon" />
           <strong>Summon</strong>
-        </button>
+        </UiButton>
       </nav>
     </main>
   );
