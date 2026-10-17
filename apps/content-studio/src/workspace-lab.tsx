@@ -61,8 +61,8 @@ function WorkspaceLab() {
         <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00D</p>
         <h2 id="workspace-lab-title">Shared shell and workspace templates</h2>
         <p>
-          Development-only fixtures for the shared Studio frame, templates, responsive behavior,
-          and accessibility contracts. No production routes or trusted mutations exist here.
+          Development-only fixtures for the shared Studio frame, templates, responsive behavior, and
+          accessibility contracts. No production routes or trusted mutations exist here.
         </p>
       </header>
 
