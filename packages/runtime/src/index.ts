@@ -18,6 +18,14 @@ export {
   type DevelopmentBattleView,
 } from "./development-battle.js";
 export {
+  type EconomyRestoreResult,
+  type EconomySnapshot,
+  FANTASIA_ECONOMY_SCHEMA_VERSION,
+  type PersistedCurrencyBalanceRow,
+  type PersistedCurrencyLedgerRow,
+  restoreEconomyState,
+} from "./economy-progress.js";
+export {
   type EncounterRuntimeEvent,
   type EncounterRuntimeInput,
   EncounterRuntimeRunner,
