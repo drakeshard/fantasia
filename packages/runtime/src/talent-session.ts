@@ -3,6 +3,8 @@ import {
   type TalentNodeDefinition,
   type TalentNodeEffect,
   type TalentNodeStatus,
+  type TalentPrerequisite,
+  type TalentPrerequisiteGroup,
   type TalentTreeDefinition,
 } from "@fantasia/game";
 
@@ -16,6 +18,27 @@ export interface TalentFamilyView {
   readonly treeCount: number;
 }
 
+export type TalentPrerequisiteView =
+  | Readonly<{
+      kind: "node-rank";
+      nodeId: string;
+      rank: number;
+    }>
+  | Readonly<{
+      kind: "total-tree-ranks";
+      ranks: number;
+    }>
+  | Readonly<{
+      kind: "doctrine-ranks";
+      doctrine: string;
+      ranks: number;
+    }>;
+
+export interface TalentPrerequisiteGroupView {
+  readonly mode: "all" | "any";
+  readonly requirements: readonly TalentPrerequisiteView[];
+}
+
 export interface TalentNodeView {
   readonly nodeId: string;
   readonly name: string;
@@ -25,6 +48,7 @@ export interface TalentNodeView {
   readonly statusLabel: string;
   readonly ranks: number;
   readonly rewardLabel: string;
+  readonly prerequisiteGroups: readonly TalentPrerequisiteGroupView[];
   readonly layoutBand?: string;
   readonly notes?: string;
 }
@@ -98,6 +122,28 @@ function formatReward(effect: TalentNodeEffect): string {
   return `${effect.valuePerRank} ${reward} / rank`;
 }
 
+function prerequisiteView(requirement: TalentPrerequisite): TalentPrerequisiteView {
+  switch (requirement.kind) {
+    case "node-rank":
+      return { kind: "node-rank", nodeId: requirement.nodeId, rank: requirement.rank };
+    case "total-tree-ranks":
+      return { kind: "total-tree-ranks", ranks: requirement.ranks };
+    case "doctrine-ranks":
+      return {
+        kind: "doctrine-ranks",
+        doctrine: requirement.doctrine,
+        ranks: requirement.ranks,
+      };
+  }
+}
+
+function prerequisiteGroupView(group: TalentPrerequisiteGroup): TalentPrerequisiteGroupView {
+  return {
+    mode: group.mode,
+    requirements: group.requirements.map(prerequisiteView),
+  };
+}
+
 function nodeView(node: TalentNodeDefinition): TalentNodeView {
   const rewards = node.effects.map(formatReward).join(" · ");
   const rewardLabel =
@@ -115,6 +161,7 @@ function nodeView(node: TalentNodeDefinition): TalentNodeView {
     statusLabel: statusLabel(node.status),
     ranks: node.ranks,
     rewardLabel,
+    prerequisiteGroups: (node.prerequisites ?? []).map(prerequisiteGroupView),
     ...(node.layoutBand === undefined ? {} : { layoutBand: node.layoutBand }),
     ...(node.notes === undefined ? {} : { notes: node.notes }),
   };
