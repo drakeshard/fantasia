@@ -43,7 +43,11 @@ function TalentGraphNode({ node }: { readonly node: TalentNodeView }) {
   return (
     <div class="talent-graph-step">
       {requirements.length > 0 ? (
-        <div class="talent-graph-prerequisites" aria-label={`Prerequisites for ${node.name}`}>
+        <div
+          class="talent-graph-prerequisites"
+          role="group"
+          aria-label={`Prerequisites for ${node.name}`}
+        >
           <span class="talent-graph-connector" aria-hidden="true" />
           {requirements.map((requirement) => (
             <span class="talent-requirement" key={prerequisiteLabel(requirement)}>
@@ -155,7 +159,11 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                 </span>
               </UiPanel>
 
-              <div class="talent-doctrine-grid talent-graph" aria-label="Lancer Talent graph">
+              <div
+                class="talent-doctrine-grid talent-graph"
+                role="group"
+                aria-label="Lancer Talent graph"
+              >
                 {lancer.doctrines.map((doctrine) => (
                   <section class="talent-doctrine" key={doctrine.name}>
                     <header>
