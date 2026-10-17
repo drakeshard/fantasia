@@ -1,0 +1,242 @@
+$ playwright test
+[WebServer] $ [WebServer] vite preview --host 127.0.0.1 --port 4173
+
+Running 51 tests using 1 worker
+
+  ✘   1 [chromium-desktop] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states (5.4s)
+  ✘   2 [chromium-desktop] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states (retry #1) (5.4s)
+  ✓   3 [chromium-desktop] › tests/e2e/auth.spec.ts:39:1 › account access remains usable in portrait before the gameplay landscape gate (325ms)
+  ✓   4 [chromium-desktop] › tests/e2e/battle-keyboard.spec.ts:8:1 › battle supports logical-cell keyboard navigation without pointer input (2.2s)
+  ✓   5 [chromium-desktop] › tests/e2e/bootstrap.spec.ts:47:1 › home, saga, chapter and approved story navigation preserve truthful execution (801ms)
+  ✓   6 [chromium-desktop] › tests/e2e/bootstrap.spec.ts:112:1 › standardized Fantasia Battle HUD remains reachable through development query (3.2s)
+  ✓   7 [chromium-desktop] › tests/e2e/bootstrap.spec.ts:169:1 › home, campaign, story and battle primary actions remain reachable at 200 percent interface text (867ms)
+  ✓   8 [chromium-desktop] › tests/e2e/campaign-camera.spec.ts:13:1 › campaign camera keeps stage markers screen-sized and restores context through Saga Back (797ms)
+  ✓   9 [chromium-desktop] › tests/e2e/campaign-camera.spec.ts:57:1 › dragging the campaign map does not activate a stage while a click still selects (871ms)
+  ✓  10 [chromium-desktop] › tests/e2e/campaign-camera.spec.ts:87:1 › wheel and pinch zoom are map-scoped and bounded (1.2s)
+  ✓  11 [chromium-desktop] › tests/e2e/characters.spec.ts:3:1 › Characters exposes only production-safe protagonist facts and returns Home (675ms)
+  ✓  12 [chromium-desktop] › tests/e2e/navigation-placement.spec.ts:30:1 › global Home and Settings utilities stay predictable across player screens (1.2s)
+  ✓  13 [chromium-desktop] › tests/e2e/navigation-placement.spec.ts:72:1 › battle Settings uses the same top-right utility zone without inventing a Home exit (692ms)
+  ✓  14 [chromium-desktop] › tests/e2e/orientation.spec.ts:3:1 › portrait view is gated behind the landscape-required screen (218ms)
+  ✓  15 [chromium-desktop] › tests/e2e/settings.spec.ts:4:1 › D08 settings persist UI preferences and restore modal focus (950ms)
+  ✓  16 [chromium-desktop] › tests/e2e/settings.spec.ts:31:1 › D08 recovers truthfully from malformed stored preferences (576ms)
+  ✓  17 [chromium-desktop] › tests/e2e/settings.spec.ts:47:1 › D08 settings remain reachable from the development battle sandbox (961ms)
+  ✓  18 [chromium-desktop] › tests/e2e/talent.spec.ts:3:1 › Talent menu exposes controlled account-wide progression without inventing economy (766ms)
+  ✘  19 [chromium-mobile] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states (5.3s)
+  ✘  20 [chromium-mobile] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states (retry #1) (5.4s)
+  ✓  21 [chromium-mobile] › tests/e2e/auth.spec.ts:39:1 › account access remains usable in portrait before the gameplay landscape gate (311ms)
+  -  22 [chromium-mobile] › tests/e2e/battle-keyboard.spec.ts:8:1 › battle supports logical-cell keyboard navigation without pointer input
+  ✓  23 [chromium-mobile] › tests/e2e/bootstrap.spec.ts:47:1 › home, saga, chapter and approved story navigation preserve truthful execution (659ms)
+  ✓  24 [chromium-mobile] › tests/e2e/bootstrap.spec.ts:112:1 › standardized Fantasia Battle HUD remains reachable through development query (5.1s)
+  -  25 [chromium-mobile] › tests/e2e/bootstrap.spec.ts:169:1 › home, campaign, story and battle primary actions remain reachable at 200 percent interface text
+  ✓  26 [chromium-mobile] › tests/e2e/campaign-camera.spec.ts:13:1 › campaign camera keeps stage markers screen-sized and restores context through Saga Back (620ms)
+  -  27 [chromium-mobile] › tests/e2e/campaign-camera.spec.ts:57:1 › dragging the campaign map does not activate a stage while a click still selects
+  -  28 [chromium-mobile] › tests/e2e/campaign-camera.spec.ts:87:1 › wheel and pinch zoom are map-scoped and bounded
+  ✓  29 [chromium-mobile] › tests/e2e/characters.spec.ts:3:1 › Characters exposes only production-safe protagonist facts and returns Home (412ms)
+  ✓  30 [chromium-mobile] › tests/e2e/navigation-placement.spec.ts:30:1 › global Home and Settings utilities stay predictable across player screens (637ms)
+  ✓  31 [chromium-mobile] › tests/e2e/navigation-placement.spec.ts:72:1 › battle Settings uses the same top-right utility zone without inventing a Home exit (572ms)
+  -  32 [chromium-mobile] › tests/e2e/orientation.spec.ts:3:1 › portrait view is gated behind the landscape-required screen
+  ✓  33 [chromium-mobile] › tests/e2e/settings.spec.ts:4:1 › D08 settings persist UI preferences and restore modal focus (537ms)
+  ✓  34 [chromium-mobile] › tests/e2e/settings.spec.ts:31:1 › D08 recovers truthfully from malformed stored preferences (295ms)
+  ✓  35 [chromium-mobile] › tests/e2e/settings.spec.ts:47:1 › D08 settings remain reachable from the development battle sandbox (830ms)
+  ✓  36 [chromium-mobile] › tests/e2e/talent.spec.ts:3:1 › Talent menu exposes controlled account-wide progression without inventing economy (506ms)
+  ✘  37 [chromium-short-touch] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states (5.3s)
+  ✘  38 [chromium-short-touch] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states (retry #1) (5.4s)
+  ✓  39 [chromium-short-touch] › tests/e2e/auth.spec.ts:39:1 › account access remains usable in portrait before the gameplay landscape gate (317ms)
+  -  40 [chromium-short-touch] › tests/e2e/battle-keyboard.spec.ts:8:1 › battle supports logical-cell keyboard navigation without pointer input
+  ✓  41 [chromium-short-touch] › tests/e2e/bootstrap.spec.ts:47:1 › home, saga, chapter and approved story navigation preserve truthful execution (717ms)
+  ✓  42 [chromium-short-touch] › tests/e2e/bootstrap.spec.ts:112:1 › standardized Fantasia Battle HUD remains reachable through development query (2.3s)
+  -  43 [chromium-short-touch] › tests/e2e/bootstrap.spec.ts:169:1 › home, campaign, story and battle primary actions remain reachable at 200 percent interface text
+  ✓  44 [chromium-short-touch] › tests/e2e/campaign-camera.spec.ts:13:1 › campaign camera keeps stage markers screen-sized and restores context through Saga Back (646ms)
+  -  45 [chromium-short-touch] › tests/e2e/campaign-camera.spec.ts:57:1 › dragging the campaign map does not activate a stage while a click still selects
+  -  46 [chromium-short-touch] › tests/e2e/campaign-camera.spec.ts:87:1 › wheel and pinch zoom are map-scoped and bounded
+  ✓  47 [chromium-short-touch] › tests/e2e/characters.spec.ts:3:1 › Characters exposes only production-safe protagonist facts and returns Home (377ms)
+  ✓  48 [chromium-short-touch] › tests/e2e/navigation-placement.spec.ts:30:1 › global Home and Settings utilities stay predictable across player screens (692ms)
+  ✓  49 [chromium-short-touch] › tests/e2e/navigation-placement.spec.ts:72:1 › battle Settings uses the same top-right utility zone without inventing a Home exit (427ms)
+  -  50 [chromium-short-touch] › tests/e2e/orientation.spec.ts:3:1 › portrait view is gated behind the landscape-required screen
+  ✓  51 [chromium-short-touch] › tests/e2e/settings.spec.ts:4:1 › D08 settings persist UI preferences and restore modal focus (596ms)
+  ✓  52 [chromium-short-touch] › tests/e2e/settings.spec.ts:31:1 › D08 recovers truthfully from malformed stored preferences (293ms)
+  ✓  53 [chromium-short-touch] › tests/e2e/settings.spec.ts:47:1 › D08 settings remain reachable from the development battle sandbox (507ms)
+  ✓  54 [chromium-short-touch] › tests/e2e/talent.spec.ts:3:1 › Talent menu exposes controlled account-wide progression without inventing economy (471ms)
+
+
+  1) [chromium-desktop] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByLabel('Password', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByLabel('Password', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Password', { exact: true })
+
+
+      10 |   await expect(page.getByRole("heading", { name: "Welcome back", exact: true })).toBeVisible();
+      11 |   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+    > 12 |   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
+         |                                                              ^
+      13 |   await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
+      14 |   await expect(
+      15 |     page.getByText(
+        at /home/runner/work/fantasia/fantasia/tests/e2e/auth.spec.ts:12:62
+
+    Error Context: test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-desktop/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByLabel('Password', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByLabel('Password', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Password', { exact: true })
+
+
+      10 |   await expect(page.getByRole("heading", { name: "Welcome back", exact: true })).toBeVisible();
+      11 |   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+    > 12 |   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
+         |                                                              ^
+      13 |   await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
+      14 |   await expect(
+      15 |     page.getByText(
+        at /home/runner/work/fantasia/fantasia/tests/e2e/auth.spec.ts:12:62
+
+    Error Context: test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-desktop-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-desktop-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-desktop-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium-mobile] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByLabel('Password', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByLabel('Password', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Password', { exact: true })
+
+
+      10 |   await expect(page.getByRole("heading", { name: "Welcome back", exact: true })).toBeVisible();
+      11 |   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+    > 12 |   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
+         |                                                              ^
+      13 |   await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
+      14 |   await expect(
+      15 |     page.getByText(
+        at /home/runner/work/fantasia/fantasia/tests/e2e/auth.spec.ts:12:62
+
+    Error Context: test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-mobile/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByLabel('Password', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByLabel('Password', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Password', { exact: true })
+
+
+      10 |   await expect(page.getByRole("heading", { name: "Welcome back", exact: true })).toBeVisible();
+      11 |   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+    > 12 |   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
+         |                                                              ^
+      13 |   await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
+      14 |   await expect(
+      15 |     page.getByText(
+        at /home/runner/work/fantasia/fantasia/tests/e2e/auth.spec.ts:12:62
+
+    Error Context: test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-mobile-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-mobile-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-mobile-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium-short-touch] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByLabel('Password', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByLabel('Password', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Password', { exact: true })
+
+
+      10 |   await expect(page.getByRole("heading", { name: "Welcome back", exact: true })).toBeVisible();
+      11 |   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+    > 12 |   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
+         |                                                              ^
+      13 |   await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
+      14 |   await expect(
+      15 |     page.getByText(
+        at /home/runner/work/fantasia/fantasia/tests/e2e/auth.spec.ts:12:62
+
+    Error Context: test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-short-touch/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByLabel('Password', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByLabel('Password', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Password', { exact: true })
+
+
+      10 |   await expect(page.getByRole("heading", { name: "Welcome back", exact: true })).toBeVisible();
+      11 |   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
+    > 12 |   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
+         |                                                              ^
+      13 |   await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
+      14 |   await expect(
+      15 |     page.getByText(
+        at /home/runner/work/fantasia/fantasia/tests/e2e/auth.spec.ts:12:62
+
+    Error Context: test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-short-touch-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-short-touch-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/auth-account-access-previe-97601-and-account-creation-states-chromium-short-touch-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium-desktop] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states 
+    [chromium-mobile] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states 
+    [chromium-short-touch] › tests/e2e/auth.spec.ts:3:1 › account access preview exposes truthful sign-in and account creation states 
+  10 skipped
+  38 passed (1.2m)
+[ELIFECYCLE] Command failed with exit code 1.
