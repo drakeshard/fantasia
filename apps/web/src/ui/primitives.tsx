@@ -73,8 +73,8 @@ export function UiIconButton({
       {...buttonProps}
       class={`ui-primitive-icon-button${className ? ` ${className}` : ""}`}
       tone={tone}
-      busy={busy}
-      selected={selected}
+      {...(busy === undefined ? {} : { busy })}
+      {...(selected === undefined ? {} : { selected })}
       aria-label={label}
     >
       <span class="ui-primitive-icon-slot" aria-hidden="true">
@@ -139,7 +139,7 @@ export function UiTitleLockup({
 
 export function UiDivider({ label }: { readonly label?: string }) {
   return (
-    <div class="ui-divider" role={label ? "separator" : undefined} aria-label={label}>
+    <div class="ui-divider" {...(label ? { role: "separator", "aria-label": label } : {})}>
       <span aria-hidden="true" />
       {label ? <strong>{label}</strong> : null}
       <span aria-hidden="true" />
