@@ -139,13 +139,14 @@ export function AuthScreen({
                   />
                 </label>
 
-                <label class="auth-field">
-                  <span>Password</span>
+                <div class="auth-field">
+                  <span id="auth-password-label">Password</span>
                   <div class="auth-password-field">
                     <input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       autocomplete={createMode ? "new-password" : "current-password"}
+                      aria-labelledby="auth-password-label"
                       placeholder="Enter your password"
                       required
                       onInput={(event) => setPassword(event.currentTarget.value)}
@@ -161,7 +162,7 @@ export function AuthScreen({
                       {showPassword ? "Hide" : "Show"}
                     </button>
                   </div>
-                </label>
+                </div>
 
                 {message ? (
                   <div
