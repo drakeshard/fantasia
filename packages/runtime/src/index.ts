@@ -110,6 +110,8 @@ export {
   TalentMenuSession,
   type TalentMenuView,
   type TalentNodeView,
+  type TalentPrerequisiteGroupView,
+  type TalentPrerequisiteView,
 } from "./talent-session.js";
 
 export const runtimeStatus = (): string =>
