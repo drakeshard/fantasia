@@ -1,0 +1,8 @@
+{
+  "name": "drakeshard-fantasia-content-studio",
+  "compatibility_date": "2026-10-17",
+  "assets": {
+    "directory": "./apps/content-studio/dist",
+    "not_found_handling": "single-page-application"
+  }
+}
