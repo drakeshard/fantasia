@@ -14,7 +14,12 @@
   background:
     radial-gradient(circle at 46% 40%, rgb(46 76 98 / 20%), transparent 33%),
     radial-gradient(circle at 82% 24%, rgb(226 190 120 / 5%), transparent 23%),
-    linear-gradient(118deg, var(--ui-canvas-deep) 0 17%, var(--ui-canvas) 44%, var(--ui-canvas-deep));
+    linear-gradient(
+      118deg,
+      var(--ui-canvas-deep) 0 17%,
+      var(--ui-canvas) 44%,
+      var(--ui-canvas-deep)
+    );
 }
 
 .saga-war-table::after {
@@ -96,16 +101,14 @@
   border-color: var(--ui-accent);
   border-left-color: var(--ui-accent-strong);
   background:
-    radial-gradient(circle at 8% 50%, rgb(226 190 120 / 9%), transparent 28%),
-    rgb(25 39 54 / 88%);
+    radial-gradient(circle at 8% 50%, rgb(226 190 120 / 9%), transparent 28%), rgb(25 39 54 / 88%);
   box-shadow: var(--ui-highlight-inset), var(--ui-shadow-control);
 }
 
 .saga-route-step.is-current .saga-chapter-node.ui-primitive-button:hover:not(:disabled) {
   border-color: var(--ui-accent-strong);
   background:
-    radial-gradient(circle at 8% 50%, rgb(226 190 120 / 12%), transparent 30%),
-    rgb(36 55 73 / 92%);
+    radial-gradient(circle at 8% 50%, rgb(226 190 120 / 12%), transparent 30%), rgb(36 55 73 / 92%);
   transform: translateX(2px);
 }
 
