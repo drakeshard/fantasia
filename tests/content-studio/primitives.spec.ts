@@ -75,7 +75,9 @@ test("invalid form control exposes its error relationship", async ({ page }) => 
   await expect(page.locator(`#${describedBy}`)).toHaveText("This reference is unavailable.");
 });
 
-test("compact and desktop layouts preserve minimum targets and avoid document overflow", async ({ page }) => {
+test("compact and desktop layouts preserve minimum targets and avoid document overflow", async ({
+  page,
+}) => {
   const metrics = await page.evaluate(() => {
     const buttons = Array.from(document.querySelectorAll<HTMLElement>(".ui-button")).filter(
       (element) => element.offsetParent !== null,
