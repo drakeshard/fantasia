@@ -4,6 +4,7 @@ import {
   type InterfaceTextScale,
   type UiPreferences,
 } from "./preferences.js";
+import { UiButton, UiPanel, UiTitleLockup } from "./ui/primitives.js";
 
 interface SettingsAccount {
   readonly displayName: string | null;
@@ -43,11 +44,10 @@ export function SettingsDialog({
   onClose,
 }: SettingsDialogProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    closeRef.current?.focus();
+    dialogRef.current?.querySelector<HTMLElement>("[data-settings-close]")?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -95,33 +95,32 @@ export function SettingsDialog({
         class="settings-dialog"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="settings-dialog-title"
+        aria-label="Settings"
       >
         <header class="settings-dialog-header">
-          <div>
-            <p class="hud-eyebrow">Interface preferences</p>
-            <h2 id="settings-dialog-title">Settings</h2>
-          </div>
-          <button ref={closeRef} type="button" class="ui-button secondary" onClick={onClose}>
+          <UiTitleLockup
+            class="settings-title-lockup"
+            eyebrow="Interface preferences"
+            title="Settings"
+            detail="Adjust how Fantasia presents information on this device."
+          />
+          <UiButton data-settings-close tone="quiet" onClick={onClose}>
             Close
-          </button>
+          </UiButton>
         </header>
 
         <div class="settings-dialog-body">
           {account && onSignOut ? (
-            <section class="settings-recovery settings-account" aria-label="Account">
-              <strong>Account</strong>
-              <p>{accountLabel}</p>
-              {account.displayName && account.email ? <small>{account.email}</small> : null}
-              <button
-                type="button"
-                class="ui-button secondary"
-                onClick={onSignOut}
-                disabled={signOutBusy}
-              >
+            <UiPanel class="settings-recovery settings-account" tone="raised" ariaLabel="Account">
+              <div class="settings-panel-copy">
+                <strong>Account</strong>
+                <p>{accountLabel}</p>
+                {account.displayName && account.email ? <small>{account.email}</small> : null}
+              </div>
+              <UiButton tone="neutral" busy={signOutBusy} onClick={onSignOut}>
                 {signOutBusy ? "Signing out…" : "Sign out"}
-              </button>
-            </section>
+              </UiButton>
+            </UiPanel>
           ) : null}
 
           <label class="settings-row" for="interface-text-scale">
@@ -175,23 +174,25 @@ export function SettingsDialog({
           </label>
 
           {storageMessage ? (
-            <section class="settings-recovery" aria-live="polite">
-              <strong>Preference storage</strong>
-              <p>{storageMessage}</p>
-              <button type="button" class="ui-button secondary" onClick={onRetryStorage}>
+            <UiPanel class="settings-recovery" tone="overlay" ariaLabel="Preference storage">
+              <div class="settings-panel-copy">
+                <strong>Preference storage</strong>
+                <p>{storageMessage}</p>
+              </div>
+              <UiButton tone="neutral" onClick={onRetryStorage}>
                 Retry storage
-              </button>
-            </section>
+              </UiButton>
+            </UiPanel>
           ) : null}
         </div>
 
         <footer class="settings-dialog-footer">
-          <button type="button" class="ui-button secondary" onClick={onReset}>
+          <UiButton tone="quiet" onClick={onReset}>
             Reset to defaults
-          </button>
-          <button type="button" class="ui-button primary" onClick={onClose}>
+          </UiButton>
+          <UiButton tone="primary" onClick={onClose}>
             Done
-          </button>
+          </UiButton>
         </footer>
       </div>
     </div>
