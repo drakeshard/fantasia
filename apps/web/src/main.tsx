@@ -54,6 +54,7 @@ import "./characters.css";
 import "./talent.css";
 import "./navigation-placement.css";
 import "./auth-screen.css";
+import "./ui24e1-auth-home.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "characters" | "talent" | "story" | "battle";
 type AuthGateStatus = "bypassed" | "checking" | "guest" | "authenticated";

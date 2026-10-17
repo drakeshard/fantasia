@@ -1,0 +1,367 @@
+/* GAME-UI24E1 — focused production normalization for Auth + Home.
+ * Loaded after historical screen CSS so the frozen UI24A-D system wins without
+ * destabilizing unrelated player-facing screens during the controlled migration.
+ */
+
+/* Auth: cinematic art remains dominant; the account surface is the only dense panel. */
+.auth-screen {
+  --auth-gold: var(--ui-accent);
+  --auth-ivory: var(--ui-text);
+  --auth-muted: var(--ui-text-secondary);
+  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.55fr);
+}
+
+.auth-screen::after {
+  border-color: color-mix(in srgb, var(--ui-border-subtle) 72%, transparent);
+}
+
+.auth-screen-art {
+  background:
+    linear-gradient(
+      90deg,
+      rgb(3 8 13 / 18%) 0%,
+      rgb(3 8 13 / 8%) 42%,
+      rgb(3 8 13 / 50%) 70%,
+      rgb(3 8 13 / 92%) 100%
+    ),
+    linear-gradient(180deg, rgb(3 8 13 / 5%), rgb(3 8 13 / 60%)),
+    url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center / cover no-repeat;
+}
+
+.auth-brand-panel {
+  padding: clamp(var(--ui-space-6), 5vw, 76px);
+}
+
+.auth-brand-story {
+  width: min(600px, 78%);
+  padding: var(--ui-space-4) var(--ui-space-5);
+  border-left-color: var(--ui-accent);
+  background: linear-gradient(90deg, rgb(7 16 25 / 68%), transparent 92%);
+}
+
+.auth-brand-story p {
+  color: var(--ui-text-secondary);
+}
+
+.auth-panel-frame.ui-primitive-panel {
+  width: min(100%, 500px);
+  padding: clamp(var(--ui-space-5), 3vw, var(--ui-space-6));
+  border-color: var(--ui-border-subtle);
+  border-top-color: var(--ui-border-strong);
+  background: rgb(7 16 25 / 94%);
+  box-shadow: var(--ui-shadow-panel);
+  backdrop-filter: blur(10px);
+}
+
+.auth-panel-frame.ui-primitive-panel::before {
+  inset: var(--ui-space-2);
+  border-top-color: color-mix(in srgb, var(--ui-accent) 18%, transparent);
+  border-left-color: transparent;
+}
+
+.auth-mode-switch {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 62%);
+}
+
+.auth-mode-switch .ui-primitive-button {
+  min-height: var(--ui-control-height);
+  border: 0;
+  border-bottom: var(--ui-border-width-emphasis) solid transparent;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--ui-text-tertiary);
+  background: transparent;
+}
+
+.auth-mode-switch .ui-primitive-button::after {
+  display: none;
+}
+
+.auth-mode-switch .ui-primitive-button + .ui-primitive-button {
+  border-left: var(--ui-border-width) solid var(--ui-border-subtle);
+}
+
+.auth-mode-switch .ui-primitive-button.is-active,
+.auth-mode-switch .ui-primitive-button.is-selected {
+  border-bottom-color: var(--ui-accent);
+  color: var(--ui-text);
+  background: color-mix(in srgb, var(--ui-accent) 8%, transparent);
+}
+
+.auth-field > span {
+  color: var(--ui-text);
+}
+
+.auth-field > span small,
+.auth-panel-footer .auth-panel-footnote {
+  color: var(--ui-text-tertiary);
+}
+
+.auth-field input {
+  min-height: var(--ui-control-height);
+  border-color: var(--ui-border-subtle);
+  color: var(--ui-text);
+  background: rgb(7 16 25 / 82%);
+}
+
+.auth-field input:hover:not(:disabled) {
+  border-color: var(--ui-border);
+}
+
+.auth-field input:focus {
+  border-color: var(--ui-border-strong);
+}
+
+.auth-password-field .auth-password-toggle.ui-primitive-button {
+  min-width: 68px;
+  min-height: var(--ui-control-height);
+  border-color: var(--ui-border-subtle);
+  border-left-color: var(--ui-border-subtle);
+  color: var(--ui-accent);
+  background: rgb(7 16 25 / 94%);
+  box-shadow: none;
+}
+
+.auth-password-field .auth-password-toggle.ui-primitive-button::after,
+.auth-submit.ui-primitive-button::after,
+.auth-resend.ui-primitive-button::after {
+  display: none;
+}
+
+.auth-message {
+  border-color: color-mix(in srgb, var(--ui-info) 32%, transparent);
+  color: var(--ui-text-secondary);
+  background: color-mix(in srgb, var(--ui-info) 9%, transparent);
+}
+
+.auth-message.error {
+  border-color: color-mix(in srgb, var(--ui-danger) 42%, transparent);
+  color: var(--ui-danger);
+  background: color-mix(in srgb, var(--ui-danger) 9%, transparent);
+}
+
+.auth-message.success {
+  border-color: color-mix(in srgb, var(--ui-positive) 42%, transparent);
+  color: var(--ui-positive);
+  background: color-mix(in srgb, var(--ui-positive) 9%, transparent);
+}
+
+.auth-submit.ui-primitive-button {
+  width: 100%;
+  margin-top: var(--ui-space-1);
+}
+
+.auth-resend.ui-primitive-button {
+  width: 100%;
+  color: var(--ui-text-secondary);
+}
+
+.auth-panel-footer {
+  border-top-color: var(--ui-divider);
+}
+
+.auth-panel-footer p {
+  color: var(--ui-text-secondary);
+}
+
+.auth-restoring-mark {
+  border-color: color-mix(in srgb, var(--ui-accent) 24%, transparent);
+  border-top-color: var(--ui-accent);
+}
+
+/* Home: preserve the cinematic field and reduce legacy ornamental competition. */
+.home-lobby {
+  --home-detail-gold-bright: var(--ui-accent-strong);
+  --home-detail-gold-deep: var(--ui-accent);
+  --home-detail-line: color-mix(in srgb, var(--ui-accent) 30%, transparent);
+  --home-detail-line-soft: color-mix(in srgb, var(--ui-accent) 14%, transparent);
+}
+
+.home-lobby::after {
+  border-color: var(--ui-border-subtle);
+  box-shadow: inset 0 0 48px rgb(0 0 0 / 10%);
+}
+
+.home-lobby-hud {
+  border-bottom-color: var(--ui-border-subtle);
+  background: linear-gradient(180deg, rgb(7 16 25 / 90%), rgb(7 16 25 / 54%));
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.home-lobby-hud::after,
+.home-lobby .home-wordmark-copy::after,
+.home-current-story::after,
+.home-feature-card::before {
+  display: none;
+}
+
+.home-lobby-status.ui-badge {
+  min-height: 32px;
+  padding-inline: var(--ui-space-3);
+  border-color: var(--ui-border-subtle);
+  color: var(--ui-text-secondary);
+  background: rgb(7 16 25 / 72%);
+  box-shadow: none;
+}
+
+.home-stage-label {
+  border-left-color: var(--ui-accent);
+}
+
+.home-stage-label::after {
+  opacity: 0.38;
+}
+
+.home-current-story.ui-primitive-panel {
+  border-color: var(--ui-border);
+  border-left: var(--ui-border-width-emphasis) solid var(--ui-accent);
+  background: linear-gradient(105deg, rgb(7 16 25 / 95%), rgb(7 16 25 / 80%));
+  box-shadow: var(--ui-shadow-panel);
+  backdrop-filter: blur(8px);
+}
+
+.home-current-story.ui-primitive-panel::before {
+  inset: var(--ui-space-2);
+  border-top-color: color-mix(in srgb, var(--ui-accent) 14%, transparent);
+  border-left-color: transparent;
+}
+
+.home-current-story::before {
+  width: 32px;
+  height: 32px;
+  background-size: 32px 32px;
+  opacity: 0.26;
+}
+
+.home-current-story-mark,
+.home-feature-emblem {
+  border: var(--ui-border-width) solid var(--ui-border-subtle);
+  background: rgb(7 16 25 / 72%);
+  box-shadow: none;
+}
+
+.home-current-story-mark::before,
+.home-feature-emblem::before {
+  opacity: 0.42;
+}
+
+.home-current-story-continue.ui-primitive-button {
+  border-color: var(--ui-accent-strong);
+  color: var(--ui-on-accent);
+  background: linear-gradient(180deg, var(--ui-accent-strong), var(--ui-accent));
+  box-shadow: var(--ui-shadow-control);
+}
+
+.home-current-story-continue.ui-primitive-button::before {
+  display: none;
+}
+
+.home-current-story-continue.ui-primitive-button:hover:not(:disabled) {
+  border-color: var(--ui-text-heading);
+  background: linear-gradient(180deg, var(--ui-text-heading), var(--ui-accent-strong));
+  filter: none;
+}
+
+.home-feature-card.ui-primitive-panel {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 82%);
+  box-shadow: var(--ui-shadow-panel);
+  backdrop-filter: blur(8px);
+}
+
+.home-feature-card.ui-primitive-panel::before {
+  inset: var(--ui-space-2);
+  border-top-color: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+  border-left-color: transparent;
+}
+
+.home-feature-rule {
+  opacity: 0.55;
+}
+
+.home-feature-state.ui-badge {
+  width: fit-content;
+  min-height: 28px;
+  padding-inline: var(--ui-space-3);
+  box-shadow: none;
+}
+
+.home-feature-locked {
+  opacity: var(--ui-opacity-disabled-soft);
+}
+
+.home-game-dock .ui-primitive-button-content {
+  display: contents;
+}
+
+.home-game-dock .home-dock-item.ui-primitive-button {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.home-game-dock .home-dock-item.ui-primitive-button::after {
+  display: none;
+}
+
+.home-game-dock .home-dock-item.ui-primitive-button:hover:not(:disabled) {
+  border-color: var(--ui-border-subtle);
+  background: color-mix(in srgb, var(--ui-surface) 76%, transparent);
+  box-shadow: none;
+}
+
+.home-game-dock .home-dock-item.ui-primitive-button:disabled {
+  border-color: transparent;
+  background: transparent;
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .auth-brand-panel {
+    padding: var(--ui-space-5) var(--ui-space-6);
+  }
+
+  .auth-panel-frame.ui-primitive-panel {
+    padding: var(--ui-space-4) var(--ui-space-5);
+  }
+
+  .auth-mode-switch {
+    margin-top: var(--ui-space-3);
+  }
+
+  .auth-form {
+    gap: var(--ui-space-2);
+    margin-top: var(--ui-space-3);
+  }
+
+  .home-current-story {
+    grid-template-columns: 54px minmax(0, 1fr) 128px;
+  }
+
+  .home-current-story-continue.ui-primitive-button {
+    min-width: 128px;
+    padding-inline: 10px;
+  }
+
+  .home-current-story-continue .ui-primitive-button-content {
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .home-current-story-continue .home-action-chevron {
+    width: 16px;
+    height: 16px;
+  }
+
+  .home-feature-card.ui-primitive-panel,
+  .home-current-story.ui-primitive-panel {
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-current-story-continue.ui-primitive-button:hover:not(:disabled) {
+    transform: none;
+  }
+}

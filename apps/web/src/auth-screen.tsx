@@ -1,5 +1,6 @@
 import type { JSX } from "preact";
 import { useState } from "preact/hooks";
+import { UiButton, UiPanel } from "./ui/primitives.js";
 
 // Auth presentation stays title-local; credential/session authority remains in the backend modules.
 export interface AuthMessage {
@@ -68,7 +69,7 @@ export function AuthScreen({
       </section>
 
       <section class="auth-panel" aria-live="polite">
-        <div class="auth-panel-frame">
+        <UiPanel class="auth-panel-frame" tone="overlay" ariaLabel="Account access">
           {restoring ? (
             <div class="auth-restoring" role="status">
               <span class="auth-restoring-mark" aria-hidden="true" />
@@ -90,24 +91,24 @@ export function AuthScreen({
 
               <fieldset class="auth-mode-switch">
                 <legend>Account access mode</legend>
-                <button
-                  type="button"
-                  class={createMode ? "" : "is-active"}
-                  aria-pressed={!createMode}
+                <UiButton
+                  class={!createMode ? "is-active" : ""}
+                  tone="quiet"
+                  selected={!createMode}
                   onClick={() => setMode("sign-in")}
                   disabled={busy}
                 >
                   Sign in
-                </button>
-                <button
-                  type="button"
+                </UiButton>
+                <UiButton
                   class={createMode ? "is-active" : ""}
-                  aria-pressed={createMode}
+                  tone="quiet"
+                  selected={createMode}
                   onClick={() => setMode("create-account")}
                   disabled={busy}
                 >
                   Create account
-                </button>
+                </UiButton>
               </fieldset>
 
               <form class="auth-form" onSubmit={submit}>
@@ -155,15 +156,15 @@ export function AuthScreen({
                       onInput={(event) => setPassword(event.currentTarget.value)}
                       disabled={busy}
                     />
-                    <button
-                      type="button"
+                    <UiButton
                       class="auth-password-toggle"
+                      tone="quiet"
                       onClick={() => setShowPassword((current) => !current)}
                       disabled={busy}
                       aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? "Hide" : "Show"}
-                    </button>
+                    </UiButton>
                   </div>
                 </div>
 
@@ -183,17 +184,23 @@ export function AuthScreen({
                   </div>
                 ) : null}
 
-                <button class="auth-submit" type="submit" disabled={busy || !backendConfigured}>
+                <UiButton
+                  class="auth-submit"
+                  tone="primary"
+                  type="submit"
+                  busy={busy}
+                  disabled={!backendConfigured}
+                >
                   {busy ? "Connecting…" : createMode ? "Create account" : "Enter Fantasia"}
-                </button>
-                <button
+                </UiButton>
+                <UiButton
                   class="auth-resend"
-                  type="button"
+                  tone="quiet"
                   disabled={!canResend}
                   onClick={() => onResendConfirmation(email.trim())}
                 >
                   Resend confirmation email
-                </button>
+                </UiButton>
               </form>
 
               <footer class="auth-panel-footer">
@@ -204,7 +211,7 @@ export function AuthScreen({
               </footer>
             </>
           )}
-        </div>
+        </UiPanel>
       </section>
     </main>
   );

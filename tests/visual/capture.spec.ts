@@ -81,6 +81,17 @@ async function captureGeometry(
   await writeFile(path.join(directory, filename), `${JSON.stringify(geometry, null, 2)}\n`);
 }
 
+async function captureAuthGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "auth-geometry.json", [
+    ".auth-screen",
+    ".auth-brand-panel",
+    ".auth-panel",
+    ".auth-panel-frame",
+    ".auth-mode-switch",
+    ".auth-form",
+  ]);
+}
+
 async function captureHomeGeometry(page: Page, testInfo: TestInfo) {
   await captureGeometry(page, testInfo, "home-geometry.json", [
     ".home-screen",
@@ -165,17 +176,26 @@ async function captureBattleGeometry(page: Page, testInfo: TestInfo) {
 }
 
 test("capture controlled player-facing UI for review", async ({ page }, testInfo) => {
-  await page.goto("/");
   const viewport = page.viewportSize();
   const portrait = Boolean(viewport && viewport.height > viewport.width);
 
   if (portrait) {
+    await page.goto("/");
     await expect(page.getByRole("main", { name: "Landscape orientation required" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Rotate your device" })).toBeVisible();
     await captureViewport(page, testInfo, "orientation-gate");
     return;
   }
 
+  await page.goto("/?dev=auth");
+  await expect(page.getByRole("main", { name: "Fantasia account access" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /google/i })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /forgot password/i })).toHaveCount(0);
+  await captureViewport(page, testInfo, "auth");
+  await captureAuthGeometry(page, testInfo);
+
+  await page.goto("/");
   await expect(page.getByRole("main", { name: "Fantasia home" })).toBeVisible();
   await captureViewport(page, testInfo, "home");
   await captureHomeGeometry(page, testInfo);
