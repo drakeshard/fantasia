@@ -15,6 +15,12 @@ export interface FantasiaSignUpResult {
   session: FantasiaAuthSession | null;
 }
 
+export interface FantasiaAuthRedirectResult {
+  handled: boolean;
+  session: FantasiaAuthSession | null;
+  error?: string;
+}
+
 export interface FantasiaAccountProfile {
   accountId: string;
   displayName: string | null;
@@ -46,6 +52,14 @@ interface RawAccountProfile {
   revision?: unknown;
   created_at?: unknown;
   updated_at?: unknown;
+}
+
+interface ParsedAuthRedirect {
+  handled: boolean;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresAt?: number;
+  error?: string;
 }
 
 export class FantasiaBackendError extends Error {
@@ -136,16 +150,113 @@ function parseSession(raw: RawAuthResponse): FantasiaAuthSession | null {
   };
 }
 
+function firstAuthParam(url: URL, name: string): string | null {
+  const searchValue = url.searchParams.get(name);
+  if (searchValue) return searchValue;
+  const hash = new URLSearchParams(url.hash.startsWith("#") ? url.hash.slice(1) : url.hash);
+  return hash.get(name);
+}
+
+export function parseFantasiaAuthRedirect(rawUrl: string): ParsedAuthRedirect {
+  let url: URL;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    return { handled: false };
+  }
+
+  const error = firstAuthParam(url, "error_description") ?? firstAuthParam(url, "error");
+  const errorCode = firstAuthParam(url, "error_code");
+  if (error || errorCode) {
+    return {
+      handled: true,
+      error: error?.trim() || "The confirmation link could not be completed.",
+    };
+  }
+
+  const accessToken = firstAuthParam(url, "access_token");
+  const refreshToken = firstAuthParam(url, "refresh_token");
+  if (!accessToken && !refreshToken) return { handled: false };
+  if (!accessToken || !refreshToken) {
+    return { handled: true, error: "The confirmation link returned an incomplete session." };
+  }
+
+  const expiresAtValue = Number(firstAuthParam(url, "expires_at"));
+  const expiresInValue = Number(firstAuthParam(url, "expires_in"));
+  const expiresAt =
+    Number.isFinite(expiresAtValue) && expiresAtValue > 0
+      ? Math.floor(expiresAtValue)
+      : Number.isFinite(expiresInValue) && expiresInValue > 0
+        ? Math.floor(Date.now() / 1000) + Math.floor(expiresInValue)
+        : undefined;
+
+  if (expiresAt === undefined) {
+    return { handled: true, error: "The confirmation link returned a session without an expiry." };
+  }
+
+  return { handled: true, accessToken, refreshToken, expiresAt };
+}
+
+async function loadAuthUser(accessToken: string): Promise<FantasiaAuthUser> {
+  const response = await request("/auth/v1/user", { method: "GET" }, accessToken);
+  const user = parseUser((await response.json()) as RawAuthUser);
+  if (!user) throw new FantasiaBackendError("Supabase returned an invalid confirmed user.", 502);
+  return user;
+}
+
+export async function consumeFantasiaAuthRedirect(
+  rawUrl: string,
+): Promise<FantasiaAuthRedirectResult> {
+  const parsed = parseFantasiaAuthRedirect(rawUrl);
+  if (!parsed.handled) return { handled: false, session: null };
+  if (parsed.error) return { handled: true, session: null, error: parsed.error };
+  if (!parsed.accessToken || !parsed.refreshToken || parsed.expiresAt === undefined) {
+    return {
+      handled: true,
+      session: null,
+      error: "The confirmation link returned an incomplete session.",
+    };
+  }
+
+  const user = await loadAuthUser(parsed.accessToken);
+  return {
+    handled: true,
+    session: {
+      accessToken: parsed.accessToken,
+      refreshToken: parsed.refreshToken,
+      expiresAt: parsed.expiresAt,
+      user,
+    },
+  };
+}
+
+function withRedirect(path: string, emailRedirectTo?: string): string {
+  if (!emailRedirectTo?.trim()) return path;
+  const separator = path.includes("?") ? "&" : "?";
+  return `${path}${separator}redirect_to=${encodeURIComponent(emailRedirectTo.trim())}`;
+}
+
 export async function signUpWithPassword(
   email: string,
   password: string,
+  emailRedirectTo?: string,
 ): Promise<FantasiaSignUpResult> {
-  const response = await request("/auth/v1/signup", {
+  const response = await request(withRedirect("/auth/v1/signup", emailRedirectTo), {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
   const raw = (await response.json()) as RawAuthResponse;
   return { user: parseUser(raw.user), session: parseSession(raw) };
+}
+
+export async function resendSignupConfirmation(
+  email: string,
+  emailRedirectTo?: string,
+): Promise<void> {
+  await request(withRedirect("/auth/v1/resend", emailRedirectTo), {
+    method: "POST",
+    body: JSON.stringify({ type: "signup", email }),
+  });
 }
 
 export async function signInWithPassword(

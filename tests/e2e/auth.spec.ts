@@ -12,6 +12,9 @@ test("account access preview exposes truthful sign-in and account creation state
   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Enter Fantasia", exact: true })).toBeDisabled();
   await expect(
+    page.getByRole("button", { name: "Resend confirmation email", exact: true }),
+  ).toBeDisabled();
+  await expect(
     page.getByText(
       "Backend configuration is not available in this build. This screen is in preview mode.",
       { exact: true },

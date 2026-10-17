@@ -14,6 +14,7 @@ interface AuthScreenProps {
   readonly message?: AuthMessage;
   readonly onSignIn: (email: string, password: string) => void;
   readonly onCreateAccount: (email: string, password: string, displayName?: string) => void;
+  readonly onResendConfirmation: (email: string) => void;
 }
 
 type AuthMode = "sign-in" | "create-account";
@@ -25,6 +26,7 @@ export function AuthScreen({
   message,
   onSignIn,
   onCreateAccount,
+  onResendConfirmation,
 }: AuthScreenProps) {
   const [mode, setMode] = useState<AuthMode>("sign-in");
   const [email, setEmail] = useState("");
@@ -33,6 +35,7 @@ export function AuthScreen({
   const [showPassword, setShowPassword] = useState(false);
 
   const createMode = mode === "create-account";
+  const canResend = backendConfigured && !busy && !restoring && email.trim().length > 0;
 
   function submit(event: JSX.TargetedSubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -182,6 +185,14 @@ export function AuthScreen({
 
                 <button class="auth-submit" type="submit" disabled={busy || !backendConfigured}>
                   {busy ? "Connecting…" : createMode ? "Create account" : "Enter Fantasia"}
+                </button>
+                <button
+                  class="auth-resend"
+                  type="button"
+                  disabled={!canResend}
+                  onClick={() => onResendConfirmation(email.trim())}
+                >
+                  Resend confirmation email
                 </button>
               </form>
 

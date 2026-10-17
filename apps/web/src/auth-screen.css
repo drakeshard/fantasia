@@ -252,7 +252,8 @@
 .auth-field input:focus,
 .auth-mode-switch button:focus-visible,
 .auth-password-field .auth-password-toggle:focus-visible,
-.auth-submit:focus-visible {
+.auth-submit:focus-visible,
+.auth-resend:focus-visible {
   outline: 3px solid #7aa7ff;
   outline-offset: 2px;
 }
@@ -317,7 +318,26 @@
   filter: brightness(1.06);
 }
 
+.auth-resend {
+  min-height: 44px;
+  border: 1px solid rgb(226 190 120 / 26%);
+  border-radius: 2px;
+  color: rgb(226 190 120 / 92%);
+  background: rgb(7 18 28 / 52%);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.auth-resend:hover:not(:disabled) {
+  border-color: rgb(226 190 120 / 48%);
+  color: var(--auth-ivory);
+  background: rgb(226 190 120 / 8%);
+}
+
 .auth-submit:disabled,
+.auth-resend:disabled,
 .auth-mode-switch button:disabled,
 .auth-password-field .auth-password-toggle:disabled {
   cursor: default;
