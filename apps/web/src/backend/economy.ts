@@ -96,7 +96,10 @@ export function parseEconomyRows(
     knownCurrencyDefinitionIds,
   );
   if (restored.kind === "rejected") {
-    throw new FantasiaBackendError(`Supabase returned invalid economy state: ${restored.reason}`, 502);
+    throw new FantasiaBackendError(
+      `Supabase returned invalid economy state: ${restored.reason}`,
+      502,
+    );
   }
 
   return {
