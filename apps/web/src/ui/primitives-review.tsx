@@ -69,9 +69,21 @@ export function PrimitivesReviewApp() {
             <UiBadge tone="danger">Blocked</UiBadge>
             <UiBadge tone="info">Information</UiBadge>
           </div>
-          <UiFeedback title="Loading account state" detail="Pending work prevents duplicate commitment." tone="loading" />
-          <UiFeedback title="Nothing selected" detail="Choose an item to inspect its details." tone="empty" />
-          <UiFeedback title="Action unavailable" detail="The requested state is not currently valid." tone="error" />
+          <UiFeedback
+            title="Loading account state"
+            detail="Pending work prevents duplicate commitment."
+            tone="loading"
+          />
+          <UiFeedback
+            title="Nothing selected"
+            detail="Choose an item to inspect its details."
+            tone="empty"
+          />
+          <UiFeedback
+            title="Action unavailable"
+            detail="The requested state is not currently valid."
+            tone="error"
+          />
         </UiPanel>
 
         <UiPanel class="ui-primitives-review-section" ariaLabel="Selectable rows">
