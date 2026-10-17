@@ -9,6 +9,7 @@ export * from "./composition/rpg/actor-state.js";
 export * from "./composition/rpg/hp.js";
 export * from "./composition/rpg/subject-association.js";
 export * from "./composition/tactical/actor-identity.js";
+export * from "./economy/model.js";
 export * from "./encounter/loop.js";
 export * from "./encounter/persistence.js";
 export * from "./encounter/turns.js";
