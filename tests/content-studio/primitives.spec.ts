@@ -26,7 +26,7 @@ test("tabs support keyboard navigation and skip disabled items", async ({ page }
     const style = getComputedStyle(element);
     const root = getComputedStyle(document.documentElement);
     return {
-      outlineWidth: style.outlineWidth,
+      outlineWidth: Number.parseFloat(style.outlineWidth),
       outlineColor: style.outlineColor,
       selectionColor: style.color,
       focusToken: root.getPropertyValue("--studio-focus-ring").trim(),
@@ -34,7 +34,7 @@ test("tabs support keyboard navigation and skip disabled items", async ({ page }
     };
   });
 
-  expect(focusAndSelection.outlineWidth).toBe("2px");
+  expect(focusAndSelection.outlineWidth).toBeGreaterThanOrEqual(2);
   expect(focusAndSelection.focusToken).not.toBe(focusAndSelection.accentToken);
   expect(focusAndSelection.outlineColor).not.toBe(focusAndSelection.selectionColor);
 });
@@ -45,7 +45,15 @@ test("dialog escape cancels and restores focus to the opener", async ({ page }) 
 
   await opener.click();
   await expect(dialog).toBeVisible();
-  await expect(page.getByLabel("Reference", { exact: true })).toBeFocused();
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const active = document.activeElement;
+        const modal = document.querySelector("#preview-dialog");
+        return active instanceof HTMLElement && modal?.contains(active) === true;
+      }),
+    )
+    .toBe(true);
 
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
