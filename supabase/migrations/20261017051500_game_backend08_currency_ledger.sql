@@ -32,8 +32,8 @@ create table public.account_currency_ledger (
 alter table public.account_currency_balances enable row level security;
 alter table public.account_currency_ledger enable row level security;
 
-revoke all on table public.account_currency_balances from public, anon, authenticated;
-revoke all on table public.account_currency_ledger from public, anon, authenticated;
+revoke all on table public.account_currency_balances from public, anon, authenticated, service_role;
+revoke all on table public.account_currency_ledger from public, anon, authenticated, service_role;
 
 grant select on table public.account_currency_balances to authenticated;
 grant select on table public.account_currency_ledger to authenticated;
@@ -64,7 +64,7 @@ security invoker
 set search_path = ''
 as $$
 declare
-  v_currency_definition_id text := btrim(p_currency_definition_id);
+  v_currency_definition_id text := p_currency_definition_id;
   v_balance bigint;
   v_revision bigint;
   v_new_balance numeric;
@@ -77,8 +77,9 @@ begin
 
   if v_currency_definition_id is null
     or char_length(v_currency_definition_id) not between 1 and 128
+    or v_currency_definition_id <> btrim(v_currency_definition_id)
   then
-    raise exception 'currency definition id must be 1 to 128 characters' using errcode = '22023';
+    raise exception 'currency definition id must be a trimmed 1 to 128 character string' using errcode = '22023';
   end if;
 
   if p_delta is null or p_delta = 0 or p_delta < -9007199254740991 or p_delta > 9007199254740991 then
@@ -158,6 +159,6 @@ end;
 $$;
 
 revoke all on function private.apply_currency_delta(uuid, text, bigint)
-from public, anon, authenticated;
+from public, anon, authenticated, service_role;
 grant execute on function private.apply_currency_delta(uuid, text, bigint)
 to service_role;
