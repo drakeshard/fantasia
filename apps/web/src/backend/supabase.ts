@@ -183,11 +183,12 @@ export function parseFantasiaAuthRedirect(rawUrl: string): ParsedAuthRedirect {
 
   const expiresAtValue = Number(firstAuthParam(url, "expires_at"));
   const expiresInValue = Number(firstAuthParam(url, "expires_in"));
-  const expiresAt = Number.isFinite(expiresAtValue) && expiresAtValue > 0
-    ? Math.floor(expiresAtValue)
-    : Number.isFinite(expiresInValue) && expiresInValue > 0
-      ? Math.floor(Date.now() / 1000) + Math.floor(expiresInValue)
-      : undefined;
+  const expiresAt =
+    Number.isFinite(expiresAtValue) && expiresAtValue > 0
+      ? Math.floor(expiresAtValue)
+      : Number.isFinite(expiresInValue) && expiresInValue > 0
+        ? Math.floor(Date.now() / 1000) + Math.floor(expiresInValue)
+        : undefined;
 
   if (expiresAt === undefined) {
     return { handled: true, error: "The confirmation link returned a session without an expiry." };
