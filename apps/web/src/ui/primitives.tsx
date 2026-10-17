@@ -120,9 +120,7 @@ export function UiTitleLockup({
   class: className,
 }: UiTitleLockupProps) {
   return (
-    <div
-      class={`ui-title-lockup ui-title-lockup-${align}${className ? ` ${className}` : ""}`}
-    >
+    <div class={`ui-title-lockup ui-title-lockup-${align}${className ? ` ${className}` : ""}`}>
       {ornament ? (
         <span class="ui-title-lockup-ornament" aria-hidden="true">
           {ornament}
