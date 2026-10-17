@@ -3,13 +3,22 @@ import { UI_PREFERENCES_STORAGE_KEY } from "../../apps/web/src/preferences.ts";
 
 test("D08 settings persist UI preferences and restore modal focus", async ({ page }, testInfo) => {
   await page.goto("/");
+  const home = page.getByRole("main", { name: "Fantasia home" });
   const settings = page.getByRole("button", { name: "Settings", exact: true });
+  await expect(home).toBeVisible();
   await expect(settings).toBeVisible();
   await settings.focus();
   await settings.click();
 
   const dialog = page.getByRole("dialog", { name: "Settings" });
+  await expect(home).toBeVisible();
   await expect(dialog.getByRole("button", { name: "Close", exact: true })).toBeFocused();
+
+  await page.keyboard.press("Shift+Tab");
+  await expect(dialog.getByRole("button", { name: "Done", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(dialog.getByRole("button", { name: "Close", exact: true })).toBeFocused();
+
   await dialog.getByLabel("Interface text").selectOption("1.25");
   await dialog.getByLabel("Persistent map labels").uncheck();
   await dialog.getByLabel("Reduce motion").check();

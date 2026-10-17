@@ -175,6 +175,18 @@ async function captureBattleGeometry(page: Page, testInfo: TestInfo) {
   ]);
 }
 
+async function captureSettingsGeometry(page: Page, testInfo: TestInfo) {
+  await captureGeometry(page, testInfo, "settings-geometry.json", [
+    ".home-screen",
+    ".settings-backdrop",
+    ".settings-dialog",
+    ".settings-dialog-header",
+    ".settings-dialog-body",
+    ".settings-dialog-footer",
+    ".settings-row",
+  ]);
+}
+
 test("capture controlled player-facing UI for review", async ({ page }, testInfo) => {
   const viewport = page.viewportSize();
   const portrait = Boolean(viewport && viewport.height > viewport.width);
@@ -242,4 +254,5 @@ test("capture controlled player-facing UI for review", async ({ page }, testInfo
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "Settings", exact: true })).toBeVisible();
   await captureViewport(page, testInfo, "settings");
+  await captureSettingsGeometry(page, testInfo);
 });
