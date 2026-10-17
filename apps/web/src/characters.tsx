@@ -1,4 +1,5 @@
 import { GameUtilityCluster } from "./game-controls.js";
+import { UiArtFrame, UiBadge, UiPanel, UiTitleLockup } from "./ui/primitives.js";
 
 interface CharactersAppProps {
   readonly onHome: () => void;
@@ -15,15 +16,12 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
   return (
     <main class="characters-screen" aria-label="Characters">
       <header class="characters-hud">
-        <div class="characters-heading">
-          <span class="characters-heading-icon" aria-hidden="true">
-            <CharactersIcon src="fantasia_ui_icon_characters_default_v001.svg" />
-          </span>
-          <span>
-            <small>Archive</small>
-            <h1>Characters</h1>
-          </span>
-        </div>
+        <UiTitleLockup
+          class="characters-heading"
+          eyebrow="Archive"
+          title="Characters"
+          ornament={<CharactersIcon src="fantasia_ui_icon_characters_default_v001.svg" />}
+        />
         <GameUtilityCluster onHome={onHome} onSettings={onSettings} />
       </header>
 
@@ -34,7 +32,7 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
             <strong>Character archive</strong>
           </div>
 
-          <div class="character-card is-selected">
+          <UiPanel class="character-card is-selected" tone="raised" ariaLabel="Selected character">
             <span class="character-card-crest" aria-hidden="true">
               <CharactersIcon src="fantasia_ui_brand_crest_v001.svg" />
             </span>
@@ -42,10 +40,12 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
               <strong>Traveler</strong>
               <small>Protagonist · Infantry</small>
             </span>
-            <span class="character-card-state">Known</span>
-          </div>
+            <UiBadge class="character-card-state" tone="positive">
+              Known
+            </UiBadge>
+          </UiPanel>
 
-          <div class="characters-roster-note">
+          <UiPanel class="characters-roster-note" ariaLabel="Character reveal boundary">
             <span class="characters-note-mark" aria-hidden="true">
               +
             </span>
@@ -56,24 +56,23 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
                 safely.
               </small>
             </span>
-          </div>
+          </UiPanel>
         </aside>
 
         <article class="character-profile" aria-label="Traveler character profile">
-          <div class="character-profile-visual" aria-hidden="true">
-            <div class="character-profile-ring">
+          <UiArtFrame class="character-profile-visual" label="Traveler">
+            <div class="character-profile-ring" aria-hidden="true">
               <CharactersIcon src="fantasia_ui_brand_crest_v001.svg" />
             </div>
-            <span>Traveler</span>
-          </div>
+          </UiArtFrame>
 
           <div class="character-profile-copy">
-            <span class="character-profile-kicker">Protagonist profile</span>
-            <h2>Traveler</h2>
-            <p>
-              An aspiring adventurer from Primora in Vaelkrath, stranded far from home after
-              crossing a Fracture.
-            </p>
+            <UiTitleLockup
+              class="character-profile-title"
+              eyebrow="Protagonist profile"
+              title="Traveler"
+              detail="An aspiring adventurer from Primora in Vaelkrath, stranded far from home after crossing a Fracture."
+            />
 
             <dl class="character-profile-facts">
               <div>
@@ -94,13 +93,13 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
               </div>
             </dl>
 
-            <div class="character-profile-boundary" role="note">
+            <UiPanel class="character-profile-boundary" tone="overlay" ariaLabel="Character system boundary">
               <strong>Character systems are still opening up.</strong>
               <span>
                 Levels, numeric stats, skills, equipment, class paths, rarity and recruitment are
                 not shown until their production data is authoritative.
               </span>
-            </div>
+            </UiPanel>
           </div>
         </article>
       </section>
