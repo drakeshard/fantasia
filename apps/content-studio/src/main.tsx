@@ -41,9 +41,9 @@ const lifecycle = [
 const validation = ["passed", "warning", "blocking", "unknown"] as const;
 
 const tabs = [
-  { id: "overview", label: "Overview" },
-  { id: "assets", label: "Assets" },
-  { id: "history", label: "History" },
+  { id: "overview", label: "Overview", disabled: false },
+  { id: "assets", label: "Assets", disabled: false },
+  { id: "history", label: "History", disabled: false },
   { id: "future", label: "Unavailable", disabled: true },
 ] as const;
 
