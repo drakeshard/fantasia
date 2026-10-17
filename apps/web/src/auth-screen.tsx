@@ -1,6 +1,7 @@
+import type { JSX } from "preact";
 import { useState } from "preact/hooks";
 
-interface AuthMessage {
+export interface AuthMessage {
   readonly tone: "error" | "info" | "success";
   readonly text: string;
 }
@@ -32,7 +33,7 @@ export function AuthScreen({
 
   const createMode = mode === "create-account";
 
-  function submit(event: SubmitEvent) {
+  function submit(event: JSX.TargetedSubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy || restoring) return;
     if (createMode) {
@@ -48,7 +49,7 @@ export function AuthScreen({
 
       <section class="auth-brand-panel" aria-label="Fantasia">
         <div class="auth-brand-mark">
-          <img src="/assets/ui/core/fantasia-crest.svg" alt="" />
+          <img src="/assets/ui/core/fantasia_ui_brand_crest_v001.svg" alt="" />
         </div>
         <div class="auth-brand-copy">
           <span>Drakeshard Studios</span>
@@ -107,7 +108,9 @@ export function AuthScreen({
               <form class="auth-form" onSubmit={submit}>
                 {createMode ? (
                   <label class="auth-field">
-                    <span>Display name <small>Optional</small></span>
+                    <span>
+                      Display name <small>Optional</small>
+                    </span>
                     <input
                       type="text"
                       value={displayName}
@@ -158,14 +161,18 @@ export function AuthScreen({
                 </label>
 
                 {message ? (
-                  <div class={`auth-message ${message.tone}`} role={message.tone === "error" ? "alert" : "status"}>
+                  <div
+                    class={`auth-message ${message.tone}`}
+                    role={message.tone === "error" ? "alert" : "status"}
+                  >
                     {message.text}
                   </div>
                 ) : null}
 
                 {!backendConfigured ? (
                   <div class="auth-message info" role="status">
-                    Backend configuration is not available in this build. This screen is in preview mode.
+                    Backend configuration is not available in this build. This screen is in preview
+                    mode.
                   </div>
                 ) : null}
 
@@ -176,7 +183,9 @@ export function AuthScreen({
 
               <footer class="auth-panel-footer">
                 <p>Email/password is the current supported account method.</p>
-                <small>Password recovery, social login, and other account methods are not available yet.</small>
+                <small>
+                  Password recovery, social login, and other account methods are not available yet.
+                </small>
               </footer>
             </>
           )}
