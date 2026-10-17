@@ -250,16 +250,15 @@ type InspectorProps = {
 function WorkspaceInspector({ label, open, onOpenChange, children }: InspectorProps) {
   const openerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const wasOpenRef = useRef(false);
+  const shouldRestoreFocusRef = useRef(false);
 
   useEffect(() => {
     if (open) {
-      wasOpenRef.current = true;
       queueMicrotask(() => closeRef.current?.focus());
       return;
     }
-    if (wasOpenRef.current) {
-      wasOpenRef.current = false;
+    if (shouldRestoreFocusRef.current) {
+      shouldRestoreFocusRef.current = false;
       queueMicrotask(() => openerRef.current?.focus());
     }
   }, [open]);
@@ -282,7 +281,10 @@ function WorkspaceInspector({ label, open, onOpenChange, children }: InspectorPr
           ref={closeRef}
           variant="quiet"
           aria-label="Close inspector"
-          onClick={() => onOpenChange(false)}
+          onClick={() => {
+            shouldRestoreFocusRef.current = true;
+            onOpenChange(false);
+          }}
         >
           Close
         </Button>
