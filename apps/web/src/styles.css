@@ -1,30 +1,11 @@
+@import "./ui/tokens.css";
+
 :root {
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #f4f0e7;
-  background: #101923;
+  font-family: var(--ui-font-body);
+  color: var(--ui-text);
+  background: var(--ui-canvas);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --ui-bg: #101923;
-  --ui-surface: #192736;
-  --ui-raised: #243749;
-  --ui-text: #f4f0e7;
-  --ui-text-muted: #bbc6d2;
-  --ui-border: #718394;
-  --ui-accent: #e2be78;
-  --ui-accent-text: #18202a;
-  --ui-complete: #82cfbd;
-  --ui-danger: #f59c9c;
-  --ui-focus: #9acbff;
-  --ui-s1: 4px;
-  --ui-s2: 8px;
-  --ui-s3: 12px;
-  --ui-s4: 16px;
-  --ui-s5: 24px;
-  --ui-s6: 32px;
-  --ui-s7: 48px;
-  --ui-radius: 4px;
-  --ui-min-target: 44px;
 }
 
 * {
@@ -43,7 +24,7 @@ body,
 body {
   min-height: 100dvh;
   overflow-x: hidden;
-  background: var(--ui-bg);
+  background: var(--ui-canvas);
   color: var(--ui-text);
 }
 
@@ -60,15 +41,15 @@ button,
 summary,
 select,
 input {
-  min-height: var(--ui-min-target);
+  min-height: var(--ui-target-min);
 }
 
 button:focus-visible,
 summary:focus-visible,
 select:focus-visible,
 input:focus-visible {
-  outline: 2px solid var(--ui-focus);
-  outline-offset: 2px;
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
 }
 
 h1,
@@ -89,17 +70,17 @@ h3 {
 .battle-screen {
   width: 100%;
   min-height: 100dvh;
-  padding: var(--ui-s2);
+  padding: var(--ui-space-2);
   background:
-    radial-gradient(circle at 50% 0%, rgb(52 78 101 / 30%), transparent 42%), var(--ui-bg);
+    radial-gradient(circle at 50% 0%, rgb(52 78 101 / 30%), transparent 42%), var(--ui-canvas);
 }
 
 .ui-button,
 .action-button,
 .choice-button,
 .turn-order-entry {
-  border: 1px solid var(--ui-border);
-  border-radius: var(--ui-radius);
+  border: var(--ui-border-width) solid var(--ui-border);
+  border-radius: var(--ui-radius-panel);
   color: var(--ui-text);
   background: var(--ui-surface);
   cursor: pointer;
@@ -110,7 +91,7 @@ h3 {
 .choice-button:hover:not(:disabled),
 .turn-order-entry:hover:not(:disabled) {
   border-color: var(--ui-accent);
-  background: var(--ui-raised);
+  background: var(--ui-surface-raised);
 }
 
 .ui-button:disabled,
@@ -118,25 +99,25 @@ h3 {
 .choice-button:disabled,
 .turn-order-entry:disabled {
   cursor: not-allowed;
-  opacity: 0.48;
+  opacity: var(--ui-opacity-disabled);
 }
 
 .ui-button.primary {
   border-color: var(--ui-accent);
-  color: var(--ui-accent-text);
+  color: var(--ui-on-accent);
   background: var(--ui-accent);
-  font-weight: 800;
+  font-weight: var(--ui-font-weight-bold);
 }
 
 .ui-button.secondary {
-  background: var(--ui-raised);
+  background: var(--ui-surface-raised);
 }
 
 .hud-eyebrow {
-  margin: 0 0 var(--ui-s2);
+  margin: 0 0 var(--ui-space-2);
   color: var(--ui-accent);
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: var(--ui-font-weight-bold);
   line-height: 1.25rem;
   letter-spacing: 0.09em;
   text-transform: uppercase;

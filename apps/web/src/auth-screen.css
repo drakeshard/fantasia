@@ -1,7 +1,7 @@
 .auth-screen {
-  --auth-gold: #e2be78;
-  --auth-ivory: #f4f0e7;
-  --auth-muted: #aebbc8;
+  --auth-gold: var(--ui-accent);
+  --auth-ivory: var(--ui-text);
+  --auth-muted: var(--ui-text-subdued);
   position: relative;
   width: 100vw;
   min-height: 100dvh;
@@ -9,7 +9,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.65fr);
   color: var(--auth-ivory);
-  background: #071019;
+  background: var(--ui-canvas-deep);
 }
 
 .auth-screen-art {
@@ -23,14 +23,14 @@
       rgb(3 8 13 / 62%) 68%,
       rgb(3 8 13 / 92%) 100%
     ),
-    linear-gradient(180deg, rgb(3 8 13 / 12%), rgb(3 8 13 / 66%)),
+    linear-gradient(180deg, rgb(3 8 13 / 12%), var(--ui-overlay-scrim)),
     url("/assets/ui/fantasia_ui_home_kingdom_bg_v001.webp") center / cover no-repeat;
 }
 
 .auth-screen::after {
   position: absolute;
-  inset: 12px;
-  border: 1px solid rgb(226 190 120 / 18%);
+  inset: var(--ui-space-3);
+  border: var(--ui-border-width) solid var(--ui-border-subtle);
   pointer-events: none;
   content: "";
 }
@@ -38,7 +38,7 @@
 .auth-brand-panel,
 .auth-panel {
   position: relative;
-  z-index: 1;
+  z-index: var(--ui-z-raised);
 }
 
 .auth-brand-panel {
@@ -72,7 +72,7 @@
 .auth-panel-header > span {
   color: var(--auth-gold);
   font-size: clamp(0.65rem, 0.72vw, 0.76rem);
-  font-weight: 800;
+  font-weight: var(--ui-font-weight-bold);
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
@@ -92,16 +92,16 @@
 
 .auth-brand-copy h1 {
   margin-top: 2px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--ui-font-display);
   font-size: clamp(2.1rem, 4vw, 4.3rem);
-  font-weight: 500;
+  font-weight: var(--ui-font-weight-regular);
   letter-spacing: 0.08em;
   line-height: 0.95;
 }
 
 .auth-brand-copy p {
   margin-top: 5px;
-  color: rgb(244 240 231 / 74%);
+  color: var(--ui-text-secondary);
   font-size: clamp(0.72rem, 0.9vw, 0.98rem);
   letter-spacing: 0.09em;
 }
@@ -111,21 +111,21 @@
   align-self: end;
   width: min(620px, 82%);
   padding: 18px 20px 19px;
-  border-left: 2px solid var(--auth-gold);
+  border-left: var(--ui-border-width-emphasis) solid var(--auth-gold);
   background: linear-gradient(90deg, rgb(4 10 16 / 64%), transparent);
 }
 
 .auth-brand-story strong {
   display: block;
   margin-top: 7px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--ui-font-display);
   font-size: clamp(1.25rem, 2vw, 2.1rem);
-  font-weight: 500;
+  font-weight: var(--ui-font-weight-regular);
 }
 
 .auth-brand-story p {
   max-width: 540px;
-  margin-top: 8px;
+  margin-top: var(--ui-space-2);
   color: rgb(244 240 231 / 70%);
   font-size: 0.88rem;
   line-height: 1.55;
@@ -142,20 +142,20 @@
   width: min(100%, 520px);
   justify-self: end;
   padding: clamp(26px, 3.2vw, 44px);
-  border: 1px solid rgb(226 190 120 / 34%);
-  border-top: 2px solid rgb(226 190 120 / 58%);
+  border: var(--ui-border-width) solid rgb(226 190 120 / 34%);
+  border-top: var(--ui-border-width-emphasis) solid rgb(226 190 120 / 58%);
   background: linear-gradient(145deg, rgb(7 18 28 / 95%), rgb(5 13 21 / 90%));
-  box-shadow: 0 30px 80px rgb(0 0 0 / 48%);
+  box-shadow: var(--ui-shadow-panel);
   backdrop-filter: blur(18px);
 }
 
 .auth-panel-header h2,
 .auth-restoring h2 {
   margin-top: 7px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--ui-font-display);
   font-size: clamp(1.85rem, 2.8vw, 2.8rem);
-  font-weight: 500;
-  line-height: 1.05;
+  font-weight: var(--ui-font-weight-regular);
+  line-height: var(--ui-line-tight);
 }
 
 .auth-panel-header p,
@@ -163,7 +163,7 @@
   margin-top: 10px;
   color: var(--auth-muted);
   font-size: 0.86rem;
-  line-height: 1.5;
+  line-height: var(--ui-line-body);
 }
 
 .auth-mode-switch {
@@ -172,7 +172,7 @@
   grid-template-columns: 1fr 1fr;
   margin: 26px 0 0;
   padding: 0;
-  border: 1px solid rgb(226 190 120 / 24%);
+  border: var(--ui-border-width) solid rgb(226 190 120 / 24%);
   background: rgb(2 7 12 / 38%);
 }
 
@@ -186,17 +186,17 @@
 }
 
 .auth-mode-switch button {
-  min-height: 46px;
+  min-height: var(--ui-control-height);
   border: 0;
-  border-bottom: 2px solid transparent;
-  color: rgb(244 240 231 / 64%);
+  border-bottom: var(--ui-border-width-emphasis) solid transparent;
+  color: var(--ui-text-tertiary);
   background: transparent;
-  font-weight: 750;
+  font-weight: var(--ui-font-weight-semibold);
   cursor: pointer;
 }
 
 .auth-mode-switch button + button {
-  border-left: 1px solid rgb(226 190 120 / 16%);
+  border-left: var(--ui-border-width) solid rgb(226 190 120 / 16%);
 }
 
 .auth-mode-switch button.is-active {
@@ -207,7 +207,7 @@
 
 .auth-form {
   display: grid;
-  gap: 16px;
+  gap: var(--ui-space-4);
   margin-top: 22px;
 }
 
@@ -220,10 +220,10 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--ui-space-3);
   color: rgb(244 240 231 / 88%);
-  font-size: 0.78rem;
-  font-weight: 750;
+  font-size: var(--ui-font-size-md);
+  font-weight: var(--ui-font-weight-semibold);
   letter-spacing: 0.04em;
 }
 
@@ -237,8 +237,8 @@
   width: 100%;
   min-height: 48px;
   padding: 0 13px;
-  border: 1px solid rgb(226 190 120 / 24%);
-  border-radius: 2px;
+  border: var(--ui-border-width) solid rgb(226 190 120 / 24%);
+  border-radius: var(--ui-radius-field);
   outline: none;
   color: var(--auth-ivory);
   background: rgb(2 8 13 / 68%);
@@ -254,8 +254,8 @@
 .auth-password-field .auth-password-toggle:focus-visible,
 .auth-submit:focus-visible,
 .auth-resend:focus-visible {
-  outline: 3px solid #7aa7ff;
-  outline-offset: 2px;
+  outline: var(--ui-focus-width-strong) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
 }
 
 .auth-password-field {
@@ -270,21 +270,21 @@
 .auth-password-field .auth-password-toggle {
   min-width: 64px;
   min-height: 48px;
-  border: 1px solid rgb(226 190 120 / 24%);
-  border-left: 1px solid rgb(226 190 120 / 16%);
+  border: var(--ui-border-width) solid rgb(226 190 120 / 24%);
+  border-left: var(--ui-border-width) solid rgb(226 190 120 / 16%);
   color: var(--auth-gold);
   background: rgb(8 19 29 / 86%);
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-bold);
   cursor: pointer;
 }
 
 .auth-message {
-  padding: 11px 12px;
-  border: 1px solid rgb(124 151 173 / 28%);
+  padding: 11px var(--ui-space-3);
+  border: var(--ui-border-width) solid rgb(124 151 173 / 28%);
   color: #c6d5e2;
   background: rgb(32 56 76 / 20%);
-  font-size: 0.78rem;
+  font-size: var(--ui-font-size-md);
   line-height: 1.45;
 }
 
@@ -301,11 +301,11 @@
 }
 
 .auth-submit {
-  min-height: 52px;
+  min-height: var(--ui-control-height-primary);
   margin-top: 2px;
-  border: 1px solid #f1d08c;
-  border-radius: 2px;
-  color: #18202a;
+  border: var(--ui-border-width) solid #f1d08c;
+  border-radius: var(--ui-radius-field);
+  color: var(--ui-on-accent);
   background: linear-gradient(180deg, #ebca84, #c99a4b);
   box-shadow:
     inset 0 1px rgb(255 255 255 / 38%),
@@ -319,14 +319,14 @@
 }
 
 .auth-resend {
-  min-height: 44px;
-  border: 1px solid rgb(226 190 120 / 26%);
-  border-radius: 2px;
+  min-height: var(--ui-target-min);
+  border: var(--ui-border-width) solid rgb(226 190 120 / 26%);
+  border-radius: var(--ui-radius-field);
   color: rgb(226 190 120 / 92%);
   background: rgb(7 18 28 / 52%);
   font: inherit;
   font-size: 0.76rem;
-  font-weight: 750;
+  font-weight: var(--ui-font-weight-semibold);
   cursor: pointer;
 }
 
@@ -341,13 +341,13 @@
 .auth-mode-switch button:disabled,
 .auth-password-field .auth-password-toggle:disabled {
   cursor: default;
-  opacity: 0.58;
+  opacity: var(--ui-opacity-disabled-soft);
 }
 
 .auth-panel-footer {
   margin-top: 22px;
-  padding-top: 16px;
-  border-top: 1px solid rgb(226 190 120 / 16%);
+  padding-top: var(--ui-space-4);
+  border-top: var(--ui-border-width) solid rgb(226 190 120 / 16%);
 }
 
 .auth-panel-footer p {
@@ -357,7 +357,7 @@
 
 .auth-panel-footer .auth-panel-footnote {
   display: block;
-  margin-top: 4px;
+  margin-top: var(--ui-space-1);
   color: rgb(174 187 200 / 58%);
   font-size: 0.68rem;
   line-height: 1.45;
@@ -370,10 +370,10 @@
 }
 
 .auth-restoring-mark {
-  width: 34px;
-  height: 34px;
+  width: var(--ui-icon-lg);
+  height: var(--ui-icon-lg);
   margin-bottom: 18px;
-  border: 2px solid rgb(226 190 120 / 22%);
+  border: var(--ui-border-width-emphasis) solid rgb(226 190 120 / 22%);
   border-top-color: var(--auth-gold);
   border-radius: 50%;
   animation: auth-spin 900ms linear infinite;
@@ -381,8 +381,8 @@
 
 .auth-restoring p {
   color: var(--auth-gold);
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-bold);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -415,7 +415,7 @@
   .auth-brand-panel {
     min-height: 34dvh;
     grid-template-rows: auto 1fr;
-    padding: 28px 28px 12px;
+    padding: 28px 28px var(--ui-space-3);
   }
 
   .auth-brand-copy h1 {
@@ -429,7 +429,7 @@
   .auth-panel {
     min-height: 0;
     align-items: start;
-    padding: 12px 20px 30px;
+    padding: var(--ui-space-3) 20px 30px;
   }
 
   .auth-panel-frame {
@@ -440,7 +440,7 @@
 
 @media (max-height: 520px) and (orientation: landscape) {
   .auth-brand-panel {
-    padding: 24px 34px;
+    padding: var(--ui-space-5) 34px;
   }
 
   .auth-brand-story {
@@ -454,7 +454,7 @@
   .auth-panel-frame {
     max-height: calc(100dvh - 28px);
     overflow: auto;
-    padding: 20px 24px;
+    padding: 20px var(--ui-space-5);
   }
 
   .auth-panel-header p,
