@@ -1,0 +1,808 @@
+/* GAME-UI24E3 — controlled production normalization for Story, Characters and Talent.
+ * Final-loaded by the migrated screen modules so frozen GAME-UI24A/B/C/D semantics
+ * win without deleting geometry-sensitive historical CSS in this slice.
+ */
+
+/* Shared migrated screen shell */
+.story-screen,
+.characters-screen,
+.talent-screen {
+  color: var(--ui-text);
+  background: var(--ui-canvas-deep);
+}
+
+.story-hud,
+.characters-hud,
+.talent-hud {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 94%);
+  box-shadow: var(--ui-shadow-header);
+}
+
+.story-hud .game-control,
+.characters-hud .game-control,
+.talent-hud .game-control {
+  min-height: var(--ui-target-min);
+}
+
+/* Story — scene first, stable dialogue safe region */
+.story-screen {
+  background:
+    radial-gradient(circle at 50% 36%, rgb(36 55 73 / 34%), transparent 44%),
+    linear-gradient(180deg, var(--ui-canvas), var(--ui-canvas-deep));
+}
+
+.story-title-block.ui-title-lockup {
+  justify-self: center;
+  min-width: 0;
+  max-width: min(46vw, 700px);
+}
+
+.story-title-block .ui-title-lockup-copy {
+  min-width: 0;
+}
+
+.story-title-block .ui-title-lockup-eyebrow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.story-title-block h2 {
+  overflow: hidden;
+  color: var(--ui-text-heading);
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.story-stage {
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, rgb(7 16 25 / 8%), rgb(7 16 25 / 38%)),
+    radial-gradient(circle at 50% 40%, rgb(226 190 120 / 5%), transparent 38%);
+}
+
+.story-stage-ornament {
+  opacity: 0.18;
+}
+
+.story-scene-context {
+  z-index: 2;
+  gap: var(--ui-space-2);
+}
+
+.story-scene-context .ui-badge {
+  border-color: var(--ui-border-subtle);
+  color: var(--ui-text-secondary);
+  background: rgb(7 16 25 / 78%);
+}
+
+.story-caption.ui-primitive-panel {
+  z-index: 3;
+  width: min(900px, calc(100% - 64px));
+  min-height: 164px;
+  margin-inline: auto;
+  padding: var(--ui-space-5) var(--ui-space-6);
+  border-color: var(--ui-border);
+  background: rgb(7 16 25 / 94%);
+  box-shadow: var(--ui-shadow-panel);
+}
+
+.story-caption.ui-primitive-panel::before {
+  inset: var(--ui-space-2);
+}
+
+.story-speaker {
+  color: var(--ui-accent);
+  font-size: var(--ui-font-size-md);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: var(--ui-tracking-label);
+  text-transform: uppercase;
+}
+
+.story-line {
+  max-width: 70ch;
+  color: var(--ui-text);
+  font-size: clamp(1rem, 1.45vw, 1.18rem);
+  line-height: 1.65;
+}
+
+.story-progress {
+  color: var(--ui-text-tertiary);
+}
+
+.story-controls {
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 96%);
+}
+
+.story-unavailable-card.ui-primitive-panel {
+  width: min(620px, calc(100% - 48px));
+  display: grid;
+  gap: var(--ui-space-5);
+  padding: var(--ui-space-6);
+}
+
+/* Characters — selected character / art surface dominates */
+.characters-screen {
+  background:
+    radial-gradient(circle at 68% 40%, rgb(36 55 73 / 44%), transparent 46%),
+    linear-gradient(135deg, var(--ui-canvas-deep), var(--ui-canvas) 60%, var(--ui-canvas-deep));
+}
+
+.characters-heading.ui-title-lockup,
+.talent-heading.ui-title-lockup {
+  gap: var(--ui-space-3);
+}
+
+.characters-heading .ui-title-lockup-ornament,
+.talent-heading .ui-title-lockup-ornament {
+  width: 40px;
+  height: 40px;
+  padding: 7px;
+  border: var(--ui-border-width) solid var(--ui-border);
+  border-radius: var(--ui-radius-control);
+  background: rgb(25 39 54 / 72%);
+}
+
+.characters-layout {
+  min-height: 0;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 0;
+}
+
+.characters-roster {
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-5);
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 76%);
+}
+
+.characters-section-title small {
+  color: var(--ui-accent);
+}
+
+.characters-section-title strong {
+  color: var(--ui-text-heading);
+  font-family: var(--ui-font-display);
+  font-weight: var(--ui-font-weight-regular);
+}
+
+.character-card.ui-primitive-panel {
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: var(--ui-space-3);
+  align-items: center;
+  padding: var(--ui-space-3);
+  border-color: var(--ui-border-strong);
+  background: rgb(36 55 73 / 78%);
+  box-shadow: inset 3px 0 var(--ui-accent);
+}
+
+.character-card.ui-primitive-panel::before,
+.characters-roster-note.ui-primitive-panel::before,
+.character-profile-boundary.ui-primitive-panel::before {
+  display: none;
+}
+
+.character-card-crest {
+  width: 40px;
+  height: 40px;
+  border-color: var(--ui-border);
+  background: rgb(7 16 25 / 72%);
+}
+
+.character-card-copy strong {
+  color: var(--ui-text-heading);
+}
+
+.character-card-copy small {
+  color: var(--ui-text-secondary);
+}
+
+.character-card-state.ui-badge {
+  align-self: center;
+}
+
+.characters-roster-note.ui-primitive-panel {
+  margin-top: auto;
+  padding: var(--ui-space-3);
+  border-color: var(--ui-border-subtle);
+  background: rgb(25 39 54 / 56%);
+}
+
+.characters-roster-note strong {
+  color: var(--ui-text);
+}
+
+.characters-roster-note small {
+  color: var(--ui-text-tertiary);
+}
+
+.character-profile {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(360px, 1.05fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+  padding: clamp(24px, 4vw, 64px);
+  border: 0;
+  background: transparent;
+}
+
+.character-profile-visual.ui-art-frame {
+  width: min(100%, 560px);
+  min-height: 0;
+  aspect-ratio: 4 / 5;
+  margin: 0 auto;
+  border-color: var(--ui-border);
+  border-radius: var(--ui-radius-panel);
+  background:
+    radial-gradient(circle at 50% 36%, rgb(226 190 120 / 10%), transparent 32%),
+    linear-gradient(160deg, rgb(36 55 73 / 76%), rgb(7 16 25 / 92%));
+  box-shadow: var(--ui-shadow-panel);
+}
+
+.character-profile-visual .ui-art-frame-content {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.character-profile-visual figcaption {
+  position: absolute;
+  right: var(--ui-space-4);
+  bottom: var(--ui-space-3);
+  color: var(--ui-text-tertiary);
+  font-size: var(--ui-font-size-xs);
+  letter-spacing: var(--ui-tracking-label);
+  text-transform: uppercase;
+}
+
+.character-profile-ring {
+  width: clamp(120px, 17vw, 210px);
+  height: clamp(120px, 17vw, 210px);
+  border-color: var(--ui-border-strong);
+  background: rgb(7 16 25 / 66%);
+  box-shadow: none;
+}
+
+.character-profile-ring .characters-icon {
+  width: 48%;
+  height: 48%;
+}
+
+.character-profile-copy {
+  max-width: 620px;
+}
+
+.character-profile-title h2 {
+  font-size: clamp(2rem, 4vw, 4rem);
+}
+
+.character-profile-title p {
+  max-width: 56ch;
+}
+
+.character-profile-facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2) var(--ui-space-5);
+  margin-top: var(--ui-space-5);
+  padding-block: var(--ui-space-4);
+  border-block: var(--ui-border-width) solid var(--ui-divider);
+}
+
+.character-profile-facts > div {
+  padding: var(--ui-space-2) 0;
+  border: 0;
+  background: transparent;
+}
+
+.character-profile-facts dt {
+  color: var(--ui-text-tertiary);
+}
+
+.character-profile-facts dd {
+  color: var(--ui-text-heading);
+}
+
+.character-profile-boundary.ui-primitive-panel {
+  margin-top: var(--ui-space-5);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-left: 3px solid var(--ui-accent);
+  background: rgb(7 16 25 / 76%);
+}
+
+/* Talent — graph dominant; only authoritative prerequisites get connectors. */
+.talent-screen {
+  background:
+    radial-gradient(circle at 66% 36%, rgb(36 55 73 / 40%), transparent 48%),
+    linear-gradient(145deg, var(--ui-canvas-deep), var(--ui-canvas) 58%, var(--ui-canvas-deep));
+}
+
+.talent-workspace {
+  grid-template-columns: minmax(220px, 270px) minmax(0, 1fr);
+}
+
+.talent-family-rail {
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-5) var(--ui-space-4);
+  border-color: var(--ui-border-subtle);
+  background: rgb(7 16 25 / 82%);
+}
+
+.talent-family-tabs {
+  gap: var(--ui-space-2);
+}
+
+.talent-family-tab.ui-primitive-button {
+  width: 100%;
+  min-height: 76px;
+  padding: var(--ui-space-3);
+  justify-content: stretch;
+  text-align: left;
+}
+
+.talent-family-tab.ui-primitive-button .ui-primitive-button-content {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: var(--ui-space-2) var(--ui-space-3);
+  align-items: start;
+  justify-content: stretch;
+}
+
+.talent-family-mark {
+  width: 36px;
+  height: 36px;
+  border-color: var(--ui-border);
+  border-radius: var(--ui-radius-control);
+  color: var(--ui-accent);
+  background: rgb(7 16 25 / 70%);
+}
+
+.talent-family-copy strong {
+  color: var(--ui-text-heading);
+}
+
+.talent-family-copy small {
+  color: var(--ui-text-tertiary);
+}
+
+.talent-family-state.ui-badge {
+  grid-column: 2;
+  justify-self: start;
+}
+
+.talent-account-note.ui-primitive-panel {
+  padding: var(--ui-space-3);
+  border-color: var(--ui-border-subtle);
+  background: rgb(25 39 54 / 52%);
+}
+
+.talent-account-note.ui-primitive-panel::before,
+.talent-production-boundary.ui-primitive-panel::before {
+  display: none;
+}
+
+.talent-content {
+  padding: clamp(20px, 3vw, 44px);
+}
+
+.talent-tree-heading {
+  align-items: center;
+}
+
+.talent-tree-heading .ui-title-lockup h2 {
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.talent-tree-meta {
+  gap: var(--ui-space-2);
+}
+
+.talent-production-boundary.ui-primitive-panel {
+  margin: var(--ui-space-4) 0 var(--ui-space-5);
+  grid-template-columns: auto minmax(0, 1fr);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-color: var(--ui-border);
+  border-left: 3px solid var(--ui-accent);
+  background: rgb(7 16 25 / 82%);
+}
+
+.talent-graph {
+  position: relative;
+  grid-template-columns: repeat(4, minmax(170px, 1fr));
+  gap: var(--ui-space-3);
+  align-items: start;
+}
+
+.talent-doctrine {
+  position: relative;
+  min-width: 0;
+  padding: var(--ui-space-3);
+  border: var(--ui-border-width) solid var(--ui-border-subtle);
+  border-radius: var(--ui-radius-panel);
+  background: rgb(25 39 54 / 54%);
+}
+
+.talent-doctrine header {
+  min-height: 52px;
+  padding-bottom: var(--ui-space-3);
+  border-color: var(--ui-divider);
+}
+
+.talent-doctrine header small {
+  color: var(--ui-accent);
+}
+
+.talent-doctrine h3 {
+  color: var(--ui-text-heading);
+}
+
+.talent-node-stack {
+  gap: 0;
+  padding-top: var(--ui-space-3);
+}
+
+.talent-graph-step {
+  display: grid;
+}
+
+.talent-graph-prerequisites {
+  position: relative;
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  padding: 18px 4px 6px;
+}
+
+.talent-graph-connector {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: var(--ui-accent);
+  opacity: 0.7;
+}
+
+.talent-graph-connector::before,
+.talent-graph-connector::after {
+  position: absolute;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--ui-accent);
+  background: var(--ui-canvas-deep);
+  transform: translateX(-50%) rotate(45deg);
+  content: "";
+}
+
+.talent-graph-connector::before {
+  top: 0;
+}
+
+.talent-graph-connector::after {
+  bottom: 0;
+}
+
+.talent-requirement {
+  z-index: 1;
+  max-width: 100%;
+  padding: 3px 7px;
+  border: var(--ui-border-width) solid var(--ui-border);
+  border-radius: var(--ui-radius-field);
+  color: var(--ui-accent-strong);
+  background: var(--ui-canvas-deep);
+  font-size: 0.58rem;
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.talent-node {
+  min-height: 146px;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3);
+  border-color: rgb(174 187 200 / 24%);
+  border-radius: var(--ui-radius-panel);
+  background: rgb(7 16 25 / 86%);
+  box-shadow: none;
+}
+
+.talent-node.is-approved {
+  border-color: var(--ui-border-strong);
+  box-shadow: inset 0 2px rgb(226 190 120 / 24%);
+}
+
+.talent-node-topline {
+  align-items: flex-start;
+}
+
+.talent-node-status {
+  color: inherit;
+}
+
+.talent-node h4 {
+  color: var(--ui-text-heading);
+  font-size: 0.94rem;
+}
+
+.talent-node-reward {
+  color: var(--ui-accent-strong);
+}
+
+.talent-node-ranks,
+.talent-node p,
+.talent-node code {
+  color: var(--ui-text-tertiary);
+}
+
+.talent-empty-emblem {
+  border-color: var(--ui-border);
+  background: var(--ui-surface);
+}
+
+@media (max-width: 1050px) {
+  .character-profile {
+    grid-template-columns: minmax(220px, 0.8fr) minmax(330px, 1.2fr);
+    gap: var(--ui-space-5);
+    padding: var(--ui-space-5);
+  }
+
+  .talent-workspace {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .talent-graph {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+}
+
+@media (max-height: 499px) {
+  .story-title-block.ui-title-lockup {
+    max-width: 42vw;
+  }
+
+  .story-title-block .ui-title-lockup-eyebrow {
+    display: none;
+  }
+
+  .story-title-block h2 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .story-caption.ui-primitive-panel {
+    width: min(760px, calc(100% - 32px));
+    min-height: 112px;
+    padding: var(--ui-space-3) var(--ui-space-4);
+  }
+
+  .story-line {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .characters-layout {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .characters-roster {
+    gap: var(--ui-space-2);
+    padding: var(--ui-space-2);
+  }
+
+  .characters-section-title small,
+  .characters-roster-note small,
+  .character-profile-boundary span {
+    display: none;
+  }
+
+  .character-card.ui-primitive-panel {
+    min-height: 58px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: var(--ui-space-2);
+  }
+
+  .character-card-crest {
+    width: 32px;
+    height: 32px;
+  }
+
+  .character-card-state.ui-badge {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .characters-roster-note.ui-primitive-panel {
+    margin-top: 0;
+    padding: var(--ui-space-2);
+  }
+
+  .character-profile {
+    grid-template-columns: minmax(150px, 0.7fr) minmax(300px, 1.3fr);
+    gap: var(--ui-space-3);
+    padding: var(--ui-space-3);
+  }
+
+  .character-profile-visual.ui-art-frame {
+    width: min(100%, 210px);
+    max-height: 282px;
+  }
+
+  .character-profile-ring {
+    width: 92px;
+    height: 92px;
+  }
+
+  .character-profile-title .ui-title-lockup-eyebrow {
+    display: none;
+  }
+
+  .character-profile-title h2 {
+    margin-top: 0;
+    font-size: 1.65rem;
+  }
+
+  .character-profile-title p {
+    margin-top: var(--ui-space-1);
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .character-profile-facts {
+    gap: 0 var(--ui-space-3);
+    margin-top: var(--ui-space-2);
+    padding-block: var(--ui-space-1);
+  }
+
+  .character-profile-facts > div {
+    padding: 3px 0;
+  }
+
+  .character-profile-boundary.ui-primitive-panel {
+    margin-top: var(--ui-space-2);
+    padding: var(--ui-space-2) var(--ui-space-3);
+  }
+
+  .talent-workspace {
+    grid-template-columns: 184px minmax(0, 1fr);
+  }
+
+  .talent-family-rail {
+    gap: var(--ui-space-2);
+    padding: var(--ui-space-2);
+  }
+
+  .talent-family-tab.ui-primitive-button {
+    min-height: 52px;
+    padding: 6px;
+  }
+
+  .talent-family-tab.ui-primitive-button .ui-primitive-button-content {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 4px 7px;
+  }
+
+  .talent-family-mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .talent-family-copy small,
+  .talent-account-note,
+  .talent-production-boundary span,
+  .talent-node p,
+  .talent-node code {
+    display: none;
+  }
+
+  .talent-family-copy strong {
+    font-size: 0.7rem;
+  }
+
+  .talent-content {
+    padding: 8px 10px;
+  }
+
+  .talent-tree-heading .ui-title-lockup-eyebrow {
+    display: none;
+  }
+
+  .talent-tree-heading .ui-title-lockup h2 {
+    margin: 0;
+    font-size: 1.45rem;
+  }
+
+  .talent-production-boundary.ui-primitive-panel {
+    margin: 5px 0 7px;
+    padding: 5px 8px;
+  }
+
+  .talent-graph {
+    grid-template-columns: repeat(4, minmax(130px, 1fr));
+    gap: 6px;
+  }
+
+  .talent-doctrine {
+    padding: 6px;
+  }
+
+  .talent-doctrine header {
+    min-height: 34px;
+    padding-bottom: 4px;
+  }
+
+  .talent-doctrine header small {
+    display: none;
+  }
+
+  .talent-doctrine h3 {
+    font-size: 0.8rem;
+  }
+
+  .talent-node-stack {
+    padding-top: 5px;
+  }
+
+  .talent-graph-prerequisites {
+    min-height: 39px;
+    padding: 11px 2px 3px;
+  }
+
+  .talent-requirement {
+    padding: 2px 4px;
+    font-size: 0.48rem;
+  }
+
+  .talent-node {
+    min-height: 92px;
+    gap: 3px;
+    padding: 6px;
+  }
+
+  .talent-node .ui-badge {
+    min-height: 18px;
+    padding: 1px 4px;
+    font-size: 0.49rem;
+  }
+
+  .talent-node-type {
+    font-size: 0.48rem;
+  }
+
+  .talent-node h4 {
+    font-size: 0.7rem;
+  }
+
+  .talent-node-reward,
+  .talent-node-ranks {
+    font-size: 0.56rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .characters-layout {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+
+  .character-profile {
+    grid-template-columns: 1fr;
+  }
+
+  .character-profile-visual.ui-art-frame {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-screen *,
+  .characters-screen *,
+  .talent-screen * {
+    scroll-behavior: auto;
+  }
+}
