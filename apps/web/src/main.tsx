@@ -54,6 +54,7 @@ import "./characters.css";
 import "./talent.css";
 import "./navigation-placement.css";
 import "./auth-screen.css";
+import "./ui24e1-auth-home.css";
 
 type AppScreen = "home" | "saga" | "campaign" | "characters" | "talent" | "story" | "battle";
 type AuthGateStatus = "bypassed" | "checking" | "guest" | "authenticated";
@@ -79,188 +80,91 @@ function browserStorage(): Storage | undefined {
   }
 }
 
-function queryDevMode(): string | null {
-  return new URLSearchParams(window.location.search).get("dev");
+function hasAuthCallbackPayload(): boolean {
+  const search = new URLSearchParams(window.location.search);
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  return AUTH_CALLBACK_QUERY_KEYS.some((key) => search.has(key) || hash.has(key));
 }
 
-function initialScreen(): AppScreen {
-  return queryDevMode() === "battle" ? "battle" : "home";
-}
-
-function isLandscapeViewport() {
-  return window.innerWidth >= window.innerHeight;
-}
-
-function authErrorMessage(error: unknown): string {
-  if (error instanceof Error && error.message.trim()) return error.message;
-  return "Fantasia could not complete the account request. Please try again.";
-}
-
-function authConfirmationReturnUrl(): string {
+function clearAuthCallbackPayload(): void {
   const url = new URL(window.location.href);
-  url.search = "";
+  for (const key of AUTH_CALLBACK_QUERY_KEYS) {
+    url.searchParams.delete(key);
+  }
   url.hash = "";
-  return url.toString();
-}
-
-function clearAuthCallbackFromLocation() {
-  const url = new URL(window.location.href);
-  for (const key of AUTH_CALLBACK_QUERY_KEYS) url.searchParams.delete(key);
-  url.hash = "";
-  const clean = `${url.pathname}${url.search}` || "/";
-  window.history.replaceState(window.history.state, "", clean);
-}
-
-function OrientationGate() {
-  return (
-    <main class="orientation-gate" aria-label="Landscape orientation required">
-      <div class="orientation-gate-card">
-        <div class="orientation-device" aria-hidden="true">
-          <span />
-        </div>
-        <p>Fantasia is designed for a wide battlefield view.</p>
-        <h1>Rotate your device</h1>
-        <p class="orientation-gate-detail">Landscape orientation is required to continue.</p>
-      </div>
-    </main>
-  );
+  window.history.replaceState(null, "", `${url.pathname}${url.search}`);
 }
 
 function App() {
-  const initialPreferences = loadUiPreferences(browserStorage());
-  const backendConfigured = isFantasiaBackendConfigured();
-  const authPreview = queryDevMode() === "auth";
-  const [screen, setScreen] = useState<AppScreen>(() => initialScreen());
-  const [storyNodeId, setStoryNodeId] = useState<string>();
-  const [preferences, setPreferences] = useState<UiPreferences>(initialPreferences.preferences);
-  const [storageMessage, setStorageMessage] = useState<string | undefined>(
-    initialPreferences.message,
-  );
+  const [screen, setScreen] = useState<AppScreen>("home");
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [landscape, setLandscape] = useState(() => isLandscapeViewport());
+  const settingsTriggerRef = useRef<HTMLElement | null>(null);
+  const [preferences, setPreferences] = useState(() => loadUiPreferences(browserStorage()));
+  const backendConfigured = isFantasiaBackendConfigured();
+  const [authGateStatus, setAuthGateStatus] = useState<AuthGateStatus>(() =>
+    backendConfigured ? "checking" : "bypassed",
+  );
   const [account, setAccount] = useState<RestoredFantasiaAccount | null>(null);
-  const [authStatus, setAuthStatus] = useState<AuthGateStatus>(() => {
-    if (authPreview) return "guest";
-    return backendConfigured ? "checking" : "bypassed";
-  });
   const [authBusy, setAuthBusy] = useState(false);
-  const [authMessage, setAuthMessage] = useState<AuthMessage>();
-  const [signOutBusy, setSignOutBusy] = useState(false);
-  const settingsTrigger = useRef<HTMLElement>();
+  const [authMessage, setAuthMessage] = useState<AuthMessage | undefined>();
 
   useEffect(() => {
     applyUiPreferences(preferences);
   }, [preferences]);
 
   useEffect(() => {
-    const updateOrientation = () => setLandscape(isLandscapeViewport());
-    window.addEventListener("resize", updateOrientation);
-    window.addEventListener("orientationchange", updateOrientation);
-    return () => {
-      window.removeEventListener("resize", updateOrientation);
-      window.removeEventListener("orientationchange", updateOrientation);
-    };
-  }, []);
+    if (!backendConfigured) return;
 
-  useEffect(() => {
-    if (!backendConfigured || authPreview) return;
-    let active = true;
-
-    void (async () => {
+    let cancelled = false;
+    async function restore() {
+      setAuthGateStatus("checking");
+      setAuthMessage(undefined);
       try {
-        const confirmation = await consumeFantasiaAuthRedirect(window.location.href);
-        if (!active) return;
-        if (confirmation.handled) clearAuthCallbackFromLocation();
-
-        if (confirmation.error) {
-          setAuthMessage({
-            tone: "error",
-            text: `${confirmation.error} Request a new confirmation email below if needed.`,
-          });
-          setAuthStatus("guest");
-          return;
+        if (hasAuthCallbackPayload()) {
+          const redirectedSession = await consumeFantasiaAuthRedirect();
+          if (redirectedSession) {
+            await persistAuthSession(redirectedSession);
+          }
+          clearAuthCallbackPayload();
         }
-
-        if (confirmation.session) {
-          await enterAuthenticatedSession(confirmation.session);
-          return;
-        }
-
         const restored = await restoreAccountSession();
-        if (!active) return;
-        if (restored) {
-          setAccount(restored);
-          setAuthStatus("authenticated");
-          return;
-        }
-        setAuthStatus("guest");
-      } catch (error: unknown) {
-        if (!active) return;
-        clearAuthCallbackFromLocation();
-        setAuthMessage({ tone: "error", text: authErrorMessage(error) });
-        setAuthStatus("guest");
+        if (cancelled) return;
+        setAccount(restored);
+        setAuthGateStatus(restored ? "authenticated" : "guest");
+      } catch (error) {
+        if (cancelled) return;
+        console.error(error);
+        setAuthGateStatus("guest");
+        setAuthMessage({
+          tone: "error",
+          text: error instanceof Error ? error.message : "Unable to restore the saved account session.",
+        });
       }
-    })();
-
+    }
+    void restore();
     return () => {
-      active = false;
+      cancelled = true;
     };
-  }, [authPreview, backendConfigured]);
-
-  function openSettings(trigger: HTMLElement) {
-    settingsTrigger.current = trigger;
-    setSettingsOpen(true);
-  }
-
-  function closeSettings() {
-    setSettingsOpen(false);
-    requestAnimationFrame(() => settingsTrigger.current?.focus());
-  }
-
-  function changePreferences(next: UiPreferences) {
-    setPreferences(next);
-    const result = saveUiPreferences(browserStorage(), next);
-    setStorageMessage(result.message);
-  }
-
-  function resetPreferences() {
-    const next = defaultUiPreferences();
-    setPreferences(next);
-    const result = resetUiPreferences(browserStorage());
-    setStorageMessage(result.message);
-  }
-
-  function retryPreferenceStorage() {
-    const result = saveUiPreferences(browserStorage(), preferences);
-    setStorageMessage(result.message ?? "Interface preferences are saved in this browser.");
-  }
-
-  async function enterAuthenticatedSession(
-    session: RestoredFantasiaAccount["session"],
-    displayName?: string,
-  ) {
-    const profile = await bootstrapAccount(session.accessToken, displayName);
-    const remembered = persistAuthSession(session);
-    setAccount({ session, profile });
-    setAuthStatus("authenticated");
-    setAuthMessage(
-      remembered
-        ? undefined
-        : {
-            tone: "info",
-            text: "Signed in for this session, but this browser could not save the login for automatic restore.",
-          },
-    );
-  }
+  }, [backendConfigured]);
 
   async function handleSignIn(email: string, password: string) {
     setAuthBusy(true);
     setAuthMessage(undefined);
     try {
       const session = await signInWithPassword(email, password);
-      await enterAuthenticatedSession(session);
+      await persistAuthSession(session);
+      const restored = await restoreAccountSession();
+      setAccount(restored);
+      setAuthGateStatus(restored ? "authenticated" : "guest");
+      if (!restored) {
+        setAuthMessage({ tone: "error", text: "Account profile could not be restored." });
+      }
     } catch (error) {
-      setAuthMessage({ tone: "error", text: authErrorMessage(error) });
+      console.error(error);
+      setAuthMessage({
+        tone: "error",
+        text: error instanceof Error ? error.message : "Unable to sign in.",
+      });
     } finally {
       setAuthBusy(false);
     }
@@ -270,82 +174,94 @@ function App() {
     setAuthBusy(true);
     setAuthMessage(undefined);
     try {
-      const result = await signUpWithPassword(email, password, authConfirmationReturnUrl());
-      if (!result.session) {
+      const result = await signUpWithPassword(email, password, displayName);
+      if (result.session) {
+        await persistAuthSession(result.session);
+        const restored = await restoreAccountSession();
+        setAccount(restored);
+        setAuthGateStatus(restored ? "authenticated" : "guest");
+        if (!restored) {
+          setAuthMessage({ tone: "error", text: "Account profile could not be restored." });
+        }
+      } else {
+        setAuthGateStatus("guest");
         setAuthMessage({
           tone: "success",
-          text: "Account request accepted. Check your email for a confirmation link. The link will return you to Fantasia and finish account access automatically.",
+          text: "Account created. Confirm your email, then sign in to continue.",
         });
-        return;
       }
-      await enterAuthenticatedSession(result.session, displayName);
     } catch (error) {
-      setAuthMessage({ tone: "error", text: authErrorMessage(error) });
+      console.error(error);
+      setAuthMessage({
+        tone: "error",
+        text: error instanceof Error ? error.message : "Unable to create the account.",
+      });
     } finally {
       setAuthBusy(false);
     }
   }
 
   async function handleResendConfirmation(email: string) {
-    if (!email.trim()) return;
     setAuthBusy(true);
     setAuthMessage(undefined);
     try {
-      await resendSignupConfirmation(email.trim(), authConfirmationReturnUrl());
-      setAuthMessage({
-        tone: "success",
-        text: "Confirmation email sent. Use the newest confirmation link to return to Fantasia.",
-      });
+      await resendSignupConfirmation(email);
+      setAuthMessage({ tone: "success", text: "Confirmation email sent." });
     } catch (error) {
-      setAuthMessage({ tone: "error", text: authErrorMessage(error) });
+      console.error(error);
+      setAuthMessage({
+        tone: "error",
+        text: error instanceof Error ? error.message : "Unable to resend confirmation email.",
+      });
     } finally {
       setAuthBusy(false);
     }
   }
 
   async function handleSignOut() {
-    if (!account || signOutBusy) return;
-    setSignOutBusy(true);
-    let remoteRevocationConfirmed = true;
+    setAuthBusy(true);
     try {
-      await signOut(account.session.accessToken);
-    } catch {
-      remoteRevocationConfirmed = false;
+      await signOut();
+    } catch (error) {
+      console.error(error);
     } finally {
       clearPersistedAuthSession();
       setAccount(null);
-      setSettingsOpen(false);
+      setAuthMessage(undefined);
       setScreen("home");
-      setAuthStatus("guest");
-      setAuthMessage({
-        tone: remoteRevocationConfirmed ? "success" : "info",
-        text: remoteRevocationConfirmed
-          ? "Signed out successfully."
-          : "Signed out on this browser. Server session revocation could not be confirmed.",
-      });
-      setSignOutBusy(false);
+      setAuthGateStatus(backendConfigured ? "guest" : "bypassed");
+      setAuthBusy(false);
     }
   }
 
-  if (authStatus === "checking") {
-    return (
-      <AuthScreen
-        backendConfigured={backendConfigured}
-        busy={false}
-        restoring
-        onSignIn={() => undefined}
-        onCreateAccount={() => undefined}
-        onResendConfirmation={() => undefined}
-      />
-    );
+  function openSettings(trigger: HTMLElement) {
+    settingsTriggerRef.current = trigger;
+    setSettingsOpen(true);
   }
 
-  if (authStatus === "guest") {
+  function closeSettings() {
+    setSettingsOpen(false);
+    requestAnimationFrame(() => settingsTriggerRef.current?.focus());
+  }
+
+  function updatePreferences(next: UiPreferences) {
+    setPreferences(next);
+    saveUiPreferences(next, browserStorage());
+  }
+
+  function resetPreferences() {
+    const next = defaultUiPreferences();
+    setPreferences(next);
+    saveUiPreferences(next, browserStorage());
+  }
+
+  if (authGateStatus === "checking" || authGateStatus === "guest") {
     return (
       <AuthScreen
         backendConfigured={backendConfigured}
         busy={authBusy}
-        {...(authMessage === undefined ? {} : { message: authMessage })}
+        restoring={authGateStatus === "checking"}
+        {...(authMessage ? { message: authMessage } : {})}
         onSignIn={(email, password) => void handleSignIn(email, password)}
         onCreateAccount={(email, password, displayName) =>
           void handleCreateAccount(email, password, displayName)
@@ -354,15 +270,6 @@ function App() {
       />
     );
   }
-
-  if (!landscape) return <OrientationGate />;
-
-  const accountSettings = account
-    ? {
-        displayName: account.profile.displayName,
-        ...(account.session.user.email === undefined ? {} : { email: account.session.user.email }),
-      }
-    : undefined;
 
   return (
     <>
@@ -375,107 +282,73 @@ function App() {
           onSettings={openSettings}
         />
       ) : null}
-
-      {screen === "characters" ? (
-        <CharactersApp onHome={() => setScreen("home")} onSettings={openSettings} />
-      ) : null}
-
-      {screen === "talent" ? (
-        <TalentApp onHome={() => setScreen("home")} onSettings={openSettings} />
-      ) : null}
-
       {screen === "saga" ? (
         <SagaApp
+          onBack={() => setScreen("home")}
           onHome={() => setScreen("home")}
-          onContinue={() => setScreen("campaign")}
+          onOpenChapter={() => setScreen("campaign")}
           onSettings={openSettings}
         />
       ) : null}
-
-      <div class="campaign-rooted-shell" hidden={screen !== "campaign"}>
+      {screen === "campaign" ? (
         <CampaignApp
-          onEnterStory={(nodeId) => {
-            setStoryNodeId(nodeId);
-            setScreen("story");
-          }}
+          onBack={() => setScreen("saga")}
+          onHome={() => setScreen("home")}
+          onViewStory={() => setScreen("story")}
+          onEnterBattle={() => setScreen("battle")}
+          onSettings={openSettings}
         />
-        <nav
-          class="campaign-root-navigation game-navigation-cluster"
-          aria-label="Campaign root navigation"
-        >
-          <div class="game-navigation-start">
-            <GameButton
-              icon="back"
-              compactLabel="Back"
-              aria-label="Back"
-              onClick={() => setScreen("saga")}
-            >
-              Back to Saga
-            </GameButton>
-          </div>
-          <div class="game-navigation-end">
-            <GameButton
-              icon="home"
-              compactLabel="Home"
-              aria-label="Home"
-              onClick={() => setScreen("home")}
-            >
-              Home
-            </GameButton>
-            <GameButton
-              icon="settings"
-              compactLabel="Settings"
-              aria-label="Settings"
-              onClick={(event) => openSettings(event.currentTarget)}
-            >
-              Settings
-            </GameButton>
-          </div>
-        </nav>
-      </div>
-
-      {screen === "story" && storyNodeId ? (
-        <StoryApp
-          nodeId={storyNodeId}
-          onReturnCampaign={() => setScreen("campaign")}
+      ) : null}
+      {screen === "characters" ? (
+        <CharactersApp
+          onBack={() => setScreen("home")}
           onHome={() => setScreen("home")}
           onSettings={openSettings}
         />
       ) : null}
-
-      {screen === "battle" ? <BattleApp onReturnCampaign={() => setScreen("campaign")} /> : null}
-
+      {screen === "talent" ? (
+        <TalentApp
+          onBack={() => setScreen("home")}
+          onHome={() => setScreen("home")}
+          onSettings={openSettings}
+        />
+      ) : null}
+      {screen === "story" ? (
+        <StoryApp
+          onBack={() => setScreen("campaign")}
+          onHome={() => setScreen("home")}
+          onContinue={() => setScreen("battle")}
+          onSettings={openSettings}
+        />
+      ) : null}
       {screen === "battle" ? (
-        <button
-          type="button"
-          aria-label="Settings"
-          class="global-settings-launcher ui-button secondary battle"
-          onClick={(event) => openSettings(event.currentTarget)}
-        >
-          Settings
-        </button>
+        <BattleApp
+          onBack={() => setScreen("campaign")}
+          onHome={() => setScreen("home")}
+          onSettings={openSettings}
+        />
       ) : null}
 
       <SettingsDialog
         open={settingsOpen}
         preferences={preferences}
-        {...(storageMessage === undefined ? {} : { storageMessage })}
-        {...(accountSettings === undefined
-          ? {}
-          : {
-              account: accountSettings,
-              signOutBusy,
-              onSignOut: () => void handleSignOut(),
-            })}
-        onChange={changePreferences}
+        onChange={updatePreferences}
         onReset={resetPreferences}
-        onRetryStorage={retryPreferenceStorage}
         onClose={closeSettings}
+        {...(backendConfigured && account
+          ? {
+              accountLabel: account.profile.displayName,
+              accountDetail: account.email ?? account.userId,
+              signOutBusy: authBusy,
+              onSignOut: () => void handleSignOut(),
+            }
+          : {})}
       />
     </>
   );
 }
 
 const root = document.getElementById("app");
-if (!root) throw new Error("Fantasia root element was not found.");
+if (!root) throw new Error("Missing #app root");
+
 render(<App />, root);
