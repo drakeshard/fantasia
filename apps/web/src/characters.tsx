@@ -93,7 +93,11 @@ export function CharactersApp({ onHome, onSettings }: CharactersAppProps) {
               </div>
             </dl>
 
-            <UiPanel class="character-profile-boundary" tone="overlay" ariaLabel="Character system boundary">
+            <UiPanel
+              class="character-profile-boundary"
+              tone="overlay"
+              ariaLabel="Character system boundary"
+            >
               <strong>Character systems are still opening up.</strong>
               <span>
                 Levels, numeric stats, skills, equipment, class paths, rarity and recruitment are
