@@ -85,7 +85,8 @@ export function AuthScreen({
                 </p>
               </header>
 
-              <div class="auth-mode-switch" role="group" aria-label="Account access mode">
+              <fieldset class="auth-mode-switch">
+                <legend>Account access mode</legend>
                 <button
                   type="button"
                   class={createMode ? "" : "is-active"}
@@ -104,7 +105,7 @@ export function AuthScreen({
                 >
                   Create account
                 </button>
-              </div>
+              </fieldset>
 
               <form class="auth-form" onSubmit={submit}>
                 {createMode ? (
@@ -152,6 +153,7 @@ export function AuthScreen({
                     />
                     <button
                       type="button"
+                      class="auth-password-toggle"
                       onClick={() => setShowPassword((current) => !current)}
                       disabled={busy}
                       aria-label={showPassword ? "Hide password" : "Show password"}
@@ -184,7 +186,7 @@ export function AuthScreen({
 
               <footer class="auth-panel-footer">
                 <p>Email/password is the current supported account method.</p>
-                <small>
+                <small class="auth-panel-footnote">
                   Password recovery, social login, and other account methods are not available yet.
                 </small>
               </footer>
