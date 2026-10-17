@@ -19,11 +19,7 @@ import {
   ValidationBadge,
   VersionBadge,
 } from "./semantic";
-import type {
-  LifecycleState,
-  RuntimeReadinessState,
-  ValidationState,
-} from "./semantic-model";
+import type { LifecycleState, RuntimeReadinessState, ValidationState } from "./semantic-model";
 
 function cx(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(" ");
@@ -115,12 +111,12 @@ export function StudioShell({
 
       <div class="studio-shell__body">
         <header class="studio-shell__topbar">
-          <div class="studio-shell__search" aria-label="Global search and browser slot">
+          <section class="studio-shell__search" aria-label="Global search and browser slot">
             {searchSlot}
-          </div>
-          <div class="studio-shell__session" aria-label="User session and role slot">
+          </section>
+          <section class="studio-shell__session" aria-label="User session and role slot">
             {sessionSlot}
-          </div>
+          </section>
         </header>
         <div class="studio-shell__viewport">{children}</div>
       </div>
@@ -197,12 +193,7 @@ export function WorkspaceHeader({
   );
 }
 
-export type WorkspaceStateKind =
-  | "loading"
-  | "empty"
-  | "error"
-  | "read-only"
-  | "unauthorized";
+export type WorkspaceStateKind = "loading" | "empty" | "error" | "read-only" | "unauthorized";
 
 export function WorkspaceStateRegion({ state }: { state: WorkspaceStateKind }) {
   if (state === "loading") {
@@ -399,12 +390,7 @@ export function EntityWorkspaceTemplate({
         onSelect={onTabSelect}
       />
       {tabs.map((tab) => (
-        <TabPanel
-          tabsId={tabsId}
-          tabId={tab.id}
-          selected={selectedTab === tab.id}
-          key={tab.id}
-        >
+        <TabPanel tabsId={tabsId} tabId={tab.id} selected={selectedTab === tab.id} key={tab.id}>
           {panels[tab.id] ?? <WorkspaceStateRegion state="empty" />}
         </TabPanel>
       ))}
