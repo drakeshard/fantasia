@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 1,
+  "id": "CH01-B01-LAYOUT-CANDIDATE-v001",
+  "stageId": "CH01-B01",
+  "title": "Strangers on the Road",
+  "status": "provisional-layout-candidate",
+  "gameD222Compliance": false,
+  "gameD222Dependency": "The approved original GAME-D222 prompt text is unavailable. This candidate follows GAME-D221 and M05 only and must not be labeled GAME-D222 compliant.",
+  "storyAuthority": "content/narrative/story.json",
+  "coordinateSystem": {
+    "origin": "north-west",
+    "xIncreases": "east",
+    "yIncreases": "south",
+    "groundAdjacency": "four-cardinal",
+    "unit": "square-cell"
+  },
+  "bounds": {
+    "minX": 0,
+    "maxX": 17,
+    "minY": 0,
+    "maxY": 11
+  },
+  "environmentIntent": {
+    "location": "wooded farmland on the Loire approaches east of Orleans",
+    "time": "late afternoon",
+    "presentation": "2D tactical geometry only; no decorative environment art is approved by this file",
+    "functionalRegions": [
+      {
+        "id": "west-approach",
+        "purpose": "civilian/cart starting approach and rear-pressure side",
+        "cells": [
+          { "x": 0, "y": 5 },
+          { "x": 0, "y": 6 },
+          { "x": 1, "y": 5 },
+          { "x": 1, "y": 6 },
+          { "x": 2, "y": 5 },
+          { "x": 2, "y": 6 },
+          { "x": 3, "y": 5 },
+          { "x": 3, "y": 6 },
+          { "x": 4, "y": 5 },
+          { "x": 4, "y": 6 }
+        ]
+      },
+      {
+        "id": "central-road",
+        "purpose": "initial ambush contact and cart protection space",
+        "cells": [
+          { "x": 5, "y": 5 },
+          { "x": 5, "y": 6 },
+          { "x": 6, "y": 5 },
+          { "x": 6, "y": 6 },
+          { "x": 7, "y": 5 },
+          { "x": 7, "y": 6 },
+          { "x": 8, "y": 5 },
+          { "x": 8, "y": 6 },
+          { "x": 9, "y": 5 },
+          { "x": 9, "y": 6 },
+          { "x": 10, "y": 5 },
+          { "x": 10, "y": 6 },
+          { "x": 11, "y": 5 },
+          { "x": 11, "y": 6 }
+        ]
+      },
+      {
+        "id": "east-bend",
+        "purpose": "opened escape corridor and cart exit approach",
+        "cells": [
+          { "x": 12, "y": 4 },
+          { "x": 12, "y": 5 },
+          { "x": 12, "y": 6 },
+          { "x": 13, "y": 4 },
+          { "x": 13, "y": 5 },
+          { "x": 13, "y": 6 },
+          { "x": 14, "y": 4 },
+          { "x": 14, "y": 5 },
+          { "x": 14, "y": 6 },
+          { "x": 15, "y": 4 },
+          { "x": 15, "y": 5 },
+          { "x": 15, "y": 6 },
+          { "x": 16, "y": 4 },
+          { "x": 16, "y": 5 },
+          { "x": 16, "y": 6 },
+          { "x": 17, "y": 4 },
+          { "x": 17, "y": 5 },
+          { "x": 17, "y": 6 }
+        ]
+      },
+      {
+        "id": "north-ridge",
+        "purpose": "candidate elevated entry area for Hangaku's ranged intervention",
+        "cells": [
+          { "x": 8, "y": 1 },
+          { "x": 9, "y": 1 },
+          { "x": 10, "y": 1 },
+          { "x": 11, "y": 1 },
+          { "x": 8, "y": 2 },
+          { "x": 9, "y": 2 },
+          { "x": 10, "y": 2 },
+          { "x": 11, "y": 2 },
+          { "x": 12, "y": 2 },
+          { "x": 9, "y": 3 },
+          { "x": 10, "y": 3 },
+          { "x": 11, "y": 3 },
+          { "x": 12, "y": 3 }
+        ]
+      },
+      {
+        "id": "south-track",
+        "purpose": "side entry for La Hire and secondary route pressure",
+        "cells": [
+          { "x": 3, "y": 9 },
+          { "x": 4, "y": 9 },
+          { "x": 5, "y": 9 },
+          { "x": 4, "y": 10 },
+          { "x": 5, "y": 10 },
+          { "x": 6, "y": 10 },
+          { "x": 5, "y": 11 },
+          { "x": 6, "y": 11 }
+        ]
+      }
+    ]
+  },
+  "terrain": {
+    "blockedCells": [
+      { "x": 0, "y": 0 },
+      { "x": 1, "y": 0 },
+      { "x": 2, "y": 0 },
+      { "x": 3, "y": 0 },
+      { "x": 0, "y": 1 },
+      { "x": 1, "y": 1 },
+      { "x": 2, "y": 1 },
+      { "x": 3, "y": 1 },
+      { "x": 4, "y": 1 },
+      { "x": 0, "y": 2 },
+      { "x": 1, "y": 2 },
+      { "x": 2, "y": 2 },
+      { "x": 3, "y": 2 },
+      { "x": 4, "y": 2 },
+      { "x": 5, "y": 2 },
+      { "x": 0, "y": 3 },
+      { "x": 1, "y": 3 },
+      { "x": 2, "y": 3 },
+      { "x": 5, "y": 3 },
+      { "x": 6, "y": 3 },
+      { "x": 15, "y": 0 },
+      { "x": 16, "y": 0 },
+      { "x": 17, "y": 0 },
+      { "x": 15, "y": 1 },
+      { "x": 16, "y": 1 },
+      { "x": 17, "y": 1 },
+      { "x": 16, "y": 2 },
+      { "x": 17, "y": 2 },
+      { "x": 0, "y": 9 },
+      { "x": 1, "y": 9 },
+      { "x": 8, "y": 9 },
+      { "x": 9, "y": 9 },
+      { "x": 10, "y": 9 },
+      { "x": 11, "y": 9 },
+      { "x": 12, "y": 9 },
+      { "x": 13, "y": 9 },
+      { "x": 14, "y": 9 },
+      { "x": 15, "y": 9 },
+      { "x": 16, "y": 9 },
+      { "x": 17, "y": 9 },
+      { "x": 0, "y": 10 },
+      { "x": 1, "y": 10 },
+      { "x": 2, "y": 10 },
+      { "x": 8, "y": 10 },
+      { "x": 9, "y": 10 },
+      { "x": 10, "y": 10 },
+      { "x": 11, "y": 10 },
+      { "x": 12, "y": 10 },
+      { "x": 13, "y": 10 },
+      { "x": 14, "y": 10 },
+      { "x": 15, "y": 10 },
+      { "x": 16, "y": 10 },
+      { "x": 17, "y": 10 },
+      { "x": 0, "y": 11 },
+      { "x": 1, "y": 11 },
+      { "x": 2, "y": 11 },
+      { "x": 3, "y": 11 },
+      { "x": 8, "y": 11 },
+      { "x": 9, "y": 11 },
+      { "x": 10, "y": 11 },
+      { "x": 11, "y": 11 },
+      { "x": 12, "y": 11 },
+      { "x": 13, "y": 11 },
+      { "x": 14, "y": 11 },
+      { "x": 15, "y": 11 },
+      { "x": 16, "y": 11 },
+      { "x": 17, "y": 11 }
+    ],
+    "elevationCells": [
+      { "x": 8, "y": 1, "level": 1 },
+      { "x": 9, "y": 1, "level": 1 },
+      { "x": 10, "y": 1, "level": 1 },
+      { "x": 11, "y": 1, "level": 1 },
+      { "x": 8, "y": 2, "level": 1 },
+      { "x": 9, "y": 2, "level": 1 },
+      { "x": 10, "y": 2, "level": 1 },
+      { "x": 11, "y": 2, "level": 1 },
+      { "x": 12, "y": 2, "level": 1 },
+      { "x": 9, "y": 3, "level": 1 },
+      { "x": 10, "y": 3, "level": 1 },
+      { "x": 11, "y": 3, "level": 1 },
+      { "x": 12, "y": 3, "level": 1 }
+    ],
+    "movementCost": {
+      "default": 1,
+      "exceptions": [],
+      "note": "No difficult-ground cost is frozen for this candidate. Functional-region labels are descriptive only."
+    }
+  },
+  "cart": {
+    "status": "candidate-objective-footprint",
+    "footprint": {
+      "width": 2,
+      "height": 1,
+      "orientation": "east-west",
+      "anchorMeaning": "western occupied cell"
+    },
+    "startAnchor": { "x": 4, "y": 6 },
+    "routeAnchors": [
+      { "x": 4, "y": 6 },
+      { "x": 5, "y": 6 },
+      { "x": 6, "y": 6 },
+      { "x": 7, "y": 6 },
+      { "x": 8, "y": 6 },
+      { "x": 9, "y": 6 },
+      { "x": 10, "y": 6 },
+      { "x": 11, "y": 6 },
+      { "x": 12, "y": 6 },
+      { "x": 12, "y": 5 },
+      { "x": 13, "y": 5 },
+      { "x": 14, "y": 5 },
+      { "x": 15, "y": 5 },
+      { "x": 16, "y": 5 }
+    ],
+    "exitZone": [
+      { "x": 16, "y": 4 },
+      { "x": 16, "y": 5 },
+      { "x": 16, "y": 6 },
+      { "x": 17, "y": 4 },
+      { "x": 17, "y": 5 },
+      { "x": 17, "y": 6 }
+    ],
+    "clearanceRule": "For every route anchor, both the anchor cell and the adjacent eastern footprint cell must be in bounds and unblocked.",
+    "runtimeGap": "Current production battlefield placement is single-square active-entity occupancy. Cart movement/footprint/objective semantics are not yet implemented and remain title-local work after layout acceptance."
+  },
+  "deployment": {
+    "initial": [
+      {
+        "id": "mc",
+        "side": "allied",
+        "label": "MC",
+        "cell": { "x": 3, "y": 7 },
+        "storyConstraint": "normal Attack disabled"
+      },
+      { "id": "julie", "side": "allied", "label": "Julie", "cell": { "x": 6, "y": 5 } },
+      { "id": "local-escort-a", "side": "allied", "label": "Escort A", "cell": { "x": 5, "y": 7 } },
+      { "id": "local-escort-b", "side": "allied", "label": "Escort B", "cell": { "x": 4, "y": 4 } },
+      {
+        "id": "civilian-a",
+        "side": "protected",
+        "label": "Civilian A",
+        "cell": { "x": 2, "y": 5 }
+      },
+      {
+        "id": "civilian-b",
+        "side": "protected",
+        "label": "Civilian B",
+        "cell": { "x": 2, "y": 7 }
+      },
+      {
+        "id": "civilian-c",
+        "side": "protected",
+        "label": "Civilian C",
+        "cell": { "x": 4, "y": 8 }
+      },
+      { "id": "forager-a", "side": "enemy", "label": "Forager A", "cell": { "x": 7, "y": 4 } },
+      { "id": "forager-b", "side": "enemy", "label": "Forager B", "cell": { "x": 8, "y": 5 } },
+      { "id": "forager-c", "side": "enemy", "label": "Forager C", "cell": { "x": 7, "y": 8 } },
+      { "id": "forager-d", "side": "enemy", "label": "Forager D", "cell": { "x": 9, "y": 7 } },
+      { "id": "forager-e", "side": "enemy", "label": "Forager E", "cell": { "x": 10, "y": 4 } }
+    ],
+    "reinforcements": [
+      {
+        "phase": "hangaku-intervention",
+        "beatId": "CH01-B01-BEAT-02",
+        "id": "hangaku",
+        "side": "allied",
+        "knowledgeLabel": "Unknown Warrior",
+        "entryCell": { "x": 10, "y": 2 },
+        "note": "Entry uses the candidate north ridge. Exact range/LoS mechanics are not authored by this layout."
+      },
+      {
+        "phase": "rear-pressure",
+        "beatId": "CH01-B01-BEAT-03",
+        "id": "forager-reinforcement-a",
+        "side": "enemy",
+        "label": "Forager Reinforcement A",
+        "entryCell": { "x": 2, "y": 8 }
+      },
+      {
+        "phase": "rear-pressure",
+        "beatId": "CH01-B01-BEAT-03",
+        "id": "forager-reinforcement-b",
+        "side": "enemy",
+        "label": "Forager Reinforcement B",
+        "entryCell": { "x": 3, "y": 9 }
+      },
+      {
+        "phase": "la-hire-entry",
+        "beatId": "CH01-B01-BEAT-03",
+        "id": "la-hire",
+        "side": "allied",
+        "knowledgeLabel": "Rough Swordsman",
+        "entryCell": { "x": 5, "y": 11 },
+        "note": "Side entry is intentionally separated from the west road so the intervention reads as a flank rather than a rear spawn."
+      }
+    ]
+  },
+  "objectives": {
+    "initial": {
+      "beatId": "CH01-B01-BEAT-01",
+      "text": "Protect the civilians and supply cart; MC survives and assists while normal Attack remains disabled.",
+      "failureCandidates": [
+        "all protected civilians incapacitated",
+        "cart rendered unable to continue",
+        "MC incapacitated"
+      ],
+      "status": "candidate-only; failure semantics are not frozen"
+    },
+    "final": {
+      "beatId": "CH01-B01-BEAT-04",
+      "text": "Escort the civilians and cart through the east exit corridor toward shelter.",
+      "requiredExitRegion": "east-bend",
+      "status": "story outcome approved; exact runtime completion predicate remains open"
+    }
+  },
+  "phaseAnnotations": [
+    {
+      "beatId": "CH01-B01-BEAT-01",
+      "geometryIntent": "Initial pressure comes from the central/eastern road while civilians cluster behind the cart on the west approach."
+    },
+    {
+      "beatId": "CH01-B01-BEAT-02",
+      "geometryIntent": "Hangaku enters from the north ridge and interrupts a threat without requiring this layout to define universal cover or LoS rules."
+    },
+    {
+      "beatId": "CH01-B01-BEAT-03",
+      "geometryIntent": "Rear pressure appears from the south-west track, then La Hire enters from the southern side and creates room to disengage."
+    },
+    {
+      "beatId": "CH01-B01-BEAT-04",
+      "geometryIntent": "The combat focus shifts from holding the cart to moving the cart/civilians along the two-cell-wide road into the east exit zone."
+    },
+    {
+      "beatId": "CH01-B01-BEAT-05",
+      "geometryIntent": "No new battle geometry; post-battle identity reveal occurs after the party clears the danger area."
+    }
+  ],
+  "candidateAssumptions": [
+    "18x12 is a first playtest footprint, not an approved standard map size.",
+    "Five initial attackers plus two rear-pressure reinforcements are layout markers only and do not freeze encounter balance.",
+    "The cart is modeled as a 2x1 east-west footprint solely to test route clearance; final cart interaction/movement rules are unresolved.",
+    "The north ridge uses elevation +1 to provide a readable ranged-entry perch; this does not author a universal high-ground bonus or LoS rule.",
+    "No difficult-ground movement costs, cover values, hazards, weather, destructibles, or hidden routes are introduced by this candidate."
+  ],
+  "runtimeGapsBeforeProductionExecution": [
+    "accepted owner-reviewed B01 geometry",
+    "cart/objective footprint and movement semantics",
+    "protected civilian behavior and defeat/failure semantics",
+    "phase/reinforcement trigger semantics",
+    "MC battle restriction that disables normal Attack until the later approved story point",
+    "B01-specific victory/failure predicate",
+    "encounter AI/content values sufficient for a production battle"
+  ]
+}
