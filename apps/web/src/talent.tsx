@@ -43,10 +43,7 @@ function TalentGraphNode({ node }: { readonly node: TalentNodeView }) {
   return (
     <div class="talent-graph-step">
       {requirements.length > 0 ? (
-        <section
-          class="talent-graph-prerequisites"
-          aria-label={`Prerequisites for ${node.name}`}
-        >
+        <section class="talent-graph-prerequisites" aria-label={`Prerequisites for ${node.name}`}>
           <span class="talent-graph-connector" aria-hidden="true" />
           {requirements.map((requirement) => (
             <span class="talent-requirement" key={prerequisiteLabel(requirement)}>
