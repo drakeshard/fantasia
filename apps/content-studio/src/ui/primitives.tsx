@@ -234,6 +234,7 @@ export function Tabs({ id, label, tabs, selectedId, onSelect }: TabsProps) {
     const enabledPosition = enabled.indexOf(currentIndex);
     const nextPosition = (enabledPosition + direction + enabled.length) % enabled.length;
     const nextIndex = enabled[nextPosition];
+    if (nextIndex === undefined) return;
     const nextTab = tabs[nextIndex];
     if (!nextTab) return;
     refs.current[nextIndex]?.focus();
@@ -409,10 +410,7 @@ type StateMessageProps = {
 
 export function StateMessage({ title, children, tone = "neutral", action }: StateMessageProps) {
   return (
-    <div
-      class={cx("ui-state-message", `ui-state-message--${tone}`)}
-      role={tone === "error" ? "alert" : "status"}
-    >
+    <div class={cx("ui-state-message", `ui-state-message--${tone}`)} role={tone === "error" ? "alert" : undefined}>
       <strong>{title}</strong>
       <span>{children}</span>
       {action ? <div class="ui-state-message__action">{action}</div> : null}
@@ -421,6 +419,7 @@ export function StateMessage({ title, children, tone = "neutral", action }: Stat
 }
 
 type DialogProps = {
+  id: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
@@ -431,6 +430,7 @@ type DialogProps = {
 };
 
 export function Dialog({
+  id,
   open,
   onOpenChange,
   title,
@@ -441,6 +441,8 @@ export function Dialog({
 }: DialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const titleId = `${id}-title`;
+  const descriptionId = `${id}-description`;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -475,10 +477,11 @@ export function Dialog({
 
   return (
     <dialog
+      id={id}
       class={cx("ui-dialog", placement === "drawer" && "ui-dialog--drawer")}
       ref={dialogRef}
-      aria-labelledby="ui-dialog-title"
-      aria-describedby={description ? "ui-dialog-description" : undefined}
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
       onCancel={(event) => {
         event.preventDefault();
         onOpenChange(false);
@@ -486,8 +489,8 @@ export function Dialog({
     >
       <div class="ui-dialog__header">
         <div>
-          <h2 id="ui-dialog-title">{title}</h2>
-          {description ? <p id="ui-dialog-description">{description}</p> : null}
+          <h2 id={titleId}>{title}</h2>
+          {description ? <p id={descriptionId}>{description}</p> : null}
         </div>
         <IconButton label="Close dialog" icon="×" variant="quiet" onClick={() => onOpenChange(false)} />
       </div>
