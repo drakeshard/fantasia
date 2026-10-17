@@ -3,6 +3,7 @@ import { useState } from "preact/hooks";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./ui/primitives.css";
+import "./ui/semantic.css";
 import "./styles/foundation-preview.css";
 import {
   ActionGroup,
@@ -13,7 +14,6 @@ import {
   Dialog,
   Divider,
   IconButton,
-  List,
   ProgressBar,
   SectionHeading,
   SelectField,
@@ -26,19 +26,22 @@ import {
   TextField,
   Toolbar,
 } from "./ui/primitives";
-
-const lifecycle = [
-  "working",
-  "candidate",
-  "in-review",
-  "approved",
-  "frozen",
-  "runtime-ready",
-  "published",
-  "retired",
-] as const;
-
-const validation = ["passed", "warning", "blocking", "unknown"] as const;
+import {
+  LifecycleBadge,
+  LifecycleProgress,
+  ProvenanceSummary,
+  ProviderReference,
+  ReadinessSummary,
+  RelationCard,
+  ReviewBadge,
+  ReviewSummary,
+  RuntimeDerivativeCard,
+  SemanticDimensionGrid,
+  SemanticFixture,
+  ValidationBadge,
+  VersionHistoryItem,
+} from "./ui/semantic";
+import { lifecycleOrder } from "./ui/semantic-model";
 
 const tabs = [
   { id: "overview", label: "Overview", disabled: false },
@@ -64,19 +67,328 @@ function App() {
   return (
     <main class="foundation-preview" aria-labelledby="studio-title">
       <header class="foundation-preview__hero">
-        <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00B</p>
+        <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00C</p>
         <h1 id="studio-title">Fantasia Content Studio</h1>
         <p>
-          Reusable, content-agnostic primitives and interaction states. Semantic lifecycle, review,
-          validation and runtime components remain reserved for the next layer.
+          Shared Studio semantics layered over the 00A token system and 00B primitives. Lifecycle,
+          review, validation, runtime readiness, publication and verification remain independently
+          visible.
         </p>
       </header>
+
+      <section class="preview-section" aria-labelledby="semantic-lifecycle-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="semantic-lifecycle-title">Lifecycle vocabulary</h2>
+            <p>
+              One exact lifecycle sequence is reused everywhere. Review and readiness never create
+              alternate lifecycle states.
+            </p>
+          </div>
+          <LifecycleBadge state="approved" />
+        </div>
+        <LifecycleProgress state="approved" versionLabel="asset v003" />
+        <p class="preview-meta preview-meta--spaced">Exact reusable lifecycle badge set</p>
+        <div class="semantic-grid" data-testid="lifecycle-badge-set">
+          {lifecycleOrder.map((state) => (
+            <LifecycleBadge state={state} key={state} />
+          ))}
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="mixed-state-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="mixed-state-title">Independent semantic dimensions</h2>
+            <p>
+              Mixed fixtures prove lifecycle, validation, review, runtime, publication and
+              verification can coexist without being collapsed.
+            </p>
+          </div>
+        </div>
+        <div class="studio-semantic-fixture-grid">
+          <SemanticFixture
+            title="Approved with validation warning"
+            description="Content approval does not erase technical warnings."
+            testId="fixture-approved-warning"
+          >
+            <SemanticDimensionGrid
+              lifecycle="approved"
+              validation="warning"
+              review="approved"
+              runtimeReadiness="not-ready"
+              publication="unpublished"
+              verification="unverified"
+            />
+          </SemanticFixture>
+
+          <SemanticFixture
+            title="Frozen but runtime not ready"
+            description="Freeze and runtime readiness remain separate gates."
+            testId="fixture-frozen-runtime-not-ready"
+          >
+            <SemanticDimensionGrid
+              lifecycle="frozen"
+              validation="passed"
+              review="approved"
+              runtimeReadiness="not-ready"
+              publication="unpublished"
+              verification="unverified"
+            />
+          </SemanticFixture>
+
+          <SemanticFixture
+            title="Runtime ready, not published"
+            description="Readiness can be satisfied before publication."
+            testId="fixture-runtime-ready-unpublished"
+          >
+            <SemanticDimensionGrid
+              lifecycle="runtime-ready"
+              validation="passed"
+              review="approved"
+              runtimeReadiness="ready"
+              publication="unpublished"
+              verification="unverified"
+            />
+          </SemanticFixture>
+
+          <SemanticFixture
+            title="Published with verification warning"
+            description="Post-publish warning does not rewrite lifecycle history."
+            testId="fixture-published-verification-warning"
+          >
+            <SemanticDimensionGrid
+              lifecycle="published"
+              validation="passed"
+              review="approved"
+              runtimeReadiness="ready"
+              publication="published"
+              verification="warning"
+            />
+          </SemanticFixture>
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="review-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="review-title">Review, approval and readiness</h2>
+            <p>
+              Review presentation is explicitly version-scoped and permission-aware only at the UI
+              level; no privileged mutation exists here.
+            </p>
+          </div>
+        </div>
+        <div class="studio-semantic-fixture-grid">
+          <ReviewSummary
+            versionLabel="character.jeanne.base / v003"
+            state="requested"
+            assignee="Art approver"
+            commentCount={3}
+            changeRequestCount={0}
+            approvalEligible
+            freezeEligible={false}
+          />
+          <ReviewSummary
+            versionLabel="character.jeanne.base / v002"
+            state="changes-requested"
+            assignee="Asset owner"
+            commentCount={7}
+            changeRequestCount={2}
+            approvalEligible={false}
+            freezeEligible={false}
+          />
+          <ReviewSummary
+            versionLabel="character.jeanne.base / v003"
+            state="approved"
+            assignee="Delegated approver"
+            commentCount={4}
+            changeRequestCount={0}
+            approvalEligible
+            freezeEligible
+          />
+          <Surface kind="inset">
+            <SectionHeading
+              title="Readiness dimensions"
+              description="Visual/content validation is not runtime readiness."
+            />
+            <ReadinessSummary
+              contentValidation="warning"
+              runtimeReadiness="not-ready"
+              blockingCount={0}
+              warningCount={2}
+            />
+          </Surface>
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="versions-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="versions-title">Versions and retained history</h2>
+            <p>
+              Replacement creates a new version. Older reviewed versions remain readable instead of
+              looking overwritten.
+            </p>
+          </div>
+        </div>
+        <ul class="studio-version-list" aria-label="Asset version history">
+          <VersionHistoryItem
+            label="v003"
+            current
+            lifecycle="approved"
+            createdAt="Current version · 17 Oct 2026"
+            summary="Corrected sword geometry; review and provenance apply specifically to v003."
+          />
+          <VersionHistoryItem
+            label="v002"
+            current={false}
+            lifecycle="frozen"
+            createdAt="Historical version · 16 Oct 2026"
+            summary="Previously frozen source retained for audit and rollback evidence."
+          />
+          <VersionHistoryItem
+            label="v001"
+            current={false}
+            lifecycle="retired"
+            createdAt="Historical version · 14 Oct 2026"
+            summary="Superseded source remains in version history rather than being erased."
+          />
+        </ul>
+      </section>
+
+      <section class="preview-section" aria-labelledby="source-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="source-title">Semantic identity, providers and provenance</h2>
+            <p>
+              Semantic IDs are primary. Provider paths are secondary metadata and may change without
+              redefining the content identity.
+            </p>
+          </div>
+        </div>
+        <div class="studio-provider-stack">
+          <ProviderReference
+            semanticId="character.jeanne"
+            provider="git"
+            reference="content/characters/jeanne.json"
+            sourceRole="canonical-definition"
+          />
+          <ProviderReference
+            semanticId="asset.character.jeanne.base"
+            provider="drive"
+            reference="Drive file 1wOm8… / source-master/v003"
+            sourceRole="source-master"
+          />
+          <ProviderReference
+            semanticId="asset.character.jeanne.base"
+            provider="registry"
+            reference="asset_versions / v003"
+            sourceRole="registry-metadata"
+          />
+          <ProviderReference
+            semanticId="asset.character.jeanne.base.runtime"
+            provider="runtime"
+            reference="runtime-assets/characters/jeanne/base-v003.webp"
+            sourceRole="runtime-derivative"
+          />
+        </div>
+        <Divider />
+        <ProvenanceSummary
+          semanticId="asset.character.jeanne.base"
+          sourceVersion="v003"
+          provider="drive"
+          sourceReference="Drive file 1wOm8… / source-master/v003"
+          checksum="sha256:7c1f…9b42"
+          processingProfile="portrait-web-v1"
+        />
+      </section>
+
+      <section class="preview-section" aria-labelledby="relations-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="relations-title">Relations and usage</h2>
+            <p>
+              Cross-entity links show ownership direction without copying the related asset into a
+              second identity.
+            </p>
+          </div>
+        </div>
+        <div class="studio-relations-grid">
+          <RelationCard
+            relationType="Signature equipment"
+            sourceId="character.jeanne"
+            targetId="equipment.lys-de-laube"
+            targetLabel="Lys de l’Aube"
+            note="Relationship only; equipment retains its own canonical identity and assets."
+          />
+          <RelationCard
+            relationType="Story appearance"
+            sourceId="character.jeanne"
+            targetId="story.s01.ch02.tourelles"
+            targetLabel="The Tourelles"
+            note="Usage reference links the character to story content without duplicating either record."
+          />
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="runtime-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="runtime-title">Runtime derivatives and release state</h2>
+            <p>
+              Every derivative names its source version. Runtime readiness, publication and
+              verification are presented as separate facts.
+            </p>
+          </div>
+        </div>
+        <div class="studio-runtime-grid">
+          <RuntimeDerivativeCard
+            derivativeId="asset.character.jeanne.base.runtime-web"
+            sourceVersion="v003"
+            runtimeReadiness="ready"
+            publication="unpublished"
+            verification="unverified"
+            checksum="sha256:3e1a…c109"
+            providerReference="runtime-assets/characters/jeanne/base-v003.webp"
+          />
+          <RuntimeDerivativeCard
+            derivativeId="asset.character.jeanne.base.runtime-web@published"
+            sourceVersion="v002"
+            runtimeReadiness="ready"
+            publication="published"
+            verification="warning"
+            checksum="sha256:b28d…71e0"
+            providerReference="runtime-assets/characters/jeanne/base-v002.webp"
+          />
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="review-state-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="review-state-title">Review workflow presentation</h2>
+            <p>
+              Requested, changes requested and approved are workflow states, not lifecycle aliases.
+            </p>
+          </div>
+        </div>
+        <div class="semantic-grid">
+          <ReviewBadge state="requested" />
+          <ReviewBadge state="changes-requested" />
+          <ReviewBadge state="approved" />
+          <ValidationBadge state="passed" />
+          <ValidationBadge state="warning" />
+          <ValidationBadge state="blocking" />
+          <ValidationBadge state="unknown" />
+        </div>
+      </section>
 
       <section class="preview-section" aria-labelledby="actions-title">
         <div class="preview-section__heading">
           <div>
-            <h2 id="actions-title">Actions and interaction states</h2>
-            <p>Rest, hover, focus, pressed, disabled and pending all share one token contract.</p>
+            <h2 id="actions-title">00B primitive regression surface</h2>
+            <p>Base actions and pending guards remain available under the semantic layer.</p>
           </div>
           <Chip accent>44px minimum target</Chip>
         </div>
@@ -114,8 +426,8 @@ function App() {
       <section class="preview-section" aria-labelledby="forms-title">
         <div class="preview-section__heading">
           <div>
-            <h2 id="forms-title">Form controls</h2>
-            <p>Native controls retain labels, descriptions, invalid state and disabled behavior.</p>
+            <h2 id="forms-title">00B form regression surface</h2>
+            <p>Native labels, descriptions, invalid state and disabled behavior remain intact.</p>
           </div>
         </div>
         <div class="form-grid">
@@ -124,7 +436,7 @@ function App() {
             type="search"
             label="Search"
             placeholder="Search semantic ID or title"
-            hint="Search remains presentation-only in this foundation lab."
+            hint="Search remains presentation-only in this UI Lab."
           />
           <TextField
             id="studio-invalid"
@@ -145,7 +457,7 @@ function App() {
           <Checkbox
             id="studio-selection"
             label="Select this row"
-            description="Generic selection primitive for later list and table composition."
+            description="Generic selection primitive for later workspace composition."
           />
           <div class="form-grid__wide">
             <TextArea
@@ -161,7 +473,7 @@ function App() {
       <section class="preview-section" aria-labelledby="navigation-title">
         <div class="preview-section__heading">
           <div>
-            <h2 id="navigation-title">Tabs and keyboard navigation</h2>
+            <h2 id="navigation-title">00B tabs and keyboard regression</h2>
             <p>Arrow keys, Home and End move selection while focus remains visibly distinct.</p>
           </div>
         </div>
@@ -181,75 +493,16 @@ function App() {
           >
             {tab.disabled
               ? "This tab is unavailable."
-              : `${tab.label} is selected without assigning any Studio lifecycle meaning.`}
+              : `${tab.label} is selected without assigning lifecycle meaning.`}
           </TabPanel>
         ))}
-      </section>
-
-      <section class="preview-section" aria-labelledby="structure-title">
-        <div class="preview-section__heading">
-          <div>
-            <h2 id="structure-title">Surfaces and structure</h2>
-            <p>Composable panel, card, inset, toolbar, list and table foundations.</p>
-          </div>
-        </div>
-        <Surface>
-          <SectionHeading
-            title="Production panel anatomy"
-            description="Shared structure only; no workspace semantics are introduced here."
-            actions={
-              <Toolbar label="Example panel actions">
-                <Button variant="quiet">Filter</Button>
-                <Button variant="quiet">Sort</Button>
-              </Toolbar>
-            }
-          />
-          <Divider />
-          <div class="surface-composition-grid">
-            <Surface kind="card">
-              <strong>Raised card</strong>
-              <p>Groups a focused set of controls or metadata.</p>
-            </Surface>
-            <Surface kind="inset">
-              <strong>Inset surface</strong>
-              <p>Separates dense secondary information from the parent panel.</p>
-            </Surface>
-          </div>
-          <Divider />
-          <List label="Example structural list">
-            <li>Semantic identity stays outside primitive styling.</li>
-            <li>Rows remain readable without relying on color alone.</li>
-          </List>
-          <Divider />
-          <DataTable label="Example structural table">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Reference</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Example alpha</td>
-                <td>Generic row</td>
-                <td>REF-001</td>
-              </tr>
-              <tr>
-                <td>Example beta</td>
-                <td>Generic row</td>
-                <td>REF-002</td>
-              </tr>
-            </tbody>
-          </DataTable>
-        </Surface>
       </section>
 
       <section class="preview-section" aria-labelledby="feedback-title">
         <div class="preview-section__heading">
           <div>
-            <h2 id="feedback-title">Feedback and truthful empty states</h2>
-            <p>Neutral foundations communicate progress, absence, unavailability and errors.</p>
+            <h2 id="feedback-title">00B feedback regression surface</h2>
+            <p>Generic loading, progress, absence and error primitives remain content-agnostic.</p>
           </div>
         </div>
         <div class="feedback-grid">
@@ -272,13 +525,53 @@ function App() {
         </div>
       </section>
 
+      <section class="preview-section" aria-labelledby="structure-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="structure-title">00B structural primitives</h2>
+            <p>Panel/table/toolbar foundations remain reusable beneath Studio semantics.</p>
+          </div>
+        </div>
+        <Surface>
+          <SectionHeading
+            title="Structural table"
+            description="Semantics are composed above this content-agnostic table."
+            actions={
+              <Toolbar label="Example panel actions">
+                <Button variant="quiet">Filter</Button>
+                <Button variant="quiet">Sort</Button>
+              </Toolbar>
+            }
+          />
+          <DataTable label="Example structural table">
+            <thead>
+              <tr>
+                <th scope="col">Semantic ID</th>
+                <th scope="col">Version</th>
+                <th scope="col">Provider reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>asset.character.jeanne.base</td>
+                <td>v003</td>
+                <td>Drive source/master</td>
+              </tr>
+              <tr>
+                <td>asset.character.jeanne.base.runtime</td>
+                <td>from v003</td>
+                <td>Runtime derivative</td>
+              </tr>
+            </tbody>
+          </DataTable>
+        </Surface>
+      </section>
+
       <section class="preview-section" aria-labelledby="overlay-title">
         <div class="preview-section__heading">
           <div>
-            <h2 id="overlay-title">Dialog and drawer</h2>
-            <p>
-              Native modal behavior traps focus; Escape cancels and focus returns to the opener.
-            </p>
+            <h2 id="overlay-title">00B dialog and drawer regression</h2>
+            <p>Native modal focus, Escape cancellation and focus restoration remain unchanged.</p>
           </div>
         </div>
         <ActionGroup>
@@ -324,34 +617,6 @@ function App() {
         >
           <p>Drawer content remains generic until shared Studio shell work begins.</p>
         </Dialog>
-      </section>
-
-      <section class="preview-section" aria-labelledby="tokens-title">
-        <div class="preview-section__heading">
-          <div>
-            <h2 id="tokens-title">00A semantic-token separation</h2>
-            <p>
-              These are token swatches only. Lifecycle and validation components are intentionally
-              deferred to GAME-STUDIO00C.
-            </p>
-          </div>
-        </div>
-        <p class="preview-meta">Lifecycle token family</p>
-        <div class="semantic-grid">
-          {lifecycle.map((state) => (
-            <span class={`semantic-chip semantic-chip--lifecycle-${state}`} key={state}>
-              {state.replaceAll("-", " ").toUpperCase()}
-            </span>
-          ))}
-        </div>
-        <p class="preview-meta preview-meta--spaced">Validation / readiness token family</p>
-        <div class="semantic-grid">
-          {validation.map((state) => (
-            <span class={`semantic-chip semantic-chip--validation-${state}`} key={state}>
-              {state.toUpperCase()}
-            </span>
-          ))}
-        </div>
       </section>
     </main>
   );
