@@ -1,0 +1,42 @@
+name: GAME-UI23 Browser Diagnostics
+
+on:
+  push:
+    branches: [game-ui23/login-account-gate]
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: game-ui23/login-account-gate
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Capture auth browser diagnostics
+        run: pnpm exec playwright test tests/e2e/auth.spec.ts > game-ui23-browser.log 2>&1 || true
+      - name: Commit diagnostics and remove workflow
+        run: |
+          rm .github/workflows/browser-diagnostics-game-ui23.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A game-ui23-browser.log .github/workflows/browser-diagnostics-game-ui23.yml
+          git commit -m "chore: recapture GAME-UI23 browser diagnostics"
+          git push origin HEAD:game-ui23/login-account-gate
