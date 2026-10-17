@@ -34,10 +34,6 @@
   object-fit: contain;
 }
 
-.game-control-icon.is-back img {
-  transform: rotate(180deg);
-}
-
 .game-control-label {
   white-space: nowrap;
 }
@@ -124,6 +120,10 @@
   object-fit: contain;
 }
 
+.game-control-icon.is-back img {
+  transform: rotate(180deg);
+}
+
 /* Existing campaign toolbar markup remains screen-specific, but consumes the
  * primitive visual grammar until it can migrate to component APIs in UI24E.
  */
@@ -137,7 +137,9 @@
   border-radius: var(--ui-radius-control);
   color: var(--ui-text);
   background: linear-gradient(180deg, rgb(24 43 57 / 94%), rgb(7 17 25 / 96%));
-  box-shadow: var(--ui-highlight-inset), 0 8px 18px rgb(0 0 0 / 23%);
+  box-shadow:
+    var(--ui-highlight-inset),
+    0 8px 18px rgb(0 0 0 / 23%);
   font-weight: var(--ui-font-weight-bold);
   cursor: pointer;
 }
@@ -228,14 +230,6 @@
     font-size: clamp(0.95rem, 2.4vw, 1.15rem);
   }
 
-  .game-control.has-compact-label .game-control-label {
-    display: none;
-  }
-
-  .game-control.has-compact-label .game-control-compact-label {
-    display: inline;
-  }
-
   .game-control-icon {
     width: var(--ui-icon-sm);
     height: var(--ui-icon-sm);
@@ -257,6 +251,14 @@
     clip: rect(0 0 0 0);
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+
+  .game-control.has-compact-label .game-control-label {
+    display: none;
+  }
+
+  .game-control.has-compact-label .game-control-compact-label {
+    display: inline;
   }
 
   .campaign-root-navigation.game-navigation-cluster {
