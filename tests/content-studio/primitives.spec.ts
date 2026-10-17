@@ -45,7 +45,7 @@ test("dialog escape cancels and restores focus to the opener", async ({ page }) 
 
   await opener.click();
   await expect(dialog).toBeVisible();
-  await expect(page.getByLabel("Reference")).toBeFocused();
+  await expect(page.getByLabel("Reference", { exact: true })).toBeFocused();
 
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
