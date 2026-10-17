@@ -67,6 +67,9 @@ jobs:
       - name: Browser smoke
         run: pnpm test:e2e
 
+      - name: Content Studio primitive coverage
+        run: pnpm test:content-studio
+
       - name: Pre-deploy visual capture
         run: pnpm test:visual
 
