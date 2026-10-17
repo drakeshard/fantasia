@@ -9,7 +9,9 @@ import {
 } from "./backend/session.js";
 import {
   bootstrapAccount,
+  consumeFantasiaAuthRedirect,
   isFantasiaBackendConfigured,
+  resendSignupConfirmation,
   signInWithPassword,
   signOut,
   signUpWithPassword,
@@ -56,6 +58,19 @@ import "./auth-screen.css";
 type AppScreen = "home" | "saga" | "campaign" | "characters" | "talent" | "story" | "battle";
 type AuthGateStatus = "bypassed" | "checking" | "guest" | "authenticated";
 
+const AUTH_CALLBACK_QUERY_KEYS = [
+  "access_token",
+  "refresh_token",
+  "expires_in",
+  "expires_at",
+  "token_type",
+  "type",
+  "error",
+  "error_code",
+  "error_description",
+  "error_uri",
+] as const;
+
 function browserStorage(): Storage | undefined {
   try {
     return window.localStorage;
@@ -79,6 +94,21 @@ function isLandscapeViewport() {
 function authErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message.trim()) return error.message;
   return "Fantasia could not complete the account request. Please try again.";
+}
+
+function authConfirmationReturnUrl(): string {
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.hash = "";
+  return url.toString();
+}
+
+function clearAuthCallbackFromLocation() {
+  const url = new URL(window.location.href);
+  for (const key of AUTH_CALLBACK_QUERY_KEYS) url.searchParams.delete(key);
+  url.hash = "";
+  const clean = `${url.pathname}${url.search}` || "/";
+  window.history.replaceState(window.history.state, "", clean);
 }
 
 function OrientationGate() {
@@ -136,8 +166,27 @@ function App() {
     if (!backendConfigured || authPreview) return;
     let active = true;
 
-    void restoreAccountSession()
-      .then((restored) => {
+    void (async () => {
+      try {
+        const confirmation = await consumeFantasiaAuthRedirect(window.location.href);
+        if (!active) return;
+        if (confirmation.handled) clearAuthCallbackFromLocation();
+
+        if (confirmation.error) {
+          setAuthMessage({
+            tone: "error",
+            text: `${confirmation.error} Request a new confirmation email below if needed.`,
+          });
+          setAuthStatus("guest");
+          return;
+        }
+
+        if (confirmation.session) {
+          await enterAuthenticatedSession(confirmation.session);
+          return;
+        }
+
+        const restored = await restoreAccountSession();
         if (!active) return;
         if (restored) {
           setAccount(restored);
@@ -145,12 +194,13 @@ function App() {
           return;
         }
         setAuthStatus("guest");
-      })
-      .catch((error: unknown) => {
+      } catch (error: unknown) {
         if (!active) return;
+        clearAuthCallbackFromLocation();
         setAuthMessage({ tone: "error", text: authErrorMessage(error) });
         setAuthStatus("guest");
-      });
+      }
+    })();
 
     return () => {
       active = false;
@@ -220,15 +270,32 @@ function App() {
     setAuthBusy(true);
     setAuthMessage(undefined);
     try {
-      const result = await signUpWithPassword(email, password);
+      const result = await signUpWithPassword(email, password, authConfirmationReturnUrl());
       if (!result.session) {
         setAuthMessage({
           tone: "success",
-          text: "Account request accepted. Check your email for a confirmation link if confirmation is required, then return here and sign in.",
+          text: "Account request accepted. Check your email for a confirmation link. The link will return you to Fantasia and finish account access automatically.",
         });
         return;
       }
       await enterAuthenticatedSession(result.session, displayName);
+    } catch (error) {
+      setAuthMessage({ tone: "error", text: authErrorMessage(error) });
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+
+  async function handleResendConfirmation(email: string) {
+    if (!email.trim()) return;
+    setAuthBusy(true);
+    setAuthMessage(undefined);
+    try {
+      await resendSignupConfirmation(email.trim(), authConfirmationReturnUrl());
+      setAuthMessage({
+        tone: "success",
+        text: "Confirmation email sent. Use the newest confirmation link to return to Fantasia.",
+      });
     } catch (error) {
       setAuthMessage({ tone: "error", text: authErrorMessage(error) });
     } finally {
@@ -268,6 +335,7 @@ function App() {
         restoring
         onSignIn={() => undefined}
         onCreateAccount={() => undefined}
+        onResendConfirmation={() => undefined}
       />
     );
   }
@@ -282,6 +350,7 @@ function App() {
         onCreateAccount={(email, password, displayName) =>
           void handleCreateAccount(email, password, displayName)
         }
+        onResendConfirmation={(email) => void handleResendConfirmation(email)}
       />
     );
   }
