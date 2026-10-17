@@ -6,7 +6,9 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByTestId("workspace-lab")).toBeVisible();
 });
 
-test("shell exposes exactly the frozen top-level modules without fake routing", async ({ page }) => {
+test("shell exposes exactly the frozen top-level modules without fake routing", async ({
+  page,
+}) => {
   const shell = page.getByTestId("studio-shell");
   const moduleNav = shell.getByRole("navigation", { name: "Studio modules" });
   const expected = [
@@ -70,7 +72,9 @@ test("entity tabs use the shared keyboard behavior", async ({ page }) => {
   await expect(shell.getByText("Waiting for the selected read model.")).toBeVisible();
 });
 
-test("template lab includes all five template kinds and truthful common states", async ({ page }) => {
+test("template lab includes all five template kinds and truthful common states", async ({
+  page,
+}) => {
   for (const kind of ["collection", "entity", "asset-board", "operational-queue", "dashboard"]) {
     await expect(page.locator(`[data-template="${kind}"]`).last()).toBeVisible();
   }
@@ -81,7 +85,9 @@ test("template lab includes all five template kinds and truthful common states",
   await expect(page.getByText("Access not granted", { exact: true }).last()).toBeVisible();
 });
 
-test("workspace lab avoids document overflow at every configured baseline viewport", async ({ page }) => {
+test("workspace lab avoids document overflow at every configured baseline viewport", async ({
+  page,
+}) => {
   const metrics = await page.evaluate(() => ({
     viewportWidth: window.innerWidth,
     scrollWidth: document.documentElement.scrollWidth,
