@@ -3,50 +3,50 @@
  */
 
 .game-control {
-  --game-control-border: rgb(226 190 120 / 30%);
-  --game-control-border-strong: rgb(226 190 120 / 66%);
+  --game-control-border: var(--ui-border);
+  --game-control-border-strong: var(--ui-border-strong);
   --game-control-surface-top: rgb(24 43 57 / 96%);
   --game-control-surface-bottom: rgb(7 17 25 / 98%);
 
   position: relative;
-  min-width: 44px;
-  min-height: 46px;
+  min-width: var(--ui-target-min);
+  min-height: var(--ui-control-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--ui-space-2);
   padding: 0 14px;
   overflow: hidden;
-  border: 1px solid var(--game-control-border);
-  border-radius: 3px;
+  border: var(--ui-border-width) solid var(--game-control-border);
+  border-radius: var(--ui-radius-control);
   color: rgb(244 240 231 / 92%);
   background:
     linear-gradient(135deg, transparent 0 8px, rgb(226 190 120 / 7%) 8px 9px, transparent 9px),
     linear-gradient(180deg, var(--game-control-surface-top), var(--game-control-surface-bottom));
   box-shadow:
-    inset 0 1px rgb(255 255 255 / 5%),
+    var(--ui-highlight-inset),
     inset 0 -1px rgb(226 190 120 / 5%),
-    0 9px 20px rgb(0 0 0 / 26%);
+    var(--ui-shadow-control);
   font: inherit;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.025em;
+  font-size: var(--ui-font-size-md);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: var(--ui-tracking-control);
   cursor: pointer;
   transition:
-    border-color 120ms ease,
-    background 120ms ease,
-    transform 120ms ease,
-    box-shadow 120ms ease;
+    border-color var(--ui-motion-feedback) var(--ui-ease-standard),
+    background var(--ui-motion-feedback) var(--ui-ease-standard),
+    transform var(--ui-motion-feedback) var(--ui-ease-standard),
+    box-shadow var(--ui-motion-feedback) var(--ui-ease-standard);
 }
 
 .game-control::after {
   position: absolute;
-  right: 4px;
-  bottom: 4px;
-  width: 10px;
-  height: 10px;
-  border-right: 1px solid rgb(226 190 120 / 36%);
-  border-bottom: 1px solid rgb(226 190 120 / 36%);
+  right: var(--ui-space-1);
+  bottom: var(--ui-space-1);
+  width: var(--ui-corner-cut-md);
+  height: var(--ui-corner-cut-md);
+  border-right: var(--ui-border-width) solid rgb(226 190 120 / 36%);
+  border-bottom: var(--ui-border-width) solid rgb(226 190 120 / 36%);
   pointer-events: none;
   content: "";
 }
@@ -58,7 +58,7 @@
     linear-gradient(180deg, rgb(34 58 75 / 98%), rgb(9 22 32 / 98%));
   box-shadow:
     inset 0 1px rgb(255 255 255 / 7%),
-    0 10px 24px rgb(0 0 0 / 30%);
+    var(--ui-shadow-control-hover);
 }
 
 .game-control:active:not(:disabled) {
@@ -69,13 +69,13 @@
 }
 
 .game-control:focus-visible {
-  outline: 2px solid #9acbff;
-  outline-offset: 2px;
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
 }
 
 .game-control:disabled {
-  border-color: rgb(113 131 148 / 18%);
-  color: rgb(187 198 210 / 42%);
+  border-color: var(--ui-disabled-border);
+  color: var(--ui-disabled-text);
   background: linear-gradient(180deg, rgb(22 33 43 / 72%), rgb(10 18 25 / 76%));
   box-shadow: inset 0 1px rgb(255 255 255 / 2%);
   cursor: not-allowed;
@@ -83,8 +83,8 @@
 }
 
 .game-control-icon {
-  width: 22px;
-  height: 22px;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
   display: grid;
   flex: 0 0 auto;
   place-items: center;
@@ -105,9 +105,9 @@
 }
 
 .game-control-primary {
-  min-height: 52px;
-  border-color: #efd08b;
-  color: #18202a;
+  min-height: var(--ui-control-height-primary);
+  border-color: var(--ui-accent-strong);
+  color: var(--ui-on-accent);
   background:
     linear-gradient(135deg, transparent 0 9px, rgb(255 255 255 / 20%) 9px 10px, transparent 10px),
     linear-gradient(180deg, #f0d493, #d9ad58);
@@ -128,33 +128,33 @@
 }
 
 .game-control-utility {
-  min-width: 44px;
-  min-height: 44px;
+  min-width: var(--ui-target-min);
+  min-height: var(--ui-target-min);
   padding: 0 11px;
   gap: 6px;
-  font-size: 0.72rem;
+  font-size: var(--ui-font-size-sm);
 }
 
 .game-screen-header {
   position: relative;
-  z-index: 30;
+  z-index: var(--ui-z-hud);
   min-height: 72px;
   height: 72px;
   display: grid;
   grid-template-columns: minmax(180px, 1fr) minmax(0, auto) minmax(180px, 1fr);
   align-items: center;
-  gap: 16px;
-  padding: 8px 18px;
-  border-bottom: 1px solid rgb(226 190 120 / 20%);
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-2) 18px;
+  border-bottom: var(--ui-border-width) solid var(--ui-divider);
   background: linear-gradient(180deg, rgb(5 12 18 / 98%), rgb(7 17 25 / 94%));
-  box-shadow: 0 8px 26px rgb(0 0 0 / 24%);
+  box-shadow: var(--ui-shadow-header);
 }
 
 .game-screen-header-start,
 .game-screen-header-end {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--ui-space-2);
 }
 
 .game-screen-header-end {
@@ -177,9 +177,9 @@
 .game-screen-title-lockup span:not(.game-screen-title-crest) {
   display: block;
   color: rgb(226 190 120 / 82%);
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: var(--ui-tracking-label);
   text-transform: uppercase;
 }
 
@@ -187,10 +187,10 @@
   max-width: min(48vw, 660px);
   margin: 3px 0 0;
   overflow: hidden;
-  color: #fff4dc;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.35rem, 2vw, 1.85rem);
-  font-weight: 500;
+  color: var(--ui-text-heading);
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-font-size-title);
+  font-weight: var(--ui-font-weight-regular);
   line-height: 1.04;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -198,8 +198,8 @@
 }
 
 .game-screen-title-crest {
-  width: 34px;
-  height: 34px;
+  width: var(--ui-icon-lg);
+  height: var(--ui-icon-lg);
   flex: 0 0 auto;
 }
 
@@ -218,29 +218,29 @@
  */
 .campaign-rooted-shell .map-toolbar button {
   position: relative;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: var(--ui-target-min);
+  min-height: var(--ui-target-min);
   padding: 0 11px;
   overflow: hidden;
-  border: 1px solid rgb(226 190 120 / 30%);
-  border-radius: 3px;
+  border: var(--ui-border-width) solid var(--ui-border);
+  border-radius: var(--ui-radius-control);
   color: rgb(244 240 231 / 92%);
   background:
     linear-gradient(135deg, transparent 0 7px, rgb(226 190 120 / 7%) 7px 8px, transparent 8px),
     linear-gradient(180deg, rgb(24 43 57 / 94%), rgb(7 17 25 / 96%));
   box-shadow:
-    inset 0 1px rgb(255 255 255 / 5%),
+    var(--ui-highlight-inset),
     0 8px 18px rgb(0 0 0 / 23%);
-  font-weight: 800;
+  font-weight: var(--ui-font-weight-bold);
   cursor: pointer;
   transition:
-    border-color 120ms ease,
-    background 120ms ease,
-    transform 120ms ease;
+    border-color var(--ui-motion-feedback) var(--ui-ease-standard),
+    background var(--ui-motion-feedback) var(--ui-ease-standard),
+    transform var(--ui-motion-feedback) var(--ui-ease-standard);
 }
 
 .campaign-rooted-shell .map-toolbar button:hover:not(:disabled) {
-  border-color: rgb(226 190 120 / 66%);
+  border-color: var(--ui-border-strong);
   background:
     linear-gradient(135deg, transparent 0 7px, rgb(226 190 120 / 13%) 7px 8px, transparent 8px),
     linear-gradient(180deg, rgb(34 58 75 / 98%), rgb(9 22 32 / 98%));
@@ -251,13 +251,13 @@
 }
 
 .campaign-rooted-shell .map-toolbar button:focus-visible {
-  outline: 2px solid #9acbff;
-  outline-offset: 2px;
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
 }
 
 .campaign-rooted-shell .map-toolbar button:disabled {
-  border-color: rgb(113 131 148 / 18%);
-  color: rgb(187 198 210 / 42%);
+  border-color: var(--ui-disabled-border);
+  color: var(--ui-disabled-text);
   background: linear-gradient(180deg, rgb(22 33 43 / 72%), rgb(10 18 25 / 76%));
   cursor: not-allowed;
 }
@@ -266,14 +266,14 @@
  * unrelated browser buttons floating above the map.
  */
 .campaign-root-navigation.game-navigation-cluster {
-  z-index: 60;
+  z-index: var(--ui-z-navigation);
   top: 13px;
   left: 18px;
   right: 18px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
+  gap: var(--ui-space-2);
   pointer-events: none;
 }
 
@@ -281,7 +281,7 @@
 .campaign-root-navigation .game-navigation-end {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--ui-space-2);
 }
 
 .campaign-root-navigation .game-navigation-end {
@@ -295,7 +295,7 @@
 .saga-current-mission .game-control-primary {
   width: 100%;
   justify-content: space-between;
-  padding-inline: 16px 12px;
+  padding-inline: var(--ui-space-4) var(--ui-space-3);
 }
 
 @media (max-height: 499px) {
@@ -303,13 +303,13 @@
     min-height: 54px;
     height: 54px;
     grid-template-columns: minmax(100px, 1fr) minmax(0, auto) minmax(100px, 1fr);
-    gap: 8px;
-    padding: 4px 10px;
+    gap: var(--ui-space-2);
+    padding: var(--ui-space-1) 10px;
   }
 
   .game-screen-header .game-control,
   .campaign-root-navigation .game-control {
-    min-height: 44px;
+    min-height: var(--ui-target-min);
     padding-inline: 10px;
   }
 
@@ -340,8 +340,8 @@
   }
 
   .game-control-icon {
-    width: 20px;
-    height: 20px;
+    width: var(--ui-icon-sm);
+    height: var(--ui-icon-sm);
   }
 
   .saga-top-hud .game-control {
@@ -369,9 +369,9 @@
   }
 
   .campaign-rooted-shell .map-toolbar button {
-    min-width: 44px;
-    min-height: 44px;
-    padding-inline: 8px;
+    min-width: var(--ui-target-min);
+    min-height: var(--ui-target-min);
+    padding-inline: var(--ui-space-2);
     font-size: 0.7rem;
   }
 }
