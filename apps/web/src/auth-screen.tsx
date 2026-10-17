@@ -1,6 +1,7 @@
 import type { JSX } from "preact";
 import { useState } from "preact/hooks";
 
+// Auth presentation stays title-local; credential/session authority remains in the backend modules.
 export interface AuthMessage {
   readonly tone: "error" | "info" | "success";
   readonly text: string;
