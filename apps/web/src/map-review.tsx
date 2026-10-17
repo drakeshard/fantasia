@@ -74,10 +74,7 @@ export function MapReviewApp() {
     () => new Map(layout.terrain.elevationCells.map((cell) => [cellKey(cell), cell.level])),
     [],
   );
-  const route = useMemo(
-    () => new Set(layout.cart.routeAnchors.map((cell) => cellKey(cell))),
-    [],
-  );
+  const route = useMemo(() => new Set(layout.cart.routeAnchors.map((cell) => cellKey(cell))), []);
   const routeFootprint = useMemo(() => {
     const keys = new Set<string>();
     for (const anchor of layout.cart.routeAnchors) {
@@ -130,7 +127,7 @@ export function MapReviewApp() {
             PROVISIONAL LAYOUT CANDIDATE — not production gameplay and not GAME-D222 compliant.
           </p>
         </div>
-        <div class="map-review-status" aria-label="Candidate status">
+        <div class="map-review-status">
           <strong>18 × 12</strong>
           <span>2D authoritative geometry review</span>
         </div>
@@ -166,11 +163,7 @@ export function MapReviewApp() {
       <div class="map-review-layout">
         <section class="map-review-board-panel" aria-label="Candidate battlefield">
           <div class="map-review-board-scroll">
-            <div
-              class="map-review-board"
-              style={{ "--map-columns": String(columns.length) }}
-              data-testid="b01-map-grid"
-            >
+            <div class="map-review-board" data-testid="b01-map-grid">
               <div class="map-review-axis map-review-axis-corner" aria-hidden="true" />
               {columns.map((x) => (
                 <div class="map-review-axis map-review-axis-x" aria-hidden="true" key={`x-${x}`}>
@@ -210,8 +203,14 @@ export function MapReviewApp() {
                         onClick={() => setSelected(cell)}
                         key={key}
                       >
-                        {showCoordinates ? <span class="map-review-coordinate">{x},{y}</span> : null}
-                        {elevation > 0 ? <span class="map-review-elevation">+{elevation}</span> : null}
+                        {showCoordinates ? (
+                          <span class="map-review-coordinate">
+                            {x},{y}
+                          </span>
+                        ) : null}
+                        {elevation > 0 ? (
+                          <span class="map-review-elevation">+{elevation}</span>
+                        ) : null}
                         {marker ? <strong class="map-review-marker">{marker}</strong> : null}
                       </button>
                     );
@@ -221,19 +220,34 @@ export function MapReviewApp() {
             </div>
           </div>
 
-          <div class="map-review-legend" aria-label="Map legend">
-            <span><i class="legend-road" /> road/approach</span>
-            <span><i class="legend-blocked" /> blocked</span>
-            <span><i class="legend-ridge" /> +1 ridge</span>
-            <span><i class="legend-cart" /> cart clearance</span>
-            <span><i class="legend-exit" /> exit</span>
-            <span><b>M</b> MC · <b>J</b> Julie · <b>H</b> Hangaku · <b>L</b> La Hire · <b>f/r</b> enemies</span>
+          <div class="map-review-legend">
+            <span>
+              <i class="legend-road" /> road/approach
+            </span>
+            <span>
+              <i class="legend-blocked" /> blocked
+            </span>
+            <span>
+              <i class="legend-ridge" /> +1 ridge
+            </span>
+            <span>
+              <i class="legend-cart" /> cart clearance
+            </span>
+            <span>
+              <i class="legend-exit" /> exit
+            </span>
+            <span>
+              <b>M</b> MC · <b>J</b> Julie · <b>H</b> Hangaku · <b>L</b> La Hire · <b>f/r</b>{" "}
+              enemies
+            </span>
           </div>
         </section>
 
         <aside class="map-review-inspector" aria-live="polite">
           <p class="map-review-kicker">Selected cell</p>
-          <h2 data-testid="selected-coordinate">({selected.x}, {selected.y})</h2>
+          <h2 data-testid="selected-coordinate">
+            ({selected.x}, {selected.y})
+          </h2>
           <p class="map-review-selected-label" data-testid="selected-label">
             {selectedInitial?.label ??
               (selectedReinforcement && "knowledgeLabel" in selectedReinforcement
@@ -243,16 +257,25 @@ export function MapReviewApp() {
                   : "No deployment")}
           </p>
           <ul>
-            {selectedFacts.map((fact) => <li key={fact}>{fact}</li>)}
+            {selectedFacts.map((fact) => (
+              <li key={fact}>{fact}</li>
+            ))}
           </ul>
           {selectedRegions.length > 0 ? (
-            <p><strong>Regions:</strong> {selectedRegions.join(", ")}</p>
+            <p>
+              <strong>Regions:</strong> {selectedRegions.join(", ")}
+            </p>
           ) : null}
           {selectedInitial && "storyConstraint" in selectedInitial ? (
-            <p><strong>Story constraint:</strong> {selectedInitial.storyConstraint}</p>
+            <p>
+              <strong>Story constraint:</strong> {selectedInitial.storyConstraint}
+            </p>
           ) : null}
           {selectedReinforcement ? (
-            <p><strong>Entry phase:</strong> {selectedReinforcement.phase} · {selectedReinforcement.beatId}</p>
+            <p>
+              <strong>Entry phase:</strong> {selectedReinforcement.phase} ·{" "}
+              {selectedReinforcement.beatId}
+            </p>
           ) : null}
           {selectedReinforcement && "note" in selectedReinforcement ? (
             <p>{selectedReinforcement.note}</p>
@@ -273,8 +296,8 @@ export function MapReviewApp() {
       </section>
 
       <footer class="map-review-footer">
-        <strong>Review purpose:</strong> approve, correct, or reject geometry only. Cart/civilian mechanics,
-        phase triggers, victory/failure, AI and balance remain unresolved.
+        <strong>Review purpose:</strong> approve, correct, or reject geometry only. Cart/civilian
+        mechanics, phase triggers, victory/failure, AI and balance remain unresolved.
       </footer>
     </main>
   );
