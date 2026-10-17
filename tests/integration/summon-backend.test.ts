@@ -57,18 +57,54 @@ describe("GAME-BACKEND09 summon backend transport", () => {
 
     expect(() =>
       parseSummonRows(
-        [{ schema_version: 1, summon_definition_id: definitionId, revision: 1, state_json: {}, updated_at: "now" }],
-        [{ id: entryId, schema_version: 1, summon_definition_id: definitionId, revision: 1, state_json: {}, created_at: null }],
+        [
+          {
+            schema_version: 1,
+            summon_definition_id: definitionId,
+            revision: 1,
+            state_json: {},
+            updated_at: "now",
+          },
+        ],
+        [
+          {
+            id: entryId,
+            schema_version: 1,
+            summon_definition_id: definitionId,
+            revision: 1,
+            state_json: {},
+            created_at: null,
+          },
+        ],
         [definitionId],
       ),
     ).toThrow("Supabase returned invalid summon history metadata.");
 
     expect(() =>
       parseSummonRows(
-        [{ schema_version: 1, summon_definition_id: "summon:unknown", revision: 1, state_json: {}, updated_at: "now" }],
-        [{ id: entryId, schema_version: 1, summon_definition_id: "summon:unknown", revision: 1, state_json: {}, created_at: "now" }],
+        [
+          {
+            schema_version: 1,
+            summon_definition_id: "summon:unknown",
+            revision: 1,
+            state_json: {},
+            updated_at: "now",
+          },
+        ],
+        [
+          {
+            id: entryId,
+            schema_version: 1,
+            summon_definition_id: "summon:unknown",
+            revision: 1,
+            state_json: {},
+            created_at: "now",
+          },
+        ],
         [definitionId],
       ),
-    ).toThrow("Supabase returned invalid summon state: Summon state references an unknown summon definition.");
+    ).toThrow(
+      "Supabase returned invalid summon state: Summon state references an unknown summon definition.",
+    );
   });
 });
