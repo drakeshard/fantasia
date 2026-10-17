@@ -44,8 +44,7 @@ export interface EconomyState {
   readonly ledger: readonly CurrencyLedgerEntry[];
 }
 
-const UUID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function assertSafeNonNegativeInteger(value: number, label: string): void {
   if (!Number.isSafeInteger(value) || value < 0) {
@@ -127,9 +126,7 @@ export function createEconomyState(
       };
     })
     .sort((left, right) => {
-      const definitionOrder = left.currencyDefinitionId.localeCompare(
-        right.currencyDefinitionId,
-      );
+      const definitionOrder = left.currencyDefinitionId.localeCompare(right.currencyDefinitionId);
       if (definitionOrder !== 0) return definitionOrder;
       return left.balanceRevision - right.balanceRevision;
     });
@@ -182,9 +179,7 @@ export function serializeEconomyState(state: EconomyState): Readonly<{
       })),
     ledger: [...state.ledger]
       .sort((left, right) => {
-        const definitionOrder = left.currencyDefinitionId.localeCompare(
-          right.currencyDefinitionId,
-        );
+        const definitionOrder = left.currencyDefinitionId.localeCompare(right.currencyDefinitionId);
         if (definitionOrder !== 0) return definitionOrder;
         return left.balanceRevision - right.balanceRevision;
       })
