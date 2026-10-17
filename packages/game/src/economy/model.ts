@@ -80,7 +80,7 @@ export function createEconomyState(
   ledger: readonly SerializedCurrencyLedgerEntry[],
 ): EconomyState {
   const known = new Set(knownCurrencyDefinitionIds.map((id) => currencyDefinitionId(id)));
-  const balanceIds = new Set<string>();
+  const balanceIds = new Set<CurrencyDefinitionId>();
   const restoredBalances = balances.map((item) => {
     const definitionId = currencyDefinitionId(item.currencyDefinitionId);
     if (!known.has(definitionId)) {
@@ -99,8 +99,8 @@ export function createEconomyState(
     };
   });
 
-  const entryIds = new Set<string>();
-  const lastByCurrency = new Map<string, CurrencyLedgerEntry>();
+  const entryIds = new Set<CurrencyLedgerEntryId>();
+  const lastByCurrency = new Map<CurrencyDefinitionId, CurrencyLedgerEntry>();
   const restoredLedger = ledger
     .map((item) => {
       const entryId = currencyLedgerEntryId(item.entryId);
