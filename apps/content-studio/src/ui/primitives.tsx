@@ -229,7 +229,9 @@ export function Tabs({ id, label, tabs, selectedId, onSelect }: TabsProps) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const moveFocus = (currentIndex: number, direction: 1 | -1) => {
-    const enabled = tabs.map((tab, index) => (tab.disabled ? -1 : index)).filter((index) => index >= 0);
+    const enabled = tabs
+      .map((tab, index) => (tab.disabled ? -1 : index))
+      .filter((index) => index >= 0);
     if (enabled.length === 0) return;
     const enabledPosition = enabled.indexOf(currentIndex);
     const nextPosition = (enabledPosition + direction + enabled.length) % enabled.length;
@@ -376,7 +378,13 @@ export function DataTable({ children, label }: { children: ComponentChildren; la
   );
 }
 
-export function Chip({ children, accent = false }: { children: ComponentChildren; accent?: boolean }) {
+export function Chip({
+  children,
+  accent = false,
+}: {
+  children: ComponentChildren;
+  accent?: boolean;
+}) {
   return <span class={cx("ui-chip", accent && "ui-chip--accent")}>{children}</span>;
 }
 
@@ -389,7 +397,15 @@ export function Spinner({ label, size = "normal" }: { label: string; size?: "sma
   );
 }
 
-export function ProgressBar({ label, value, max = 100 }: { label: string; value: number; max?: number }) {
+export function ProgressBar({
+  label,
+  value,
+  max = 100,
+}: {
+  label: string;
+  value: number;
+  max?: number;
+}) {
   return (
     <label class="ui-progress">
       <span>{label}</span>
@@ -410,7 +426,10 @@ type StateMessageProps = {
 
 export function StateMessage({ title, children, tone = "neutral", action }: StateMessageProps) {
   return (
-    <div class={cx("ui-state-message", `ui-state-message--${tone}`)} role={tone === "error" ? "alert" : undefined}>
+    <div
+      class={cx("ui-state-message", `ui-state-message--${tone}`)}
+      role={tone === "error" ? "alert" : undefined}
+    >
       <strong>{title}</strong>
       <span>{children}</span>
       {action ? <div class="ui-state-message__action">{action}</div> : null}
@@ -449,7 +468,8 @@ export function Dialog({
     if (!dialog) return;
 
     if (open && !dialog.open) {
-      restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      restoreFocusRef.current =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
       dialog.showModal();
       queueMicrotask(() => {
         const target = dialog.querySelector<HTMLElement>(
@@ -492,7 +512,12 @@ export function Dialog({
           <h2 id={titleId}>{title}</h2>
           {description ? <p id={descriptionId}>{description}</p> : null}
         </div>
-        <IconButton label="Close dialog" icon="×" variant="quiet" onClick={() => onOpenChange(false)} />
+        <IconButton
+          label="Close dialog"
+          icon="×"
+          variant="quiet"
+          onClick={() => onOpenChange(false)}
+        />
       </div>
       <div class="ui-dialog__body">{children}</div>
       {actions ? <div class="ui-dialog__actions">{actions}</div> : null}
