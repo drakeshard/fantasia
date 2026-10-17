@@ -31,7 +31,10 @@ async function waitForVisualStability(page: Page) {
 
 test("capture player-facing primitive state matrix", async ({ page }, testInfo) => {
   const viewport = page.viewportSize();
-  test.skip(Boolean(viewport && viewport.height > viewport.width), "Landscape primitive review only");
+  test.skip(
+    Boolean(viewport && viewport.height > viewport.width),
+    "Landscape primitive review only",
+  );
 
   await page.goto("/primitives-review.html");
   await expect(page.getByRole("main", { name: "Fantasia UI primitive review" })).toBeVisible();
