@@ -1,0 +1,68 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--studio-surface-canvas);
+  color: var(--studio-text-primary);
+  font-family: var(--studio-font-sans);
+  line-height: var(--studio-line-height-body);
+}
+
+body {
+  min-width: 20rem;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--studio-surface-canvas);
+  color: var(--studio-text-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+[role="button"],
+input,
+select,
+textarea,
+a[href] {
+  outline: none;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a[href]:focus-visible {
+  outline: 2px solid var(--studio-focus-ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--studio-accent-primary);
+  color: var(--studio-text-on-accent);
+}
+
+:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}

@@ -1,0 +1,101 @@
+:root,
+[data-studio-theme="fantasia-midnight"] {
+  color-scheme: dark;
+
+  --studio-color-midnight-950: #0b1118;
+  --studio-color-midnight-900: #101923;
+  --studio-color-midnight-800: #192736;
+  --studio-color-midnight-700: #243749;
+  --studio-color-midnight-650: #2c4256;
+  --studio-color-ivory-100: #f4f0e7;
+  --studio-color-slate-200: #bbc6d2;
+  --studio-color-slate-400: #718394;
+  --studio-color-brass-300: #e2be78;
+  --studio-color-focus-300: #9acbff;
+  --studio-color-mint-300: #82cfbd;
+  --studio-color-red-300: #f59c9c;
+  --studio-color-amber-300: #e8c77b;
+  --studio-color-violet-300: #c1afe8;
+  --studio-color-blue-300: #88bde8;
+  --studio-color-gray-300: #98a4b0;
+
+  --studio-surface-canvas: var(--studio-color-midnight-900);
+  --studio-surface-panel: var(--studio-color-midnight-800);
+  --studio-surface-raised: var(--studio-color-midnight-700);
+  --studio-surface-overlay: var(--studio-color-midnight-650);
+  --studio-text-primary: var(--studio-color-ivory-100);
+  --studio-text-secondary: var(--studio-color-slate-200);
+  --studio-text-muted: var(--studio-color-slate-400);
+  --studio-text-on-accent: #18202a;
+  --studio-border-subtle: color-mix(in srgb, var(--studio-color-slate-400) 42%, transparent);
+  --studio-border-control: var(--studio-color-slate-400);
+  --studio-accent-primary: var(--studio-color-brass-300);
+  --studio-focus-ring: var(--studio-color-focus-300);
+
+  --studio-lifecycle-working: var(--studio-color-gray-300);
+  --studio-lifecycle-candidate: var(--studio-color-blue-300);
+  --studio-lifecycle-in-review: var(--studio-color-violet-300);
+  --studio-lifecycle-approved: var(--studio-color-mint-300);
+  --studio-lifecycle-frozen: #a9d7e8;
+  --studio-lifecycle-runtime-ready: #9ed9b8;
+  --studio-lifecycle-published: var(--studio-color-brass-300);
+  --studio-lifecycle-retired: #7f8a95;
+
+  --studio-validation-passed: var(--studio-color-mint-300);
+  --studio-validation-warning: var(--studio-color-amber-300);
+  --studio-validation-blocking: var(--studio-color-red-300);
+  --studio-validation-unknown: var(--studio-color-gray-300);
+
+  --studio-review-comment: var(--studio-color-blue-300);
+  --studio-review-change-request: var(--studio-color-red-300);
+  --studio-review-approval: var(--studio-color-mint-300);
+
+  --studio-runtime-ready: #9ed9b8;
+  --studio-runtime-published: var(--studio-color-brass-300);
+  --studio-runtime-verification-warning: var(--studio-color-amber-300);
+
+  --studio-font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --studio-font-serif: Georgia, "Times New Roman", serif;
+  --studio-font-size-meta: 0.75rem;
+  --studio-font-size-label: 0.875rem;
+  --studio-font-size-body: 1rem;
+  --studio-font-size-heading: 1.5rem;
+  --studio-font-size-display: clamp(1.75rem, 3vw, 2.5rem);
+  --studio-line-height-tight: 1.2;
+  --studio-line-height-body: 1.5;
+
+  --studio-space-4: 0.25rem;
+  --studio-space-8: 0.5rem;
+  --studio-space-12: 0.75rem;
+  --studio-space-16: 1rem;
+  --studio-space-24: 1.5rem;
+  --studio-space-32: 2rem;
+  --studio-space-48: 3rem;
+
+  --studio-control-height-sm: 2rem;
+  --studio-control-height-md: 2.75rem;
+  --studio-control-height-lg: 3rem;
+  --studio-target-min: 2.75rem;
+
+  --studio-radius-control: 0.25rem;
+  --studio-radius-panel: 0.5rem;
+  --studio-radius-round: 999px;
+
+  --studio-shadow-overlay: 0 18px 48px rgb(0 0 0 / 28%);
+
+  --studio-motion-feedback: 120ms;
+  --studio-motion-panel: 180ms;
+  --studio-motion-layout: 240ms;
+  --studio-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --studio-z-base: 0;
+  --studio-z-raised: 10;
+  --studio-z-overlay: 100;
+  --studio-z-dialog: 200;
+  --studio-z-toast: 300;
+
+  --studio-breakpoint-compact: 64rem;
+  --studio-breakpoint-narrow: 48rem;
+  --studio-content-max: 90rem;
+}
