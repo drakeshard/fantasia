@@ -38,7 +38,9 @@ export type EconomyRestoreResult =
     }>
   | Readonly<{ kind: "rejected"; reason: string }>;
 
-function parseBalances(rows: readonly PersistedCurrencyBalanceRow[]): readonly SerializedCurrencyBalance[] {
+function parseBalances(
+  rows: readonly PersistedCurrencyBalanceRow[],
+): readonly SerializedCurrencyBalance[] {
   return rows.map((row) => {
     if (row.schemaVersion !== FANTASIA_ECONOMY_SCHEMA_VERSION) {
       throw new Error("Unsupported currency balance schema version.");
@@ -58,7 +60,9 @@ function parseBalances(rows: readonly PersistedCurrencyBalanceRow[]): readonly S
   });
 }
 
-function parseLedger(rows: readonly PersistedCurrencyLedgerRow[]): readonly SerializedCurrencyLedgerEntry[] {
+function parseLedger(
+  rows: readonly PersistedCurrencyLedgerRow[],
+): readonly SerializedCurrencyLedgerEntry[] {
   return rows.map((row) => {
     if (row.schemaVersion !== FANTASIA_ECONOMY_SCHEMA_VERSION) {
       throw new Error("Unsupported currency ledger schema version.");
