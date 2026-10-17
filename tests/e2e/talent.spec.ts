@@ -41,6 +41,12 @@ test("Talent menu exposes controlled account-wide progression without inventing 
   await expect(page.getByText("Superseded", { exact: true })).toBeVisible();
   await expect(page.getByText("No active reward", { exact: true })).toBeVisible();
 
+  await expect(page.getByLabel("Lancer Talent graph")).toBeVisible();
+  const prerequisite = page.getByLabel("Prerequisites for Set Against the Charge");
+  await expect(prerequisite).toHaveCount(1);
+  await expect(prerequisite).toContainText("Requires LAN-CC-PWR-01 · Rank 1");
+  await expect(page.locator(".talent-graph-prerequisites")).toHaveCount(1);
+
   const permanentBaseStatBoundary = page.getByText(
     /Base Speed and Base Stability are never increased by permanent Talent/,
   );
