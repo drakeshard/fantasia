@@ -12,7 +12,7 @@ This directory contains Fantasia's repository-authoritative Supabase schema and 
 
 The repository remains authoritative for schema, migrations, game code, canonical game/content definitions, and the semantic runtime-asset manifest. Supabase stores runtime player/account state and serves published runtime binary assets.
 
-Do not move canonical characters, classes, skills, Talent definitions, equipment definitions, narrative, maps, encounters, combat rules, balance values, campaign titles, stage definitions, unlock rules, rewards, or semantic asset meaning into mutable database/Storage authority.
+Do not move canonical characters, classes, skills, Talent definitions, equipment definitions, currency definitions, narrative, maps, encounters, combat rules, balance values, campaign titles, stage definitions, unlock rules, rewards, or semantic asset meaning into mutable database/Storage authority.
 
 ## Current persisted slices
 
@@ -21,6 +21,8 @@ Do not move canonical characters, classes, skills, Talent definitions, equipment
 - `account_talent_progress`, containing only serialized account-wide Talent investment state plus schema version, revision, and timestamps.
 - `account_unit_instances`, containing immutable account-owned unit-instance identity: an instance UUID, schema version, Git-owned character-definition reference, and creation timestamp.
 - `account_equipment_instances`, containing immutable account-owned equipment-instance identity: an instance UUID, schema version, Git-owned equipment-definition reference, and creation timestamp.
+- `account_currency_balances`, containing the current account balance and monotonic balance revision for each repository-owned currency-definition reference that has actually received a transaction.
+- `account_currency_ledger`, containing append-only revisioned currency deltas and resulting balances for each account currency.
 - Private trusted-command idempotency receipts containing normalized request/result snapshots only; these are infrastructure records, not canonical gameplay definitions.
 
 Campaign identifiers loaded from Supabase must be validated against the current repository-owned campaign definition before runtime restoration. Temporary campaign-map selection is presentation/session state and is not persisted as campaign progress.
@@ -30,6 +32,20 @@ Talent state loaded from Supabase must be validated against the current reposito
 Roster unit instances loaded from Supabase must be validated against a repository-owned character-definition catalog before use. Authenticated clients may read only their own unit instances and receive no direct INSERT, UPDATE, or DELETE privilege. GAME-BACKEND06 does not auto-grant the protagonist and does not define recruitment, grants, duplicate-copy conversion, rarity, levels, stars, class paths, skills, equipment, economy, or summon semantics. Multiple stored instances may reference the same definition because duplicate-character gameplay policy is intentionally still unresolved.
 
 Equipment instances loaded from Supabase must be validated against a repository-owned equipment-definition catalog before use. Authenticated clients may read only their own equipment instances and receive no direct INSERT, UPDATE, or DELETE privilege. GAME-BACKEND07 does not auto-grant starter equipment and does not define generic consumable/material inventory, equipment acquisition/drop/reward grants, equip/loadout assignment, enhancement, enchant generation or reroll state, rarity, stars, durability, quantity/stack semantics, salvage/sell, economy, or summon semantics. Multiple stored instances may reference the same equipment definition because duplicate-item gameplay policy is intentionally not frozen by persistence.
+
+## Economy and currency ledger
+
+GAME-BACKEND08 establishes only the title-local persistence and integrity boundary for future currencies. It does not define a production currency catalog or any earn/spend gameplay rule.
+
+- Canonical currency IDs, names, display metadata, sources, sinks, prices, Talent costs, summon costs, reward amounts, exchange rules, and monetization policy remain Git/controlled-design authority.
+- Stored currency-definition references must be validated against the caller-supplied repository catalog before runtime restoration.
+- Amounts, deltas, and revisions are constrained to JavaScript-safe integers so Postgres `bigint` values can cross the browser JSON boundary without silently losing precision.
+- Current balances are keyed by account and currency definition. Missing rows mean no transaction history exists; GAME-BACKEND08 creates no starter balance and seeds no currency rows.
+- Ledger entries are append-only for application roles and carry the resulting balance plus the balance revision. Runtime restoration checks contiguous revisions, ledger arithmetic, and agreement with the current balance projection.
+- `private.apply_currency_delta` is a low-level service-role-only `SECURITY INVOKER` database primitive. It serializes one account/currency with a transaction-scoped advisory lock, rejects zero deltas, overdrafts, safe-integer overflow, and revision overflow, then updates the current balance and appends the matching ledger entry in the same database transaction.
+- The private primitive is not routed through the public `trusted-command` Edge Function. Actual gameplay earn/spend operations must be introduced later as narrow, validated, idempotent trusted commands once their title semantics are approved; do not expose a generic browser currency-adjust command.
+- Authenticated browser clients receive owner-scoped SELECT only on balances and ledger rows. They receive no direct currency INSERT, UPDATE, or DELETE path.
+- No shop, reward grant/claim, stage reward, Talent purchase, summon currency/rate/cost, stamina, premium currency, paid entitlement, mail/gift, item sale/salvage, or exchange semantics are introduced here.
 
 ## Runtime asset delivery
 
@@ -52,7 +68,7 @@ GAME-BACKEND05 establishes the reusable boundary for future sensitive player-sta
 - Privileged database mutation is performed by narrowly scoped `SECURITY INVOKER` RPCs executable only by `service_role`; `anon` and `authenticated` receive no EXECUTE grant.
 - `private.trusted_command_receipts` records per-account command name, idempotency key, normalized request/result snapshots only. Same-key retries return that stored result without reapplying the mutation. Reusing a key for a different normalized request is rejected.
 - The initial proof command is `profile.update_display_name`, an already-approved account mutation. It exists to prove authentication, authorization, atomic mutation, and idempotency; it does not imply that ordinary profile edits must become sensitive commands.
-- No Talent purchase/currency, stage reward, item grant, roster grant, inventory, equipment, summon, or economy semantics are introduced by this infrastructure slice.
+- No Talent purchase/currency, stage reward, item grant, roster grant, inventory, equipment, summon, or economy gameplay semantics are introduced by this infrastructure slice.
 
 ## Security baseline
 
@@ -72,4 +88,4 @@ GAME-BACKEND05 establishes the reusable boundary for future sensitive player-sta
 4. Verify RLS, grants, bucket visibility, Storage policies, and function security mode explicitly.
 5. Update controlled Fantasia Working Context when backend state materially changes.
 
-Account/profile, campaign, Talent persistence, Storage/semantic asset delivery, trusted-command infrastructure, roster unit-instance identity persistence, and equipment-instance identity persistence are complete through GAME-BACKEND07. Generic inventory taxonomy, economy, and summon state remain separate follow-up slices.
+Account/profile, campaign, Talent persistence, Storage/semantic asset delivery, trusted-command infrastructure, roster unit-instance identity persistence, equipment-instance identity persistence, and currency balance/ledger persistence are complete through GAME-BACKEND08. Generic non-equipment inventory taxonomy and summon state remain separate follow-up slices.
