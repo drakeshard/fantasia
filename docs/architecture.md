@@ -13,6 +13,14 @@ Foundation is consumed as exact public `@drakeshard/foundation@0.1.2` infrastruc
 - `apps/web` owns browser presentation, HTML/CSS/Preact UI, browser input adapters, IndexedDB storage adapters, runtime asset delivery-origin configuration, future renderer adapters, camera/animation/effects/audio, and input mapping to game intentions.
 - Drakeshard RPG and Tactical remain sibling dependencies. Fantasia may consume selected package subpaths, but neither library may depend on the other because Fantasia uses both.
 
+## Content Studio registry boundary
+
+The unified Content Studio uses a logically isolated Supabase schema, `studio_registry`, for Layer 2B workflow and asset metadata. It owns stable semantic entity/asset identities, source-version/provider references, explicit relations, validation/readiness evidence, runtime-derivative metadata, and audit history only.
+
+Git remains canonical for structured gameplay/content definitions and the accepted runtime semantic asset manifest. Google Drive remains the current source/master production-asset authority. Existing player/account persistence remains separate from Studio registry identity and authorization. GAME-STUDIO01 grants no direct registry privileges to browser `anon` or ordinary `authenticated` roles; GAME-STUDIO02 owns real Studio membership/roles and the trusted Operations API.
+
+The exact frozen lifecycle is `WORKING → CANDIDATE → IN REVIEW → APPROVED → FROZEN → RUNTIME READY → PUBLISHED → RETIRED`. Review workflow, validation/readiness, runtime verification, and publication evidence remain independent dimensions. See `docs/content-studio-registry.md` for the physical contract and verification rules.
+
 ## Foundation boundary
 
 Fantasia imports Foundation only through supported package subpaths. Package-root imports and repository/source imports are forbidden.
