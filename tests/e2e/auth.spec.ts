@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("account access preview exposes truthful sign-in and account creation states", async ({ page }) => {
+test("account access preview exposes truthful sign-in and account creation states", async ({
+  page,
+}) => {
   await page.goto("/?dev=auth");
 
   const auth = page.getByRole("main", { name: "Fantasia account access" });
@@ -34,7 +36,9 @@ test("account access preview exposes truthful sign-in and account creation state
   await expect(page.getByLabel("Password", { exact: true })).toHaveAttribute("type", "password");
 });
 
-test("account access remains usable in portrait before the gameplay landscape gate", async ({ page }) => {
+test("account access remains usable in portrait before the gameplay landscape gate", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/?dev=auth");
 

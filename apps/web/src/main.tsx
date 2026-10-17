@@ -4,8 +4,8 @@ import { type AuthMessage, AuthScreen } from "./auth-screen.js";
 import {
   clearPersistedAuthSession,
   persistAuthSession,
-  restoreAccountSession,
   type RestoredFantasiaAccount,
+  restoreAccountSession,
 } from "./backend/session.js";
 import {
   bootstrapAccount,
