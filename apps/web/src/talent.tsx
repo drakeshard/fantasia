@@ -1,6 +1,11 @@
-import { TalentMenuSession, type TalentNodeView } from "@fantasia/runtime";
+import {
+  TalentMenuSession,
+  type TalentNodeView,
+  type TalentPrerequisiteView,
+} from "@fantasia/runtime";
 import { useMemo, useState } from "preact/hooks";
 import { GameUtilityCluster } from "./game-controls.js";
+import { UiBadge, UiButton, UiPanel, UiTitleLockup } from "./ui/primitives.js";
 
 interface TalentAppProps {
   readonly onHome: () => void;
@@ -21,6 +26,48 @@ function nodeClass(node: TalentNodeView): string {
   return classes.join(" ");
 }
 
+function prerequisiteLabel(requirement: TalentPrerequisiteView): string {
+  switch (requirement.kind) {
+    case "node-rank":
+      return `Requires ${requirement.nodeId} · Rank ${requirement.rank}`;
+    case "total-tree-ranks":
+      return `Requires ${requirement.ranks} total tree ranks`;
+    case "doctrine-ranks":
+      return `Requires ${requirement.ranks} ${requirement.doctrine} ranks`;
+  }
+}
+
+function TalentGraphNode({ node }: { readonly node: TalentNodeView }) {
+  const requirements = node.prerequisiteGroups.flatMap((group) => group.requirements);
+  return (
+    <div class="talent-graph-step">
+      {requirements.length > 0 ? (
+        <div class="talent-graph-prerequisites" aria-label={`Prerequisites for ${node.name}`}>
+          <span class="talent-graph-connector" aria-hidden="true" />
+          {requirements.map((requirement) => (
+            <span class="talent-requirement" key={prerequisiteLabel(requirement)}>
+              {prerequisiteLabel(requirement)}
+            </span>
+          ))}
+        </div>
+      ) : null}
+      <article class={nodeClass(node)} data-talent-node={node.nodeId}>
+        <div class="talent-node-topline">
+          <span class="talent-node-type">{node.type.replaceAll("-", " ")}</span>
+          <UiBadge tone={node.status === "approved" ? "positive" : "neutral"}>
+            {node.statusLabel}
+          </UiBadge>
+        </div>
+        <h4>{node.name}</h4>
+        <div class="talent-node-reward">{node.rewardLabel}</div>
+        <div class="talent-node-ranks">Rank capacity · {node.ranks}</div>
+        {node.notes ? <p>{node.notes}</p> : null}
+        <code>{node.nodeId}</code>
+      </article>
+    </div>
+  );
+}
+
 export function TalentApp({ onHome, onSettings }: TalentAppProps) {
   const session = useMemo(() => new TalentMenuSession(), []);
   const view = session.view();
@@ -31,15 +78,12 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
   return (
     <main class="talent-screen" aria-label="Talents">
       <header class="talent-hud">
-        <div class="talent-heading">
-          <span class="talent-heading-icon" aria-hidden="true">
-            <TalentIcon />
-          </span>
-          <span>
-            <small>Account progression</small>
-            <h1>Talents</h1>
-          </span>
-        </div>
+        <UiTitleLockup
+          class="talent-heading"
+          eyebrow="Account progression"
+          title="Talents"
+          ornament={<TalentIcon />}
+        />
         <GameUtilityCluster onHome={onHome} onSettings={onSettings} />
       </header>
 
@@ -51,12 +95,13 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
           </div>
           <div class="talent-family-tabs" role="tablist" aria-label="Talent families">
             {view.families.map((candidate) => (
-              <button
+              <UiButton
                 key={candidate.id}
-                type="button"
                 role="tab"
                 aria-selected={candidate.id === familyId}
-                class={`talent-family-tab${candidate.id === familyId ? " is-selected" : ""}`}
+                selected={candidate.id === familyId}
+                class="talent-family-tab"
+                tone="quiet"
                 onClick={() => setFamilyId(candidate.id)}
               >
                 <span class="talent-family-mark" aria-hidden="true">
@@ -66,46 +111,50 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                   <strong>{candidate.label}</strong>
                   <small>{candidate.description}</small>
                 </span>
-                <span class={`talent-family-state${candidate.available ? " is-available" : ""}`}>
+                <UiBadge
+                  class={`talent-family-state${candidate.available ? " is-available" : ""}`}
+                  tone={candidate.available ? "positive" : "neutral"}
+                >
                   {candidate.available ? `${candidate.treeCount} tree` : "Not authored"}
-                </span>
-              </button>
+                </UiBadge>
+              </UiButton>
             ))}
           </div>
 
-          <div class="talent-account-note" role="note">
+          <UiPanel class="talent-account-note" ariaLabel="Account-wide Talent rule">
             <strong>Shared by the account</strong>
             <span>
               Matching current and future units receive these permanent Talent benefits. Base Speed
               and Base Stability are never increased by permanent Talent.
             </span>
-          </div>
+          </UiPanel>
         </aside>
 
         <section class="talent-content" aria-live="polite">
           {familyId === "class" && lancer ? (
             <>
               <div class="talent-tree-heading">
-                <span>
-                  <small>Class Talent · controlled scaffold</small>
-                  <h2>{lancer.className}</h2>
-                </span>
+                <UiTitleLockup eyebrow="Class Talent · controlled scaffold" title={lancer.className} />
                 <div class="talent-tree-meta">
-                  <span>{lancer.nodeCount} nodes shown</span>
-                  <span>{lancer.totalRankCapacity} rank capacity</span>
+                  <UiBadge>{lancer.nodeCount} nodes shown</UiBadge>
+                  <UiBadge>{lancer.totalRankCapacity} rank capacity</UiBadge>
                 </div>
               </div>
 
-              <div class="talent-production-boundary" role="note">
+              <UiPanel
+                class="talent-production-boundary"
+                tone="overlay"
+                ariaLabel="Talent production boundary"
+              >
                 <strong>Previewing controlled design state</strong>
                 <span>
                   Purchasing is not available yet. Currency, costs, reset/refund rules, unlock
                   timing and the final Lancer tree are still being authored. Proposed nodes below
                   are not live progression.
                 </span>
-              </div>
+              </UiPanel>
 
-              <div class="talent-doctrine-grid">
+              <div class="talent-doctrine-grid talent-graph" aria-label="Lancer Talent graph">
                 {lancer.doctrines.map((doctrine) => (
                   <section class="talent-doctrine" key={doctrine.name}>
                     <header>
@@ -114,17 +163,7 @@ export function TalentApp({ onHome, onSettings }: TalentAppProps) {
                     </header>
                     <div class="talent-node-stack">
                       {doctrine.nodes.map((node) => (
-                        <article class={nodeClass(node)} key={node.nodeId}>
-                          <div class="talent-node-topline">
-                            <span class="talent-node-type">{node.type.replaceAll("-", " ")}</span>
-                            <span class="talent-node-status">{node.statusLabel}</span>
-                          </div>
-                          <h4>{node.name}</h4>
-                          <div class="talent-node-reward">{node.rewardLabel}</div>
-                          <div class="talent-node-ranks">Rank capacity · {node.ranks}</div>
-                          {node.notes ? <p>{node.notes}</p> : null}
-                          <code>{node.nodeId}</code>
-                        </article>
+                        <TalentGraphNode node={node} key={node.nodeId} />
                       ))}
                     </div>
                   </section>
