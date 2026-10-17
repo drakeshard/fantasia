@@ -1,6 +1,7 @@
 import { CampaignSession } from "@fantasia/runtime";
 import { useMemo } from "preact/hooks";
 import { GameUtilityCluster } from "./game-controls.js";
+import { UiButton, UiPanel } from "./ui/primitives.js";
 
 const UI_ASSET_ROOT = "/assets/ui/core";
 
@@ -59,7 +60,7 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
             </div>
           </section>
 
-          <section class="saga-chapter-route" aria-labelledby="saga-route-heading">
+          <UiPanel class="saga-chapter-route" tone="overlay" ariaLabel="Chapter path">
             <div class="saga-route-heading">
               <div>
                 <p class="saga-kicker">Chapter path</p>
@@ -77,9 +78,10 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                     key={chapter.id}
                   >
                     {index > 0 ? <span class="saga-route-connector" aria-hidden="true" /> : null}
-                    <button
-                      type="button"
+                    <UiButton
                       class="saga-chapter-node"
+                      tone="quiet"
+                      selected={current}
                       onClick={() => {
                         if (current) onContinue();
                       }}
@@ -117,14 +119,14 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                           <span>Unavailable</span>
                         )}
                       </span>
-                    </button>
+                    </UiButton>
                   </li>
                 );
               })}
             </ol>
-          </section>
+          </UiPanel>
 
-          <aside class="saga-current-mission" aria-label="Current chapter">
+          <UiPanel class="saga-current-mission" tone="raised" ariaLabel="Current chapter">
             <div class="saga-current-heading">
               <span class="saga-current-icon" aria-hidden="true">
                 <img src={`${UI_ASSET_ROOT}/fantasia_ui_icon_campaign_default_v001.svg`} alt="" />
@@ -146,9 +148,9 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
               progression remain campaign-owned.
             </p>
 
-            <button
-              type="button"
+            <UiButton
               class="saga-continue-button"
+              tone="primary"
               aria-label="Continue current chapter"
               onClick={onContinue}
             >
@@ -161,8 +163,8 @@ export function SagaApp({ onHome, onContinue, onSettings }: SagaAppProps) {
                 alt=""
                 aria-hidden="true"
               />
-            </button>
-          </aside>
+            </UiButton>
+          </UiPanel>
         </div>
 
         <footer class="saga-footer-status">
