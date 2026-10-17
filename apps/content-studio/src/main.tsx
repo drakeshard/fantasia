@@ -67,8 +67,8 @@ function App() {
         <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00B</p>
         <h1 id="studio-title">Fantasia Content Studio</h1>
         <p>
-          Reusable, content-agnostic primitives and interaction states. Semantic lifecycle,
-          review, validation and runtime components remain reserved for the next layer.
+          Reusable, content-agnostic primitives and interaction states. Semantic lifecycle, review,
+          validation and runtime components remain reserved for the next layer.
         </p>
       </header>
 
@@ -276,7 +276,9 @@ function App() {
         <div class="preview-section__heading">
           <div>
             <h2 id="overlay-title">Dialog and drawer</h2>
-            <p>Native modal behavior traps focus; Escape cancels and focus returns to the opener.</p>
+            <p>
+              Native modal behavior traps focus; Escape cancels and focus returns to the opener.
+            </p>
           </div>
         </div>
         <ActionGroup>
@@ -304,7 +306,12 @@ function App() {
             </>
           }
         >
-          <TextField id="dialog-reference" label="Reference" defaultValue="REF-001" data-autofocus />
+          <TextField
+            id="dialog-reference"
+            label="Reference"
+            defaultValue="REF-001"
+            data-autofocus
+          />
         </Dialog>
         <Dialog
           id="preview-drawer"
