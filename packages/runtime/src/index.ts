@@ -88,6 +88,14 @@ export {
   RuntimeAssetResolver,
 } from "./runtime-assets.js";
 export {
+  FANTASIA_SUMMON_SCHEMA_VERSION,
+  type PersistedSummonHistoryRow,
+  type PersistedSummonStateRow,
+  restoreSummonState,
+  type SummonRestoreResult,
+  type SummonSnapshot,
+} from "./summon-progress.js";
+export {
   emptyTalentProgressSnapshot,
   FANTASIA_TALENT_PROGRESS_SCHEMA_VERSION,
   restoreTalentProgress,
