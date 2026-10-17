@@ -106,7 +106,7 @@ function canonicalizeState(
   if (canonical === null || Array.isArray(canonical) || typeof canonical !== "object") {
     throw new Error(`${label} must be a JSON object.`);
   }
-  return canonical;
+  return canonical as Readonly<{ [key: string]: SummonJsonValue }>;
 }
 
 export function createSummonPersistenceState(
