@@ -21,7 +21,12 @@
   border-radius: var(--ui-radius-control);
   color: var(--ui-text);
   background:
-    linear-gradient(135deg, transparent 0 var(--ui-corner-cut-sm), rgb(226 190 120 / 7%) var(--ui-corner-cut-sm) calc(var(--ui-corner-cut-sm) + 1px), transparent calc(var(--ui-corner-cut-sm) + 1px)),
+    linear-gradient(
+      135deg,
+      transparent 0 var(--ui-corner-cut-sm),
+      rgb(226 190 120 / 7%) var(--ui-corner-cut-sm) calc(var(--ui-corner-cut-sm) + 1px),
+      transparent calc(var(--ui-corner-cut-sm) + 1px)
+    ),
     linear-gradient(180deg, rgb(24 43 57 / 96%), rgb(7 17 25 / 98%));
   box-shadow: var(--ui-highlight-inset), var(--ui-shadow-control);
   font-size: var(--ui-font-size-md);
@@ -50,7 +55,12 @@
 .ui-primitive-button:hover:not(:disabled) {
   border-color: var(--ui-border-strong);
   background:
-    linear-gradient(135deg, transparent 0 var(--ui-corner-cut-sm), rgb(226 190 120 / 13%) var(--ui-corner-cut-sm) calc(var(--ui-corner-cut-sm) + 1px), transparent calc(var(--ui-corner-cut-sm) + 1px)),
+    linear-gradient(
+      135deg,
+      transparent 0 var(--ui-corner-cut-sm),
+      rgb(226 190 120 / 13%) var(--ui-corner-cut-sm) calc(var(--ui-corner-cut-sm) + 1px),
+      transparent calc(var(--ui-corner-cut-sm) + 1px)
+    ),
     linear-gradient(180deg, rgb(34 58 75 / 98%), rgb(9 22 32 / 98%));
   box-shadow: var(--ui-highlight-inset), var(--ui-shadow-control-hover);
 }
@@ -120,6 +130,13 @@
   opacity: 0.72;
 }
 
+.ui-feedback-mark {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ui-info);
+}
+
 .ui-primitive-busy-mark,
 .ui-feedback-loading .ui-feedback-mark {
   width: 14px;
@@ -128,6 +145,7 @@
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
+  background: transparent;
   animation: ui-primitive-spin 700ms linear infinite;
 }
 
@@ -295,13 +313,6 @@
   border: var(--ui-border-width) solid var(--ui-border-subtle);
   border-radius: var(--ui-radius-control);
   background: rgb(7 16 25 / 78%);
-}
-
-.ui-feedback-mark {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--ui-info);
 }
 
 .ui-feedback strong {
