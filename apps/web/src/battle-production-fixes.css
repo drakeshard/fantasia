@@ -1,3 +1,7 @@
+@import "./ui24e5-battle-hud.css";
+
+/* Historical launcher offsets remain as compatibility fallback; GAME-UI24E5
+ * owns the final Battle utility placement in the imported migration layer. */
 .global-settings-launcher.battle {
   top: 19px;
   right: 124px;
