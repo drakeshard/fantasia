@@ -17,7 +17,9 @@ function assert(condition, message) {
 
 function assertEqual(actual, expected, message) {
   if (actual !== expected) {
-    throw new Error(`${message}: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`);
+    throw new Error(
+      `${message}: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`,
+    );
   }
 }
 
@@ -55,7 +57,10 @@ function createClient(config, fetchImpl = fetch) {
     const body = await response.json();
     assert(typeof body.access_token === "string", "Sign-in response is missing access_token");
     assert(typeof body.refresh_token === "string", "Sign-in response is missing refresh_token");
-    assert(typeof body.user?.id === "string", "Sign-in response is missing the authenticated user");
+    assert(
+      typeof body.user?.id === "string",
+      "Sign-in response is missing the authenticated user",
+    );
     return {
       accessToken: body.access_token,
       refreshToken: body.refresh_token,
@@ -77,7 +82,10 @@ function createClient(config, fetchImpl = fetch) {
       accessToken,
     );
     const rows = await response.json();
-    assert(Array.isArray(rows) && rows.length === 1, "Account bootstrap must return exactly one profile");
+    assert(
+      Array.isArray(rows) && rows.length === 1,
+      "Account bootstrap must return exactly one profile",
+    );
     return parseProfile(rows[0]);
   }
 
@@ -88,7 +96,10 @@ function createClient(config, fetchImpl = fetch) {
       accessToken,
     );
     const rows = await response.json();
-    assert(Array.isArray(rows) && rows.length === 1, "Account profile load must return exactly one profile");
+    assert(
+      Array.isArray(rows) && rows.length === 1,
+      "Account profile load must return exactly one profile",
+    );
     return parseProfile(rows[0]);
   }
 
@@ -119,18 +130,37 @@ function createClient(config, fetchImpl = fetch) {
       accessToken,
     );
     const rows = await response.json();
-    assert(Array.isArray(rows) && rows.length === 1, "Null display-name cleanup must return one profile");
+    assert(
+      Array.isArray(rows) && rows.length === 1,
+      "Null display-name cleanup must return one profile",
+    );
     return parseProfile(rows[0]);
   }
 
-  return { bootstrap, loadProfile, restoreNullDisplayName, signIn, signOut, trustedDisplayName };
+  return {
+    bootstrap,
+    loadProfile,
+    restoreNullDisplayName,
+    signIn,
+    signOut,
+    trustedDisplayName,
+  };
 }
 
 function parseProfile(value) {
-  assert(value && typeof value === "object" && !Array.isArray(value), "Invalid account profile response");
+  assert(
+    value && typeof value === "object" && !Array.isArray(value),
+    "Invalid account profile response",
+  );
   assert(typeof value.account_id === "string", "Profile is missing account_id");
-  assert(value.display_name === null || typeof value.display_name === "string", "Profile has invalid display_name");
-  assert(Number.isSafeInteger(value.revision) && value.revision >= 0, "Profile has invalid revision");
+  assert(
+    value.display_name === null || typeof value.display_name === "string",
+    "Profile has invalid display_name",
+  );
+  assert(
+    Number.isSafeInteger(value.revision) && value.revision >= 0,
+    "Profile has invalid revision",
+  );
   assert(typeof value.created_at === "string", "Profile is missing created_at");
   assert(typeof value.updated_at === "string", "Profile is missing updated_at");
   return {
@@ -143,14 +173,26 @@ function parseProfile(value) {
 }
 
 function parseTrustedCommand(value) {
-  assert(value && typeof value === "object" && !Array.isArray(value), "Invalid trusted-command response");
+  assert(
+    value && typeof value === "object" && !Array.isArray(value),
+    "Invalid trusted-command response",
+  );
   assertEqual(value.command, TRUSTED_COMMAND, "Trusted-command type mismatch");
-  assert(typeof value.idempotencyKey === "string", "Trusted command is missing idempotencyKey");
+  assert(
+    typeof value.idempotencyKey === "string",
+    "Trusted command is missing idempotencyKey",
+  );
   assert(typeof value.replayed === "boolean", "Trusted command is missing replayed");
   const result = value.result;
-  assert(result && typeof result === "object" && !Array.isArray(result), "Trusted command is missing result");
+  assert(
+    result && typeof result === "object" && !Array.isArray(result),
+    "Trusted command is missing result",
+  );
   assert(typeof result.accountId === "string", "Trusted command result is missing accountId");
-  assert(typeof result.displayName === "string", "Trusted command result is missing displayName");
+  assert(
+    typeof result.displayName === "string",
+    "Trusted command result is missing displayName",
+  );
   assert(Number.isSafeInteger(result.revision), "Trusted command result has invalid revision");
   assert(typeof result.createdAt === "string", "Trusted command result is missing createdAt");
   assert(typeof result.updatedAt === "string", "Trusted command result is missing updatedAt");
@@ -162,7 +204,11 @@ function assertReplay(first, replay, expectedKey) {
   assertEqual(replay.idempotencyKey, expectedKey, "Replay idempotency key mismatch");
   assertEqual(first.replayed, false, "Initial command must not be a replay");
   assertEqual(replay.replayed, true, "Second command must be a replay");
-  assertEqual(JSON.stringify(replay.result), JSON.stringify(first.result), "Replay result must exactly match initial result");
+  assertEqual(
+    JSON.stringify(replay.result),
+    JSON.stringify(first.result),
+    "Replay result must exactly match initial result",
+  );
 }
 
 function runSelfTest() {
@@ -202,7 +248,9 @@ function runSelfTest() {
 async function runHostedAcceptance() {
   const config = {
     url: requireEnv("VITE_SUPABASE_URL", ["FANTASIA_SUPABASE_URL"]).replace(/\/$/, ""),
-    publishableKey: requireEnv("VITE_SUPABASE_PUBLISHABLE_KEY", ["FANTASIA_SUPABASE_PUBLISHABLE_KEY"]),
+    publishableKey: requireEnv("VITE_SUPABASE_PUBLISHABLE_KEY", [
+      "FANTASIA_SUPABASE_PUBLISHABLE_KEY",
+    ]),
   };
   const email = requireEnv("FANTASIA_ACCEPTANCE_EMAIL");
   const password = requireEnv("FANTASIA_ACCEPTANCE_PASSWORD");
@@ -211,35 +259,81 @@ async function runHostedAcceptance() {
   let cleanupAccessToken;
   let originalProfile;
   let mutationApplied = false;
+  let acceptanceError;
+  let cleanupError;
 
   try {
     const firstSession = await client.signIn(email, password);
     const bootstrapped = await client.bootstrap(firstSession.accessToken);
     const loaded = await client.loadProfile(firstSession.accessToken);
-    assertEqual(loaded.accountId, firstSession.userId, "Loaded profile must belong to authenticated user");
-    assertEqual(JSON.stringify(loaded), JSON.stringify(bootstrapped), "Bootstrap and load profile state must agree");
+    assertEqual(
+      loaded.accountId,
+      firstSession.userId,
+      "Loaded profile must belong to authenticated user",
+    );
+    assertEqual(
+      JSON.stringify(loaded),
+      JSON.stringify(bootstrapped),
+      "Bootstrap and load profile state must agree",
+    );
     originalProfile = loaded;
 
     const temporaryName = `E2E-${randomUUID().slice(0, 12)}`;
     const idempotencyKey = randomUUID();
-    const first = await client.trustedDisplayName(firstSession.accessToken, idempotencyKey, temporaryName);
+    const first = await client.trustedDisplayName(
+      firstSession.accessToken,
+      idempotencyKey,
+      temporaryName,
+    );
     mutationApplied = true;
-    assertEqual(first.result.accountId, loaded.accountId, "Trusted command must mutate the authenticated account");
-    assertEqual(first.result.displayName, temporaryName, "Trusted command must persist the requested display name");
-    assertEqual(first.result.revision, loaded.revision + 1, "Trusted command must advance profile revision exactly once");
+    assertEqual(
+      first.result.accountId,
+      loaded.accountId,
+      "Trusted command must mutate the authenticated account",
+    );
+    assertEqual(
+      first.result.displayName,
+      temporaryName,
+      "Trusted command must persist the requested display name",
+    );
+    assertEqual(
+      first.result.revision,
+      loaded.revision + 1,
+      "Trusted command must advance profile revision exactly once",
+    );
 
-    const replay = await client.trustedDisplayName(firstSession.accessToken, idempotencyKey, temporaryName);
+    const replay = await client.trustedDisplayName(
+      firstSession.accessToken,
+      idempotencyKey,
+      temporaryName,
+    );
     assertReplay(first, replay, idempotencyKey);
     await client.signOut(firstSession.accessToken);
 
     const secondSession = await client.signIn(email, password);
     cleanupAccessToken = secondSession.accessToken;
     const restored = await client.loadProfile(secondSession.accessToken);
-    assertEqual(restored.accountId, first.result.accountId, "Fresh session must restore the same account");
-    assertEqual(restored.displayName, first.result.displayName, "Fresh session must restore the exact persisted display name");
-    assertEqual(restored.revision, first.result.revision, "Fresh session must restore the exact persisted revision");
+    assertEqual(
+      restored.accountId,
+      first.result.accountId,
+      "Fresh session must restore the same account",
+    );
+    assertEqual(
+      restored.displayName,
+      first.result.displayName,
+      "Fresh session must restore the exact persisted display name",
+    );
+    assertEqual(
+      restored.revision,
+      first.result.revision,
+      "Fresh session must restore the exact persisted revision",
+    );
 
-    console.log("Hosted backend acceptance passed: auth → bootstrap/load → trusted mutation → idempotent replay → fresh-session restore.");
+    console.log(
+      "Hosted backend acceptance passed: auth → bootstrap/load → trusted mutation → idempotent replay → fresh-session restore.",
+    );
+  } catch (error) {
+    acceptanceError = error;
   } finally {
     if (mutationApplied && originalProfile) {
       try {
@@ -249,12 +343,18 @@ async function runHostedAcceptance() {
         if (originalProfile.displayName === null) {
           await client.restoreNullDisplayName(cleanupAccessToken, originalProfile.accountId);
         } else {
-          await client.trustedDisplayName(cleanupAccessToken, randomUUID(), originalProfile.displayName);
+          await client.trustedDisplayName(
+            cleanupAccessToken,
+            randomUUID(),
+            originalProfile.displayName,
+          );
         }
         console.log("Hosted backend acceptance cleanup restored the original display name.");
-      } catch (cleanupError) {
-        console.error("Hosted backend acceptance cleanup failed; inspect the test account profile before rerunning.");
-        throw cleanupError;
+      } catch (error) {
+        cleanupError = error;
+        console.error(
+          "Hosted backend acceptance cleanup failed; inspect the test account profile before rerunning.",
+        );
       }
     }
 
@@ -266,6 +366,9 @@ async function runHostedAcceptance() {
       }
     }
   }
+
+  if (acceptanceError) throw acceptanceError;
+  if (cleanupError) throw cleanupError;
 }
 
 if (process.argv.includes("--self-test")) {
