@@ -6,6 +6,7 @@ import {
 import { useMemo, useState } from "preact/hooks";
 import { GameUtilityCluster } from "./game-controls.js";
 import { UiBadge, UiButton, UiPanel, UiTitleLockup } from "./ui/primitives.js";
+import "./ui24e3-story-characters-talent.css";
 
 interface TalentAppProps {
   readonly onHome: () => void;
