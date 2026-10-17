@@ -33,7 +33,7 @@ export default defineConfig({
     {
       name: "studio-compact",
       use: {
-        viewport: { width: 844, height: 390 },
+        viewport: { width: 896, height: 414 },
         hasTouch: true,
       },
     },
