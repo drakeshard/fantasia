@@ -1,6 +1,5 @@
-import { render } from "preact";
+import { type ComponentChildren, render } from "preact";
 import { useState } from "preact/hooks";
-import "./ui/workspace.css";
 import { Button, Chip, DataTable, SelectField, Surface, TextField } from "./ui/primitives";
 import {
   LifecycleBadge,
@@ -15,13 +14,14 @@ import {
   DashboardTemplate,
   EntityWorkspaceTemplate,
   OperationalQueueTemplate,
+  type StudioModuleId,
   StudioShell,
   TemplateFixtureHeading,
   TemplateToolbar,
   WorkspaceHeader,
   WorkspaceStateRegion,
-  type StudioModuleId,
 } from "./ui/workspace";
+import "./ui/workspace.css";
 
 const entityTabs = [
   { id: "overview", label: "Overview" },
@@ -35,7 +35,7 @@ const entityTabs = [
   { id: "history", label: "History" },
 ] as const;
 
-function FixtureCard({ title, children }: { title: string; children: preact.ComponentChildren }) {
+function FixtureCard({ title, children }: { title: string; children: ComponentChildren }) {
   return (
     <article class="studio-fixture-card">
       <strong>{title}</strong>
@@ -52,14 +52,17 @@ function WorkspaceLab() {
   const [assetInspectorOpen, setAssetInspectorOpen] = useState(true);
 
   return (
-    <section class="foundation-preview" aria-labelledby="workspace-lab-title" data-testid="workspace-lab">
+    <section
+      class="foundation-preview"
+      aria-labelledby="workspace-lab-title"
+      data-testid="workspace-lab"
+    >
       <header class="foundation-preview__hero">
         <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00D</p>
         <h2 id="workspace-lab-title">Shared shell and workspace templates</h2>
         <p>
-          Development-only fixture surface for the frozen Layer 3A shell and reusable workspace
-          patterns. It contains no production routes, auth enforcement, provider calls, registry
-          mutations, or canonical content edits.
+          Development-only fixtures for the shared Studio frame, templates, responsive behavior,
+          and accessibility contracts. No production routes or trusted mutations exist here.
         </p>
       </header>
 
@@ -68,14 +71,14 @@ function WorkspaceLab() {
           <div>
             <h2 id="shell-title">Global Studio shell</h2>
             <p>
-              The nine frozen modules share one navigation, global search/browser slot, user-role
-              presentation slot, and stable workspace viewport.
+              One navigation, global search/browser slot, user-role slot, and stable workspace
+              viewport serve the nine frozen modules.
             </p>
           </div>
           <Chip accent>Fixture only</Chip>
         </div>
         <p class="studio-ui-lab-shell-note">
-          Module buttons intentionally change selection only. They do not fake routing or data.
+          Module buttons change fixture selection only. They do not fake routing, auth, or data.
         </p>
         <StudioShell
           activeModule={activeModule}
@@ -106,9 +109,15 @@ function WorkspaceLab() {
             panels={{
               overview: (
                 <div class="studio-fixture-card-grid">
-                  <FixtureCard title="Identity">Character identity and canonical metadata slot.</FixtureCard>
-                  <FixtureCard title="Gameplay">Class, faction, element and stat summary slot.</FixtureCard>
-                  <FixtureCard title="Relations">Explicit semantic relations remain separately visible.</FixtureCard>
+                  <FixtureCard title="Identity">
+                    Character identity and canonical metadata slot.
+                  </FixtureCard>
+                  <FixtureCard title="Gameplay">
+                    Class, faction, element, and stat summary slot.
+                  </FixtureCard>
+                  <FixtureCard title="Relations">
+                    Explicit semantic relations remain separately visible.
+                  </FixtureCard>
                 </div>
               ),
               gameplay: <WorkspaceStateRegion state="loading" />,
@@ -124,8 +133,7 @@ function WorkspaceLab() {
               <>
                 <AuthoritySummary validation="warning" runtimeReadiness="not-ready" />
                 <p class="preview-meta">
-                  Inspector fixture keeps source authority and readiness visible without exposing
-                  fake mutations.
+                  Source authority and readiness remain visible without fake mutations.
                 </p>
               </>
             }
@@ -161,10 +169,7 @@ function WorkspaceLab() {
         <div class="preview-section__heading">
           <div>
             <h2 id="templates-title">Reusable template set</h2>
-            <p>
-              Five structural templates provide typed composition regions while canonical data stays
-              in its real authority.
-            </p>
+            <p>Five shared structural patterns cover production-page composition.</p>
           </div>
         </div>
 
@@ -173,7 +178,7 @@ function WorkspaceLab() {
             header={
               <TemplateFixtureHeading
                 title="Collection template"
-                description="Searchable/filterable entity or asset collection layout."
+                description="Searchable and filterable collection layout."
                 status={<ValidationBadge state="passed" />}
               />
             }
@@ -185,7 +190,11 @@ function WorkspaceLab() {
             }
             filterSlot={
               <>
-                <TextField id="collection-search" label="Search collection" placeholder="Semantic ID or title" />
+                <TextField
+                  id="collection-search"
+                  label="Search collection"
+                  placeholder="Semantic ID or title"
+                />
                 <SelectField
                   id="collection-filter"
                   label="Lifecycle filter"
@@ -209,13 +218,21 @@ function WorkspaceLab() {
               <tbody>
                 <tr>
                   <td>entity.example-a</td>
-                  <td><LifecycleBadge state="approved" /></td>
-                  <td><ValidationBadge state="passed" /></td>
+                  <td>
+                    <LifecycleBadge state="approved" />
+                  </td>
+                  <td>
+                    <ValidationBadge state="passed" />
+                  </td>
                 </tr>
                 <tr>
                   <td>entity.example-b</td>
-                  <td><LifecycleBadge state="in-review" /></td>
-                  <td><ValidationBadge state="warning" /></td>
+                  <td>
+                    <LifecycleBadge state="in-review" />
+                  </td>
+                  <td>
+                    <ValidationBadge state="warning" />
+                  </td>
                 </tr>
               </tbody>
             </DataTable>
@@ -225,26 +242,22 @@ function WorkspaceLab() {
             header={
               <TemplateFixtureHeading
                 title="Dashboard template"
-                description="Attention, summary and navigation panels without invented production metrics."
+                description="Attention, summary, and navigation panels without invented metrics."
               />
             }
           >
             <div class="studio-fixture-metric-grid">
-              <article class="studio-fixture-metric">
-                <span>Attention slot</span>
-                <strong>—</strong>
-                <p>Real metric awaits an authoritative read model.</p>
-              </article>
-              <article class="studio-fixture-metric">
-                <span>Review slot</span>
-                <strong>—</strong>
-                <p>No fake queue count is presented.</p>
-              </article>
-              <article class="studio-fixture-metric">
-                <span>Release slot</span>
-                <strong>—</strong>
-                <p>Publishing state belongs to Layer 5 contracts.</p>
-              </article>
+              {[
+                ["Attention slot", "Real metric awaits an authoritative read model."],
+                ["Review slot", "No fake queue count is presented."],
+                ["Release slot", "Publishing state belongs to Layer 5 contracts."],
+              ].map(([title, copy]) => (
+                <article class="studio-fixture-metric" key={title}>
+                  <span>{title}</span>
+                  <strong>—</strong>
+                  <p>{copy}</p>
+                </article>
+              ))}
             </div>
             <WorkspaceStateRegion state="loading" />
           </DashboardTemplate>
@@ -258,7 +271,9 @@ function WorkspaceLab() {
               overview: (
                 <div class="studio-fixture-card-grid">
                   <FixtureCard title="Main content">Shared tabbed entity composition.</FixtureCard>
-                  <FixtureCard title="Independent semantics">Lifecycle and readiness never collapse.</FixtureCard>
+                  <FixtureCard title="Independent semantics">
+                    Lifecycle and readiness never collapse.
+                  </FixtureCard>
                 </div>
               ),
             }}
@@ -285,7 +300,7 @@ function WorkspaceLab() {
               <WorkspaceHeader
                 breadcrumbs={["Characters", "Template", "Assets"]}
                 title="Asset Board template"
-                description="Semantic asset/version groups with retained source and derivative separation."
+                description="Semantic asset/version groups with source and derivative separation."
                 semanticId="asset.entity.template"
                 lifecycle="approved"
                 versionLabel="v003"
@@ -314,21 +329,15 @@ function WorkspaceLab() {
             onInspectorOpenChange={setAssetInspectorOpen}
           >
             <div class="studio-fixture-assets">
-              <article class="studio-fixture-asset">
-                <strong>Portrait · base</strong>
-                <LifecycleBadge state="approved" />
-                <p>Source/master v003 · derivative readiness shown separately.</p>
-              </article>
-              <article class="studio-fixture-asset">
-                <strong>Battle sprite · base</strong>
-                <LifecycleBadge state="in-review" />
-                <p>Replacement would create another retained version.</p>
-              </article>
-              <article class="studio-fixture-asset">
-                <strong>Signature equipment relation</strong>
-                <ValidationBadge state="passed" />
-                <p>Related entity, not duplicated character-owned art.</p>
-              </article>
+              <FixtureCard title="Portrait · base">
+                Source/master v003; runtime readiness is separate.
+              </FixtureCard>
+              <FixtureCard title="Battle sprite · base">
+                Replacement creates another retained version.
+              </FixtureCard>
+              <FixtureCard title="Signature equipment relation">
+                Related entity, not duplicated character-owned art.
+              </FixtureCard>
             </div>
           </AssetBoardTemplate>
 
@@ -336,7 +345,7 @@ function WorkspaceLab() {
             header={
               <TemplateFixtureHeading
                 title="Operational Queue template"
-                description="Shared review, processing, publish or verification queue structure."
+                description="Review, processing, publish, or verification queue structure."
                 status={<Chip>Presentation only</Chip>}
               />
             }
@@ -355,13 +364,6 @@ function WorkspaceLab() {
                   <p>Processing status does not rewrite source approval.</p>
                 </div>
                 <RuntimeReadinessBadge state="not-ready" />
-              </article>
-              <article class="studio-fixture-queue-item">
-                <div>
-                  <strong>Verification item</strong>
-                  <p>Post-publish evidence remains a separate dimension.</p>
-                </div>
-                <ValidationBadge state="warning" />
               </article>
             </div>
           </OperationalQueueTemplate>
