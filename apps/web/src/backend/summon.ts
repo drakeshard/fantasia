@@ -1,4 +1,4 @@
-import { type SummonSnapshot, restoreSummonState } from "@fantasia/runtime";
+import { restoreSummonState, type SummonSnapshot } from "@fantasia/runtime";
 import { FantasiaBackendError } from "./supabase.js";
 
 export interface FantasiaSummonRecord {
@@ -77,7 +77,8 @@ export function parseSummonRows(
     if (typeof row.created_at !== "string") {
       throw new FantasiaBackendError("Supabase returned invalid summon history metadata.", 502);
     }
-    if (typeof row.id === "string") historyCreatedAtByEntryId[row.id.toLowerCase()] = row.created_at;
+    if (typeof row.id === "string")
+      historyCreatedAtByEntryId[row.id.toLowerCase()] = row.created_at;
     return {
       entryId: row.id,
       schemaVersion: row.schema_version,
@@ -87,11 +88,7 @@ export function parseSummonRows(
     };
   });
 
-  const restored = restoreSummonState(
-    persistedStates,
-    persistedHistory,
-    knownSummonDefinitionIds,
-  );
+  const restored = restoreSummonState(persistedStates, persistedHistory, knownSummonDefinitionIds);
   if (restored.kind === "rejected") {
     throw new FantasiaBackendError(
       `Supabase returned invalid summon state: ${restored.reason}`,
