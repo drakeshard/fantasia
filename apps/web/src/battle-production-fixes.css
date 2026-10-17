@@ -1,13 +1,2 @@
-.global-settings-launcher.battle {
-  top: 19px;
-  right: 124px;
-  z-index: 20;
-  min-height: 44px;
-}
-
-@media (max-height: 499px) and (min-width: 600px) {
-  .global-settings-launcher.battle {
-    top: 8px;
-    right: 116px;
-  }
-}
+@import "./ui24e5-battle-hud.css";
+@import "./ui24e5-battle-hud-fixes.css";
