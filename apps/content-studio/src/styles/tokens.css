@@ -57,11 +57,7 @@
     rgb(42 72 99 / 90%) 0%,
     rgb(27 51 73 / 94%) 100%
   );
-  --studio-material-inset: linear-gradient(
-    180deg,
-    rgb(8 20 32 / 94%) 0%,
-    rgb(14 29 44 / 96%) 100%
-  );
+  --studio-material-inset: linear-gradient(180deg, rgb(8 20 32 / 94%) 0%, rgb(14 29 44 / 96%) 100%);
   --studio-material-control: linear-gradient(
     180deg,
     rgb(42 70 96 / 90%) 0%,
