@@ -5,10 +5,18 @@ import {
   type UiPreferences,
 } from "./preferences.js";
 
+interface SettingsAccount {
+  readonly displayName: string | null;
+  readonly email?: string;
+}
+
 interface SettingsDialogProps {
   readonly open: boolean;
   readonly preferences: UiPreferences;
   readonly storageMessage?: string;
+  readonly account?: SettingsAccount;
+  readonly signOutBusy?: boolean;
+  readonly onSignOut?: () => void;
   readonly onChange: (preferences: UiPreferences) => void;
   readonly onReset: () => void;
   readonly onRetryStorage: () => void;
@@ -26,6 +34,9 @@ export function SettingsDialog({
   open,
   preferences,
   storageMessage,
+  account,
+  signOutBusy = false,
+  onSignOut,
   onChange,
   onReset,
   onRetryStorage,
@@ -75,6 +86,8 @@ export function SettingsDialog({
     onChange({ ...preferences, ...next, version: defaultUiPreferences().version });
   }
 
+  const accountLabel = account?.displayName?.trim() || account?.email || "Fantasia account";
+
   return (
     <div class="settings-backdrop" role="presentation">
       <div
@@ -95,6 +108,22 @@ export function SettingsDialog({
         </header>
 
         <div class="settings-dialog-body">
+          {account && onSignOut ? (
+            <section class="settings-recovery settings-account" aria-label="Account">
+              <strong>Account</strong>
+              <p>{accountLabel}</p>
+              {account.displayName && account.email ? <small>{account.email}</small> : null}
+              <button
+                type="button"
+                class="ui-button secondary"
+                onClick={onSignOut}
+                disabled={signOutBusy}
+              >
+                {signOutBusy ? "Signing out…" : "Sign out"}
+              </button>
+            </section>
+          ) : null}
+
           <label class="settings-row" for="interface-text-scale">
             <span>
               <strong>Interface text</strong>
