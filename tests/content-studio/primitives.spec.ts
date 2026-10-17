@@ -7,10 +7,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("tabs support keyboard navigation and skip disabled items", async ({ page }) => {
-  const overview = page.getByRole("tab", { name: "Overview" });
-  const assets = page.getByRole("tab", { name: "Assets" });
-  const history = page.getByRole("tab", { name: "History" });
-  const unavailable = page.getByRole("tab", { name: "Unavailable" });
+  const primitiveTabs = page.getByRole("tablist", { name: "Primitive preview sections" });
+  const overview = primitiveTabs.getByRole("tab", { name: "Overview" });
+  const assets = primitiveTabs.getByRole("tab", { name: "Assets" });
+  const history = primitiveTabs.getByRole("tab", { name: "History" });
+  const unavailable = primitiveTabs.getByRole("tab", { name: "Unavailable" });
 
   await overview.focus();
   await page.keyboard.press("ArrowRight");
