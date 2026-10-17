@@ -1,85 +1,23 @@
-/* GAME-UI19 — reusable Fantasia navigation/control grammar.
- * Title-local presentation only: semantic navigation and campaign commands remain owned by callers.
+@import "./ui/primitives.css";
+
+/* GAME-UI19 / GAME-UI24C — game-semantic wrappers over title-local primitives.
+ * Low-level interaction states/material live in ui/primitives.css.
  */
 
 .game-control {
-  --game-control-border: var(--ui-border);
-  --game-control-border-strong: var(--ui-border-strong);
-  --game-control-surface-top: rgb(24 43 57 / 96%);
-  --game-control-surface-bottom: rgb(7 17 25 / 98%);
-
-  position: relative;
-  min-width: var(--ui-target-min);
-  min-height: var(--ui-control-height);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: var(--ui-space-2);
-  padding: 0 14px;
-  overflow: hidden;
-  border: var(--ui-border-width) solid var(--game-control-border);
-  border-radius: var(--ui-radius-control);
-  color: rgb(244 240 231 / 92%);
-  background:
-    linear-gradient(135deg, transparent 0 8px, rgb(226 190 120 / 7%) 8px 9px, transparent 9px),
-    linear-gradient(180deg, var(--game-control-surface-top), var(--game-control-surface-bottom));
-  box-shadow:
-    var(--ui-highlight-inset),
-    inset 0 -1px rgb(226 190 120 / 5%),
-    var(--ui-shadow-control);
-  font: inherit;
-  font-size: var(--ui-font-size-md);
-  font-weight: var(--ui-font-weight-bold);
-  letter-spacing: var(--ui-tracking-control);
-  cursor: pointer;
-  transition:
-    border-color var(--ui-motion-feedback) var(--ui-ease-standard),
-    background var(--ui-motion-feedback) var(--ui-ease-standard),
-    transform var(--ui-motion-feedback) var(--ui-ease-standard),
-    box-shadow var(--ui-motion-feedback) var(--ui-ease-standard);
 }
 
-.game-control::after {
-  position: absolute;
-  right: var(--ui-space-1);
-  bottom: var(--ui-space-1);
-  width: var(--ui-corner-cut-md);
-  height: var(--ui-corner-cut-md);
-  border-right: var(--ui-border-width) solid rgb(226 190 120 / 36%);
-  border-bottom: var(--ui-border-width) solid rgb(226 190 120 / 36%);
-  pointer-events: none;
-  content: "";
+.game-control-primary {
+  min-height: var(--ui-control-height-primary);
 }
 
-.game-control:hover:not(:disabled) {
-  border-color: var(--game-control-border-strong);
-  background:
-    linear-gradient(135deg, transparent 0 8px, rgb(226 190 120 / 13%) 8px 9px, transparent 9px),
-    linear-gradient(180deg, rgb(34 58 75 / 98%), rgb(9 22 32 / 98%));
-  box-shadow:
-    inset 0 1px rgb(255 255 255 / 7%),
-    var(--ui-shadow-control-hover);
-}
-
-.game-control:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 2px 8px rgb(0 0 0 / 28%),
-    0 5px 13px rgb(0 0 0 / 24%);
-}
-
-.game-control:focus-visible {
-  outline: var(--ui-focus-width) solid var(--ui-focus);
-  outline-offset: var(--ui-focus-offset);
-}
-
-.game-control:disabled {
-  border-color: var(--ui-disabled-border);
-  color: var(--ui-disabled-text);
-  background: linear-gradient(180deg, rgb(22 33 43 / 72%), rgb(10 18 25 / 76%));
-  box-shadow: inset 0 1px rgb(255 255 255 / 2%);
-  cursor: not-allowed;
-  opacity: 0.72;
+.game-control-utility {
+  min-width: var(--ui-target-min);
+  min-height: var(--ui-target-min);
+  padding-inline: 11px;
+  gap: 6px;
+  font-size: var(--ui-font-size-sm);
 }
 
 .game-control-icon {
@@ -104,35 +42,8 @@
   display: none;
 }
 
-.game-control-primary {
-  min-height: var(--ui-control-height-primary);
-  border-color: var(--ui-accent-strong);
-  color: var(--ui-on-accent);
-  background:
-    linear-gradient(135deg, transparent 0 9px, rgb(255 255 255 / 20%) 9px 10px, transparent 10px),
-    linear-gradient(180deg, #f0d493, #d9ad58);
-  box-shadow:
-    inset 0 1px rgb(255 255 255 / 34%),
-    0 11px 26px rgb(0 0 0 / 28%);
-}
-
-.game-control-primary:hover:not(:disabled) {
-  border-color: #f6dda7;
-  background:
-    linear-gradient(135deg, transparent 0 9px, rgb(255 255 255 / 24%) 9px 10px, transparent 10px),
-    linear-gradient(180deg, #f5dca1, #dfb761);
-}
-
 .game-control-primary .game-control-icon {
   filter: brightness(0.45) saturate(0.7);
-}
-
-.game-control-utility {
-  min-width: var(--ui-target-min);
-  min-height: var(--ui-target-min);
-  padding: 0 11px;
-  gap: 6px;
-  font-size: var(--ui-font-size-sm);
 }
 
 .game-screen-header {
@@ -213,8 +124,8 @@
   transform: rotate(180deg);
 }
 
-/* Chapter map utilities share the same component grammar even while campaign.tsx
- * retains the existing semantic toolbar markup and camera behavior.
+/* Existing campaign toolbar markup remains screen-specific, but consumes the
+ * primitive visual grammar until it can migrate to component APIs in UI24E.
  */
 .campaign-rooted-shell .map-toolbar button {
   position: relative;
@@ -224,26 +135,17 @@
   overflow: hidden;
   border: var(--ui-border-width) solid var(--ui-border);
   border-radius: var(--ui-radius-control);
-  color: rgb(244 240 231 / 92%);
-  background:
-    linear-gradient(135deg, transparent 0 7px, rgb(226 190 120 / 7%) 7px 8px, transparent 8px),
-    linear-gradient(180deg, rgb(24 43 57 / 94%), rgb(7 17 25 / 96%));
+  color: var(--ui-text);
+  background: linear-gradient(180deg, rgb(24 43 57 / 94%), rgb(7 17 25 / 96%));
   box-shadow:
     var(--ui-highlight-inset),
     0 8px 18px rgb(0 0 0 / 23%);
   font-weight: var(--ui-font-weight-bold);
   cursor: pointer;
-  transition:
-    border-color var(--ui-motion-feedback) var(--ui-ease-standard),
-    background var(--ui-motion-feedback) var(--ui-ease-standard),
-    transform var(--ui-motion-feedback) var(--ui-ease-standard);
 }
 
 .campaign-rooted-shell .map-toolbar button:hover:not(:disabled) {
   border-color: var(--ui-border-strong);
-  background:
-    linear-gradient(135deg, transparent 0 7px, rgb(226 190 120 / 13%) 7px 8px, transparent 8px),
-    linear-gradient(180deg, rgb(34 58 75 / 98%), rgb(9 22 32 / 98%));
 }
 
 .campaign-rooted-shell .map-toolbar button:active:not(:disabled) {
@@ -262,9 +164,6 @@
   cursor: not-allowed;
 }
 
-/* Root Chapter navigation becomes a single authored HUD object instead of three
- * unrelated browser buttons floating above the map.
- */
 .campaign-root-navigation.game-navigation-cluster {
   z-index: var(--ui-z-navigation);
   top: 13px;
@@ -331,14 +230,6 @@
     font-size: clamp(0.95rem, 2.4vw, 1.15rem);
   }
 
-  .game-control.has-compact-label .game-control-label {
-    display: none;
-  }
-
-  .game-control.has-compact-label .game-control-compact-label {
-    display: inline;
-  }
-
   .game-control-icon {
     width: var(--ui-icon-sm);
     height: var(--ui-icon-sm);
@@ -362,6 +253,14 @@
     white-space: nowrap;
   }
 
+  .game-control.has-compact-label .game-control-label {
+    display: none;
+  }
+
+  .game-control.has-compact-label .game-control-compact-label {
+    display: inline;
+  }
+
   .campaign-root-navigation.game-navigation-cluster {
     top: 5px;
     left: 10px;
@@ -377,7 +276,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .game-control,
   .campaign-rooted-shell .map-toolbar button {
     transition: none;
   }

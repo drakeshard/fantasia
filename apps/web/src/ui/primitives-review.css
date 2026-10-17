@@ -1,0 +1,108 @@
+.ui-primitives-review {
+  min-height: 100dvh;
+  padding: var(--ui-space-5);
+  background:
+    radial-gradient(circle at 18% 12%, rgb(226 190 120 / 8%), transparent 34%),
+    linear-gradient(180deg, var(--ui-canvas-deep), var(--ui-canvas));
+  color: var(--ui-text);
+}
+
+.ui-primitives-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-5);
+  margin: 0 auto var(--ui-space-5);
+  max-width: 1280px;
+}
+
+.ui-primitives-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-4);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.ui-primitives-review-section {
+  padding: var(--ui-space-4);
+}
+
+.ui-primitives-review-section > .ui-title-lockup {
+  margin-bottom: var(--ui-space-4);
+}
+
+.ui-primitives-review-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+
+.ui-primitives-review-row + .ui-primitives-review-row,
+.ui-primitives-review-row + .ui-feedback,
+.ui-feedback + .ui-feedback {
+  margin-top: var(--ui-space-3);
+}
+
+.ui-primitives-review-stack {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.ui-primitives-review .ui-divider {
+  margin: var(--ui-space-3) 0;
+}
+
+.ui-primitives-review-art {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-5);
+  text-align: center;
+  color: var(--ui-text-secondary);
+  background:
+    radial-gradient(circle, rgb(226 190 120 / 10%), transparent 45%),
+    linear-gradient(135deg, rgb(36 55 73 / 72%), rgb(7 16 25 / 86%));
+}
+
+.ui-primitives-review-art img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+@media (max-width: 900px), (max-height: 499px) {
+  .ui-primitives-review {
+    padding: var(--ui-space-3);
+  }
+
+  .ui-primitives-review-header {
+    align-items: flex-start;
+    margin-bottom: var(--ui-space-3);
+  }
+
+  .ui-primitives-review-header .ui-hud-strip {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .ui-primitives-review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ui-space-2);
+  }
+
+  .ui-primitives-review-section {
+    padding: var(--ui-space-3);
+  }
+
+  .ui-primitives-review-section > .ui-title-lockup {
+    margin-bottom: var(--ui-space-2);
+  }
+
+  .ui-primitives-review-art {
+    min-height: 100px;
+    padding: var(--ui-space-3);
+  }
+}

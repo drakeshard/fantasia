@@ -1,4 +1,5 @@
 import type { ComponentChildren, JSX } from "preact";
+import { UiButton } from "./ui/primitives.js";
 
 const UI_ASSET_ROOT = "/assets/ui/core";
 
@@ -28,6 +29,8 @@ interface GameButtonProps
   readonly icon?: GameControlIcon;
   readonly tone?: GameControlTone;
   readonly compactLabel?: string;
+  readonly busy?: boolean;
+  readonly selected?: boolean;
 }
 
 export function GameButton({
@@ -36,6 +39,8 @@ export function GameButton({
   icon,
   tone = "nav",
   compactLabel,
+  busy,
+  selected,
   ...buttonProps
 }: GameButtonProps) {
   const classes = [
@@ -48,11 +53,17 @@ export function GameButton({
     .join(" ");
 
   return (
-    <button {...buttonProps} type="button" class={classes}>
+    <UiButton
+      {...buttonProps}
+      class={classes}
+      tone={tone === "primary" ? "primary" : tone === "utility" ? "quiet" : "neutral"}
+      {...(busy === undefined ? {} : { busy })}
+      {...(selected === undefined ? {} : { selected })}
+    >
       {icon ? <GameControlIconView icon={icon} /> : null}
       <span class="game-control-label">{children}</span>
       {compactLabel ? <span class="game-control-compact-label">{compactLabel}</span> : null}
-    </button>
+    </UiButton>
   );
 }
 
