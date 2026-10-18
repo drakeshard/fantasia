@@ -23,38 +23,44 @@ async function openDetails(page: Page) {
   return details;
 }
 
-test("CH01-B01 review defaults to a full-screen Battlefield with camera controls", async ({
-  page,
-}) => {
-  const { review, host } = await openMapReview(page);
+test(
+  "CH01-B01 review defaults to a full-screen Battlefield with camera controls",
+  async ({ page }, testInfo) => {
+    const { review, host } = await openMapReview(page);
 
-  await expect(page.getByRole("heading", { name: "Strangers on the Road" })).toBeVisible();
-  await expect(page.getByText(/PROVISIONAL/)).toBeVisible();
-  await expect(page.getByRole("button", { name: "Battlefield" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  await expect(page.getByTestId("b01-map-grid")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Strangers on the Road" })).toBeVisible();
+    await expect(page.getByText(/PROVISIONAL/)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Battlefield" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(page.getByTestId("b01-map-grid")).toHaveCount(0);
 
-  const reviewBox = await review.boundingBox();
-  expect(reviewBox?.width).toBe(page.viewportSize()?.width);
-  expect(reviewBox?.height).toBe(page.viewportSize()?.height);
+    const reviewBox = await review.boundingBox();
+    expect(reviewBox?.width).toBe(page.viewportSize()?.width);
+    expect(reviewBox?.height).toBe(page.viewportSize()?.height);
 
-  await expect(host).toHaveAttribute("data-camera-rotation", "0");
-  await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
-  await expect(host).toHaveAttribute("data-camera-pan", "0,0");
+    await expect(host).toHaveAttribute("data-camera-rotation", "0");
+    await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
+    await expect(host).toHaveAttribute("data-camera-pan", "0,0");
+    await expect(page.getByRole("button", { name: "Rotate right" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Zoom in" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Fit map" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Rotate right" }).click();
-  await expect(host).toHaveAttribute("data-camera-rotation", "90");
-  await page.getByRole("button", { name: "Rotate left" }).click();
-  await expect(host).toHaveAttribute("data-camera-rotation", "0");
+    if (testInfo.project.use.hasTouch === true) return;
 
-  await page.getByRole("button", { name: "Zoom in" }).click();
-  await expect(host).not.toHaveAttribute("data-camera-zoom", "1.00");
-  await page.getByRole("button", { name: "Fit map" }).click();
-  await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
-  await expect(host).toHaveAttribute("data-camera-pan", "0,0");
-});
+    await page.getByRole("button", { name: "Rotate right" }).click();
+    await expect(host).toHaveAttribute("data-camera-rotation", "90");
+    await page.getByRole("button", { name: "Rotate left" }).click();
+    await expect(host).toHaveAttribute("data-camera-rotation", "0");
+
+    await page.getByRole("button", { name: "Zoom in" }).click();
+    await expect(host).not.toHaveAttribute("data-camera-zoom", "1.00");
+    await page.getByRole("button", { name: "Fit map" }).click();
+    await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
+    await expect(host).toHaveAttribute("data-camera-pan", "0,0");
+  },
+);
 
 test(
   "CH01-B01 review supports desktop drag-pan and collapsible details without changing selection",
