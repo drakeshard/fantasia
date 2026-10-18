@@ -1,25 +1,48 @@
 html,
 body,
 #app {
+  width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
   overflow: hidden;
 }
 
+/*
+ * The map review is an isolated full-screen developer surface. Keep its
+ * containing block tied to the visual viewport instead of allowing Pixi's
+ * auto-density canvas sizing to participate in document layout.
+ */
 .map-review {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  min-width: 0;
   min-height: 0;
-  max-height: 100dvh;
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+  contain: strict;
 }
 
+.map-review-stage,
 .map-review-battlefield-wrap,
 .map-review-battlefield {
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
   contain: strict;
 }
 
 .map-review-battlefield canvas {
   position: absolute;
   inset: 0;
+  width: 100% !important;
+  height: 100% !important;
   max-width: none;
   max-height: none;
 }
