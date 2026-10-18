@@ -72,7 +72,7 @@ jobs:
 
             # Changes to CI/toolchain/shared package plumbing are intentionally conservative.
             case "$path" in
-              .github/workflows/ci.yml|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.node-version|biome.json|tsconfig*.json|scripts/*|patches/*|config/*|packages/*)
+              .github/workflows/ci.yml|.github/actions/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.node-version|biome.json|tsconfig*.json|scripts/*|patches/*|config/*|packages/*)
                 full=true
                 ;;
             esac
@@ -121,25 +121,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Setup Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
-        with:
-          node-version-file: .node-version
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Prepare pinned shared-library artifacts
-        run: node scripts/prepare-shared-packages.mjs
-
-      - name: Verify shared-library provenance
-        run: node scripts/verify-shared-packages.mjs
-
-      - name: Require committed lockfile
-        run: test -f pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Fantasia
+        uses: ./.github/actions/setup-fantasia
 
       - name: Dependency audit
         run: pnpm audit
@@ -172,25 +155,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Setup Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
-        with:
-          node-version-file: .node-version
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Prepare pinned shared-library artifacts
-        run: node scripts/prepare-shared-packages.mjs
-
-      - name: Verify shared-library provenance
-        run: node scripts/verify-shared-packages.mjs
-
-      - name: Require committed lockfile
-        run: test -f pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Fantasia
+        uses: ./.github/actions/setup-fantasia
 
       - name: Build web surface
         run: pnpm --filter @fantasia/web... build
@@ -211,25 +177,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Setup Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
-        with:
-          node-version-file: .node-version
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Prepare pinned shared-library artifacts
-        run: node scripts/prepare-shared-packages.mjs
-
-      - name: Verify shared-library provenance
-        run: node scripts/verify-shared-packages.mjs
-
-      - name: Require committed lockfile
-        run: test -f pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Fantasia
+        uses: ./.github/actions/setup-fantasia
 
       - name: Build Content Studio surface
         run: pnpm --filter @fantasia/content-studio... build
@@ -250,25 +199,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Setup Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
-        with:
-          node-version-file: .node-version
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Prepare pinned shared-library artifacts
-        run: node scripts/prepare-shared-packages.mjs
-
-      - name: Verify shared-library provenance
-        run: node scripts/verify-shared-packages.mjs
-
-      - name: Require committed lockfile
-        run: test -f pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Fantasia
+        uses: ./.github/actions/setup-fantasia
 
       - name: Build web surface
         run: pnpm --filter @fantasia/web... build
