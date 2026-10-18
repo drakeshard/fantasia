@@ -25,7 +25,9 @@ async function openDetails(page: Page) {
   return details;
 }
 
-test("GAME-MAP05 renders all 600 stress cells across the full elevation range", async ({ page }) => {
+test("GAME-MAP05 renders all 600 stress cells across the full elevation range", async ({
+  page,
+}) => {
   const { host } = await openStressReview(page);
 
   await expect(page.getByRole("heading", { name: "Elevation Extremes" })).toBeVisible();
@@ -33,7 +35,9 @@ test("GAME-MAP05 renders all 600 stress cells across the full elevation range", 
   await expect(host).toHaveAttribute("data-rendered-cell-count", "600");
   await expect(host).toHaveAttribute("data-elevation-min", "-7");
   await expect(host).toHaveAttribute("data-elevation-max", "7");
-  await expect.poll(async () => Number(await host.getAttribute("data-elevation-face-count"))).toBeGreaterThan(0);
+  await expect
+    .poll(async () => Number(await host.getAttribute("data-elevation-face-count")))
+    .toBeGreaterThan(0);
 });
 
 test("GAME-MAP05 keeps camera controls and drag-pan usable at stress size", async ({ page }) => {
