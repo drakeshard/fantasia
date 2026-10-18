@@ -178,3 +178,23 @@ export const sourceRoleMeta: Record<SourceRole, string> = {
 export function lifecycleIndex(state: LifecycleState) {
   return lifecycleOrder.indexOf(state);
 }
+
+export function lifecycleStateFromRegistry(value: string | null | undefined): LifecycleState | null {
+  if (!value) return null;
+  const normalized = value.trim().toLowerCase().replaceAll("_", "-").replaceAll(" ", "-");
+  return lifecycleOrder.includes(normalized as LifecycleState)
+    ? (normalized as LifecycleState)
+    : null;
+}
+
+export function validationStateFromRegistry(
+  outcome: string | null | undefined,
+  blocking = false,
+): ValidationState {
+  const normalized = outcome?.trim().toUpperCase() ?? "";
+  if (blocking && normalized !== "PASSED") return "blocking";
+  if (normalized === "FAILED") return "blocking";
+  if (normalized === "WARNING") return "warning";
+  if (normalized === "PASSED") return "passed";
+  return "unknown";
+}
