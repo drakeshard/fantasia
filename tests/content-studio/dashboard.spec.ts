@@ -86,7 +86,8 @@ async function mockStudio(page: Page, role = "Viewer") {
         : {
             authorized: true,
             role,
-            capabilities: role === "Viewer" ? ["studio.read"] : ["studio.read", "registry.metadata.edit"],
+            capabilities:
+              role === "Viewer" ? ["studio.read"] : ["studio.read", "registry.metadata.edit"],
           };
     await route.fulfill({
       status: 200,
@@ -103,7 +104,9 @@ async function signIn(page: Page) {
   await page.getByRole("button", { name: "Sign in" }).click();
 }
 
-test("Dashboard shows normalized attention, freshness, and unavailable sources", async ({ page }) => {
+test("Dashboard shows normalized attention, freshness, and unavailable sources", async ({
+  page,
+}) => {
   await mockStudio(page);
   await signIn(page);
 
