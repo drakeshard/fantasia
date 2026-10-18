@@ -1,8 +1,7 @@
 import { render } from "preact";
 import { MapStressReviewApp } from "./map-stress-review.js";
+import { installMapReviewStyles } from "./map-review-style.js";
 import "./styles.css";
-import "./map-review.css";
-import "./map-review-stability.css";
 
 const root = document.getElementById("app");
 if (!root) throw new Error("Fantasia root element was not found.");
@@ -34,6 +33,7 @@ function lockReviewViewport(): void {
   review.style.overflow = "hidden";
 }
 
+installMapReviewStyles();
 render(<MapStressReviewApp />, appRoot);
 lockReviewViewport();
 window.addEventListener("resize", lockReviewViewport);
