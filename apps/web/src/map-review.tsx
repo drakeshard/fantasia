@@ -82,21 +82,24 @@ function BattlefieldReview({
   readonly onSelect: (cell: Cell) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const rendererRef = useRef<MapReviewRenderer>();
-
-  const options: MapReviewRendererOptions = {
-    selected,
-    showGrid,
-    showCoordinates,
-    showRoute,
-    showUnits,
-  };
+  const rendererRef = useRef<MapReviewRenderer | undefined>(undefined);
+  const options = useMemo<MapReviewRendererOptions>(
+    () => ({
+      selected,
+      showGrid,
+      showCoordinates,
+      showRoute,
+      showUnits,
+    }),
+    [selected, showGrid, showCoordinates, showRoute, showUnits],
+  );
+  const initialOptionsRef = useRef(options);
 
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
     let disposed = false;
-    const renderer = new MapReviewRenderer(host, options, onSelect);
+    const renderer = new MapReviewRenderer(host, initialOptionsRef.current, onSelect);
     rendererRef.current = renderer;
     void renderer.init().then(() => {
       if (disposed) renderer.destroy();
@@ -106,11 +109,11 @@ function BattlefieldReview({
       if (rendererRef.current === renderer) rendererRef.current = undefined;
       renderer.destroy();
     };
-  }, []);
+  }, [onSelect]);
 
   useEffect(() => {
     rendererRef.current?.update(options);
-  }, [selected, showGrid, showCoordinates, showRoute, showUnits]);
+  }, [options]);
 
   return (
     <div class="map-review-battlefield-wrap">
