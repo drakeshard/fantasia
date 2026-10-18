@@ -369,8 +369,8 @@ function WorkspaceLab() {
           <div>
             <h2 id="asset-states-title">Reusable Asset Board states</h2>
             <p>
-              Empty, unavailable, loading and read-error states remain distinct from registered asset
-              evidence.
+              Empty, unavailable, loading and read-error states remain distinct from registered
+              asset evidence.
             </p>
           </div>
         </div>
