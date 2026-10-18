@@ -4,6 +4,7 @@ import "./styles/base.css";
 import "./ui/primitives.css";
 import "./ui/semantic.css";
 import "./ui/workspace.css";
+import "./ui/entity-asset.css";
 import "./styles/material-fidelity.css";
 import "./styles/studio-auth.css";
 import "./styles/production-dashboard.css";

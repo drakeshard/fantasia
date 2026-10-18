@@ -161,6 +161,17 @@ test("Viewer can browse canonical Characters but cannot author", async ({ page }
   await expect(page.getByText("Read-only access", { exact: true })).toBeVisible();
 });
 
+test("Characters Assets tab consumes the shared Asset Board empty state", async ({ page }) => {
+  await mockStudio(page, "Viewer");
+  await signIn(page);
+  await page.getByRole("button", { name: /MC/ }).click();
+  await page.getByRole("tab", { name: "Assets" }).click();
+  await expect(page.getByText("No registered semantic assets", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(/Provider folders are not treated as semantic asset authority/),
+  ).toBeVisible();
+});
+
 test("Editor creates a controlled Git proposal without direct acceptance", async ({ page }) => {
   await mockStudio(page, "Editor");
   await signIn(page);

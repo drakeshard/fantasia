@@ -1,5 +1,7 @@
 import { type ComponentChildren, render } from "preact";
 import { useState } from "preact/hooks";
+import { AssetBoard } from "./ui/asset-board";
+import { assetBoardLabFixtures } from "./ui/asset-board.fixtures";
 import { Button, Chip, DataTable, SelectField, Surface, TextField } from "./ui/primitives";
 import {
   LifecycleBadge,
@@ -22,6 +24,7 @@ import {
   WorkspaceStateRegion,
 } from "./ui/workspace";
 import "./ui/workspace.css";
+import "./ui/entity-asset.css";
 
 const entityTabs = [
   { id: "overview", label: "Overview" },
@@ -58,11 +61,12 @@ function WorkspaceLab() {
       data-testid="workspace-lab"
     >
       <header class="foundation-preview__hero">
-        <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00D</p>
+        <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00D / STUDIO06B</p>
         <h2 id="workspace-lab-title">Shared shell and workspace templates</h2>
         <p>
-          Development-only fixtures for the shared Studio frame, templates, responsive behavior, and
-          accessibility contracts. No production routes or trusted mutations exist here.
+          Development-only fixtures for the shared Studio frame, templates, reusable entity/asset
+          composition, responsive behavior, and accessibility contracts. No production routes or
+          trusted mutations exist here.
         </p>
       </header>
 
@@ -123,7 +127,7 @@ function WorkspaceLab() {
               gameplay: <WorkspaceStateRegion state="loading" />,
               skills: <WorkspaceStateRegion state="empty" />,
               equipment: <WorkspaceStateRegion state="read-only" />,
-              assets: <WorkspaceStateRegion state="empty" />,
+              assets: <AssetBoard assets={assetBoardLabFixtures} readOnly />,
               story: <WorkspaceStateRegion state="unauthorized" />,
               relations: <WorkspaceStateRegion state="empty" />,
               validation: <WorkspaceStateRegion state="error" />,
@@ -328,17 +332,7 @@ function WorkspaceLab() {
             inspectorOpen={assetInspectorOpen}
             onInspectorOpenChange={setAssetInspectorOpen}
           >
-            <div class="studio-fixture-assets">
-              <FixtureCard title="Portrait · base">
-                Source/master v003; runtime readiness is separate.
-              </FixtureCard>
-              <FixtureCard title="Battle sprite · base">
-                Replacement creates another retained version.
-              </FixtureCard>
-              <FixtureCard title="Signature equipment relation">
-                Related entity, not duplicated character-owned art.
-              </FixtureCard>
-            </div>
+            <AssetBoard assets={assetBoardLabFixtures} readOnly />
           </AssetBoardTemplate>
 
           <OperationalQueueTemplate
@@ -367,6 +361,24 @@ function WorkspaceLab() {
               </article>
             </div>
           </OperationalQueueTemplate>
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="asset-states-title">
+        <div class="preview-section__heading">
+          <div>
+            <h2 id="asset-states-title">Reusable Asset Board states</h2>
+            <p>
+              Empty, unavailable, loading and read-error states remain distinct from registered
+              asset evidence.
+            </p>
+          </div>
+        </div>
+        <div class="feedback-grid">
+          <AssetBoard assets={[]} />
+          <AssetBoard assets={[]} availability="unavailable" />
+          <AssetBoard assets={[]} availability="loading" />
+          <AssetBoard assets={[]} availability="error" />
         </div>
       </section>
 
