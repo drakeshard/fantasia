@@ -12,6 +12,7 @@ A lower layer never imports or targets a higher layer. Feature CSS never restyle
 
 | Layer | Files | Owns | Must not own |
 | --- | --- | --- | --- |
+| Design-system contract | `design-system-contract.json` | active title-theme identity/scope, required public theme tokens, representative accessibility contrast pairs and thresholds | CSS implementation, feature layout, component DOM anatomy |
 | Structural tokens | `src/styles/tokens.css` | typography scale, spacing, target/control sizes, radii, motion, z-index, breakpoints | palette, gradients, feature layout |
 | Fantasia theme | `src/styles/theme-fantasia-midnight.css` | palette, semantic colors, surfaces/material recipes, shadows, component paint variables, lifecycle/validation colors | component DOM anatomy, feature layout |
 | Design-system entrypoint | `src/styles/design-system.css` | ordered imports for the shared system | feature styling |
@@ -29,22 +30,24 @@ A lower layer never imports or targets a higher layer. Feature CSS never restyle
 3. Raw palette values and `--studio-color-*` palette tokens belong only to the Fantasia theme or purpose-built visual-reference assets. Shared and production feature CSS consume semantic/component theme variables.
 4. The theme is a token-remapping scope. It must not target `body`, `.ui-*`, workspace, semantic, or feature DOM. Base/shared CSS owns applying theme tokens to DOM anatomy.
 5. Public `--studio-*` declarations live only in `tokens.css` or the active title theme. References elsewhere must resolve to that controlled contract; dead compatibility aliases are not added merely to preserve obsolete token vocabulary.
-6. Keyboard focus is separate from selected/current state. Shared controls keep visible `:focus-visible` treatment, >=44px targets, disabled/pending behavior and reduced-motion handling.
-7. `!important` in production feature CSS is an ownership bug. Fix the owning component/layer instead.
-8. `scripts/check-content-studio-design-system.mjs` is a required Quality gate. Do not weaken the checker to land a feature override; move the styling to the correct owner.
+6. `design-system-contract.json` is the single machine-readable source for title-theme identity, required public theme tokens and representative contrast requirements. Static and browser validation consume the same file; do not duplicate token lists inside tests or scripts.
+7. Normal text contrast pairs in the controlled contract use a minimum of 4.5:1. Non-text focus/state indicators use a minimum of 3:1. If a controlled pair fails, revise the owning semantic/theme token instead of weakening the threshold.
+8. Keyboard focus is separate from selected/current state. Shared controls keep visible `:focus-visible` treatment, >=44px targets, disabled/pending behavior and reduced-motion handling.
+9. `!important` in production feature CSS is an ownership bug. Fix the owning component/layer instead.
+10. `scripts/check-content-studio-design-system.mjs` is a required Quality gate. Do not weaken the checker to land a feature override; move the styling to the correct owner.
 
 ## Validation ownership
 
 Validation follows the cheapest reliable layer rather than duplicating the same requirement in every test runtime.
 
-- **Static contract checks** own token declaration/reference integrity, theme-only palette ownership, token-only theme scope, shared/feature selector boundaries, raw-palette prevention, `!important` prevention, and design-system import ordering.
+- **Static contract checks** own contract shape, token declaration/reference integrity, theme-only palette ownership, token-only theme scope, shared/feature selector boundaries, raw-palette prevention, `!important` prevention, and design-system import ordering.
 - **Unit tests** own pure deterministic logic such as semantic-state catalogs, ordering, metadata mapping, and renderer-neutral helpers. Do not add DOM-emulated unit tests merely to duplicate browser behavior.
-- **Real-browser tests** own keyboard/focus, dialog/native behavior, computed CSS/theme resolution, minimum target/layout behavior, reduced motion, and other browser-owned outcomes.
-- **Visual evidence** is separate from behavioral proof. The current UI-Lab screenshot captures are local/manual review artifacts; they are not called visual regression until CI stores or compares an accepted baseline.
+- **Real-browser tests** own keyboard/focus, dialog/native behavior, computed CSS/theme resolution, representative contrast, minimum target/layout behavior, reduced motion, and other browser-owned outcomes.
+- **Visual evidence** is separate from behavioral proof. Screenshot output is not called visual regression until accepted baselines are stored and CI compares against them.
 - **Coverage metrics** are supporting diagnostics. Contract and scenario coverage are the acceptance target.
 
 ## Change workflow
 
 When a visual defect appears in more than one feature, or a feature must reach into a shared selector to fix it, stop and repair the shared layer first. Feature CSS should remain small enough that its purpose is obvious from its feature-prefixed selectors.
 
-When a token/theme change affects shared paint, run the static contract checks plus representative browser/theme and primitive scenarios. When a primitive behavior changes, prove browser-owned behavior in Playwright and add a unit test only if an independent pure rule actually exists.
+When a token/theme change affects shared paint, update the centralized contract only when the public contract itself changes, then run static contract checks plus representative browser/theme and primitive scenarios. When a primitive behavior changes, prove browser-owned behavior in Playwright and add a unit test only if an independent pure rule actually exists.
