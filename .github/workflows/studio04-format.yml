@@ -19,6 +19,7 @@ jobs:
         with:
           node-version-file: .node-version
       - run: corepack enable
+      - run: node scripts/prepare-shared-packages.mjs
       - run: pnpm install --frozen-lockfile
       - name: Format STUDIO04 files
         run: |
