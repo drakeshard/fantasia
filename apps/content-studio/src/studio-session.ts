@@ -1,4 +1,7 @@
-import type { StudioRole, StudioSessionResult } from "../../../supabase/functions/studio-operations/contract";
+import type {
+  StudioRole,
+  StudioSessionResult,
+} from "../../../supabase/functions/studio-operations/contract";
 
 const defaultSupabaseUrl = "https://mswgfxqhqhtltbrkkspy.supabase.co";
 const defaultPublishableKey = "sb_publishable_Okszqzy-4qQaYGB_mLlzlA_-AWqA_3y";
@@ -99,7 +102,10 @@ export function clearStudioAuthSession(): void {
   window.localStorage.removeItem(storageKey);
 }
 
-export async function signInStudio(email: string, password: string): Promise<StoredStudioAuthSession> {
+export async function signInStudio(
+  email: string,
+  password: string,
+): Promise<StoredStudioAuthSession> {
   const response = await fetch(`${studioSupabaseUrl}/auth/v1/token?grant_type=password`, {
     method: "POST",
     headers: { apikey: studioPublishableKey, "content-type": "application/json" },
@@ -156,7 +162,9 @@ export async function fetchStudioAuthorization(
     throw new Error("Studio session is no longer valid.");
   }
   if (!response.ok) {
-    throw new Error(typeof body.message === "string" ? body.message : "Studio authorization failed.");
+    throw new Error(
+      typeof body.message === "string" ? body.message : "Studio authorization failed.",
+    );
   }
   if (typeof body.authorized !== "boolean") {
     throw new Error("Studio authorization response was invalid.");
