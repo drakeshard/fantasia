@@ -42,7 +42,9 @@ export function AssetEvidence({ assets }: { assets: readonly AssetEvidenceRecord
         <Surface kind="inset" key={asset.semanticId}>
           <strong>{asset.role}</strong>
           <code>{asset.semanticId}</code>
-          <span>{asset.currentVersion?.sourceAvailable ? "source registered" : "source unavailable"}</span>
+          <span>
+            {asset.currentVersion?.sourceAvailable ? "source registered" : "source unavailable"}
+          </span>
         </Surface>
       ))}
     </EvidenceStack>
