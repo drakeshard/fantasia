@@ -87,7 +87,7 @@ async function githubRequest<T>(
 ): Promise<{ readonly status: number; readonly body: T | null }> {
   const response = await fetch(`${GITHUB_API}${path}`, {
     ...init,
-    headers: { ...githubHeaders(token), ...(init.headers ?? {}) },
+    headers: githubHeaders(token),
   });
   let body: T | null = null;
   if (response.status !== 204) {
@@ -113,6 +113,14 @@ function requiredString(value: unknown, label: string): string {
     throw new GitHubProposalError("provider", `GitHub ${label} was missing.`);
   }
   return value;
+}
+
+function requiredCommitSha(value: unknown, label: string): string {
+  const sha = requiredString(value, label);
+  if (!/^[0-9a-f]{40}$/.test(sha)) {
+    throw new GitHubProposalError("provider", `GitHub ${label} was invalid.`);
+  }
+  return sha;
 }
 
 function requiredNumber(value: unknown, label: string): number {
@@ -142,7 +150,7 @@ function repoPath(suffix: string): string {
 
 async function currentMainRevision(token: string): Promise<string> {
   const result = await githubRequest<GitHubRef>(token, repoPath(`/git/ref/heads/${BASE_BRANCH}`));
-  return requiredString(result.body?.object?.sha, "main revision");
+  return requiredCommitSha(result.body?.object?.sha, "main revision");
 }
 
 async function fetchCanonicalFile(
@@ -172,13 +180,18 @@ async function ensureProposalBranch(
   token: string,
   branchName: string,
   baseRevision: string,
-): Promise<void> {
+): Promise<{ readonly existed: boolean; readonly headSha: string }> {
   if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH) {
     throw new GitHubProposalError("validation", "Proposal branch is outside the Studio namespace.");
   }
   const refPath = repoPath(`/git/ref/heads/${encodeURIComponent(branchName)}`);
   const existing = await githubRequest<GitHubRef>(token, refPath, {}, [200, 404]);
-  if (existing.status === 200) return;
+  if (existing.status === 200) {
+    return {
+      existed: true,
+      headSha: requiredCommitSha(existing.body?.object?.sha, "proposal branch revision"),
+    };
+  }
   await githubRequest(
     token,
     repoPath("/git/refs"),
@@ -188,6 +201,7 @@ async function ensureProposalBranch(
     },
     [201],
   );
+  return { existed: false, headSha: baseRevision };
 }
 
 async function writeCanonicalFile(
@@ -196,8 +210,6 @@ async function writeCanonicalFile(
   blobSha: string,
   content: string,
   request: CanonicalStoryNodeChangeRequest,
-  actorUserId: string,
-  changeRequestId: string,
 ): Promise<string> {
   if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH) {
     throw new GitHubProposalError(
@@ -228,13 +240,7 @@ async function writeCanonicalFile(
     },
     [200, 201],
   );
-  const commitSha = requiredString(result.body?.commit?.sha, "proposal commit SHA");
-  if (!/^[0-9a-f]{40}$/.test(commitSha)) {
-    throw new GitHubProposalError("provider", "GitHub proposal commit SHA was invalid.");
-  }
-  void actorUserId;
-  void changeRequestId;
-  return commitSha;
+  return requiredCommitSha(result.body?.commit?.sha, "proposal commit SHA");
 }
 
 function proposalBody(
@@ -308,7 +314,7 @@ async function pullRequestStatus(
   const pr = await githubRequest<GitHubPullRequest>(token, repoPath(`/pulls/${pullRequestNumber}`));
   if (pr.body?.merged_at) return "MERGED";
   if (pr.body?.state === "closed") return "CLOSED";
-  const headSha = requiredString(pr.body?.head?.sha, "pull request head SHA");
+  const headSha = requiredCommitSha(pr.body?.head?.sha, "pull request head SHA");
   const checks = await githubRequest<GitHubCheckRuns>(
     token,
     repoPath(`/commits/${headSha}/check-runs?per_page=100`),
@@ -329,6 +335,10 @@ async function pullRequestStatus(
     return "CHECKS_FAILED";
   }
   return "PR_OPEN";
+}
+
+function jsonSemanticallyEqual(left: unknown, right: unknown): boolean {
+  return JSON.stringify(left) === JSON.stringify(right);
 }
 
 export async function createCanonicalGitProposal(input: {
@@ -356,17 +366,34 @@ export async function createCanonicalGitProposal(input: {
     throw error;
   }
 
+  const desiredStory = JSON.parse(validated.content) as unknown;
   const branchName = canonicalProposalBranchName(input.request.semanticId, input.changeRequestId);
-  await ensureProposalBranch(input.token, branchName, input.request.baseRevision);
-  const commitSha = await writeCanonicalFile(
-    input.token,
-    branchName,
-    canonical.blobSha,
-    validated.content,
-    input.request,
-    input.actorUserId,
-    input.changeRequestId,
-  );
+  const branch = await ensureProposalBranch(input.token, branchName, input.request.baseRevision);
+
+  let commitSha: string;
+  if (branch.existed) {
+    const branchCanonical = await fetchCanonicalFile(input.token, branchName);
+    if (jsonSemanticallyEqual(branchCanonical.parsed, desiredStory)) {
+      commitSha = branch.headSha;
+    } else {
+      commitSha = await writeCanonicalFile(
+        input.token,
+        branchName,
+        branchCanonical.blobSha,
+        validated.content,
+        input.request,
+      );
+    }
+  } else {
+    commitSha = await writeCanonicalFile(
+      input.token,
+      branchName,
+      canonical.blobSha,
+      validated.content,
+      input.request,
+    );
+  }
+
   const pullRequest = await createOrUpdatePullRequest(
     input.token,
     branchName,
