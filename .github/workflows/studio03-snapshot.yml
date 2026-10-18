@@ -1,0 +1,33 @@
+name: STUDIO03 snapshot generator
+
+on:
+  push:
+    branches: [game-studio03/read-models-provider-adapters]
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: game-studio03/read-models-provider-adapters
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+      - name: Generate canonical read projection
+        env:
+          CANONICAL_GIT_REVISION: f5c1086faaf406142a43cd183e155c9e76a488bd
+        run: node scripts/generate-studio-canonical-snapshot.mjs
+      - name: Commit snapshot
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add supabase/functions/studio-operations/canonical-snapshot.generated.json
+          git commit -m "chore(studio): refresh canonical deployment snapshot"
+          git push origin HEAD:game-studio03/read-models-provider-adapters
