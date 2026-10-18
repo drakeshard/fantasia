@@ -5,7 +5,10 @@ import {
   battlefieldCellKey,
 } from "./battlefield-engine.js";
 import { BattlefieldRenderer } from "./battlefield-renderer.js";
-import type { BattlefieldTerrainVisualId, BattlefieldUnitVisualId } from "./battlefield-presentation.js";
+import type {
+  BattlefieldTerrainVisualId,
+  BattlefieldUnitVisualId,
+} from "./battlefield-presentation.js";
 
 export interface BattleRendererCallbacks {
   readonly onCellActivate: (cell: ProductionBattleCellView) => void;
@@ -86,6 +89,14 @@ export class ProductionBattleRenderer {
         testId: "production-battlefield-canvas",
         ariaLabel: "Fantasia tactical battlefield",
         antialias: false,
+        layout: {
+          minWidth: 320,
+          minHeight: 360,
+          minFitScale: 0.52,
+          maxFitScale: 1.35,
+          topOverflow: 36,
+          bottomOverflow: 0,
+        },
       },
       {
         onCellActivate: (cell) => {
