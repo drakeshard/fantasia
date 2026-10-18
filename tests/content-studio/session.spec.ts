@@ -97,7 +97,9 @@ test("sign out clears the authenticated Studio shell", async ({ page }) => {
 
   await expect(page.getByTestId("studio-signed-out")).toBeVisible();
   await expect(page.getByTestId("studio-shell")).toHaveCount(0);
-  const stored = await page.evaluate(() => localStorage.getItem("fantasia.content-studio.session.v1"));
+  const stored = await page.evaluate(() =>
+    localStorage.getItem("fantasia.content-studio.session.v1"),
+  );
   expect(stored).toBeNull();
 });
 
