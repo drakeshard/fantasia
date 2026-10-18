@@ -4,7 +4,7 @@ import type {
   BattlefieldTerrainVisualId,
 } from "./battlefield-presentation.js";
 
-export type EnvironmentWeatherVisualId = "weather.blizzard";
+export type EnvironmentWeatherVisualId = "weather.ghost-mist" | "weather.avalon-mist";
 
 export interface EnvironmentWeatherRegion {
   readonly visualId: EnvironmentWeatherVisualId;
@@ -13,12 +13,15 @@ export interface EnvironmentWeatherRegion {
 }
 
 export interface EnvironmentSceneDefinition {
-  readonly id: "twin-isles-shore" | "canyon-blizzard-frontier";
+  readonly id: "ghost-sea-hunt" | "avalon-arthuria-confrontation";
   readonly title: string;
   readonly kicker: string;
   readonly description: string;
   readonly scene: BattlefieldRenderScene;
   readonly weatherRegions: readonly EnvironmentWeatherRegion[];
+  readonly focusCell: BattlefieldCellCoord;
+  readonly paletteNotes: readonly string[];
+  readonly showUnits: boolean;
 }
 
 interface Bounds {
@@ -43,8 +46,29 @@ function where(
   return cells.filter(predicate);
 }
 
-function manhattan(cell: BattlefieldCellCoord, center: BattlefieldCellCoord): number {
-  return Math.abs(cell.x - center.x) + Math.abs(cell.y - center.y);
+function ellipse(
+  cells: readonly BattlefieldCellCoord[],
+  center: BattlefieldCellCoord,
+  radiusX: number,
+  radiusY: number,
+): BattlefieldCellCoord[] {
+  return where(cells, ({ x, y }) => {
+    const dx = (x - center.x) / radiusX;
+    const dy = (y - center.y) / radiusY;
+    return dx * dx + dy * dy <= 1;
+  });
+}
+
+function deck(
+  cells: readonly BattlefieldCellCoord[],
+  center: BattlefieldCellCoord,
+  halfLength: number,
+  halfWidth: number,
+): BattlefieldCellCoord[] {
+  return where(
+    cells,
+    ({ x, y }) => Math.abs(x - center.x) <= halfLength && Math.abs(y - center.y) <= halfWidth,
+  );
 }
 
 function terrainAt(scene: BattlefieldRenderScene, cell: BattlefieldCellCoord): BattlefieldTerrainVisualId {
@@ -57,133 +81,152 @@ function terrainAt(scene: BattlefieldRenderScene, cell: BattlefieldCellCoord): B
   return visualId;
 }
 
-const COAST_BOUNDS = { minX: 0, maxX: 27, minY: 0, maxY: 17 } as const;
-const coastCells = cellsIn(COAST_BOUNDS);
+const LARGE_BOUNDS = { minX: 0, maxX: 63, minY: 0, maxY: 63 } as const;
+const LARGE_SCENE_CELLS = cellsIn(LARGE_BOUNDS);
 
-const mainland = where(
-  coastCells,
-  ({ x, y }) => y >= 13 + (x % 6 === 0 ? -1 : x % 5 === 0 ? 1 : 0),
+const leagueShipCenters = [
+  { x: 10, y: 18 },
+  { x: 17, y: 27 },
+  { x: 11, y: 37 },
+  { x: 21, y: 45 },
+  { x: 26, y: 17 },
+  { x: 29, y: 33 },
+  { x: 31, y: 51 },
+] as const;
+const leagueDecks = leagueShipCenters.flatMap((center, index) =>
+  deck(LARGE_SCENE_CELLS, center, index % 2 === 0 ? 3 : 4, 1),
 );
-const mainlandShore = where(
-  coastCells,
-  ({ x, y }) => y === 12 + (x % 6 === 0 ? -1 : x % 5 === 0 ? 1 : 0),
+const dutchmanCenter = { x: 50, y: 17 } as const;
+const dutchmanDeck = deck(LARGE_SCENE_CELLS, dutchmanCenter, 5, 2);
+const krakenCenter = { x: 50, y: 43 } as const;
+const krakenAbyss = ellipse(LARGE_SCENE_CELLS, krakenCenter, 10, 8);
+const ghostChannels = where(
+  LARGE_SCENE_CELLS,
+  ({ x, y }) => (x + y) % 13 === 0 || (x * 3 + y * 5) % 29 === 0,
 );
-const mainlandShallow = where(
-  coastCells,
-  ({ x, y }) => y === 11 + (x % 6 === 0 ? -1 : x % 5 === 0 ? 1 : 0),
-);
-
-const islandACenter = { x: 8, y: 6 } as const;
-const islandBCenter = { x: 19, y: 7 } as const;
-const islandALand = where(coastCells, (cell) => manhattan(cell, islandACenter) <= 3);
-const islandBLand = where(
-  coastCells,
-  (cell) => Math.abs(cell.x - islandBCenter.x) * 0.8 + Math.abs(cell.y - islandBCenter.y) <= 3.5,
-);
-const islandAShore = where(coastCells, (cell) => manhattan(cell, islandACenter) === 4);
-const islandBShore = where(
-  coastCells,
-  (cell) => {
-    const distance = Math.abs(cell.x - islandBCenter.x) * 0.8 + Math.abs(cell.y - islandBCenter.y);
-    return distance > 3.5 && distance <= 4.7;
-  },
-);
-const islandShallows = where(coastCells, (cell) => {
-  const aDistance = manhattan(cell, islandACenter);
-  const bDistance = Math.abs(cell.x - islandBCenter.x) * 0.8 + Math.abs(cell.y - islandBCenter.y);
-  return aDistance === 5 || (bDistance > 4.7 && bDistance <= 5.7);
-});
-
-const coastElevation = [
-  ...where(coastCells, (cell) => manhattan(cell, islandACenter) <= 1).map((cell) => ({
-    ...cell,
-    level: 2,
-  })),
-  ...where(
-    coastCells,
-    (cell) => Math.abs(cell.x - islandBCenter.x) <= 1 && Math.abs(cell.y - islandBCenter.y) <= 1,
-  ).map((cell) => ({ ...cell, level: cell.x === islandBCenter.x ? 3 : 2 })),
+const ghostSeaElevation = [
+  ...leagueDecks.map((cell) => ({ ...cell, level: 2 })),
+  ...dutchmanDeck.map((cell) => ({ ...cell, level: 3 })),
 ];
 
-export const TWIN_ISLES_SHORE: EnvironmentSceneDefinition = {
-  id: "twin-isles-shore",
-  title: "Twin Isles Shore",
-  kicker: "Environment Scene 01 · Coastal Waters",
+export const GHOST_SEA_HUNT: EnvironmentSceneDefinition = {
+  id: "ghost-sea-hunt",
+  title: "Ghost Sea Hunt",
+  kicker: "Environment Stress Scene 01 · Seven Sea League",
   description:
-    "Open sea meets a broken mainland shore while two raised islands sit inside bands of shallow water.",
+    "A 64×64 haunted ocean staging ground: seven allied vessels form a battle line while the Flying Dutchman and a Kraken wait beyond a ghost-lit abyss.",
   scene: {
-    id: "environment.twin-isles-shore",
-    bounds: COAST_BOUNDS,
+    id: "environment.ghost-sea-hunt",
+    bounds: LARGE_BOUNDS,
     blockedCells: [],
-    elevationCells: coastElevation,
+    elevationCells: ghostSeaElevation,
     terrainRegions: [
-      { visualId: "terrain.water.deep", cells: coastCells },
-      { visualId: "terrain.water.shallow", cells: [...mainlandShallow, ...islandShallows] },
-      { visualId: "terrain.shore", cells: [...mainlandShore, ...islandAShore, ...islandBShore] },
-      { visualId: "terrain.grass", cells: [...mainland, ...islandALand, ...islandBLand] },
-      {
-        visualId: "terrain.ridge",
-        cells: where(coastCells, (cell) => coastElevation.some((entry) => entry.x === cell.x && entry.y === cell.y)),
-      },
-    ],
-    blockedPropVisualId: "prop.woodland",
-    routeAnchors: [],
-    routeClearanceCells: [],
-    exitZone: [],
-    units: [],
-    testIdPrefix: "environment-twin-isles",
-    ariaLabel: "Twin Isles Shore environment battlefield review",
-  },
-  weatherRegions: [],
-};
-
-const FRONTIER_BOUNDS = { minX: 0, maxX: 29, minY: 0, maxY: 19 } as const;
-const frontierCells = cellsIn(FRONTIER_BOUNDS);
-const desert = where(frontierCells, ({ x }) => x <= 11);
-const canyon = where(
-  frontierCells,
-  ({ x, y }) => x >= 8 && x <= 19 && !((x === 13 || x === 14) && y >= 2 && y <= 17),
-);
-const canyonFloor = where(frontierCells, ({ x, y }) => (x === 13 || x === 14) && y >= 1 && y <= 18);
-const tundra = where(frontierCells, ({ x }) => x >= 18);
-const snow = where(frontierCells, ({ x, y }) => x >= 23 || (x >= 21 && (x + y) % 4 === 0));
-const canyonElevation = canyon.map((cell) => {
-  const rim = cell.x <= 10 || cell.x >= 17 ? 2 : 3;
-  const mesa = (cell.y >= 3 && cell.y <= 6) || (cell.y >= 13 && cell.y <= 16) ? 2 : 0;
-  return { ...cell, level: Math.min(5, rim + mesa) };
-});
-const blizzardCells = where(frontierCells, ({ x }) => x >= 21);
-
-export const CANYON_BLIZZARD_FRONTIER: EnvironmentSceneDefinition = {
-  id: "canyon-blizzard-frontier",
-  title: "Canyon Blizzard Frontier",
-  kicker: "Environment Scene 02 · Climate Frontier",
-  description:
-    "Warm desert falls into a raised canyon system before the eastern field turns to tundra, snow and a dense blizzard front.",
-  scene: {
-    id: "environment.canyon-blizzard-frontier",
-    bounds: FRONTIER_BOUNDS,
-    blockedCells: [],
-    elevationCells: canyonElevation,
-    terrainRegions: [
-      { visualId: "terrain.sand", cells: desert },
-      { visualId: "terrain.canyon", cells: canyon },
-      { visualId: "terrain.sand", cells: canyonFloor },
-      { visualId: "terrain.tundra", cells: tundra },
-      { visualId: "terrain.snow", cells: snow },
+      { visualId: "terrain.water.deep", cells: LARGE_SCENE_CELLS },
+      { visualId: "terrain.water.ghost", cells: ghostChannels },
+      { visualId: "terrain.water.abyss", cells: krakenAbyss },
+      { visualId: "terrain.deck", cells: [...leagueDecks, ...dutchmanDeck] },
     ],
     blockedPropVisualId: "prop.rubble",
     routeAnchors: [],
     routeClearanceCells: [],
     exitZone: [],
-    units: [],
-    testIdPrefix: "environment-canyon-blizzard",
-    ariaLabel: "Canyon Blizzard Frontier environment battlefield review",
+    units: [
+      ...leagueShipCenters.map((cell, index) => ({
+        cell,
+        visualId: index < 4 ? ("unit.allied" as const) : ("unit.reinforcement-allied" as const),
+        label: `S${index + 1}`,
+      })),
+      { cell: dutchmanCenter, visualId: "unit.enemy", label: "Dutchman" },
+      { cell: krakenCenter, visualId: "unit.enemy", label: "Kraken" },
+    ],
+    testIdPrefix: "environment-ghost-sea",
+    ariaLabel: "Ghost Sea Hunt large environment battlefield review",
   },
-  weatherRegions: [{ visualId: "weather.blizzard", cells: blizzardCells, intensity: 0.86 }],
+  weatherRegions: [
+    { visualId: "weather.ghost-mist", cells: LARGE_SCENE_CELLS, intensity: 0.8 },
+  ],
+  focusCell: krakenCenter,
+  paletteNotes: [
+    "Deep sea · ghost water · abyss · raised ship decks",
+    "Seven Sea League staging markers · Flying Dutchman · Kraken",
+    "Full-field weather.ghost-mist presentation",
+  ],
+  showUnits: true,
 };
 
-export const ENVIRONMENT_SCENES = [TWIN_ISLES_SHORE, CANYON_BLIZZARD_FRONTIER] as const;
+const avalonCenter = { x: 43, y: 31 } as const;
+const avalonLakeWest = where(
+  LARGE_SCENE_CELLS,
+  ({ x, y }) => x <= 8 + Math.round(3 * Math.sin(y / 6)),
+);
+const avalonLakeSouth = where(
+  LARGE_SCENE_CELLS,
+  ({ x, y }) => y >= 58 - Math.round(2 * Math.cos(x / 7)) && x >= 22,
+);
+const enchantedWater = [...avalonLakeWest, ...avalonLakeSouth];
+const enchantedShore = where(
+  LARGE_SCENE_CELLS,
+  ({ x, y }) =>
+    x === 9 + Math.round(3 * Math.sin(y / 6)) ||
+    (y === 57 - Math.round(2 * Math.cos(x / 7)) && x >= 22),
+);
+const sacredHill = ellipse(LARGE_SCENE_CELLS, avalonCenter, 12, 9);
+const innerSanctum = ellipse(LARGE_SCENE_CELLS, avalonCenter, 6, 5);
+const causeway = where(
+  LARGE_SCENE_CELLS,
+  ({ x, y }) => x >= 12 && x <= 43 && Math.abs(y - (28 + Math.floor((x - 12) / 10))) <= 1,
+);
+const avalonElevation = sacredHill.map((cell) => {
+  const dx = (cell.x - avalonCenter.x) / 12;
+  const dy = (cell.y - avalonCenter.y) / 9;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  const level = distance < 0.32 ? 5 : distance < 0.55 ? 4 : distance < 0.76 ? 3 : 2;
+  return { ...cell, level };
+});
+
+export const AVALON_ARTHURIA_CONFRONTATION: EnvironmentSceneDefinition = {
+  id: "avalon-arthuria-confrontation",
+  title: "Avalon — Arthuria Confrontation",
+  kicker: "Environment Stress Scene 02 · Avalon Approach",
+  description:
+    "A 64×64 mist-bound Avalon battlefield of enchanted water, meadow and a rising sacred causeway leading to Arthuria's central position.",
+  scene: {
+    id: "environment.avalon-arthuria-confrontation",
+    bounds: LARGE_BOUNDS,
+    blockedCells: [],
+    elevationCells: avalonElevation,
+    terrainRegions: [
+      { visualId: "terrain.meadow.mist", cells: LARGE_SCENE_CELLS },
+      { visualId: "terrain.water.enchanted", cells: enchantedWater },
+      { visualId: "terrain.shore", cells: enchantedShore },
+      { visualId: "terrain.stone.sacred", cells: [...causeway, ...sacredHill, ...innerSanctum] },
+    ],
+    blockedPropVisualId: "prop.woodland",
+    routeAnchors: [],
+    routeClearanceCells: [],
+    exitZone: [],
+    units: [
+      { cell: { x: 15, y: 28 }, visualId: "unit.allied", label: "Vanguard" },
+      { cell: { x: 19, y: 32 }, visualId: "unit.allied", label: "Guard" },
+      { cell: { x: 24, y: 27 }, visualId: "unit.reinforcement-allied", label: "Reserve" },
+      { cell: avalonCenter, visualId: "unit.enemy", label: "Arthuria" },
+    ],
+    testIdPrefix: "environment-avalon",
+    ariaLabel: "Avalon Arthuria confrontation large environment battlefield review",
+  },
+  weatherRegions: [
+    { visualId: "weather.avalon-mist", cells: LARGE_SCENE_CELLS, intensity: 0.58 },
+  ],
+  focusCell: avalonCenter,
+  paletteNotes: [
+    "Mist meadow · enchanted water · shore · sacred stone",
+    "Raised Avalon sanctum with a long causeway approach",
+    "Full-field weather.avalon-mist presentation",
+  ],
+  showUnits: true,
+};
+
+export const ENVIRONMENT_SCENES = [GHOST_SEA_HUNT, AVALON_ARTHURIA_CONFRONTATION] as const;
 
 export function terrainVisualIdAt(
   definition: EnvironmentSceneDefinition,
