@@ -30,11 +30,23 @@ const character = {
       rpg: {
         classes: ["Infantry"],
         initialClass: "Infantry",
-        attributes: { physicalPower: 12, magicalPower: 5, defense: 10, resistance: 7, speed: 8, stability: 10 },
+        attributes: {
+          physicalPower: 12,
+          magicalPower: 5,
+          defense: 10,
+          resistance: 7,
+          speed: 8,
+          stability: 10,
+        },
         hp: { current: 100, capacity: 100 },
       },
     },
-    provenance: { authority: "git", source: "content/characters/characters.json", revision, canonical: true },
+    provenance: {
+      authority: "git",
+      source: "content/characters/characters.json",
+      revision,
+      canonical: true,
+    },
   },
   lifecycle: null,
   schemaVersion: null,
@@ -42,37 +54,90 @@ const character = {
   relations: [],
   assets: [],
   history: [],
-  permissions: { role: "Viewer", capabilities: ["studio.read"], canRead: true, canEditRegistryMetadata: false, canApprove: false, canFreeze: false, canManageMembership: false },
-  provenance: [{ authority: "git", source: "content/characters/characters.json", revision, canonical: true }],
+  permissions: {
+    role: "Viewer",
+    capabilities: ["studio.read"],
+    canRead: true,
+    canEditRegistryMetadata: false,
+    canApprove: false,
+    canFreeze: false,
+    canManageMembership: false,
+  },
+  provenance: [
+    {
+      authority: "git",
+      source: "content/characters/characters.json",
+      revision,
+      canonical: true,
+    },
+  ],
   issues: [],
 };
 
 const readModels = {
   readModelVersion: 1,
   revision,
-  freshness: { gitRevision: revision, gitState: "deployment-snapshot", registryObservedAt: "2026-10-18T04:00:00Z", providerState: "registry-observed-no-live-provider-fetch" },
+  freshness: {
+    gitRevision: revision,
+    gitState: "deployment-snapshot",
+    registryObservedAt: "2026-10-18T04:00:00Z",
+    providerState: "registry-observed-no-live-provider-fetch",
+  },
   search: { total: 1, offset: 0, limit: 100 },
   models: [character],
-  canonicalProposals: { state: "available", observedAt: "2026-10-18T04:00:00Z", items: [] },
+  canonicalProposals: {
+    state: "available",
+    observedAt: "2026-10-18T04:00:00Z",
+    items: [],
+  },
 };
 
 async function mockStudio(page: Page, role: "Viewer" | "Editor") {
-  await page.route("**/auth/v1/token?grant_type=password", async (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(tokenResponse) }));
+  await page.route("**/auth/v1/token?grant_type=password", async (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(tokenResponse),
+    }),
+  );
   await page.route("**/functions/v1/studio-operations", async (route) => {
     const request = route.request().postDataJSON() as { type?: string };
-    const body = request.type === "studio.read_models.get" ? readModels : {
-      authorized: true,
-      role,
-      capabilities: role === "Viewer" ? ["studio.read"] : ["studio.read", "registry.metadata.edit", "canonical.change.propose"],
-    };
-    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
+    const body =
+      request.type === "studio.read_models.get"
+        ? readModels
+        : {
+            authorized: true,
+            role,
+            capabilities:
+              role === "Viewer"
+                ? ["studio.read"]
+                : ["studio.read", "registry.metadata.edit", "canonical.change.propose"],
+          };
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(body),
+    });
   });
   await page.route("**/functions/v1/studio-canonical-change", async (route) => {
     const request = route.request().postDataJSON() as Record<string, unknown>;
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ replayed: false, proposal: { changeRequestId: "character-test-1234", semanticId: "character.production.hero", status: "PR_OPEN", branchName: "studio/character/character.production.hero/character-test-1234", commitSha: revision, pullRequestNumber: 201, pullRequestUrl: "https://github.com/drakeshard/fantasia/pull/201", validationMessage: "Validated character semantic IDs." }, request }),
+      body: JSON.stringify({
+        replayed: false,
+        proposal: {
+          changeRequestId: "character-test-1234",
+          semanticId: "character.production.hero",
+          status: "PR_OPEN",
+          branchName: "studio/character/character.production.hero/character-test-1234",
+          commitSha: revision,
+          pullRequestNumber: 201,
+          pullRequestUrl: "https://github.com/drakeshard/fantasia/pull/201",
+          validationMessage: "Validated character semantic IDs.",
+        },
+        request,
+      }),
     });
   });
 }
@@ -104,10 +169,20 @@ test("Editor creates a controlled Git proposal without direct acceptance", async
   const proposal = page.waitForRequest("**/functions/v1/studio-canonical-change");
   await page.getByRole("button", { name: "Create Git proposal" }).click();
   const request = await proposal;
-  const body = request.postDataJSON() as { payload: { contentType: string; canonicalPath: string; operation: { kind: string; displayName: string }; baseRevision: string } };
+  const body = request.postDataJSON() as {
+    payload: {
+      contentType: string;
+      canonicalPath: string;
+      operation: { kind: string; displayName: string };
+      baseRevision: string;
+    };
+  };
   expect(body.payload.contentType).toBe("fantasia.character.v1");
   expect(body.payload.canonicalPath).toBe("content/characters/characters.json");
-  expect(body.payload.operation).toEqual({ kind: "set-display-name", displayName: "Main Character" });
+  expect(body.payload.operation).toEqual({
+    kind: "set-display-name",
+    displayName: "Main Character",
+  });
   expect(body.payload.baseRevision).toBe(revision);
   await expect(page.getByText(/Git remains canonical until the PR is merged/)).toBeVisible();
   await expect(page.getByText(/Layer 4 approval\/freeze is separate/)).toBeVisible();
