@@ -24,7 +24,6 @@
                 "scriptStatus": "approved",
                 "location": "Primora Village, Vaelkrath",
                 "time": "Morning",
-                "summary": "MC accepts a routine wild-boar request from Primora's local guild post, showing an earnest desire to become a hero without grand destiny or prophecy.",
                 "beats": [
                   {
                     "id": "PRO-N01-BEAT-01"
@@ -39,7 +38,6 @@
                 "scriptStatus": "approved",
                 "location": "Forest trail outside Primora",
                 "time": "Morning",
-                "summary": "A routine wild-boar request teaches basic movement and sword combat before an abnormal threat interrupts the hunt.",
                 "beats": [
                   {
                     "id": "PRO-B01-BEAT-01"
@@ -54,7 +52,6 @@
                 "scriptStatus": "approved",
                 "location": "Forest outside Primora",
                 "time": "Late morning",
-                "summary": "The failed chimera breaks MC's starting sword and injures MC. The encounter becomes an escape sequence ending in an accidental crossing through a small Fracture.",
                 "beats": [
                   {
                     "id": "PRO-B02-BEAT-01"
@@ -79,7 +76,6 @@
                 "scriptStatus": "approved",
                 "location": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
                 "time": "26 April 1429 — late afternoon",
-                "summary": "MC emerges from the Fracture injured and disoriented, is found by civilians/local escorts traveling with Julie d’Aubigny, receives Julie's practical aid, learns that Primora and Vaelkrath are unknown, and joins the group before road danger escalates into CH01-B01.",
                 "beats": [
                   {
                     "id": "CH01-N01-BEAT-01"
@@ -116,7 +112,6 @@
                 "type": "battle",
                 "status": "approved-structure",
                 "scriptStatus": "approved",
-                "summary": "First mandatory France battle. Protect/escort the civilian group and supply cart from armed foragers/stragglers while MC remains attack-limited. Julie is already present; Hangaku Gozen and La Hire enter through the fight.",
                 "beats": [
                   {
                     "id": "CH01-B01-BEAT-01"
@@ -141,7 +136,6 @@
                 "type": "story",
                 "status": "approved-structure",
                 "scriptStatus": "approved",
-                "summary": "Post-B01 shelter, treatment, food and rest. MC builds early rapport with Julie, Hangaku and La Hire, then receives a cheap replacement sword after recovery.",
                 "beats": [
                   {
                     "id": "CH01-N03-BEAT-01"
@@ -160,7 +154,6 @@
                 "type": "story",
                 "status": "approved-structure",
                 "scriptStatus": "approved",
-                "summary": "Recovery and context deepen the contradiction: France, England, Orléans and Charles/the Dauphin mean nothing to MC, while Primora and Vaelkrath mean nothing to the others. Orléans becomes the practical route toward answers.",
                 "beats": [
                   {
                     "id": "CH01-N04-BEAT-01"
@@ -179,7 +172,6 @@
                 "type": "battle",
                 "status": "approved-structure",
                 "scriptStatus": "approved",
-                "summary": "Combat climax against an organized English siege-line road detachment/outer screen. The group opens the cordon, frees detainees and escapes before reinforcements. MC restores basic Attack with the cheap replacement sword when protecting Julie from immediate danger.",
                 "beats": [
                   {
                     "id": "CH01-B02-BEAT-01"
@@ -204,7 +196,6 @@
                 "type": "story",
                 "status": "approved-structure",
                 "scriptStatus": "approved",
-                "summary": "Chapter resolution. Jeanne remains physically offscreen; conflicting rumors establish that the Maid is coming while MC continues toward Orléans seeking answers and a route home.",
                 "beats": [
                   {
                     "id": "CH01-N06-BEAT-01"
@@ -232,7 +223,6 @@
                 "scriptStatus": "approved",
                 "location": "Orléans",
                 "time": "29 April 1429 — afternoon",
-                "summary": "MC reaches Orléans as part of La Hire's road group, but remains an unranked outsider. The group is given practical work among supplies, wounded, and messengers while Dunois remains a distant command figure.",
                 "beats": [
                   {
                     "id": "CH02-N01-BEAT-01"
@@ -247,7 +237,6 @@
                 "scriptStatus": "approved",
                 "location": "Orléans",
                 "time": "29 April 1429 — evening",
-                "summary": "Jeanne enters Orléans as a distant public symbol. MC sees the city's hope gather around a tired young woman, then returns to ordinary siege work. Three local missions become available; any two may be completed in any order before higher command pays real attention.",
                 "beats": [
                   {
                     "id": "CH02-N02-BEAT-01"
@@ -265,7 +254,6 @@
                 "scriptStatus": "approved",
                 "location": "Outer approach near Orléans",
                 "time": "1–2 May 1429",
-                "summary": "Free-order reputation mission 1/3. Returning couriers and wounded soldiers are cut off on an outer approach. MC's group must reach them, cover the withdrawal, and return the dispatches. This is a Fantasia local siege incident, not a claimed historical battle.",
                 "beats": [
                   {
                     "id": "CH02-B00-BEAT-01"
@@ -286,7 +274,6 @@
                 "scriptStatus": "approved",
                 "location": "Supply approach outside Orléans",
                 "time": "1–3 May 1429",
-                "summary": "Free-order reputation mission 2/3. A supply train carrying food, bandages, and arrows is scattered under pressure. MC's group recovers the useful loads and escorts survivors back. This is a Fantasia local siege incident, not a claimed historical battle.",
                 "beats": [
                   {
                     "id": "CH02-B00B-BEAT-01"
@@ -307,7 +294,6 @@
                 "scriptStatus": "approved",
                 "location": "Outer watch position near Orléans",
                 "time": "1–3 May 1429",
-                "summary": "Free-order reputation mission 3/3. A local watch position stops answering after an English probe. MC's group reinforces the surviving watch, prevents a collapse, and creates a route back. This is a Fantasia local siege incident, not a claimed historical battle.",
                 "beats": [
                   {
                     "id": "CH02-B00C-BEAT-01"
@@ -328,7 +314,6 @@
                 "scriptStatus": "approved",
                 "location": "Orléans",
                 "time": "Early May 1429",
-                "summary": "After any two of the three local reputation missions, multiple independent reports reach higher command. La Hire confirms his own firsthand experience, and Dunois finally treats MC's party as useful irregulars worth assigning to Saint-Loup.",
                 "beats": [
                   {
                     "id": "CH02-N02A-BEAT-01"
@@ -346,7 +331,6 @@
                 "scriptStatus": "approved",
                 "location": "Orléans operational quarters",
                 "time": "3 May 1429",
-                "summary": "MC reaches Jeanne directly only after at least two independent local achievements, multiple reports, La Hire's confirmation, and Dunois's assignment. The meeting happens inside a crowded Saint-Loup briefing, not as a private audience or personal recruitment.",
                 "beats": [
                   {
                     "id": "CH02-N03-BEAT-01"
@@ -364,7 +348,6 @@
                 "scriptStatus": "approved",
                 "location": "Saint-Loup, Orléans",
                 "time": "4 May 1429",
-                "summary": "The first major siege offensive. MC enters willingly as a functioning but still irregular fighter; the victory makes the group's usefulness public among the assault force.",
                 "beats": [
                   {
                     "id": "CH02-B01-BEAT-01"
@@ -383,7 +366,6 @@
                 "type": "story",
                 "status": "approved-structure",
                 "scriptStatus": "approved",
-                "summary": "After Saint-Loup, recognition feels less glamorous up close. MC helps among the wounded, Jeanne escapes demands for certainty, and both confront the cost attached to being called useful or heroic.",
                 "beats": [
                   {
                     "id": "CH02-N05-BEAT-01"
@@ -401,7 +383,6 @@
                 "scriptStatus": "approved",
                 "location": "Loire crossings / Augustins",
                 "time": "6 May 1429",
-                "summary": "The campaign shifts across the Loire. MC is now trusted to hold a real part of the operation, but still follows the established commanders rather than joining their rank.",
                 "beats": [
                   {
                     "id": "CH02-B02-BEAT-01"
@@ -422,7 +403,6 @@
                 "scriptStatus": "approved",
                 "location": "French positions near the Loire",
                 "time": "Night of 6 May 1429",
-                "summary": "The night before the siege climax slows the pace. The group treats wounds, argues about how far hope can carry exhausted people, and accepts that the next assault may be worse than anything so far.",
                 "beats": [
                   {
                     "id": "CH02-N06-BEAT-01"
@@ -440,7 +420,6 @@
                 "scriptStatus": "approved",
                 "location": "Tourelles, Orléans",
                 "time": "7 May 1429",
-                "summary": "The siege climax. Jeanne is wounded, morale falters, and the objective shifts honestly to protecting the wounded and preventing collapse before she later returns visibly bandaged and the final assault resumes.",
                 "beats": [
                   {
                     "id": "CH02-B03-BEAT-01"
@@ -461,7 +440,6 @@
                 "scriptStatus": "approved",
                 "location": "Orléans",
                 "time": "8 May 1429",
-                "summary": "The English withdrawal resolves the siege. MC has no French rank and still wants a route home, but after the road, Cut Road, Saint-Loup, Augustins, and Tourelles, leaving the people here behind no longer feels simple.",
                 "beats": [
                   {
                     "id": "CH02-N08-BEAT-01"
@@ -486,7 +464,6 @@
                 "scriptStatus": "approved",
                 "location": "Loire campaign route",
                 "time": "June 1429",
-                "summary": "After Orléans, MC does not simply attach to Jeanne. Dunois's report and the group's siege record give Alençon a practical reason to accept them with the Loire campaign as irregular veterans.",
                 "beats": [
                   {
                     "id": "CH03-N01-BEAT-01"
@@ -501,7 +478,6 @@
                 "scriptStatus": "approved",
                 "location": "Jargeau",
                 "time": "12 June 1429",
-                "summary": "The campaign attacks Jargeau. MC is one proven fighter among a larger army, while Suffolk anchors a serious English defense.",
                 "beats": [
                   {
                     "id": "CH03-B01-BEAT-01"
@@ -520,7 +496,6 @@
                 "type": "story",
                 "status": "approved-structure",
                 "scriptStatus": "approved",
-                "summary": "The chapter stops to live with the victory. Prisoners are processed, wounded treated, and MC discovers that being recognized by more soldiers mostly means more people expect something next time.",
                 "beats": [
                   {
                     "id": "CH03-N02-BEAT-01"
@@ -538,7 +513,6 @@
                 "scriptStatus": "approved",
                 "location": "Loire valley — Meung / Beaugency approaches",
                 "time": "Mid-June 1429",
-                "summary": "Meung and Beaugency are treated as a campaign transition rather than a teleport between headline battles. Richemont's arrival exposes political distrust inside the French side while field work continues.",
                 "beats": [
                   {
                     "id": "CH03-N03-BEAT-01"
@@ -556,7 +530,6 @@
                 "scriptStatus": "approved",
                 "location": "Road toward Patay",
                 "time": "18 June 1429",
-                "summary": "Before Patay, the army does not know it is walking into a famous victory. Scouts bring incomplete reports, commanders argue over speed, and La Hire's vanguard pushes to catch the English before they settle.",
                 "beats": [
                   {
                     "id": "CH03-N04-BEAT-01"
@@ -574,7 +547,6 @@
                 "scriptStatus": "approved",
                 "location": "Near Patay",
                 "time": "18 June 1429",
-                "summary": "The French catch the retreating English before their field position fully settles. Talbot remains formidable, but conditions and timing turn the battle.",
                 "beats": [
                   {
                     "id": "CH03-B02-BEAT-01"
@@ -595,7 +567,6 @@
                 "scriptStatus": "approved",
                 "location": "Road to Reims",
                 "time": "Late June–July 1429",
-                "summary": "The road north is political as much as military. Charles enters MC's orbit only in a public campaign setting after reports from Dunois and Alençon have made the irregular group known.",
                 "beats": [
                   {
                     "id": "CH03-N05-BEAT-01"
@@ -613,7 +584,6 @@
                 "scriptStatus": "approved",
                 "location": "Reims Cathedral",
                 "time": "17 July 1429",
-                "summary": "Charles is crowned at Reims. The chapter closes on the apparent fulfillment of Jeanne's great public mission and a restrained suggestion that the world is not as settled as it should be.",
                 "beats": [
                   {
                     "id": "CH03-N06-BEAT-01"
@@ -635,7 +605,6 @@
                 "scriptStatus": "draft",
                 "location": "Road from Reims toward the Île-de-France",
                 "time": "Late July–August 1429",
-                "summary": "The coronation creates momentum but solves neither the war nor MC's route home. Jeanne presses toward Paris while command support becomes more cautious, and a second small refractive anomaly makes the earlier Reims glimpse harder to dismiss.",
                 "beats": [
                   {
                     "id": "CH04-N01-BEAT-01"
@@ -653,7 +622,6 @@
                 "scriptStatus": "draft",
                 "location": "Paris — Saint-Honoré approach",
                 "time": "8 September 1429",
-                "summary": "The royal assault on Paris fails. Jeanne is wounded in the thigh during the fighting, and the playable objective changes from gaining a foothold to protecting the wounded and disengaging under orders rather than pretending the setback is a victory.",
                 "beats": [
                   {
                     "id": "CH04-B01-BEAT-01"
@@ -674,7 +642,6 @@
                 "scriptStatus": "draft",
                 "location": "Northern France — campaign roads and winter quarters",
                 "time": "September 1429–spring 1430",
-                "summary": "Months pass without another Orléans-style breakthrough. Forces disperse, negotiations and smaller campaigns replace the triumphal march, Jeanne recovers and keeps fighting, and MC's friendship with her deepens while the route home remains unsolved.",
                 "beats": [
                   {
                     "id": "CH04-N03-BEAT-01"
@@ -695,7 +662,6 @@
                 "scriptStatus": "draft",
                 "location": "Compiègne",
                 "time": "23 May 1430 — morning to afternoon",
-                "summary": "Jeanne reaches Compiègne with a relatively small force and prepares a sortie against the Burgundian pressure outside the town. MC's group joins as experienced irregulars, not as the operation's commanders.",
                 "beats": [
                   {
                     "id": "CH04-N04-BEAT-01"
@@ -713,7 +679,6 @@
                 "scriptStatus": "draft",
                 "location": "Compiègne / Margny approaches",
                 "time": "23 May 1430 — evening",
-                "summary": "A sortie against the Burgundian siege pressure turns into a fighting retreat. Jeanne and d’Aulon remain with the rear guard as the route to the fortified crossing is lost. The objective changes honestly from attack to retreat to survival; Jeanne is captured by Burgundian forces connected to John of Luxembourg's command.",
                 "beats": [
                   {
                     "id": "CH04-B02-BEAT-01"
@@ -737,7 +702,6 @@
                 "scriptStatus": "draft",
                 "location": "Road south of Compiègne",
                 "time": "Night, 23 May 1430",
-                "summary": "The survivors learn that Jeanne has entered the Burgundian custody chain associated with John of Luxembourg. An immediate battlefield rescue is no longer possible, so the chapter turns from campaigning to tracking a prisoner.",
                 "beats": [
                   {
                     "id": "CH04-N06-BEAT-01"
@@ -762,7 +726,6 @@
                 "scriptStatus": "draft",
                 "location": "Northern France",
                 "time": "Summer–December 1430",
-                "summary": "Months of rumor and paid information replace battlefield maps. Jeanne remains in Burgundian custody before being transferred to the English for a large payment and brought to Rouen. MC's party follows the chain rather than inventing an army that can simply take her back.",
                 "beats": [
                   {
                     "id": "CH05-N01-BEAT-01"
@@ -783,7 +746,6 @@
                 "scriptStatus": "draft",
                 "location": "Road and river approaches outside Rouen",
                 "time": "January 1431",
-                "summary": "Fantasia fictional adaptation: the party escorts a local contact carrying legitimate trade papers through a patrol sweep so they can enter Rouen without inventing a recorded historical rescue battle. The objective is access and survival, not defeating the English garrison.",
                 "beats": [
                   {
                     "id": "CH05-B01-BEAT-01"
@@ -804,7 +766,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen",
                 "time": "January–February 1431",
-                "summary": "The party discovers the basic structure they are actually fighting: Jeanne is held in the English castle under military guard while Pierre Cauchon directs the ecclesiastical proceedings. Warwick matters as the English castle/security authority; Bedford's larger regime is background rather than a mandatory personal meeting.",
                 "beats": [
                   {
                     "id": "CH05-N03-BEAT-01"
@@ -822,7 +783,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen Castle",
                 "time": "21 February 1431 onward",
-                "summary": "Jeanne's public examinations begin on 21 February under Cauchon's authority. The story presents the pressure of questioning, custody, and isolation without translating her religious claims into Fracture cosmology.",
                 "beats": [
                   {
                     "id": "CH05-N04-BEAT-01"
@@ -840,7 +800,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen Castle — service corridor near Jeanne's cell",
                 "time": "Spring 1431",
-                "summary": "Fantasia fictional adaptation: using a narrow service-access opportunity, MC reaches Jeanne for a brief covert reunion. The meeting gives no magical answer and no easy rescue; Jeanne is exhausted, guarded, and still capable of making her own choices.",
                 "beats": [
                   {
                     "id": "CH05-N05-BEAT-01"
@@ -861,7 +820,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen Castle service approaches",
                 "time": "29 May 1431 — night",
-                "summary": "Fantasia fictional adaptation: with Jeanne's danger now immediate, the party attempts a limited extraction through a mapped service route. Security closes faster than expected; the attempt fails causally and the objective changes to preserving the surviving rescue team and its final outside route rather than pretending Jeanne was freed.",
                 "beats": [
                   {
                     "id": "CH05-B02-BEAT-01"
@@ -882,7 +840,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen",
                 "time": "30 May 1431 — dawn",
-                "summary": "The party learns that Jeanne is to be taken to the Vieux-Marché that morning. The prison route is gone and ordinary rescue planning has failed. Chapter 5 ends before the stake rescue itself, handing the final attempt to the Finale without revealing what follows a successful rescue.",
                 "beats": [
                   {
                     "id": "CH05-N07-BEAT-01"
@@ -907,7 +864,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen — Vieux-Marché approaches",
                 "time": "30 May 1431 — morning",
-                "summary": "The party follows Jeanne toward the expected execution point and commits to one final rescue. They still know nothing about any larger rule governing her fate; this is a personal choice made because ordinary plans have run out.",
                 "beats": [
                   {
                     "id": "FIN-N01-BEAT-01"
@@ -925,7 +881,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen — Vieux-Marché",
                 "time": "30 May 1431 — morning",
-                "summary": "The final human rescue succeeds through explicit phases: reach Jeanne, free Jeanne, then escape the execution point. The victory is real; the story does not revoke it in a cutscene. Jeanne survives the point where the expected ending says she should die.",
                 "beats": [
                   {
                     "id": "FIN-B01-BEAT-01"
@@ -946,7 +901,6 @@
                 "scriptStatus": "draft",
                 "location": "Rouen — streets beyond Vieux-Marché and the fractured horizon",
                 "time": "30 May 1431 — moments later",
-                "summary": "After Jeanne is safely rescued, a world-like call guides the party away from the square to a broad final view. There an unknown antagonist deliberately opens a Fracture and crosses it. Hostile fractured pressure remains in the passage's wake. The voice asks the Rookie for help because the world is breaking, and MC chooses pursuit rather than taking a random escape route.",
                 "beats": [
                   {
                     "id": "FIN-B02-BEAT-01"
@@ -970,7 +924,6 @@
                 "scriptStatus": "draft",
                 "location": "Fractured Rouen — edge of the new Fracture",
                 "time": "30 May 1431 — moments later",
-                "summary": "The antagonist-opened Fracture remains available only briefly. Its destination is unknown, but MC now has a concrete trail and a plea for help rather than a random escape route. MC chooses pursuit; Jeanne is explicitly free to decide whether to follow.",
                 "beats": [
                   {
                     "id": "FIN-N03-BEAT-01"
@@ -990,5080 +943,376 @@
     "profile": "fantasia-story-studio-production-v1",
     "beats": {
       "PRO-N01-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Primora Village, Vaelkrath",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Guild Clerk",
-              "shortLabel": "GUI",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC accepts a low-risk wild-boar request at Primora's guild post before leaving for the nearby forest."
-          },
-          {
-            "type": "dialogue",
-            "text": "Establish MC's hero aspiration lightly and quickly; keep village life ordinary."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to PRO-B01."
-          }
-        ]
+        "available": true
       },
       "PRO-B01-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Forest trail outside Primora",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Wild Boar",
-              "shortLabel": "WIL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC handles the expected low-threat target until a much heavier presence enters the area."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep the first fight simple and ordinary so the later chimera feels genuinely wrong."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to PRO-B02."
-          }
-        ]
+        "available": true
       },
       "PRO-B02-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Forest outside Primora",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Failed Chimera",
-              "shortLabel": "FAI",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The anomalous chimera appears. MC attacks, the creature intercepts the strike, breaks the sword, and throws MC back."
-          },
-          {
-            "type": "dialogue",
-            "text": "Destroy MC's confidence quickly; the creature behaves as a dangerous physical threat, not a speaking villain."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to PRO-B02-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "PRO-B02-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Forest outside Primora",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Failed Chimera",
-              "shortLabel": "FAI",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC flees through the forest while injured and attack-limited, then tumbles through a visible refractive Fracture by accident."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep the escape immediate. Do not explain the Fracture, chimera origin, or destination selection."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "center": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC crashes into unfamiliar wooded farmland, still injured and carrying the broken starting sword. The small Fracture collapses without obvious trace."
-          },
-          {
-            "type": "dialogue",
-            "text": "Pain and disorientation only; no cosmology explanation."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "center": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC moves toward a nearby road after hearing a cart beyond the trees."
-          },
-          {
-            "type": "dialogue",
-            "text": "MC assumes this is some unfamiliar region reached during the fall, not another world."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-03": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Civilians",
-              "shortLabel": "CIV",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "A small civilian/local-escort group finds MC. Julie is already traveling with them and notices the injuries."
-          },
-          {
-            "type": "dialogue",
-            "text": "Caution from the escort; Julie's attention goes immediately to the visible injury."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-04."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-04": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Local escorts",
-              "shortLabel": "LOC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Julie steps past the escort, checks MC's arm, and directs immediate aid before asking for an explanation."
-          },
-          {
-            "type": "dialogue",
-            "text": "Practical compassion with restrained humor; no dramatic rescue speech."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-05."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-05": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Local escorts",
-              "shortLabel": "LOC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The introduction itself reveals that the group's speech sounds foreign even though its meaning reaches MC clearly."
-          },
-          {
-            "type": "dialogue",
-            "text": "Show the language anomaly with one sharp contradiction rather than a long explanation."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-06."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-06": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Civilians",
-              "shortLabel": "CIV",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC names Primora and Vaelkrath; nobody recognizes either place."
-          },
-          {
-            "type": "dialogue",
-            "text": "The locals are genuinely unfamiliar; Julie does not ridicule or accuse MC."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-07."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-07": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Civilians",
-              "shortLabel": "CIV",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group resumes travel. Orléans and the siege are introduced only as practical local context."
-          },
-          {
-            "type": "dialogue",
-            "text": "Give the player recognizable historical clues while keeping MC focused on location and survival."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-08."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-08": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Julie gives her name and tells MC to stay with the group rather than wander off injured."
-          },
-          {
-            "type": "dialogue",
-            "text": "Create a direct personal bond and a practical reason to travel together, not political allegiance."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N01-BEAT-09."
-          }
-        ]
+        "available": true
       },
       "CH01-N01-BEAT-09": {
-        "timing": {
-          "mode": "auto",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Chécy–Saint-Jean-de-Braye corridor east of Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Civilians",
-              "shortLabel": "CIV",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The lead escort detects armed movement ahead and halts the group."
-          },
-          {
-            "type": "dialogue",
-            "text": "Immediate practical escalation into B01."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B01."
-          }
-        ]
+        "available": true
       },
       "CH01-B01-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Strangers on the Road",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Civilians",
-              "shortLabel": "CIV",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Armed foragers/stragglers rush the road. Julie and the escorts form a defense while civilians pull behind the cart."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the first France battle about protecting ordinary people rather than defeating every enemy."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH01-B01-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Strangers on the Road",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "A civilian is nearly cut off. A precise ranged strike from an unknown warrior interrupts the attacker before she enters the line herself."
-          },
-          {
-            "type": "dialogue",
-            "text": "Introduce Hangaku by decisive action, not biography. Keep her identity hidden until dialogue earns it."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH01-B01-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Strangers on the Road",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Pressure builds on the opposite side until a rough-edged swordsman crashes into the attackers from the road."
-          },
-          {
-            "type": "dialogue",
-            "text": "Contrast Hangaku's controlled entrance with La Hire's aggressive battlefield energy; keep his identity hidden until reveal."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B01-BEAT-04."
-          }
-        ]
+        "available": true
       },
       "CH01-B01-BEAT-04": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Strangers on the Road",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The improvised defenders create a corridor. MC focuses on getting civilians and the supply cart through while the others hold the attackers."
-          },
-          {
-            "type": "dialogue",
-            "text": "Let MC contribute meaningfully without undoing the prologue defeat or attack limitation."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B01-BEAT-05."
-          }
-        ]
+        "available": true
       },
       "CH01-B01-BEAT-05": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "Strangers on the Road",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Once the immediate danger passes, the two newcomers finally give their names."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep the introductions short; the battle itself should have already defined their first impressions."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N03."
-          }
-        ]
+        "available": true
       },
       "CH01-N03-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Shelter Before Nightfall",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "At a rough shelter, Julie properly cleans and binds MC's injuries while the group eats and settles."
-          },
-          {
-            "type": "dialogue",
-            "text": "Use recovery to let personalities breathe after the battle."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N03-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH01-N03-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Shelter Before Nightfall",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC asks Hangaku where she comes from and realizes another exceptional traveler may also be far from home."
-          },
-          {
-            "type": "dialogue",
-            "text": "Hint at broader displacement without explaining Story Worlds or Fracture cosmology."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N03-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH01-N03-BEAT-03": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Shelter Before Nightfall",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "La Hire",
-              "shortLabel": "LA ",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "La Hire notices the broken sword and points MC toward a cheap replacement among available gear."
-          },
-          {
-            "type": "dialogue",
-            "text": "The replacement is ordinary and practical; it matters because MC can carry a complete sword again, not because it is special."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N04."
-          }
-        ]
+        "available": true
       },
       "CH01-N04-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Names That Should Mean Nothing",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Simple conversation names France, England, Orléans, and Charles/the Dauphin. None of them belong in MC's known world."
-          },
-          {
-            "type": "dialogue",
-            "text": "Turn necessary context into a growing contradiction, not a history lecture."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N04-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH01-N04-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Names That Should Mean Nothing",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Julie asks the question plainly: where is Vaelkrath supposed to be? MC realizes there is no map direction that can answer."
-          },
-          {
-            "type": "dialogue",
-            "text": "Let MC reach fear and uncertainty before reaching a formal another-world conclusion."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N04-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH01-N04-BEAT-03": {
-        "timing": {
-          "mode": "auto",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "Names That Should Mean Nothing",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group prepares to continue toward Orléans with the civilians and supplies."
-          },
-          {
-            "type": "dialogue",
-            "text": "End recovery cleanly and move back into danger."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B02."
-          }
-        ]
+        "available": true
       },
       "CH01-B02-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "The Road to Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "An organized English road detachment stops the group, controls passage, and begins inspecting supplies and travelers."
-          },
-          {
-            "type": "dialogue",
-            "text": "Start with pressure and negotiation, not instant combat. Establish that simply walking away will strand or expose the civilians."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B02-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH01-B02-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "The Road to Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The detention turns violent. La Hire and Hangaku act to open the cordon and free the people being held."
-          },
-          {
-            "type": "dialogue",
-            "text": "Escalate from passage dispute to rescue/breakthrough. MC still hesitates to draw the replacement sword."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B02-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH01-B02-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "The Road to Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The detachment signals for reinforcements, including a mounted enemy presence that makes the escape window narrow."
-          },
-          {
-            "type": "dialogue",
-            "text": "Raise urgency and preview Cavalry pressure without turning this into a full siege battle."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B02-BEAT-04."
-          }
-        ]
+        "available": true
       },
       "CH01-B02-BEAT-04": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "The Road to Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "English Soldier",
-              "shortLabel": "ENG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "An attacker slips through toward Julie while she is covering the retreat. MC reacts before thinking and finally draws the replacement sword."
-          },
-          {
-            "type": "dialogue",
-            "text": "Pay off Julie helping MC in N01. The action is protective and instinctive, not a sudden cure for fear."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-B02-BEAT-05."
-          }
-        ]
+        "available": true
       },
       "CH01-B02-BEAT-05": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 20,
-          "maxSeconds": 90
-        },
-        "staging": {
-          "background": "The Road to Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party and civilians complete the breakthrough before reinforcements can trap them."
-          },
-          {
-            "type": "dialogue",
-            "text": "End on escape and survival, not annihilation of the English detachment."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N06."
-          }
-        ]
+        "available": true
       },
       "CH01-N06-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "The Maid Is Coming",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "After the escape, Julie notices that MC finally used the replacement sword."
-          },
-          {
-            "type": "dialogue",
-            "text": "Give the prologue defeat a small emotional echo without dumping backstory."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N06-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH01-N06-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "The Maid Is Coming",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Travelers",
-              "shortLabel": "TRA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Passing travelers trade conflicting rumors about a young woman called the Maid who is expected toward Orléans."
-          },
-          {
-            "type": "dialogue",
-            "text": "Jeanne remains offscreen. Present hope, doubt, and uncertainty rather than authoritative prophecy."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH01-N06-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH01-N06-BEAT-03": {
-        "timing": {
-          "mode": "auto",
-          "estimatedSeconds": 18
-        },
-        "staging": {
-          "background": "The Maid Is Coming",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group continues toward Orléans. MC still wants answers and a route home; the Maid rumor becomes the next major story hook."
-          },
-          {
-            "type": "dialogue",
-            "text": "Close the chapter quietly and keep MC's motivation personal rather than political."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02."
-          }
-        ]
+        "available": true
       },
       "CH02-N01-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The road group enters a city under siege. La Hire reports briefly to Dunois while MC, Julie, and Hangaku are directed toward supply and casualty work rather than the command table."
-          },
-          {
-            "type": "dialogue",
-            "text": "Establish social distance. Dunois notices the group only as people La Hire brought in; MC has no rank, invitation, or automatic access."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N02."
-          }
-        ]
+        "available": true
       },
       "CH02-N02-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Crowds gather around Jeanne's entry. MC catches only fragments of her through banners and people and never reaches her."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep Jeanne distant, human, and burdened by public hope. No private protagonist access yet."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N02-BEAT-02."
-          }
-        ]
-      },
-      "CH02-B00-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Outer approach near Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The obvious road is watched. MC identifies a lower farm track and guides the group toward the stranded couriers."
-          },
-          {
-            "type": "dialogue",
-            "text": "First achievement should show judgment and initiative, not protagonist-level battlefield command."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B00-BEAT-02."
-          }
-        ]
-      },
-      "CH02-N02A-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Reports from at least two unrelated local groups reach Dunois: couriers, quartermasters, or watch soldiers depending on the missions completed. La Hire confirms he already saw the party hold together on the eastern road."
-          },
-          {
-            "type": "dialogue",
-            "text": "Recognition must come from repeated evidence. The exact completed mission pair may vary, but the common fact is that independent witnesses describe the same reliable group."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N02A-BEAT-02."
-          }
-        ]
-      },
-      "CH02-N03-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Orléans operational quarters",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean de Dunois",
-              "shortLabel": "JDD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party stands with other supporting groups at the edge of a crowded Saint-Loup briefing. Dunois names responsibilities; nobody treats MC as command staff."
-          },
-          {
-            "type": "dialogue",
-            "text": "Show access as operational necessity. The party is present because Dunois assigned them after repeated reports."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N03-BEAT-02."
-          }
-        ]
-      },
-      "CH02-B01-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Saint-Loup, Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean de Dunois",
-              "shortLabel": "JDD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The Saint-Loup assault begins under missile pressure. MC's group works from the supporting line while established commanders direct the larger attack."
-          },
-          {
-            "type": "dialogue",
-            "text": "Escalate clearly from local missions to a major siege assault without promoting MC into command."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B01-BEAT-02."
-          }
-        ]
-      },
-      "CH02-N05-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "The Cost of Hope",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "French soldiers",
-              "shortLabel": "FS",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC carries water and supplies among casualties while soldiers who now recognize the party ask for help without ceremony."
-          },
-          {
-            "type": "dialogue",
-            "text": "Recognition should feel like responsibility before it feels like prestige."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N05-BEAT-02."
-          }
-        ]
-      },
-      "CH02-B02-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Loire crossings / Augustins",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The force begins crossing under pressure. MC's group is trusted with keeping one practical route open, not commanding the operation."
-          },
-          {
-            "type": "dialogue",
-            "text": "Escalate from breach work to maintaining a vulnerable link between separated fronts."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B02-BEAT-02."
-          }
-        ]
-      },
-      "CH02-N06-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "French positions near the Loire",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Weapons are repaired, bandages changed, and people sleep wherever they can. Jeanne wants to continue while others openly acknowledge exhaustion."
-          },
-          {
-            "type": "dialogue",
-            "text": "Create friction and recovery before Tourelles. Nobody is fearless and no one gets to call exhaustion weakness."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N06-BEAT-02."
-          }
-        ]
-      },
-      "CH02-B03-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Tourelles, Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "During the assault Jeanne is wounded and removed from the immediate line. The attack stalls as soldiers react to seeing her fall."
-          },
-          {
-            "type": "dialogue",
-            "text": "Treat the wound as dangerous and frightening. No miraculous healing."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B03-BEAT-02."
-          }
-        ]
-      },
-      "CH02-B03-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Tourelles, Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "With Jeanne behind the line, the immediate goal becomes preventing collapse, protecting the treatment area, and keeping a route open."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the objective shift mechanically and emotionally honest. MC does not replace Jeanne as commander or symbol."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B03-BEAT-03."
-          }
-        ]
-      },
-      "CH02-N08-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "On 8 May the English withdrawal becomes visible. The city reacts with exhausted relief rather than a clean heroic tableau."
-          },
-          {
-            "type": "dialogue",
-            "text": "Resolve the siege historically while keeping the human cost present."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N08-BEAT-02."
-          }
-        ]
-      },
-      "CH03-N01-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Loire campaign route",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Alençon reviews the people joining the Loire campaign. MC's group is accepted because Dunois and La Hire both report useful service, not because Jeanne personally grants status."
-          },
-          {
-            "type": "dialogue",
-            "text": "Expand the political scale while making continued access causal and earned."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-B01."
-          }
-        ]
-      },
-      "CH03-B01-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Jargeau",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The assault begins against a prepared English defense. Alençon keeps the advance controlled while Suffolk tries to break French momentum."
-          },
-          {
-            "type": "dialogue",
-            "text": "Establish Jargeau as a real campaign battle with command structure on both sides."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-B01-BEAT-02."
-          }
-        ]
-      },
-      "CH03-N02-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "After Jargeau",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "French soldiers",
-              "shortLabel": "FS",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The field after Jargeau becomes lists, wounded, prisoners, supplies, and repairs. Recognition mostly means more people ask MC's group for help."
-          },
-          {
-            "type": "dialogue",
-            "text": "Turn recognition into responsibility rather than protagonist privilege."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N02-BEAT-02."
-          }
-        ]
-      },
-      "CH03-N03-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Loire valley — Meung / Beaugency approaches",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The column pressures crossings, screens roads, moves supplies, and watches English positions around Meung and Beaugency without turning every contact into a full mandatory battle."
-          },
-          {
-            "type": "dialogue",
-            "text": "Show campaign labor, scouting uncertainty, and smaller clashes between major set pieces."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N03-BEAT-02."
-          }
-        ]
-      },
-      "CH03-N03-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Loire valley — Meung / Beaugency approaches",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Arthur de Richemont",
-              "shortLabel": "ADR",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Richemont arrives with Breton strength. Officers react with distrust even while the campaign needs his soldiers."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make internal French politics visible through practical tension, not a lecture."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N04."
-          }
-        ]
-      },
-      "CH03-N04-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Road toward Patay",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Scouts bring conflicting positions for the withdrawing English. Nobody knows yet that Patay will become a famous victory."
-          },
-          {
-            "type": "dialogue",
-            "text": "Create uncertainty before the decision to press."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N04-BEAT-02."
-          }
-        ]
-      },
-      "CH03-B02-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Near Patay",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            },
-            "right": {
-              "character": "John Talbot",
-              "shortLabel": "JT",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The French vanguard catches the retreating English before their field line is fully established."
-          },
-          {
-            "type": "dialogue",
-            "text": "Patay begins as an opportunity created by timing, not as a guaranteed scripted victory."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-B02-BEAT-02."
-          }
-        ]
-      },
-      "CH03-N05-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Road to Reims",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The army counts the cost of Patay and prepares to move again. MC's growing reputation is visible but not glamorous."
-          },
-          {
-            "type": "dialogue",
-            "text": "Give another breath before the political road; show success creating expectation rather than privilege."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N05-BEAT-02."
-          }
-        ]
-      },
-      "CH03-N05-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Road to Reims",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Charles VII",
-              "shortLabel": "CV",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "During a group campaign halt, Alençon identifies veterans whose reports Charles has been reading. MC is one name among them, not the recipient of a private royal audience."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep Charles cautious and human. His awareness of MC is earned through reports and repeated service."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N06."
-          }
-        ]
-      },
-      "CH03-N06-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Reims Cathedral",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The coronation unfolds amid heat, armor, cloth, incense, and accumulated campaign fatigue. MC is present with the campaign, not centered by the ceremony."
-          },
-          {
-            "type": "dialogue",
-            "text": "Let the historical milestone land, then add one subtle Fracture-like visual clue without explanation."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04."
-          }
-        ]
+        "available": true
       },
       "CH02-N02-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The crowd disperses and MC's group is sent back to the unglamorous work of a besieged city. Three unrelated local problems are posted at once."
-          },
-          {
-            "type": "dialogue",
-            "text": "Turn the chapter from spectacle back to earned credibility. The party chooses where to help first rather than being summoned upward."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-REP-01."
-          }
-        ]
+        "available": true
+      },
+      "CH02-B00-BEAT-01": {
+        "available": true
       },
       "CH02-B00-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Outer approach near Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "English screen troops close from the main road while the wounded are moved. The party must hold a narrow return lane instead of chasing a victory."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make protection and discipline the achievement. The mission succeeds because people and dispatches escape."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B00-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH02-B00-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Outer approach near Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The recovered party returns through the gate with people and dispatches intact. Local witnesses now have a concrete story about MC's group."
-          },
-          {
-            "type": "dialogue",
-            "text": "Close on reportable service rather than celebration. This is one independent reputation source, not enough by itself for command access."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-REP-01."
-          }
-        ]
+        "available": true
       },
       "CH02-B00B-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Supply approach outside Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "A damaged supply train is spread across a dangerous approach. The party must identify surviving drivers and salvageable loads before choosing a return route."
-          },
-          {
-            "type": "dialogue",
-            "text": "Achievement two tests prioritization under pressure: save people and useful supplies instead of treating every enemy as the objective."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B00B-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH02-B00B-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Supply approach outside Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party forms a moving escort around the recovered wagons while skirmishers pressure the rear and flank."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the second report about reliability: MC keeps the route moving rather than breaking formation for kills."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B00B-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH02-B00B-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Supply approach outside Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Quartermaster",
-              "shortLabel": "Q",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Back inside Orléans, the quartermaster counts recovered food, bandages, arrows, and living drivers rather than enemy bodies."
-          },
-          {
-            "type": "dialogue",
-            "text": "Create an independent civilian/logistics report of competence. This can satisfy the second mandatory reputation source."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-REP-01."
-          }
-        ]
+        "available": true
       },
       "CH02-B00C-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Outer watch position near Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party reaches a damaged watch position and finds a handful of defenders pinned rather than destroyed."
-          },
-          {
-            "type": "dialogue",
-            "text": "Achievement three tests reading a bad situation quickly. The goal is to stabilize local defenders, not replace them as heroes."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B00C-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH02-B00C-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Outer watch position near Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party helps the watch hold just long enough to move the wounded and then breaks contact through a safer route."
-          },
-          {
-            "type": "dialogue",
-            "text": "Show restraint and coordination. MC's party enables the local soldiers to survive rather than taking over their post permanently."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B00C-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH02-B00C-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Outer watch position near Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Watch Sergeant",
-              "shortLabel": "WS",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The watch sergeant reports that the outsiders reinforced the post, moved the wounded, and withdrew cleanly. La Hire hears the report separately from the other missions."
-          },
-          {
-            "type": "dialogue",
-            "text": "This is a military witness independent of the courier and quartermaster accounts. If it is the second completed mission, the party has enough credibility to reach Dunois."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-REP-01."
-          }
-        ]
+        "available": true
+      },
+      "CH02-N02A-BEAT-01": {
+        "available": true
       },
       "CH02-N02A-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Dunois assigns the party to the supporting line for Saint-Loup. The offer is practical work and responsibility, not a title or privileged place in command."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the promotion social rather than formal: the party has become useful enough to receive real work and to be included in an operational briefing."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N03."
-          }
-        ]
+        "available": true
+      },
+      "CH02-N03-BEAT-01": {
+        "available": true
       },
       "CH02-N03-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans operational quarters",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Bradamante",
-              "shortLabel": "B",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Jeanne briefly speaks to MC's group while confirming the supporting line. She knows them from the reports, not because fate singled MC out."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the first direct exchange practical and short. Jeanne is tired, direct, and human; MC remains socially junior."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B01."
-          }
-        ]
+        "available": true
+      },
+      "CH02-B01-BEAT-01": {
+        "available": true
       },
       "CH02-B01-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Saint-Loup, Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Bradamante",
-              "shortLabel": "B",
-              "pose": "active"
-            },
-            "right": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Bradamante identifies a gap. MC's group helps widen and hold it long enough for more of the assault to pass."
-          },
-          {
-            "type": "dialogue",
-            "text": "Give MC a meaningful contribution inside a larger battle: recognize and exploit an opening without becoming the person who wins Saint-Loup alone."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH02-B01-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Saint-Loup, Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Saint-Loup falls. Cheers begin, but the wounded immediately turn victory into work."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make this the battle that spreads MC's reputation beyond the local witnesses while immediately complicating the idea of glory."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N05."
-          }
-        ]
+        "available": true
+      },
+      "CH02-N05-BEAT-01": {
+        "available": true
       },
       "CH02-N05-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "The Cost of Hope",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Jeanne briefly joins the casualty work after escaping another round of officers and civilians demanding certainty."
-          },
-          {
-            "type": "dialogue",
-            "text": "Build connection through shared labor and fatigue, not destiny or instant friendship."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B02."
-          }
-        ]
+        "available": true
+      },
+      "CH02-B02-BEAT-01": {
+        "available": true
       },
       "CH02-B02-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Loire crossings / Augustins",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Pressure rises on both sides of the crossing. La Hire carries orders while MC's group absorbs pressure and keeps movement possible."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make coordination, not raw victory, the middle turn of the battle."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B02-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH02-B02-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Loire crossings / Augustins",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Bradamante",
-              "shortLabel": "B",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "After sustained fighting the Augustins position gives way, but the force is exhausted and cannot pretend the next assault will be easy."
-          },
-          {
-            "type": "dialogue",
-            "text": "End with physical cost and the need for recovery before Tourelles rather than a clean victory montage."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N06."
-          }
-        ]
+        "available": true
+      },
+      "CH02-N06-BEAT-01": {
+        "available": true
       },
       "CH02-N06-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "French positions near the Loire",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC separates personal choice from political allegiance and chooses to return to the line because people will be left behind otherwise."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep MC's reason personal and consistent with the story so far; helping here does not mean swearing their life to France."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-B03."
-          }
-        ]
+        "available": true
+      },
+      "CH02-B03-BEAT-01": {
+        "available": true
+      },
+      "CH02-B03-BEAT-02": {
+        "available": true
       },
       "CH02-B03-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Tourelles, Orléans",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Jeanne later returns visibly bandaged. Her return restores morale enough for the final assault to resume; the battle is completed by the whole force."
-          },
-          {
-            "type": "dialogue",
-            "text": "Preserve the approved wound → hold/protect → bandaged return flow without supernatural recovery or solo-protagonist replacement."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH02-N08."
-          }
-        ]
+        "available": true
+      },
+      "CH02-N08-BEAT-01": {
+        "available": true
       },
       "CH02-N08-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Orléans",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC's party is now genuinely recognized after repeated local service and the major siege battles, but MC still has no formal rank and still wants answers about home."
-          },
-          {
-            "type": "dialogue",
-            "text": "Close the chapter with earned reputation and an open personal goal rather than instant belonging."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03."
-          }
-        ]
+        "available": true
+      },
+      "CH03-N01-BEAT-01": {
+        "available": true
+      },
+      "CH03-B01-BEAT-01": {
+        "available": true
       },
       "CH03-B01-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Jargeau",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The assault becomes a sustained contest over breaches and streets. MC operates as one proven fighter among the forward groups."
-          },
-          {
-            "type": "dialogue",
-            "text": "Avoid collapsing a whole siege assault into one line. Reputation now means dependable placement, not special command."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-B01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH03-B01-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Jargeau",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "William de la Pole, Earl of Suffolk",
-              "shortLabel": "WDL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Organized resistance collapses and Suffolk is captured. Victory immediately creates prisoners, wounded, and the next campaign problem."
-          },
-          {
-            "type": "dialogue",
-            "text": "End the battle on consequences instead of treating capture as a boss trophy."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N02."
-          }
-        ]
+        "available": true
+      },
+      "CH03-N02-BEAT-01": {
+        "available": true
       },
       "CH03-N02-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "After Jargeau",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JD",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Alençon now addresses the party without La Hire introducing them. A small disagreement over campaign pace follows while wounded are still being moved."
-          },
-          {
-            "type": "dialogue",
-            "text": "Recognition is now believable because Orléans and Jargeau produced repeated firsthand evidence."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N03."
-          }
-        ]
+        "available": true
+      },
+      "CH03-N03-BEAT-01": {
+        "available": true
+      },
+      "CH03-N03-BEAT-02": {
+        "available": true
+      },
+      "CH03-N04-BEAT-01": {
+        "available": true
       },
       "CH03-N04-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Road toward Patay",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean II d’Alençon",
-              "shortLabel": "JID",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "La Hire argues that waiting guarantees a prepared English line. The vanguard moves to make contact while the rest follows cautiously."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make Patay causality explicit: the opportunity exists because the French catch the withdrawal before deployment stabilizes."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-B02."
-          }
-        ]
+        "available": true
+      },
+      "CH03-B02-BEAT-01": {
+        "available": true
       },
       "CH03-B02-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Near Patay",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            },
-            "right": {
-              "character": "John Talbot",
-              "shortLabel": "JT",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Talbot tries to stabilize the defense while French pressure hits before the formation is ready."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep Talbot formidable even while circumstances turn sharply against him."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-B02-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH03-B02-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Near Patay",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "John Talbot",
-              "shortLabel": "JT",
-              "pose": "active"
-            },
-            "right": {
-              "character": "La Hire",
-              "shortLabel": "LH",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Talbot is captured. He remains composed enough to warn that one badly timed defeat does not end the war."
-          },
-          {
-            "type": "dialogue",
-            "text": "Give the battle an aftermath beat and preserve Talbot's weight as a future threat rather than a disposable boss."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH03-N05."
-          }
-        ]
+        "available": true
+      },
+      "CH03-N05-BEAT-01": {
+        "available": true
+      },
+      "CH03-N05-BEAT-02": {
+        "available": true
+      },
+      "CH03-N06-BEAT-01": {
+        "available": true
       },
       "CH04-N01-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Road from Reims toward the Île-de-France",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The army leaves Reims behind. Jeanne is already thinking about Paris, while MC discovers that coronation celebrations produced no new clue about Primora or Vaelkrath."
-          },
-          {
-            "type": "dialogue",
-            "text": "Turn the coronation high into forward pressure. MC stays because relationships now matter, not because the home problem vanished."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH04-N01-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Road from Reims toward the Île-de-France",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "At a roadside halt, light bends for an instant across a wagon's metal rim. This time Julie catches enough of the distortion to know MC did not simply imagine it."
-          },
-          {
-            "type": "dialogue",
-            "text": "Increase the anomaly clue slightly without naming, explaining, or making it useful."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-B01."
-          }
-        ]
+        "available": true
       },
       "CH04-B01-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Paris — Saint-Honoré approach",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The assault presses toward the Saint-Honoré defenses under heavy missile fire. The immediate problem is crossing exposed ground and finding a workable approach, not defeating every defender."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make Paris feel harder and less inevitable than the Loire victories."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-B01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH04-B01-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Paris — Saint-Honoré approach",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "During the stalled assault Jeanne is struck in the thigh and can no longer keep pressing the ditch. d’Aulon and nearby fighters move to get her clear while the line remains exposed."
-          },
-          {
-            "type": "dialogue",
-            "text": "Turn the battle honestly. The injury is serious enough to change the objective but is not supernatural or fatal."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-B01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH04-B01-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Paris — Saint-Honoré approach",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The assault is called off. The player must disengage the exposed forward group rather than continue an attack that no longer has a workable objective."
-          },
-          {
-            "type": "dialogue",
-            "text": "Let the loss remain a loss. Success means bringing people back after the assault fails."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N03."
-          }
-        ]
+        "available": true
       },
       "CH04-N03-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Northern France — campaign roads and winter quarters",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The story compresses months of reduced momentum: Paris is not retaken, large formations disperse, Jeanne recovers, and campaigning becomes smaller and less certain."
-          },
-          {
-            "type": "dialogue",
-            "text": "Show a real strategic slowdown without reducing it to one villainous decision or a simple betrayal narrative."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N03-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH04-N03-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 20
-        },
-        "staging": {
-          "background": "Northern France — campaign roads and winter quarters",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "During a quiet halt, MC and Jeanne compare two problems neither can simply solve: MC still cannot find home, and Jeanne cannot force the war to keep moving at the pace everyone once expected."
-          },
-          {
-            "type": "dialogue",
-            "text": "Deepen friendship through shared frustration rather than prophecy, romance, or cosmology exposition."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N03-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH04-N03-BEAT-03": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 20
-        },
-        "staging": {
-          "background": "Northern France — campaign roads and winter quarters",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "In May 1430, reports arrive that Compiègne is under Burgundian pressure. Jeanne prepares to move with a much smaller force than the army that marched to Reims."
-          },
-          {
-            "type": "dialogue",
-            "text": "Move causally into the capture campaign without pretending it has the resources or certainty of 1429."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N04."
-          }
-        ]
+        "available": true
       },
       "CH04-N04-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Compiègne",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Inside Compiègne, preparations are urgent and compact. There is no huge royal army waiting behind Jeanne this time."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the reduced scale visible before the sortie and keep local defenders important."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N04-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH04-N04-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Compiègne",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group crosses out toward the Burgundian positions near Margny with the return route visibly behind them."
-          },
-          {
-            "type": "dialogue",
-            "text": "Put the retreat route on screen before it matters so the later failure is legible rather than arbitrary."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-B02."
-          }
-        ]
+        "available": true
       },
       "CH04-B02-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Compiègne / Margny approaches",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The sortie attacks Burgundian pressure near Margny with a limited goal: disrupt the position and return before reinforcements can seal the route."
-          },
-          {
-            "type": "dialogue",
-            "text": "Start with an achievable limited objective, not a doomed battle disguised as a normal victory map."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-B02-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH04-B02-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Compiègne / Margny approaches",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Reinforcements press the sortie back. Jeanne and d’Aulon remain near the rear while other units stream toward the fortified crossing."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the capture emerge from a collapsing retreat, not from a cutscene that ignores a successful map objective."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-B02-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH04-B02-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Compiègne / Margny approaches",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The rear guard loses practical access to the crossing. MC tries to reach Jeanne, but Burgundian troops split the field and the available path closes faster than the party can reopen it."
-          },
-          {
-            "type": "dialogue",
-            "text": "The player is allowed to try. The game then states plainly when the rescue route is no longer achievable in this encounter."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-B02-BEAT-04."
-          }
-        ]
+        "available": true
       },
       "CH04-B02-BEAT-04": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 20
-        },
-        "staging": {
-          "background": "Compiègne / Margny approaches",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jean d’Aulon",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "From beyond the severed route, MC sees Jeanne pulled from her horse and taken. d’Aulon is captured with the remaining rear group. The surviving party must leave before it is surrounded as well."
-          },
-          {
-            "type": "dialogue",
-            "text": "End on an earned failure state. John of Luxembourg enters through the custody chain, not as a theatrical personal captor."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N06."
-          }
-        ]
+        "available": true
       },
       "CH04-N06-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Road south of Compiègne",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The survivors regroup far enough from Compiègne to stop running. Nobody celebrates surviving the map."
-          },
-          {
-            "type": "dialogue",
-            "text": "Let the failure remain emotionally and mechanically legible."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH04-N06-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH04-N06-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 24
-        },
-        "staging": {
-          "background": "Road south of Compiègne",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "A report identifies Jeanne as a high-value Burgundian prisoner associated with John of Luxembourg's forces. MC stops thinking in terms of rejoining the campaign and starts thinking in terms of finding her."
-          },
-          {
-            "type": "dialogue",
-            "text": "Turn the saga from campaign adventure into personal rescue pressure without pretending the party can immediately storm the captors."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05."
-          }
-        ]
+        "available": true
       },
       "CH05-N01-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Northern France",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party tracks contradictory reports as Jeanne is moved through Burgundian custody. Leads arrive late, routes change, and every castle rumor is already old by the time they reach it."
-          },
-          {
-            "type": "dialogue",
-            "text": "Replace open-field campaign certainty with frustrating information work."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH05-N01-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 20
-        },
-        "staging": {
-          "background": "Northern France",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Informant",
-              "shortLabel": "I",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party confirms that the English have acquired Jeanne from the Burgundian custody chain for a large ransom-equivalent payment and are taking her toward Rouen."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep John of Luxembourg and the transfer political and transactional rather than melodramatic personal villainy."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH05-N01-BEAT-03": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Northern France",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group reduces what it carries and plans for a hostile city controlled by the English. A marching army would end the attempt before it starts."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the genre shift explicit: information, access, and escape routes matter more than battlefield strength."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-B01."
-          }
-        ]
+        "available": true
       },
       "CH05-B01-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Road and river approaches outside Rouen",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Local Contact",
-              "shortLabel": "LC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "A local contact has papers that can place part of the group inside Rouen, but a patrol sweep closes across the approach before they reach the gate traffic."
-          },
-          {
-            "type": "dialogue",
-            "text": "Frame the fictional operation around access. Killing the patrol is neither necessary nor desirable."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-B01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH05-B01-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Road and river approaches outside Rouen",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group uses terrain and traffic to separate from the patrol instead of turning the approach into an open battle that would close the city to them."
-          },
-          {
-            "type": "dialogue",
-            "text": "Reward restraint and route control, fitting the smaller Rouen chapter scale."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-B01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH05-B01-BEAT-03": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Road and river approaches outside Rouen",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Local Contact",
-              "shortLabel": "LC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The papers and contact get part of the group through ordinary gate traffic. Weapons are concealed or left with the outer support team as planned."
-          },
-          {
-            "type": "dialogue",
-            "text": "End with access gained, not an implausible military victory over Rouen."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N03."
-          }
-        ]
+        "available": true
       },
       "CH05-N03-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Rouen",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Local Contact",
-              "shortLabel": "LC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group maps ordinary traffic around the English castle and learns that Jeanne is held under English military guard rather than in a normal church prison."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the physical rescue problem concrete before the trial scenes begin."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N03-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH05-N03-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Rouen",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Pierre Cauchon",
-              "shortLabel": "PC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Richard Beauchamp, Earl of Warwick",
-              "shortLabel": "RBE",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Through public movement and overheard official business, the party identifies Pierre Cauchon as the bishop directing the case and Warwick as a major English authority over the castle environment. They do not gain private access to either man."
-          },
-          {
-            "type": "dialogue",
-            "text": "Introduce only the named authorities needed for the next conflict; avoid a villain roll-call."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N04."
-          }
-        ]
+        "available": true
       },
       "CH05-N04-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 20
-        },
-        "staging": {
-          "background": "Rouen Castle",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Pierre Cauchon",
-              "shortLabel": "PC",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Clerks",
-              "shortLabel": "C",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "On 21 February Jeanne is brought before Cauchon and a large body of assessors in the castle chapel. The scene focuses on pressure, procedure, and Jeanne's refusal to hand over every private conviction on demand."
-          },
-          {
-            "type": "dialogue",
-            "text": "Preserve religious ambiguity. Her voices are her claims and faith experience; the narrative does not re-label them as Fracture messages."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N04-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH05-N04-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 20
-        },
-        "staging": {
-          "background": "Rouen Castle",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Local Contact",
-              "shortLabel": "LC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC cannot simply attend every proceeding. The group reconstructs what it can from public sessions, clerks, servants, guards, and city rumor while continuing to study prison access."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep MC's access earned and partial. The historical trial remains larger than the protagonist's viewpoint."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N05."
-          }
-        ]
+        "available": true
       },
       "CH05-N05-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Rouen Castle — service corridor near Jeanne's cell",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Local Contact",
-              "shortLabel": "LC",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party uses a service movement window to place MC near Jeanne's cell while Julie watches the corridor. The route is too exposed to move a prisoner through it."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the reunion costly and limited before it becomes emotional."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N05-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH05-N05-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 32
-        },
-        "staging": {
-          "background": "Rouen Castle — service corridor near Jeanne's cell",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC and Jeanne see each other through the secured cell boundary. Jeanne is worn down by confinement and questioning but refuses to become a passive object in MC's rescue fantasy."
-          },
-          {
-            "type": "dialogue",
-            "text": "Reunite them as friends. Jeanne can be afraid and tired while still retaining agency, faith, and judgment."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N05-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH05-N05-BEAT-03": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 16
-        },
-        "staging": {
-          "background": "Rouen Castle — service corridor near Jeanne's cell",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "English guards",
-              "shortLabel": "EG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The guard rhythm changes early and the group abandons the service route before it is exposed. The meeting proves Jeanne is reachable, but not yet extractable."
-          },
-          {
-            "type": "dialogue",
-            "text": "End with a concrete problem to solve rather than false hope."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-B02."
-          }
-        ]
+        "available": true
       },
       "CH05-B02-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Rouen Castle service approaches",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party enters through the one service route it has mapped and tries to reach the inner corridor before the next guard rotation."
-          },
-          {
-            "type": "dialogue",
-            "text": "Treat this as a desperate covert extraction, not an invented siege of Rouen Castle."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-B02-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH05-B02-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Rouen Castle service approaches",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "A reinforced guard movement seals the corridor needed to reach Jeanne's cell, while another patrol begins closing the route behind the party."
-          },
-          {
-            "type": "dialogue",
-            "text": "Fail the extraction because the physical route becomes untenable, not because a cutscene arbitrarily cancels a successful objective."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-B02-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "CH05-B02-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 150
-        },
-        "staging": {
-          "background": "Rouen Castle service approaches",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party fights only enough to reopen its exit and breaks away before a full castle alarm traps everyone inside Rouen."
-          },
-          {
-            "type": "dialogue",
-            "text": "The attempt fails, but preserving the rescue team leaves one final desperate option for the next chapter."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N07."
-          }
-        ]
+        "available": true
       },
       "CH05-N07-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 20
-        },
-        "staging": {
-          "background": "Rouen",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Before sunrise the contact brings the news the party feared: Jeanne is to be taken out for execution that morning."
-          },
-          {
-            "type": "dialogue",
-            "text": "Collapse the remaining timetable without beginning the Finale early."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to CH05-N07-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "CH05-N07-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 28
-        },
-        "staging": {
-          "background": "Rouen",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "M",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HG",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The group abandons every remaining assumption about a clean extraction and prepares to intercept the execution movement itself."
-          },
-          {
-            "type": "dialogue",
-            "text": "Hand cleanly into the revised Finale. Do not reveal the later world-like call, unknown antagonist, or Fracture before Jeanne is rescued."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN."
-          }
-        ]
+        "available": true
       },
       "FIN-N01-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 30
-        },
-        "staging": {
-          "background": "Rouen — Vieux-Marché approaches",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Crowds compress the streets around Vieux-Marché while Jeanne is moved under guard. MC’s group stays split among ordinary movement until they can see the custody route clearly."
-          },
-          {
-            "type": "dialogue",
-            "text": "Keep the opening human and immediate. Nobody knows a cosmic event is coming; the only goal is reaching Jeanne before the execution proceeds."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-N01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "FIN-N01-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 30
-        },
-        "staging": {
-          "background": "Rouen — Vieux-Marché approaches",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The outer lane is still open, but the guard formation is tightening around Jeanne. Waiting any longer improves the guards’ position rather than the party’s."
-          },
-          {
-            "type": "dialogue",
-            "text": "Turn the chapter handoff into a clear voluntary commitment, not a surprise encounter or miracle opening."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-B01."
-          }
-        ]
+        "available": true
       },
       "FIN-B01-BEAT-01": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Rouen — Vieux-Marché",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party breaks from the crowd and opens one narrow route toward Jeanne. The goal is contact, not defeating every guard in the square."
-          },
-          {
-            "type": "dialogue",
-            "text": "Make the first phase focused and legible: one road to Jeanne, with the group covering different pressures rather than becoming an army."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-B01-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "FIN-B01-BEAT-02": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Rouen — Vieux-Marché",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JEA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party reaches Jeanne. The objective changes immediately from approach to freeing her and preserving the retreat lane."
-          },
-          {
-            "type": "dialogue",
-            "text": "Let the reunion land quickly without stopping the battle for a long speech."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-B01-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "FIN-B01-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Rouen — Vieux-Marché",
-          "camera": "Tactical overview → event focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Hangaku Gozen",
-              "shortLabel": "HAN",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Jeanne is freed and the party clears the execution point. Only after the human rescue succeeds does an impossible distant tone begin beneath the city noise."
-          },
-          {
-            "type": "dialogue",
-            "text": "The rescue is real. The supernatural turn starts afterward rather than revoking success."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-B02."
-          }
-        ]
+        "available": true
       },
       "FIN-B02-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 30
-        },
-        "staging": {
-          "background": "Rouen — streets beyond Vieux-Marché",
-          "camera": "Retreating street frame → guided horizon reveal",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JEA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "A low impossible tone cuts through the ordinary pursuit and guides the party toward a quieter route and broad final view."
-          },
-          {
-            "type": "dialogue",
-            "text": "The unknown world-like voice addresses MC as Rookie and asks only to be heard; no prophecy or cosmology explanation."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-B02-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "FIN-B02-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 26
-        },
-        "staging": {
-          "background": "Rouen — fractured horizon vista",
-          "camera": "Wide antagonist silhouette → deliberate Fracture opening",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Unknown Figure",
-              "shortLabel": "???",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JEA",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "An unknown figure deliberately opens a large refractive Fracture, notices the arriving party, and crosses without explanation."
-          },
-          {
-            "type": "dialogue",
-            "text": "Do not name, explain, or assign a final form to the main antagonist here."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-B02-BEAT-03."
-          }
-        ]
+        "available": true
       },
       "FIN-B02-BEAT-03": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Rouen — fractured horizon vista",
-          "camera": "Tactical overview → unstable passage pressure",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JEA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "Hostile fractured forms and pressure spill into the route after the antagonist crosses."
-          },
-          {
-            "type": "dialogue",
-            "text": "Preserve supernatural gameplay pressure without calling it Correction or saying the world is enforcing Jeanne’s death."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-B02-BEAT-04."
-          }
-        ]
+        "available": true
       },
       "FIN-B02-BEAT-04": {
-        "timing": {
-          "mode": "player",
-          "minSeconds": 25,
-          "maxSeconds": 120
-        },
-        "staging": {
-          "background": "Rouen — edge of the antagonist-opened Fracture",
-          "camera": "Battle pressure → voice/portal focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JEA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The party reaches the still-open passage while the world-like voice becomes clearer."
-          },
-          {
-            "type": "dialogue",
-            "text": "The voice says the world is breaking, cannot stop them alone, and asks the Rookie to follow. MC chooses pursuit."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-N03."
-          }
-        ]
+        "available": true
       },
       "FIN-N03-BEAT-01": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 30
-        },
-        "staging": {
-          "background": "Rouen — edge of the antagonist-opened Fracture",
-          "camera": "Scene framing → narrowing passage",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JEA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "The antagonist-opened Fracture is narrowing. Its destination is unknown, but the antagonist’s route through it is certain."
-          },
-          {
-            "type": "dialogue",
-            "text": "Frame the crossing as chosen pursuit and the first concrete lead, not random escape or guaranteed home."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to FIN-N03-BEAT-02."
-          }
-        ]
+        "available": true
       },
       "FIN-N03-BEAT-02": {
-        "timing": {
-          "mode": "advance",
-          "estimatedSeconds": 30
-        },
-        "staging": {
-          "background": "Fractured Rouen — edge of the new Fracture",
-          "camera": "Scene framing → character focus",
-          "slots": {
-            "left": {
-              "character": "MC",
-              "shortLabel": "MC",
-              "pose": "active"
-            },
-            "center": {
-              "character": "Jeanne d’Arc",
-              "shortLabel": "JEA",
-              "pose": "active"
-            },
-            "right": {
-              "character": "Julie d’Aubigny",
-              "shortLabel": "JUL",
-              "pose": "active"
-            }
-          }
-        },
-        "events": [
-          {
-            "type": "action",
-            "text": "MC refuses to decide for Jeanne. Jeanne considers the narrowing antagonist-opened Fracture and chooses to step beside MC."
-          },
-          {
-            "type": "dialogue",
-            "text": "End Saga I on Jeanne’s independent agency and MC’s chosen pursuit; supporting crossings and destination remain unresolved."
-          },
-          {
-            "type": "transition",
-            "text": "Continue to TBD-SAGA-II."
-          }
-        ]
+        "available": true
       }
     }
   },
@@ -6368,449 +1617,6 @@
         }
       ]
     },
-    "terrain": {
-      "blockedCells": [
-        {
-          "x": 0,
-          "y": 0
-        },
-        {
-          "x": 1,
-          "y": 0
-        },
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        },
-        {
-          "x": 0,
-          "y": 2
-        },
-        {
-          "x": 1,
-          "y": 2
-        },
-        {
-          "x": 2,
-          "y": 2
-        },
-        {
-          "x": 3,
-          "y": 2
-        },
-        {
-          "x": 4,
-          "y": 2
-        },
-        {
-          "x": 5,
-          "y": 2
-        },
-        {
-          "x": 0,
-          "y": 3
-        },
-        {
-          "x": 1,
-          "y": 3
-        },
-        {
-          "x": 2,
-          "y": 3
-        },
-        {
-          "x": 5,
-          "y": 3
-        },
-        {
-          "x": 6,
-          "y": 3
-        },
-        {
-          "x": 15,
-          "y": 0
-        },
-        {
-          "x": 16,
-          "y": 0
-        },
-        {
-          "x": 17,
-          "y": 0
-        },
-        {
-          "x": 15,
-          "y": 1
-        },
-        {
-          "x": 16,
-          "y": 1
-        },
-        {
-          "x": 17,
-          "y": 1
-        },
-        {
-          "x": 16,
-          "y": 2
-        },
-        {
-          "x": 17,
-          "y": 2
-        },
-        {
-          "x": 0,
-          "y": 9
-        },
-        {
-          "x": 1,
-          "y": 9
-        },
-        {
-          "x": 8,
-          "y": 9
-        },
-        {
-          "x": 9,
-          "y": 9
-        },
-        {
-          "x": 10,
-          "y": 9
-        },
-        {
-          "x": 11,
-          "y": 9
-        },
-        {
-          "x": 12,
-          "y": 9
-        },
-        {
-          "x": 13,
-          "y": 9
-        },
-        {
-          "x": 14,
-          "y": 9
-        },
-        {
-          "x": 15,
-          "y": 9
-        },
-        {
-          "x": 16,
-          "y": 9
-        },
-        {
-          "x": 17,
-          "y": 9
-        },
-        {
-          "x": 0,
-          "y": 10
-        },
-        {
-          "x": 1,
-          "y": 10
-        },
-        {
-          "x": 2,
-          "y": 10
-        },
-        {
-          "x": 8,
-          "y": 10
-        },
-        {
-          "x": 9,
-          "y": 10
-        },
-        {
-          "x": 10,
-          "y": 10
-        },
-        {
-          "x": 11,
-          "y": 10
-        },
-        {
-          "x": 12,
-          "y": 10
-        },
-        {
-          "x": 13,
-          "y": 10
-        },
-        {
-          "x": 14,
-          "y": 10
-        },
-        {
-          "x": 15,
-          "y": 10
-        },
-        {
-          "x": 16,
-          "y": 10
-        },
-        {
-          "x": 17,
-          "y": 10
-        },
-        {
-          "x": 0,
-          "y": 11
-        },
-        {
-          "x": 1,
-          "y": 11
-        },
-        {
-          "x": 2,
-          "y": 11
-        },
-        {
-          "x": 3,
-          "y": 11
-        },
-        {
-          "x": 8,
-          "y": 11
-        },
-        {
-          "x": 9,
-          "y": 11
-        },
-        {
-          "x": 10,
-          "y": 11
-        },
-        {
-          "x": 11,
-          "y": 11
-        },
-        {
-          "x": 12,
-          "y": 11
-        },
-        {
-          "x": 13,
-          "y": 11
-        },
-        {
-          "x": 14,
-          "y": 11
-        },
-        {
-          "x": 15,
-          "y": 11
-        },
-        {
-          "x": 16,
-          "y": 11
-        },
-        {
-          "x": 17,
-          "y": 11
-        }
-      ],
-      "elevationCells": [
-        {
-          "x": 8,
-          "y": 1,
-          "level": 1
-        },
-        {
-          "x": 9,
-          "y": 1,
-          "level": 1
-        },
-        {
-          "x": 10,
-          "y": 1,
-          "level": 1
-        },
-        {
-          "x": 11,
-          "y": 1,
-          "level": 1
-        },
-        {
-          "x": 8,
-          "y": 2,
-          "level": 1
-        },
-        {
-          "x": 9,
-          "y": 2,
-          "level": 1
-        },
-        {
-          "x": 10,
-          "y": 2,
-          "level": 1
-        },
-        {
-          "x": 11,
-          "y": 2,
-          "level": 1
-        },
-        {
-          "x": 12,
-          "y": 2,
-          "level": 1
-        },
-        {
-          "x": 9,
-          "y": 3,
-          "level": 1
-        },
-        {
-          "x": 10,
-          "y": 3,
-          "level": 1
-        },
-        {
-          "x": 11,
-          "y": 3,
-          "level": 1
-        },
-        {
-          "x": 12,
-          "y": 3,
-          "level": 1
-        }
-      ],
-      "movementCost": {
-        "default": 1,
-        "exceptions": [],
-        "note": "No difficult-ground cost is frozen for this candidate. Functional-region labels are descriptive only."
-      }
-    },
-    "cart": {
-      "status": "candidate-objective-footprint",
-      "footprint": {
-        "width": 2,
-        "height": 1,
-        "orientation": "east-west",
-        "anchorMeaning": "western occupied cell"
-      },
-      "startAnchor": {
-        "x": 4,
-        "y": 6
-      },
-      "routeAnchors": [
-        {
-          "x": 4,
-          "y": 6
-        },
-        {
-          "x": 5,
-          "y": 6
-        },
-        {
-          "x": 6,
-          "y": 6
-        },
-        {
-          "x": 7,
-          "y": 6
-        },
-        {
-          "x": 8,
-          "y": 6
-        },
-        {
-          "x": 9,
-          "y": 6
-        },
-        {
-          "x": 10,
-          "y": 6
-        },
-        {
-          "x": 11,
-          "y": 6
-        },
-        {
-          "x": 12,
-          "y": 6
-        },
-        {
-          "x": 12,
-          "y": 5
-        },
-        {
-          "x": 13,
-          "y": 5
-        },
-        {
-          "x": 14,
-          "y": 5
-        },
-        {
-          "x": 15,
-          "y": 5
-        },
-        {
-          "x": 16,
-          "y": 5
-        }
-      ],
-      "exitZone": [
-        {
-          "x": 16,
-          "y": 4
-        },
-        {
-          "x": 16,
-          "y": 5
-        },
-        {
-          "x": 16,
-          "y": 6
-        },
-        {
-          "x": 17,
-          "y": 4
-        },
-        {
-          "x": 17,
-          "y": 5
-        },
-        {
-          "x": 17,
-          "y": 6
-        }
-      ],
-      "clearanceRule": "For every route anchor, both the anchor cell and the adjacent eastern footprint cell must be in bounds and unblocked.",
-      "runtimeGap": "Current production battlefield placement is single-square active-entity occupancy. Cart movement/footprint/objective semantics are not yet implemented and remain title-local work after layout acceptance."
-    },
     "deployment": {
       "initial": [
         {
@@ -6971,29 +1777,7 @@
           "note": "Side entry is intentionally separated from the west road so the intervention reads as a flank rather than a rear spawn."
         }
       ]
-    },
-    "phaseAnnotations": [
-      {
-        "beatId": "CH01-B01-BEAT-01",
-        "geometryIntent": "Initial pressure comes from the central/eastern road while civilians cluster behind the cart on the west approach."
-      },
-      {
-        "beatId": "CH01-B01-BEAT-02",
-        "geometryIntent": "Hangaku enters from the north ridge and interrupts a threat without requiring this layout to define universal cover or LoS rules."
-      },
-      {
-        "beatId": "CH01-B01-BEAT-03",
-        "geometryIntent": "Rear pressure appears from the south-west track, then La Hire enters from the southern side and creates room to disengage."
-      },
-      {
-        "beatId": "CH01-B01-BEAT-04",
-        "geometryIntent": "The combat focus shifts from holding the cart to moving the cart/civilians along the two-cell-wide road into the east exit zone."
-      },
-      {
-        "beatId": "CH01-B01-BEAT-05",
-        "geometryIntent": "No new battle geometry; post-battle identity reveal occurs after the party clears the danger area."
-      }
-    ]
+    }
   },
   "runtimeManifest": {
     "schemaVersion": 1,
