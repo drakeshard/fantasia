@@ -2,7 +2,7 @@ import { mkdir } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?lab=1");
   await expect(page.getByRole("heading", { name: "Fantasia Content Studio" })).toBeVisible();
 });
 

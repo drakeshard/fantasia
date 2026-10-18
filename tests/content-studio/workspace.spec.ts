@@ -2,7 +2,7 @@ import { mkdir } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?lab=1");
   await expect(page.getByTestId("workspace-lab")).toBeVisible();
 });
 
@@ -33,7 +33,7 @@ test("shell exposes exactly the frozen top-level modules without fake routing", 
     "aria-current",
     "page",
   );
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/?lab=1$/);
 });
 
 test("sidebar collapse preserves usable navigation and narrow layouts keep mobile navigation", async ({
