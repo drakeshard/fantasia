@@ -25,40 +25,6 @@ async function openDetails(page: Page) {
   return details;
 }
 
-async function dragStressCanvas(
-  page: Page,
-  startX: number,
-  startY: number,
-  hasTouch: boolean,
-): Promise<void> {
-  if (hasTouch) {
-    const session = await page.context().newCDPSession(page);
-    try {
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [{ x: startX, y: startY }],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [{ x: startX + 40, y: startY + 15 }],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [{ x: startX + 80, y: startY + 30 }],
-      });
-      await session.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-    } finally {
-      await session.detach();
-    }
-    return;
-  }
-
-  await page.mouse.move(startX, startY);
-  await page.mouse.down();
-  await page.mouse.move(startX + 80, startY + 30, { steps: 3 });
-  await page.mouse.up();
-}
-
 test("GAME-MAP05 renders all 600 stress cells across the full elevation range", async ({
   page,
 }) => {
@@ -75,8 +41,13 @@ test("GAME-MAP05 renders all 600 stress cells across the full elevation range", 
 });
 
 test(
-  "GAME-MAP05 keeps camera controls and drag-pan usable at stress size",
+  "GAME-MAP05 keeps desktop camera controls and drag-pan usable at stress size",
   async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.use.hasTouch === true,
+      "Touch camera parity is owned by the canonical map review; MAP05 only needs stress-size interaction coverage.",
+    );
+
     const { host, canvas } = await openStressReview(page);
 
     await expect(host).toHaveAttribute("data-camera-rotation", "0");
@@ -93,7 +64,10 @@ test(
     if (!box) throw new Error("Stress map canvas has no bounding box");
     const startX = box.x + box.width * 0.42;
     const startY = box.y + box.height * 0.62;
-    await dragStressCanvas(page, startX, startY, testInfo.project.use.hasTouch === true);
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(startX + 80, startY + 30, { steps: 3 });
+    await page.mouse.up();
     await expect(host).not.toHaveAttribute("data-camera-pan", "0,0");
   },
 );
