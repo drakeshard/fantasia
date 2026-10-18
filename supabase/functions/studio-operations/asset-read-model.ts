@@ -14,9 +14,14 @@ export interface RegistryAssetRelationRecord {
   readonly target_asset_id: string;
 }
 
-export interface AssetWorkspaceRegistrySnapshot extends RegistrySnapshot {
+type AssetChangeEvent = RegistrySnapshot["changeEvents"][number] & {
+  readonly asset_version_id: string | null;
+};
+
+export type AssetWorkspaceRegistrySnapshot = Omit<RegistrySnapshot, "changeEvents"> & {
   readonly assetRelations: readonly RegistryAssetRelationRecord[];
-}
+  readonly changeEvents: readonly AssetChangeEvent[];
+};
 
 export interface StudioAssetVersionSummary {
   readonly versionId: string;
