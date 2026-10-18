@@ -62,6 +62,8 @@ jobs:
           visual=false
           story=false
           full=false
+          lockfile_changed=false
+          dependency_scope=false
 
           for path in "${changed[@]}"; do
             case "$path" in
@@ -77,13 +79,25 @@ jobs:
                 ;;
             esac
 
-            # Shared bootstrap/tooling affects the npm-backed core/player/Studio paths, not Story Studio.
+            # Shared bootstrap/workspace tooling affects the npm-backed core/player/Studio paths, not Story Studio.
             case "$path" in
-              .github/actions/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|biome.json|tsconfig*.json)
+              .github/actions/*|package.json|pnpm-workspace.yaml|tsconfig*.json)
                 verify=true
                 game=true
                 studio=true
                 visual=true
+                ;;
+            esac
+
+            case "$path" in
+              package.json)
+                dependency_scope=true
+                ;;
+              pnpm-lock.yaml)
+                lockfile_changed=true
+                ;;
+              biome.json)
+                verify=true
                 ;;
             esac
 
@@ -118,12 +132,18 @@ jobs:
               packages/game/*|packages/runtime/*)
                 game=true
                 ;;
+              packages/game/package.json|packages/runtime/package.json)
+                dependency_scope=true
+                ;;
             esac
 
             # Player application and player browser tests.
             case "$path" in
               apps/web/*|tests/e2e/*|playwright.config.ts|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
                 game=true
+                ;;
+              apps/web/package.json)
+                dependency_scope=true
                 ;;
             esac
 
@@ -138,6 +158,9 @@ jobs:
             case "$path" in
               apps/content-studio/*|tests/content-studio/*|playwright.content-studio.config.ts|.github/workflows/deploy-content-studio.yml|wrangler.content-studio.jsonc|scripts/check-content-studio-deployment.mjs|scripts/check-studio-registry.mjs|scripts/check-studio-auth.mjs|scripts/check-studio-read-model.mjs|scripts/check-studio-canonical-change.mjs|scripts/generate-studio-canonical-snapshot.mjs)
                 studio=true
+                ;;
+              apps/content-studio/package.json)
+                dependency_scope=true
                 ;;
             esac
 
@@ -186,6 +209,16 @@ jobs:
             esac
           done
 
+          # A normal dependency update changes a package manifest plus the shared lockfile.
+          # Let the manifest own the surface routing. A lockfile-only edit has no owner signal,
+          # so validate every npm-backed surface conservatively without dragging in Story Studio.
+          if [[ "$lockfile_changed" == "true" && "$dependency_scope" != "true" ]]; then
+            verify=true
+            game=true
+            studio=true
+            visual=true
+          fi
+
           if [[ "$full" == "true" ]]; then
             verify=true
             game=true
@@ -208,7 +241,7 @@ jobs:
             echo "story=$story"
           } >> "$GITHUB_OUTPUT"
 
-          echo "Selected: verify=$verify web=$web game=$game studio=$studio visual=$visual story=$story full=$full"
+          echo "Selected: verify=$verify web=$web game=$game studio=$studio visual=$visual story=$story full=$full lockfile=$lockfile_changed dependency_scope=$dependency_scope"
 
   verify:
     name: Fast verification
