@@ -36,6 +36,10 @@
   --studio-accent-primary: var(--studio-color-brass-300);
   --studio-accent-navigation: var(--studio-color-cyan-300);
   --studio-focus-ring: var(--studio-color-focus-300);
+  --studio-app-background:
+    radial-gradient(circle at 78% -8%, rgb(65 116 178 / 18%), transparent 34rem),
+    radial-gradient(circle at 8% 78%, rgb(33 114 139 / 10%), transparent 32rem),
+    linear-gradient(145deg, #050b12 0%, #08121c 46%, #0b1723 72%, #07111a 100%);
 
   /* Frozen Layer 3A–3D material vocabulary. */
   --studio-material-canvas: linear-gradient(145deg, #0b1420 0%, #101d2b 48%, #0d1825 100%);
@@ -85,12 +89,4 @@
   --studio-runtime-ready: #9ed9b8;
   --studio-runtime-published: var(--studio-color-brass-300);
   --studio-runtime-verification-warning: var(--studio-color-amber-300);
-}
-
-[data-studio-theme="fantasia-midnight"] body {
-  background:
-    radial-gradient(circle at 78% -8%, rgb(65 116 178 / 18%), transparent 34rem),
-    radial-gradient(circle at 8% 78%, rgb(33 114 139 / 10%), transparent 32rem),
-    linear-gradient(145deg, #050b12 0%, #08121c 46%, #0b1723 72%, #07111a 100%);
-  background-attachment: fixed;
 }
