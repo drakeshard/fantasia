@@ -1,75 +1,58 @@
 .studio-auth-gate {
-  min-height: 100vh;
   display: grid;
+  min-height: 100vh;
   place-items: center;
-  padding: clamp(24px, 6vw, 72px);
-  background:
-    radial-gradient(circle at 18% 12%, rgb(64 106 151 / 18%), transparent 36%),
-    radial-gradient(circle at 82% 88%, rgb(105 64 132 / 14%), transparent 42%),
-    var(--studio-surface-canvas);
+  padding: clamp(var(--studio-space-24), 6vw, 4.5rem);
+  background: var(--studio-material-canvas);
 }
 
 .studio-auth-card {
-  width: min(100%, 520px);
   display: grid;
-  gap: 18px;
-  padding: clamp(24px, 5vw, 40px);
+  width: min(100%, 32.5rem);
+  gap: var(--studio-space-18);
+  padding: clamp(var(--studio-space-24), 5vw, var(--studio-space-40));
 }
 
 .studio-auth-card h1,
-.studio-auth-card p {
-  margin: 0;
-}
+.studio-auth-card p { margin: 0; }
 
 .studio-auth-card h1 {
+  color: var(--studio-text-primary);
+  font-family: var(--studio-font-serif);
   font-size: clamp(1.65rem, 4vw, 2.35rem);
 }
 
 .studio-auth-card > p:not(.studio-auth-eyebrow) {
   color: var(--studio-text-secondary);
-  line-height: 1.6;
+  line-height: var(--studio-line-height-body);
 }
 
 .studio-auth-eyebrow {
   color: var(--studio-accent-primary);
-  font-size: 0.74rem;
+  font-size: var(--studio-font-size-meta);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
-.studio-auth-form {
-  display: grid;
-  gap: 14px;
-}
-
-.studio-production-root {
-  min-height: 100vh;
-}
-
-.studio-production-root .studio-shell__fixture-note {
-  display: none;
-}
+.studio-auth-form { display: grid; gap: var(--studio-space-14); }
+.studio-production-root { min-height: 100vh; }
 
 .studio-session-card {
   display: grid;
-  min-width: min(260px, 32vw);
-  gap: 3px;
-  padding: 10px 12px;
+  min-width: min(16.25rem, 32vw);
+  gap: var(--studio-space-4);
+  padding: var(--studio-space-10) var(--studio-space-12);
 }
 
 .studio-session-card > span {
   color: var(--studio-accent-primary);
-  font-size: 0.78rem;
+  font-size: var(--studio-font-size-meta);
   font-weight: 700;
 }
 
-.studio-session-card > small {
-  color: var(--studio-text-secondary);
-}
+.studio-session-card > small { color: var(--studio-text-secondary); }
 
-@media (max-width: 768px) {
-  .studio-session-card {
-    min-width: 0;
-  }
+@media (max-width: 48rem) {
+  .studio-session-card { min-width: 0; }
 }

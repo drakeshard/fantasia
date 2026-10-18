@@ -1,105 +1,9 @@
-:root,
-[data-studio-theme="fantasia-midnight"] {
-  color-scheme: dark;
-
-  --studio-color-midnight-950: #0b1118;
-  --studio-color-midnight-900: #101923;
-  --studio-color-midnight-800: #192736;
-  --studio-color-midnight-700: #243749;
-  --studio-color-midnight-650: #2c4256;
-  --studio-color-ivory-100: #f4f0e7;
-  --studio-color-slate-200: #bbc6d2;
-  --studio-color-slate-400: #718394;
-  --studio-color-brass-300: #e2be78;
-  --studio-color-focus-300: #9acbff;
-  --studio-color-cyan-300: #62d7f4;
-  --studio-color-mint-300: #82cfbd;
-  --studio-color-red-300: #f59c9c;
-  --studio-color-amber-300: #e8c77b;
-  --studio-color-violet-300: #c1afe8;
-  --studio-color-blue-300: #88bde8;
-  --studio-color-gray-300: #98a4b0;
-
-  /* Stable semantic surface fallbacks. Material roles below layer over these values. */
-  --studio-surface-canvas: var(--studio-color-midnight-900);
-  --studio-surface-panel: var(--studio-color-midnight-800);
-  --studio-surface-raised: var(--studio-color-midnight-700);
-  --studio-surface-overlay: var(--studio-color-midnight-650);
-  --studio-text-primary: var(--studio-color-ivory-100);
-  --studio-text-secondary: var(--studio-color-slate-200);
-  --studio-text-muted: var(--studio-color-slate-400);
-  --studio-text-on-accent: #18202a;
-  --studio-border-subtle: color-mix(in srgb, var(--studio-color-slate-400) 42%, transparent);
-  --studio-border-control: var(--studio-color-slate-400);
-  --studio-border-luminous-subtle: color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 24%,
-    var(--studio-border-subtle)
-  );
-  --studio-accent-primary: var(--studio-color-brass-300);
-  --studio-accent-navigation: var(--studio-color-cyan-300);
-  --studio-focus-ring: var(--studio-color-focus-300);
-
+:root {
   /*
-   * Frozen Layer 3A–3D material vocabulary.
-   * These are deliberately restrained layered navy materials, not transparent SaaS cards.
-   * Solid semantic fallbacks above remain available when compositing/blur is unsupported.
+   * Content Studio structural token contract.
+   * Theme-neutral: palette, semantic colors, materials and component paint belong
+   * to theme-fantasia-midnight.css.
    */
-  --studio-material-canvas: linear-gradient(145deg, #0b1420 0%, #101d2b 48%, #0d1825 100%);
-  --studio-material-panel: linear-gradient(
-    180deg,
-    rgb(31 57 82 / 96%) 0%,
-    rgb(22 42 62 / 97%) 52%,
-    rgb(16 32 49 / 98%) 100%
-  );
-  --studio-material-raised: linear-gradient(
-    180deg,
-    rgb(42 72 99 / 90%) 0%,
-    rgb(27 51 73 / 94%) 100%
-  );
-  --studio-material-inset: linear-gradient(180deg, rgb(8 20 32 / 94%) 0%, rgb(14 29 44 / 96%) 100%);
-  --studio-material-control: linear-gradient(
-    180deg,
-    rgb(42 70 96 / 90%) 0%,
-    rgb(25 48 70 / 94%) 100%
-  );
-  --studio-material-toolbar: linear-gradient(
-    180deg,
-    rgb(28 54 78 / 94%) 0%,
-    rgb(19 39 59 / 96%) 100%
-  );
-  --studio-material-overlay: linear-gradient(
-    180deg,
-    rgb(38 68 94 / 94%) 0%,
-    rgb(18 38 58 / 97%) 100%
-  );
-  --studio-highlight-inset: inset 0 1px 0 rgb(157 226 255 / 6%);
-  --studio-shadow-panel: 0 10px 28px rgb(0 0 0 / 16%);
-  --studio-shadow-overlay: 0 18px 48px rgb(0 0 0 / 34%);
-  --studio-overlay-blur: 10px;
-  --studio-overlay-blur-soft: 6px;
-
-  --studio-lifecycle-working: var(--studio-color-gray-300);
-  --studio-lifecycle-candidate: var(--studio-color-blue-300);
-  --studio-lifecycle-in-review: var(--studio-color-violet-300);
-  --studio-lifecycle-approved: var(--studio-color-mint-300);
-  --studio-lifecycle-frozen: #a9d7e8;
-  --studio-lifecycle-runtime-ready: #9ed9b8;
-  --studio-lifecycle-published: var(--studio-color-brass-300);
-  --studio-lifecycle-retired: #7f8a95;
-
-  --studio-validation-passed: var(--studio-color-mint-300);
-  --studio-validation-warning: var(--studio-color-amber-300);
-  --studio-validation-blocking: var(--studio-color-red-300);
-  --studio-validation-unknown: var(--studio-color-gray-300);
-
-  --studio-review-comment: var(--studio-color-blue-300);
-  --studio-review-change-request: var(--studio-color-red-300);
-  --studio-review-approval: var(--studio-color-mint-300);
-
-  --studio-runtime-ready: #9ed9b8;
-  --studio-runtime-published: var(--studio-color-brass-300);
-  --studio-runtime-verification-warning: var(--studio-color-amber-300);
 
   --studio-font-sans:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -113,11 +17,17 @@
   --studio-line-height-body: 1.5;
 
   --studio-space-4: 0.25rem;
+  --studio-space-6: 0.375rem;
   --studio-space-8: 0.5rem;
+  --studio-space-10: 0.625rem;
   --studio-space-12: 0.75rem;
+  --studio-space-14: 0.875rem;
   --studio-space-16: 1rem;
+  --studio-space-18: 1.125rem;
+  --studio-space-20: 1.25rem;
   --studio-space-24: 1.5rem;
   --studio-space-32: 2rem;
+  --studio-space-40: 2.5rem;
   --studio-space-48: 3rem;
 
   --studio-control-height-sm: 2rem;

@@ -1,91 +1,15 @@
 /*
- * GAME-STUDIO10D — Add Asset production dialog.
- * Feature-local composition only. Uses frozen Content Studio tokens/materials and
- * preserves the existing registry/provider/upload contracts.
+ * Assets dialog composition only.
+ * Shared Dialog/Button/Field appearance is owned by ui/primitives.css.
  */
 
 #add-asset-dialog {
-  width: min(840px, calc(100vw - var(--studio-space-32)));
-  max-height: min(90vh, 820px);
-  border-color: color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 34%,
-    var(--studio-border-subtle)
-  );
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      color-mix(in srgb, var(--studio-color-cyan-300) 8%, transparent),
-      transparent 24rem
-    ),
-    var(--studio-material-panel);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--studio-color-cyan-300) 8%, transparent),
-    0 28px 72px rgb(0 0 0 / 42%);
+  width: min(52rem, calc(100vw - (2 * var(--studio-space-24))));
+  max-height: min(90vh, 52rem);
 }
 
-#add-asset-dialog .ui-dialog__header {
-  position: relative;
-  padding: var(--studio-space-24) var(--studio-space-24) var(--studio-space-16);
-  border-bottom: 1px solid color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 20%,
-    var(--studio-border-subtle)
-  );
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--studio-accent-primary) 8%, transparent),
-      transparent 35%
-    ),
-    var(--studio-material-raised);
-}
-
-#add-asset-dialog .ui-dialog__header::after {
-  position: absolute;
-  bottom: -1px;
-  left: var(--studio-space-24);
-  width: min(17rem, 40%);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    var(--studio-accent-primary),
-    color-mix(in srgb, var(--studio-color-cyan-300) 68%, transparent),
-    transparent
-  );
-  content: "";
-}
-
-#add-asset-dialog .ui-dialog__header h2 {
-  color: var(--studio-text-primary);
-  font-family: var(--studio-font-serif);
-  font-size: clamp(1.55rem, 3vw, 2rem);
-  letter-spacing: 0.01em;
-}
-
-#add-asset-dialog .ui-dialog__header p {
-  max-width: 42rem;
-  color: var(--studio-text-secondary);
-}
-
-#add-asset-dialog .ui-dialog__body {
-  padding: var(--studio-space-16) var(--studio-space-24) var(--studio-space-24);
-  background:
-    linear-gradient(
-        color-mix(in srgb, var(--studio-color-cyan-300) 2.5%, transparent) 1px,
-        transparent 1px
-      ),
-    linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--studio-color-cyan-300) 2.5%, transparent) 1px,
-        transparent 1px
-      ),
-    var(--studio-material-panel);
-  background-size: 32px 32px, 32px 32px, auto;
-}
-
-#add-asset-dialog .studio-assets-create-form,
-#add-asset-dialog .studio-assets-create-flow {
+.studio-assets-create-form,
+.studio-assets-create-flow {
   display: grid;
   gap: var(--studio-space-16);
 }
@@ -96,14 +20,9 @@
   gap: var(--studio-space-16);
   padding: var(--studio-space-16);
   overflow: hidden;
-  border: 1px solid color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 19%,
-    var(--studio-border-subtle)
-  );
+  border: 1px solid var(--studio-border-luminous-subtle);
   border-radius: var(--studio-radius-panel);
-  background: var(--studio-material-inset);
-  box-shadow: inset 0 1px 8px rgb(0 0 0 / 24%);
+  background: var(--studio-surface-inset-bg);
 }
 
 .studio-assets-create-section::before {
@@ -112,11 +31,7 @@
   left: 0;
   width: 8rem;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--studio-accent-primary) 76%, transparent),
-    transparent
-  );
+  background: linear-gradient(90deg, var(--studio-accent-primary), transparent);
   content: "";
 }
 
@@ -132,17 +47,9 @@
   place-items: center;
   width: 2rem;
   height: 2rem;
-  border: 1px solid color-mix(
-    in srgb,
-    var(--studio-accent-primary) 58%,
-    var(--studio-border-subtle)
-  );
-  border-radius: 50%;
-  background: color-mix(
-    in srgb,
-    var(--studio-accent-primary) 9%,
-    var(--studio-surface-raised)
-  );
+  border: 1px solid color-mix(in srgb, var(--studio-accent-primary) 58%, var(--studio-border-subtle));
+  border-radius: var(--studio-radius-round);
+  background: color-mix(in srgb, var(--studio-accent-primary) 9%, var(--studio-surface-raised));
   color: var(--studio-accent-primary);
   font-family: var(--studio-font-serif);
   font-size: var(--studio-font-size-meta);
@@ -158,12 +65,11 @@
 .studio-assets-create-section__heading strong {
   color: var(--studio-text-primary);
   font-family: var(--studio-font-serif);
-  font-size: 1rem;
 }
 
 .studio-assets-create-section__heading small {
   color: var(--studio-text-muted);
-  line-height: 1.45;
+  line-height: var(--studio-line-height-body);
 }
 
 .studio-assets-create-identity-grid {
@@ -172,59 +78,9 @@
   gap: var(--studio-space-12);
 }
 
-.studio-assets-create-identity-grid > .ui-field:last-child {
+.studio-assets-create-identity-grid > :last-child {
   grid-column: 1 / -1;
   max-width: 50%;
-}
-
-#add-asset-dialog .ui-field {
-  gap: var(--studio-space-4);
-}
-
-#add-asset-dialog .ui-field__label {
-  color: color-mix(in srgb, var(--studio-text-primary) 92%, var(--studio-text-secondary));
-  font-size: var(--studio-font-size-meta);
-  font-weight: 700;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
-}
-
-#add-asset-dialog .ui-control {
-  min-height: var(--studio-target-min);
-  border-color: var(--studio-border-control);
-  background: var(--studio-material-inset);
-  color: var(--studio-text-primary);
-  box-shadow:
-    inset 0 1px 6px rgb(0 0 0 / 24%),
-    inset 0 1px 0 color-mix(in srgb, var(--studio-color-cyan-300) 4%, transparent);
-}
-
-#add-asset-dialog .ui-control:hover:not(:disabled) {
-  border-color: color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 36%,
-    var(--studio-border-control)
-  );
-}
-
-#add-asset-dialog .ui-control:focus-visible {
-  border-color: color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 66%,
-    var(--studio-accent-primary)
-  );
-  outline: 2px solid color-mix(in srgb, var(--studio-color-cyan-300) 28%, transparent);
-  outline-offset: 2px;
-}
-
-#add-asset-dialog .ui-control:disabled {
-  color: var(--studio-text-muted);
-  opacity: 0.68;
-}
-
-#add-asset-dialog .ui-field__message {
-  color: var(--studio-text-muted);
-  font-size: var(--studio-font-size-meta);
 }
 
 .studio-assets-file-picker-field {
@@ -237,113 +93,58 @@
   width: 1px;
   height: 1px;
   padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-  opacity: 0;
 }
 
 .studio-assets-file-picker {
-  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--studio-space-16);
   min-height: 7.5rem;
   padding: var(--studio-space-16) var(--studio-space-24);
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px dashed color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 42%,
-    var(--studio-border-control)
-  );
+  border: 1px dashed var(--studio-border-active);
   border-radius: var(--studio-radius-panel);
-  background:
-    radial-gradient(
-      circle at 12% 50%,
-      color-mix(in srgb, var(--studio-color-cyan-300) 9%, transparent),
-      transparent 10rem
-    ),
-    var(--studio-material-inset);
-  box-shadow:
-    inset 0 1px 10px rgb(0 0 0 / 26%),
-    inset 0 1px 0 color-mix(in srgb, var(--studio-color-cyan-300) 5%, transparent);
+  background: var(--studio-surface-inset-bg);
+  box-shadow: inset 0 1px 8px color-mix(in srgb, var(--studio-color-midnight-950) 40%, transparent);
+  cursor: pointer;
   transition:
     border-color var(--studio-motion-feedback) var(--studio-ease-standard),
     background var(--studio-motion-feedback) var(--studio-ease-standard),
     transform var(--studio-motion-feedback) var(--studio-ease-standard);
 }
 
-.studio-assets-file-picker::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 9rem;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--studio-color-cyan-300) 52%, transparent)
-  );
-  content: "";
-}
-
 .studio-assets-file-picker:hover {
-  border-color: color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 68%,
-    var(--studio-accent-primary)
-  );
-  background:
-    radial-gradient(
-      circle at 12% 50%,
-      color-mix(in srgb, var(--studio-color-cyan-300) 13%, transparent),
-      transparent 11rem
-    ),
-    var(--studio-material-raised);
+  border-color: color-mix(in srgb, var(--studio-accent-navigation) 72%, var(--studio-accent-primary));
+  background: var(--studio-surface-card-bg);
   transform: translateY(-1px);
 }
 
 .studio-assets-file-input--native:focus-visible + .studio-assets-file-picker {
-  border-color: color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 72%,
-    var(--studio-accent-primary)
-  );
-  outline: 2px solid color-mix(in srgb, var(--studio-color-cyan-300) 28%, transparent);
+  outline: 2px solid var(--studio-focus-ring);
   outline-offset: 2px;
+  box-shadow: var(--studio-shadow-focus);
 }
 
 .studio-assets-file-picker--selected {
   border-style: solid;
-  border-color: color-mix(
-    in srgb,
-    var(--studio-accent-primary) 45%,
-    var(--studio-color-cyan-300)
-  );
+  border-color: color-mix(in srgb, var(--studio-accent-primary) 45%, var(--studio-accent-navigation));
 }
 
 .studio-assets-file-picker__mark {
   display: grid;
   place-items: center;
-  width: 3.35rem;
-  height: 3.35rem;
-  border: 1px solid color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 35%,
-    var(--studio-border-subtle)
-  );
-  border-radius: 50%;
-  background: color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 6%,
-    var(--studio-surface-raised)
-  );
-  color: color-mix(in srgb, var(--studio-color-cyan-300) 84%, var(--studio-text-primary));
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 1px solid var(--studio-border-luminous-subtle);
+  border-radius: var(--studio-radius-round);
+  background: var(--studio-surface-card-bg);
+  color: var(--studio-accent-navigation);
   font-size: 1.25rem;
-  box-shadow: 0 0 18px color-mix(in srgb, var(--studio-color-cyan-300) 8%, transparent);
 }
 
 .studio-assets-file-picker__copy {
@@ -355,33 +156,26 @@
 .studio-assets-file-picker__copy strong {
   color: var(--studio-text-primary);
   font-family: var(--studio-font-serif);
-  font-size: 1rem;
 }
 
-.studio-assets-file-picker__copy span {
+.studio-assets-file-picker__copy span,
+.studio-assets-file-summary small {
   color: var(--studio-text-muted);
   font-size: var(--studio-font-size-meta);
-  line-height: 1.45;
 }
 
 .studio-assets-file-picker__action {
   display: inline-flex;
+  min-height: var(--studio-target-min);
   align-items: center;
   justify-content: center;
-  min-height: var(--studio-target-min);
   padding-inline: var(--studio-space-16);
-  border: 1px solid color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 24%,
-    var(--studio-border-control)
-  );
+  border: 1px solid var(--studio-border-control);
   border-radius: var(--studio-radius-control);
-  background: var(--studio-material-raised);
+  background: var(--studio-button-secondary-bg);
   color: var(--studio-text-primary);
   font-size: var(--studio-font-size-meta);
   font-weight: 700;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
 }
 
 .studio-assets-file-summary {
@@ -391,18 +185,10 @@
   gap: var(--studio-space-12);
   min-width: 0;
   padding: var(--studio-space-8) var(--studio-space-12);
-  border: 1px solid color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 16%,
-    var(--studio-border-subtle)
-  );
-  border-left: 2px solid color-mix(
-    in srgb,
-    var(--studio-accent-primary) 68%,
-    transparent
-  );
+  border: 1px solid var(--studio-border-luminous-subtle);
+  border-left: 2px solid var(--studio-accent-primary);
   border-radius: var(--studio-radius-control);
-  background: var(--studio-material-raised);
+  background: var(--studio-surface-card-bg);
 }
 
 .studio-assets-file-summary__identity {
@@ -412,15 +198,13 @@
   min-width: 0;
 }
 
-.studio-assets-file-summary__icon {
-  color: color-mix(in srgb, var(--studio-accent-primary) 78%, var(--studio-color-cyan-300));
-  font-size: 0.8rem;
-}
-
 .studio-assets-file-summary__identity > div {
   display: grid;
-  gap: 0.15rem;
   min-width: 0;
+}
+
+.studio-assets-file-summary__icon {
+  color: var(--studio-accent-primary);
 }
 
 .studio-assets-file-summary strong,
@@ -430,38 +214,16 @@
   white-space: nowrap;
 }
 
-.studio-assets-file-summary strong {
-  color: var(--studio-text-primary);
-}
-
-.studio-assets-file-summary small {
-  color: var(--studio-text-muted);
-}
-
 .studio-assets-identity-confirmation {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(14rem, auto);
   align-items: center;
   gap: var(--studio-space-16);
   padding: var(--studio-space-12) var(--studio-space-16);
-  border: 1px solid color-mix(
-    in srgb,
-    var(--studio-accent-primary) 24%,
-    var(--studio-border-subtle)
-  );
-  border-left: 2px solid color-mix(
-    in srgb,
-    var(--studio-accent-primary) 72%,
-    transparent
-  );
+  border: 1px solid color-mix(in srgb, var(--studio-accent-primary) 30%, var(--studio-border-subtle));
+  border-left: 2px solid var(--studio-accent-primary);
   border-radius: var(--studio-radius-control);
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--studio-accent-primary) 6%, transparent),
-      transparent 45%
-    ),
-    var(--studio-material-raised);
+  background: var(--studio-surface-card-bg);
 }
 
 .studio-assets-identity-confirmation > div {
@@ -469,16 +231,17 @@
   gap: var(--studio-space-4);
 }
 
-.studio-assets-identity-confirmation span {
+.studio-assets-identity-confirmation span,
+.studio-assets-create-footer span {
   color: var(--studio-text-muted);
   font-size: var(--studio-font-size-meta);
-  letter-spacing: 0.055em;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.studio-assets-identity-confirmation strong {
+.studio-assets-identity-confirmation strong,
+.studio-assets-create-footer strong {
   color: var(--studio-text-primary);
-  font-family: var(--studio-font-serif);
 }
 
 .studio-assets-identity-confirmation code {
@@ -486,11 +249,6 @@
   overflow-wrap: anywhere;
   color: var(--studio-text-secondary);
   font-size: var(--studio-font-size-meta);
-  text-align: right;
-}
-
-.studio-assets-identity-confirmation--locked {
-  margin-block: var(--studio-space-8);
 }
 
 .studio-assets-create-footer {
@@ -498,93 +256,30 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--studio-space-16);
-  min-height: 4.5rem;
-  padding: var(--studio-space-12) var(--studio-space-16);
-  border-top: 1px solid color-mix(
-    in srgb,
-    var(--studio-color-cyan-300) 16%,
-    var(--studio-border-subtle)
-  );
-  background: var(--studio-material-raised);
+  padding-top: var(--studio-space-16);
+  border-top: 1px solid var(--studio-border-luminous-subtle);
 }
 
 .studio-assets-create-footer > div {
   display: grid;
-  gap: 0.1rem;
-}
-
-.studio-assets-create-footer span {
-  color: var(--studio-text-muted);
-  font-size: var(--studio-font-size-meta);
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-}
-
-.studio-assets-create-footer strong {
-  color: var(--studio-text-primary);
-  font-family: var(--studio-font-serif);
-}
-
-.studio-assets-create-footer .ui-button--primary {
-  min-width: 10rem;
-}
-
-@media (max-width: 700px) {
-  #add-asset-dialog {
-    width: calc(100vw - var(--studio-space-16));
-  }
-
-  #add-asset-dialog .ui-dialog__header,
-  #add-asset-dialog .ui-dialog__body {
-    padding-inline: var(--studio-space-16);
-  }
-
-  .studio-assets-create-identity-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .studio-assets-create-identity-grid > .ui-field:last-child {
-    grid-column: auto;
-    max-width: none;
-  }
-
-  .studio-assets-file-picker {
-    grid-template-columns: auto minmax(0, 1fr);
-    min-height: 8.5rem;
-    padding: var(--studio-space-16);
-  }
-
-  .studio-assets-file-picker__action {
-    grid-column: 1 / -1;
-    width: 100%;
-  }
-
-  .studio-assets-file-summary,
-  .studio-assets-create-footer {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .studio-assets-file-summary .ui-button,
-  .studio-assets-create-footer .ui-button {
-    width: 100%;
-  }
-
-  .studio-assets-identity-confirmation {
-    grid-template-columns: 1fr;
-  }
-
-  .studio-assets-identity-confirmation code {
-    text-align: left;
-  }
+  gap: var(--studio-space-4);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .studio-assets-file-picker {
-    transition: none;
+  .studio-assets-file-picker { transition: none; }
+  .studio-assets-file-picker:hover { transform: none; }
+}
+
+@media (max-width: 48rem) {
+  #add-asset-dialog {
+    width: calc(100vw - (2 * var(--studio-space-8)));
+    max-height: calc(100vh - (2 * var(--studio-space-8)));
   }
 
-  .studio-assets-file-picker:hover {
-    transform: none;
-  }
+  .studio-assets-create-identity-grid { grid-template-columns: 1fr; }
+  .studio-assets-create-identity-grid > :last-child { grid-column: auto; max-width: none; }
+  .studio-assets-file-picker { grid-template-columns: 1fr; justify-items: start; }
+  .studio-assets-file-summary,
+  .studio-assets-identity-confirmation,
+  .studio-assets-create-footer { display: grid; grid-template-columns: 1fr; }
 }
