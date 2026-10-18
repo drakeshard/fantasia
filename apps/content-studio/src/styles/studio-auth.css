@@ -47,10 +47,6 @@
   min-height: 100vh;
 }
 
-.studio-production-root .studio-shell__fixture-note {
-  display: none;
-}
-
 .studio-session-card {
   display: grid;
   min-width: min(260px, 32vw);
