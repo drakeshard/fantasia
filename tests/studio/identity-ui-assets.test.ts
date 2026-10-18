@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import identityCatalog from "../../config/identity-ui-assets.json";
 import {
   identityUiOwnersForRole,
   identityUiRoleLabel,
   identityUiRoleOptions,
 } from "../../apps/content-studio/src/features/assets/identity-ui-catalog.ts";
+import identityCatalog from "../../config/identity-ui-assets.json";
 
 describe("Identity/UI asset catalog", () => {
   it("exposes the controlled first-slice asset types", () => {
@@ -47,7 +47,8 @@ describe("Identity/UI asset catalog", () => {
     expect(plate?.roles).toEqual(["identity-plate"]);
     expect(plate?.visualStatus).toBe("FROZEN");
     expect(
-      identityCatalog.owners.find((owner) => owner.semanticId === "faction-playstyle.predator")?.roles,
+      identityCatalog.owners.find((owner) => owner.semanticId === "faction-playstyle.predator")
+        ?.roles,
     ).toEqual(["faction-playstyle-emblem"]);
   });
 });
