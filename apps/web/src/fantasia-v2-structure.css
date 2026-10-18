@@ -72,3 +72,47 @@
 .settings-dialog {
   position: relative;
 }
+
+/* Compact landscape must retain authoritative facts and primary commitments. */
+@media (max-width: 900px), (max-height: 499px) {
+  .characters-screen .character-card {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+  }
+
+  .characters-screen .character-card-state {
+    display: inline-flex;
+    min-height: 22px;
+    padding-inline: 6px;
+    font-size: 0.62rem;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading,
+  .campaign-rooted-shell .map-toolbar,
+  .campaign-rooted-shell .map-toolbar .game-control,
+  .campaign-rooted-shell .campaign-enter {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading,
+  .campaign-rooted-shell .map-toolbar {
+    display: flex;
+  }
+
+  .campaign-rooted-shell .campaign-inspector {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .campaign-rooted-shell .campaign-enter {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .battle-screen .command-preview p:not(.hud-eyebrow) {
+    display: block;
+  }
+}
