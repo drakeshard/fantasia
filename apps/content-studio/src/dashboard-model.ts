@@ -261,7 +261,12 @@ export function buildStudioDashboard(
   response: StudioReadModelsResponse,
 ): StudioDashboardProjection {
   const availableSections: DashboardAttentionSection[] = [
-    { id: "review", label: "Items in review", state: "available", items: reviewItems(response.models) },
+    {
+      id: "review",
+      label: "Items in review",
+      state: "available",
+      items: reviewItems(response.models),
+    },
     {
       id: "validation",
       label: "Blocking validation",
@@ -320,7 +325,9 @@ export function buildStudioDashboard(
     .reduce((total, section) => total + section.items.length, 0);
   const partial =
     sourceIntegrityItems(response.models).length > 0 ||
-    sections.some((section) => section.state === "unavailable" && section.id !== "publish-verification");
+    sections.some(
+      (section) => section.state === "unavailable" && section.id !== "publish-verification",
+    );
 
   return {
     state: partial ? "partial" : implementedAttentionCount === 0 ? "empty" : "ready",
