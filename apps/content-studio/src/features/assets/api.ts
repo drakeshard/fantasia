@@ -17,10 +17,10 @@ export type AssetSourceMutationInput = {
 
 export type GoogleDriveConnectionStatus = {
   readonly connected: boolean;
-  readonly accountEmail?: string;
-  readonly accountDisplayName?: string | null;
-  readonly connectedAt?: string;
-  readonly updatedAt?: string;
+  readonly accountEmail: string | null;
+  readonly accountDisplayName: string | null;
+  readonly connectedAt: string | null;
+  readonly updatedAt: string | null;
 };
 
 function operationKey(prefix: string, semanticId: string): string {
@@ -64,10 +64,10 @@ export async function getGoogleDriveConnectionStatus(
   const result = await jsonOperation(session, { type: "provider.google_drive.status" });
   return {
     connected: result.connected === true,
-    accountEmail: typeof result.accountEmail === "string" ? result.accountEmail : undefined,
+    accountEmail: typeof result.accountEmail === "string" ? result.accountEmail : null,
     accountDisplayName: typeof result.accountDisplayName === "string" ? result.accountDisplayName : null,
-    connectedAt: typeof result.connectedAt === "string" ? result.connectedAt : undefined,
-    updatedAt: typeof result.updatedAt === "string" ? result.updatedAt : undefined,
+    connectedAt: typeof result.connectedAt === "string" ? result.connectedAt : null,
+    updatedAt: typeof result.updatedAt === "string" ? result.updatedAt : null,
   };
 }
 
