@@ -144,6 +144,10 @@ async function sha256Hex(bytes: Uint8Array): Promise<string> {
   return [...digest].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
+async function requestTag(value: string): Promise<string> {
+  return sha256Hex(new TextEncoder().encode(value));
+}
+
 function dimensionsFromBytes(
   bytes: Uint8Array,
   mediaType: string,
@@ -155,7 +159,7 @@ function dimensionsFromBytes(
       return { widthPx: view.getUint32(16), heightPx: view.getUint32(20) };
     }
   }
-  if ((mediaType === "image/gif" || mediaType === "image/gif87a") && bytes.byteLength >= 10) {
+  if (mediaType === "image/gif" && bytes.byteLength >= 10) {
     return { widthPx: view.getUint16(6, true), heightPx: view.getUint16(8, true) };
   }
   if (mediaType === "image/jpeg" && bytes.byteLength >= 4 && bytes[0] === 0xff && bytes[1] === 0xd8) {
@@ -203,10 +207,11 @@ type DriveFileMetadata = {
   readonly imageMediaMetadata?: { readonly width?: unknown; readonly height?: unknown };
 };
 
+const metadataFields = "id,name,mimeType,size,modifiedTime,trashed,imageMediaMetadata(width,height)";
+
 async function driveMetadata(fileId: string, accessToken: string): Promise<DriveFileMetadata> {
-  const fields = "id,name,mimeType,size,modifiedTime,trashed,imageMediaMetadata(width,height)";
   const response = await fetch(
-    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?fields=${encodeURIComponent(fields)}&supportsAllDrives=true`,
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?fields=${encodeURIComponent(metadataFields)}&supportsAllDrives=true`,
     { headers: { authorization: `Bearer ${accessToken}` } },
   );
   const body = await response.json().catch(() => null) as DriveFileMetadata | { error?: { message?: string } } | null;
@@ -266,6 +271,36 @@ async function sourceMetadata(
   };
 }
 
+function escapeDriveQueryValue(value: string): string {
+  return value.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+}
+
+async function findDriveUploadByTag(
+  folderId: string,
+  tag: string,
+  accessToken: string,
+): Promise<DriveFileMetadata | null> {
+  const escapedFolder = escapeDriveQueryValue(folderId);
+  const escapedTag = escapeDriveQueryValue(tag);
+  const query = `'${escapedFolder}' in parents and trashed = false and appProperties has { key='studioOperation' and value='${escapedTag}' }`;
+  const response = await fetch(
+    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=${encodeURIComponent(`files(${metadataFields})`)}&pageSize=2&supportsAllDrives=true&includeItemsFromAllDrives=true`,
+    { headers: { authorization: `Bearer ${accessToken}` } },
+  );
+  const body = await response.json().catch(() => null) as { files?: unknown } | { error?: { message?: string } } | null;
+  if (!response.ok) {
+    const message = body && "error" in body && typeof body.error?.message === "string"
+      ? body.error.message
+      : "Google Drive idempotency lookup failed.";
+    throw new GoogleDriveProviderError(message);
+  }
+  if (!body || !("files" in body) || !Array.isArray(body.files) || body.files.length === 0) return null;
+  if (body.files.length > 1) {
+    throw new GoogleDriveProviderError("Google Drive contains duplicate files for one Studio upload operation.", 409);
+  }
+  return body.files[0] as DriveFileMetadata;
+}
+
 export async function inspectGoogleDriveFile(reference: string): Promise<GoogleDriveSourceMetadata> {
   const fileId = parseGoogleDriveFileId(reference);
   const token = await googleAccessToken();
@@ -274,7 +309,10 @@ export async function inspectGoogleDriveFile(reference: string): Promise<GoogleD
   return sourceMetadata(fileId, metadata, bytes);
 }
 
-export async function uploadGoogleDriveFile(file: File): Promise<GoogleDriveSourceMetadata> {
+export async function uploadGoogleDriveFile(
+  file: File,
+  studioOperationKey: string,
+): Promise<GoogleDriveSourceMetadata> {
   if (file.size < 1) throw new GoogleDriveProviderError("Source file is empty.", 400);
   const folderId = Deno.env.get("STUDIO_GOOGLE_DRIVE_SOURCE_FOLDER_ID")?.trim();
   if (!folderId) {
@@ -285,8 +323,31 @@ export async function uploadGoogleDriveFile(file: File): Promise<GoogleDriveSour
   }
   const token = await googleAccessToken();
   const bytes = new Uint8Array(await file.arrayBuffer());
+  const incomingChecksum = await sha256Hex(bytes);
+  const tag = await requestTag(studioOperationKey);
+  const existing = await findDriveUploadByTag(folderId, tag, token);
+  if (existing && typeof existing.id === "string") {
+    const existingBytes = await driveBytes(existing.id, token);
+    const existingSource = await sourceMetadata(existing.id, existing, existingBytes);
+    if (
+      existingSource.sourceName !== file.name ||
+      existingSource.byteSize !== bytes.byteLength ||
+      existingSource.checksum !== incomingChecksum
+    ) {
+      throw new GoogleDriveProviderError(
+        "Studio upload idempotency key already belongs to different source bytes.",
+        409,
+      );
+    }
+    return existingSource;
+  }
+
   const boundary = `fantasia-studio-${crypto.randomUUID()}`;
-  const metadata = JSON.stringify({ name: file.name, parents: [folderId] });
+  const metadata = JSON.stringify({
+    name: file.name,
+    parents: [folderId],
+    appProperties: { studioOperation: tag },
+  });
   const prefix = new TextEncoder().encode(
     `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metadata}\r\n` +
       `--${boundary}\r\nContent-Type: ${file.type || "application/octet-stream"}\r\n\r\n`,
@@ -298,7 +359,7 @@ export async function uploadGoogleDriveFile(file: File): Promise<GoogleDriveSour
   body.set(suffix, prefix.length + bytes.length);
 
   const response = await fetch(
-    "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=id,name,mimeType,size,modifiedTime,trashed,imageMediaMetadata(width,height)",
+    `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=${encodeURIComponent(metadataFields)}`,
     {
       method: "POST",
       headers: {
@@ -316,7 +377,11 @@ export async function uploadGoogleDriveFile(file: File): Promise<GoogleDriveSour
     throw new GoogleDriveProviderError(message, 502);
   }
   const fileId = (uploaded as DriveFileMetadata).id as string;
-  return sourceMetadata(fileId, uploaded as DriveFileMetadata, bytes);
+  const result = await sourceMetadata(fileId, uploaded as DriveFileMetadata, bytes);
+  if (result.checksum !== incomingChecksum) {
+    throw new GoogleDriveProviderError("Google Drive upload checksum verification failed.", 409);
+  }
+  return result;
 }
 
 export async function readGoogleDriveSource(
