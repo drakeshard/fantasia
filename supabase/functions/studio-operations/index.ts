@@ -15,7 +15,6 @@ import {
   StudioOperationContractError,
 } from "./contract.ts";
 import { registryOnlyReadModels } from "./missing-canonical.ts";
-import { normalizeCanonicalModels, normalizeRuntimeManifest } from "./read-model-adapters.ts";
 import { loadRepositorySnapshot } from "./repository-snapshot.ts";
 
 const corsHeaders = {
@@ -132,15 +131,15 @@ async function readModels(
     callRpc(supabaseUrl, secretKey, "get_studio_session", { p_user_id: userId }),
     callRpc(supabaseUrl, secretKey, "get_studio_registry_read_snapshot", { p_user_id: userId }),
   ]);
-  const gitSnapshot = loadRepositorySnapshot();
+  const repositorySnapshot = loadRepositorySnapshot();
   const session = asSession(sessionValue);
   if (!session.authorized || !session.role || !session.capabilities.includes("studio.read")) {
     throw new StudioOperationContractError("Studio membership required.", 403);
   }
   const registry = asRegistrySnapshot(registryValue);
-  const runtimeManifest = normalizeRuntimeManifest(gitSnapshot);
   const permissions = permissionPresentation(session.role, session.capabilities);
-  const canonicalModels = normalizeCanonicalModels(gitSnapshot);
+  const canonicalModels = repositorySnapshot.canonicalModels;
+  const runtimeManifest = repositorySnapshot.runtimeManifest;
   const canonicalIds = new Set(canonicalModels.map((model) => model.semanticId));
   const models = [
     ...canonicalModels.map((canonical) =>
@@ -164,9 +163,9 @@ async function readModels(
   );
   return {
     readModelVersion: 1,
-    revision: gitSnapshot.revision,
+    revision: repositorySnapshot.revision,
     freshness: {
-      gitRevision: gitSnapshot.revision,
+      gitRevision: repositorySnapshot.revision,
       gitState: "deployment-snapshot",
       registryObservedAt: registry.observedAt,
       providerState: "registry-observed-no-live-provider-fetch",
@@ -188,7 +187,10 @@ Deno.serve(async (request: Request) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")?.replace(/\/$/, "");
     if (!supabaseUrl) throw new Error("Missing SUPABASE_URL.");
-    const publishableKey = environmentKey("SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEYS");
+    const publishableKey = environmentKey(
+      "SUPABASE_PUBLISHABLE_KEY",
+      "SUPABASE_PUBLISHABLE_KEYS",
+    );
     const secretKey = environmentKey("SUPABASE_SECRET_KEY", "SUPABASE_SECRET_KEYS");
 
     const userResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
