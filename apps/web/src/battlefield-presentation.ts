@@ -37,7 +37,14 @@ export type BattlefieldTerrainVisualId =
   | "terrain.track"
   | "terrain.basin"
   | "terrain.plateau"
-  | "terrain.blocked";
+  | "terrain.blocked"
+  | "terrain.water.deep"
+  | "terrain.water.shallow"
+  | "terrain.shore"
+  | "terrain.sand"
+  | "terrain.canyon"
+  | "terrain.tundra"
+  | "terrain.snow";
 
 export type BattlefieldPropVisualId = "prop.woodland" | "prop.rubble";
 
@@ -135,6 +142,55 @@ export const FANTASIA_BATTLEFIELD_VISUAL_CATALOG: BattlefieldVisualCatalog = Obj
       id: "terrain.blocked",
       fill: 0x494538,
       border: 0x6e6654,
+      detail: "none",
+    }),
+    "terrain.water.deep": Object.freeze({
+      id: "terrain.water.deep",
+      fill: 0x173f55,
+      alternateFill: 0x1b4960,
+      border: 0x24566c,
+      detail: "none",
+    }),
+    "terrain.water.shallow": Object.freeze({
+      id: "terrain.water.shallow",
+      fill: 0x2d7180,
+      alternateFill: 0x347d88,
+      border: 0x4b9197,
+      detail: "none",
+    }),
+    "terrain.shore": Object.freeze({
+      id: "terrain.shore",
+      fill: 0xb69a68,
+      alternateFill: 0xc0a875,
+      border: 0x8f794f,
+      detail: "none",
+    }),
+    "terrain.sand": Object.freeze({
+      id: "terrain.sand",
+      fill: 0xa87843,
+      alternateFill: 0xb3834d,
+      border: 0x775431,
+      detail: "field",
+    }),
+    "terrain.canyon": Object.freeze({
+      id: "terrain.canyon",
+      fill: 0x75483a,
+      alternateFill: 0x81503f,
+      border: 0x533229,
+      detail: "none",
+    }),
+    "terrain.tundra": Object.freeze({
+      id: "terrain.tundra",
+      fill: 0x708087,
+      alternateFill: 0x7d8d92,
+      border: 0x55656c,
+      detail: "field",
+    }),
+    "terrain.snow": Object.freeze({
+      id: "terrain.snow",
+      fill: 0xc8d9dc,
+      alternateFill: 0xd5e3e5,
+      border: 0x9eb7bd,
       detail: "none",
     }),
   }),

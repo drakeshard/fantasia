@@ -1,0 +1,141 @@
+.environment-scenes-stage {
+  background:
+    radial-gradient(circle at 18% 18%, rgb(97 177 196 / 10%), transparent 24rem),
+    linear-gradient(180deg, #0a1720, #071016);
+}
+
+.environment-scene-battlefield {
+  isolation: isolate;
+}
+
+.environment-scenes-topbar {
+  gap: 0.75rem;
+}
+
+.environment-scenes-title {
+  max-width: min(34rem, 44vw);
+}
+
+.environment-scenes-description {
+  display: block;
+  max-width: 38rem;
+  margin-top: 0.3rem;
+  color: rgb(226 234 228 / 72%);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.environment-scene-switcher {
+  max-width: 29rem;
+}
+
+.environment-scene-switcher button {
+  white-space: nowrap;
+}
+
+.environment-scenes-details {
+  max-width: min(27rem, 92vw);
+}
+
+.environment-scenes-legend span {
+  display: block;
+}
+
+.environment-weather {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.environment-weather--blizzard {
+  top: 0;
+  right: 0;
+  width: 48%;
+  height: 100%;
+  opacity: calc(0.4 + var(--blizzard-intensity, 0.8) * 0.5);
+  background:
+    linear-gradient(100deg, transparent 0 12%, rgb(215 235 240 / 7%) 40%, rgb(224 240 244 / 18%)),
+    radial-gradient(circle at 78% 48%, rgb(226 242 246 / 17%), transparent 58%);
+  mask-image: linear-gradient(90deg, transparent, #000 24%, #000);
+}
+
+.environment-weather--blizzard::before,
+.environment-weather--blizzard::after {
+  position: absolute;
+  inset: -15%;
+  content: "";
+  background: repeating-linear-gradient(
+    108deg,
+    transparent 0 31px,
+    rgb(238 249 251 / 8%) 32px 33px,
+    transparent 34px 61px
+  );
+  transform: translate3d(-4%, 0, 0);
+  animation: environment-blizzard-sheet 2.8s linear infinite;
+}
+
+.environment-weather--blizzard::after {
+  opacity: 0.55;
+  transform: translate3d(-13%, 0, 0) scale(1.12);
+  animation-duration: 4.2s;
+}
+
+.environment-weather--blizzard i {
+  position: absolute;
+  top: var(--flake-y);
+  left: var(--flake-x);
+  width: calc(14px + (var(--flake-index) % 5) * 4px);
+  height: 1px;
+  border-radius: 999px;
+  opacity: 0.68;
+  background: rgb(242 251 253 / 88%);
+  box-shadow: 0 0 5px rgb(220 241 245 / 35%);
+  transform: rotate(-17deg);
+  animation: environment-blizzard-flake 1.25s linear infinite;
+  animation-delay: var(--flake-delay);
+}
+
+@keyframes environment-blizzard-sheet {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 16% 5%;
+  }
+}
+
+@keyframes environment-blizzard-flake {
+  from {
+    translate: -34px -10px;
+  }
+  to {
+    translate: 96px 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .environment-weather--blizzard::before,
+  .environment-weather--blizzard::after,
+  .environment-weather--blizzard i {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .environment-scenes-title {
+    max-width: 42vw;
+  }
+
+  .environment-scenes-description {
+    display: none;
+  }
+
+  .environment-scene-switcher {
+    max-width: 43vw;
+  }
+
+  .environment-scene-switcher button {
+    font-size: 0.66rem;
+  }
+}

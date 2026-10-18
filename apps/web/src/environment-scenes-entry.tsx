@@ -1,5 +1,6 @@
 import { render } from "preact";
-import { MapStressReviewApp } from "./map-stress-review.js";
+import "./environment-scenes.css";
+import { EnvironmentScenesApp } from "./environment-scenes.js";
 import { installMapReviewStyles } from "./map-review-style.js";
 import "./styles.css";
 
@@ -20,7 +21,7 @@ function lockReviewViewport(): void {
     element.style.margin = "0";
     element.style.overflow = "hidden";
   }
-  const review = appRoot.querySelector<HTMLElement>(".map-review");
+  const review = appRoot.querySelector<HTMLElement>(".environment-scenes");
   if (!review) return;
   review.style.position = "fixed";
   review.style.inset = "0";
@@ -34,6 +35,6 @@ function lockReviewViewport(): void {
 }
 
 installMapReviewStyles();
-render(<MapStressReviewApp />, appRoot);
+render(<EnvironmentScenesApp />, appRoot);
 lockReviewViewport();
 window.addEventListener("resize", lockReviewViewport);
