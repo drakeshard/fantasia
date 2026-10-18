@@ -13,12 +13,12 @@
 }
 
 .environment-scenes-title {
-  max-width: min(34rem, 44vw);
+  max-width: min(36rem, 46vw);
 }
 
 .environment-scenes-description {
   display: block;
-  max-width: 38rem;
+  max-width: 40rem;
   margin-top: 0.3rem;
   color: rgb(226 234 228 / 72%);
   font-size: 0.72rem;
@@ -26,7 +26,7 @@
 }
 
 .environment-scene-switcher {
-  max-width: 29rem;
+  max-width: 34rem;
 }
 
 .environment-scene-switcher button {
@@ -34,90 +34,151 @@
 }
 
 .environment-scenes-details {
-  max-width: min(27rem, 92vw);
+  max-width: min(28rem, 92vw);
 }
 
 .environment-scenes-legend span {
   display: block;
 }
 
+.environment-performance small {
+  display: block;
+  margin-top: 0.5rem;
+  color: rgb(226 234 228 / 62%);
+  line-height: 1.35;
+}
+
 .environment-weather {
   position: absolute;
   z-index: 4;
+  inset: 0;
   pointer-events: none;
   overflow: hidden;
+  opacity: calc(0.34 + var(--weather-intensity, 0.7) * 0.48);
 }
 
-.environment-weather--blizzard {
-  top: 0;
-  right: 0;
-  width: 48%;
-  height: 100%;
-  opacity: calc(0.4 + var(--blizzard-intensity, 0.8) * 0.5);
-  background:
-    linear-gradient(100deg, transparent 0 12%, rgb(215 235 240 / 7%) 40%, rgb(224 240 244 / 18%)),
-    radial-gradient(circle at 78% 48%, rgb(226 242 246 / 17%), transparent 58%);
-  mask-image: linear-gradient(90deg, transparent, #000 24%, #000);
-}
-
-.environment-weather--blizzard::before,
-.environment-weather--blizzard::after {
+.environment-weather::before,
+.environment-weather::after {
   position: absolute;
-  inset: -15%;
+  inset: -16%;
   content: "";
-  background: repeating-linear-gradient(
-    108deg,
-    transparent 0 31px,
-    rgb(238 249 251 / 8%) 32px 33px,
-    transparent 34px 61px
+}
+
+.environment-weather--ghost-mist {
+  background:
+    radial-gradient(circle at 76% 62%, rgb(72 199 185 / 15%), transparent 23rem),
+    radial-gradient(circle at 72% 24%, rgb(171 233 218 / 11%), transparent 27rem),
+    linear-gradient(115deg, transparent 8%, rgb(108 196 184 / 7%) 48%, rgb(181 232 217 / 13%));
+}
+
+.environment-weather--ghost-mist::before {
+  background: repeating-radial-gradient(
+    ellipse at 60% 50%,
+    transparent 0 33px,
+    rgb(147 226 208 / 7%) 36px 39px,
+    transparent 42px 76px
   );
-  transform: translate3d(-4%, 0, 0);
-  animation: environment-blizzard-sheet 2.8s linear infinite;
+  animation: environment-ghost-drift 7s ease-in-out infinite alternate;
 }
 
-.environment-weather--blizzard::after {
-  opacity: 0.55;
-  transform: translate3d(-13%, 0, 0) scale(1.12);
-  animation-duration: 4.2s;
+.environment-weather--ghost-mist::after {
+  background: linear-gradient(100deg, transparent, rgb(183 236 223 / 10%), transparent 72%);
+  filter: blur(11px);
+  animation: environment-mist-sweep 8.5s linear infinite;
 }
 
-.environment-weather--blizzard i {
+.environment-weather--ghost-mist i {
   position: absolute;
-  top: var(--flake-y);
-  left: var(--flake-x);
-  width: calc(14px + (var(--flake-index) % 5) * 4px);
-  height: 1px;
-  border-radius: 999px;
-  opacity: 0.68;
-  background: rgb(242 251 253 / 88%);
-  box-shadow: 0 0 5px rgb(220 241 245 / 35%);
-  transform: rotate(-17deg);
-  animation: environment-blizzard-flake 1.25s linear infinite;
-  animation-delay: var(--flake-delay);
+  top: var(--particle-y);
+  left: var(--particle-x);
+  width: calc(5px + (var(--particle-index) % 4) * 3px);
+  height: calc(5px + (var(--particle-index) % 3) * 2px);
+  border-radius: 50%;
+  background: rgb(151 241 216 / 62%);
+  box-shadow: 0 0 10px rgb(111 233 202 / 42%);
+  animation: environment-ghost-light 3.8s ease-in-out infinite alternate;
+  animation-delay: var(--particle-delay);
 }
 
-@keyframes environment-blizzard-sheet {
+.environment-weather--avalon-mist {
+  background:
+    radial-gradient(circle at 68% 45%, rgb(244 247 224 / 13%), transparent 24rem),
+    radial-gradient(circle at 38% 64%, rgb(175 221 206 / 10%), transparent 31rem),
+    linear-gradient(105deg, rgb(213 230 218 / 7%), transparent 30%, rgb(229 235 218 / 10%));
+}
+
+.environment-weather--avalon-mist::before,
+.environment-weather--avalon-mist::after {
+  background: linear-gradient(98deg, transparent 4%, rgb(224 235 222 / 11%) 34%, transparent 68%);
+  filter: blur(15px);
+  animation: environment-mist-sweep 11s ease-in-out infinite alternate;
+}
+
+.environment-weather--avalon-mist::after {
+  opacity: 0.62;
+  animation-duration: 15s;
+  animation-direction: alternate-reverse;
+}
+
+.environment-weather--avalon-mist i {
+  position: absolute;
+  top: var(--particle-y);
+  left: var(--particle-x);
+  width: calc(2px + (var(--particle-index) % 3));
+  height: calc(2px + (var(--particle-index) % 3));
+  border-radius: 50%;
+  background: rgb(242 247 225 / 62%);
+  box-shadow: 0 0 7px rgb(222 238 210 / 35%);
+  animation: environment-avalon-glimmer 4.8s ease-in-out infinite alternate;
+  animation-delay: var(--particle-delay);
+}
+
+@keyframes environment-ghost-drift {
   from {
-    translate: 0 0;
+    translate: -3% -1%;
+    scale: 1;
   }
   to {
-    translate: 16% 5%;
+    translate: 5% 3%;
+    scale: 1.06;
   }
 }
 
-@keyframes environment-blizzard-flake {
+@keyframes environment-mist-sweep {
   from {
-    translate: -34px -10px;
+    translate: -13% 0;
   }
   to {
-    translate: 96px 28px;
+    translate: 17% 4%;
+  }
+}
+
+@keyframes environment-ghost-light {
+  from {
+    opacity: 0.2;
+    translate: -5px 4px;
+  }
+  to {
+    opacity: 0.85;
+    translate: 13px -9px;
+  }
+}
+
+@keyframes environment-avalon-glimmer {
+  from {
+    opacity: 0.12;
+    scale: 0.8;
+  }
+  to {
+    opacity: 0.68;
+    scale: 1.35;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .environment-weather--blizzard::before,
-  .environment-weather--blizzard::after,
-  .environment-weather--blizzard i {
+  .environment-weather::before,
+  .environment-weather::after,
+  .environment-weather i {
     animation: none;
   }
 }
@@ -132,10 +193,10 @@
   }
 
   .environment-scene-switcher {
-    max-width: 43vw;
+    max-width: 45vw;
   }
 
   .environment-scene-switcher button {
-    font-size: 0.66rem;
+    font-size: 0.62rem;
   }
 }
