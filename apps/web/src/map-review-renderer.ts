@@ -380,7 +380,6 @@ export class MapReviewRenderer {
   readonly #terrainKinds: ReadonlyMap<string, MapReviewTerrainKind>;
   readonly #app = new Application();
   #ready = false;
-  #resizeObserver: ResizeObserver | undefined;
   #options: MapReviewRendererOptions;
   #rotation = 0;
   #zoom = 1;
@@ -400,6 +399,8 @@ export class MapReviewRenderer {
   #contentHeight = 1;
   #minX = 0;
   #minY = 0;
+  #lastWidth = 0;
+  #lastHeight = 0;
 
   constructor(
     host: HTMLElement,
@@ -442,8 +443,7 @@ export class MapReviewRenderer {
     canvas.addEventListener("pointerup", this.#handlePointerUp);
     canvas.addEventListener("pointercancel", this.#handlePointerUp);
     this.#ready = true;
-    this.#resizeObserver = new ResizeObserver(() => this.#resize());
-    this.#resizeObserver.observe(this.#host);
+    window.addEventListener("resize", this.#handleResize);
     this.#resize();
   }
 
@@ -482,8 +482,7 @@ export class MapReviewRenderer {
   }
 
   destroy(): void {
-    this.#resizeObserver?.disconnect();
-    this.#resizeObserver = undefined;
+    window.removeEventListener("resize", this.#handleResize);
     if (this.#tapTimer !== undefined) window.clearTimeout(this.#tapTimer);
     if (!this.#ready) return;
     const canvas = this.#app.canvas;
@@ -495,6 +494,10 @@ export class MapReviewRenderer {
     this.#app.destroy(true, { children: true });
     this.#ready = false;
   }
+
+  readonly #handleResize = (): void => {
+    this.#resize();
+  };
 
   readonly #handleWheel = (event: WheelEvent): void => {
     event.preventDefault();
@@ -566,10 +569,13 @@ export class MapReviewRenderer {
 
   #resize(): void {
     if (!this.#ready) return;
-    this.#app.renderer.resize(
-      Math.max(320, Math.floor(this.#host.clientWidth)),
-      Math.max(240, Math.floor(this.#host.clientHeight)),
-    );
+    const bounds = this.#host.getBoundingClientRect();
+    const width = Math.max(320, Math.floor(bounds.width));
+    const height = Math.max(240, Math.floor(bounds.height));
+    if (width === this.#lastWidth && height === this.#lastHeight) return;
+    this.#lastWidth = width;
+    this.#lastHeight = height;
+    this.#app.renderer.resize(width, height);
     this.#draw();
   }
 
