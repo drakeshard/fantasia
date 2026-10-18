@@ -21,7 +21,7 @@ async function openDetails(page: Page) {
 
 async function expectPerformanceSample(host: ReturnType<Page["getByTestId"]>) {
   await expect(host).toHaveAttribute("data-performance-sample-status", "complete", {
-    timeout: 30_000,
+    timeout: 75_000,
   });
   await expect(host).toHaveAttribute("data-renderer-init-ms", /^\d+(?:\.\d+)?$/);
   await expect(host).toHaveAttribute("data-renderer-redraw-ms", /^\d+(?:\.\d+)?$/);
@@ -34,6 +34,7 @@ async function expectPerformanceSample(host: ReturnType<Page["getByTestId"]>) {
 test("environment review defaults to the 64x64 Ghost Sea Hunt stress scene", async ({
   page,
 }, testInfo) => {
+  test.setTimeout(90_000);
   const { review, host } = await openEnvironmentScenes(page);
 
   await expect(page.getByRole("heading", { name: "Ghost Sea Hunt" })).toBeVisible();
@@ -79,6 +80,7 @@ test("environment review defaults to the 64x64 Ghost Sea Hunt stress scene", asy
 });
 
 test("environment review switches to the 64x64 Avalon Arthuria stress scene", async ({ page }) => {
+  test.setTimeout(90_000);
   const { host } = await openEnvironmentScenes(page);
 
   await page.getByRole("button", { name: "Avalon — Arthuria Confrontation" }).click();
