@@ -1,8 +1,8 @@
 import {
-  CanonicalChangeValidationError,
   applyCanonicalChange,
-  canonicalProposalBranchName,
   type CanonicalChangeRequest,
+  CanonicalChangeValidationError,
+  canonicalProposalBranchName,
 } from "./canonical-change.ts";
 
 const GITHUB_API = "https://api.github.com";
@@ -122,9 +122,7 @@ function requiredNumber(value: unknown, label: string): number {
 
 function decodeBase64(value: string): string {
   const binary = atob(value.replace(/\s+/g, ""));
-  return new TextDecoder().decode(
-    Uint8Array.from(binary, (character) => character.charCodeAt(0)),
-  );
+  return new TextDecoder().decode(Uint8Array.from(binary, (character) => character.charCodeAt(0)));
 }
 
 function encodeBase64(value: string): string {
@@ -139,10 +137,7 @@ function repoPath(suffix: string): string {
 }
 
 async function currentMainRevision(token: string): Promise<string> {
-  const result = await githubRequest<GitHubRef>(
-    token,
-    repoPath(`/git/ref/heads/${BASE_BRANCH}`),
-  );
+  const result = await githubRequest<GitHubRef>(token, repoPath(`/git/ref/heads/${BASE_BRANCH}`));
   return requiredCommitSha(result.body?.object?.sha, "main revision");
 }
 
@@ -158,10 +153,7 @@ async function fetchCanonicalFile(
   const blobSha = requiredString(result.body?.sha, "content blob SHA");
   const encoded = requiredString(result.body?.content, "content body");
   if (result.body?.encoding !== "base64")
-    throw new GitHubProposalError(
-      "provider",
-      "GitHub canonical content encoding was not base64.",
-    );
+    throw new GitHubProposalError("provider", "GitHub canonical content encoding was not base64.");
   try {
     return { blobSha, parsed: JSON.parse(decodeBase64(encoded)) as unknown };
   } catch (error) {
@@ -178,10 +170,7 @@ async function ensureProposalBranch(
   baseRevision: string,
 ): Promise<{ readonly existed: boolean; readonly headSha: string }> {
   if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH)
-    throw new GitHubProposalError(
-      "validation",
-      "Proposal branch is outside the Studio namespace.",
-    );
+    throw new GitHubProposalError("validation", "Proposal branch is outside the Studio namespace.");
   const refPath = repoPath(`/git/ref/heads/${encodeURIComponent(branchName)}`);
   const existing = await githubRequest<GitHubRef>(token, refPath, {}, [200, 404]);
   if (existing.status === 200)
@@ -303,10 +292,7 @@ async function pullRequestStatus(
   token: string,
   pullRequestNumber: number,
 ): Promise<GitHubProposalStatus> {
-  const pr = await githubRequest<GitHubPullRequest>(
-    token,
-    repoPath(`/pulls/${pullRequestNumber}`),
-  );
+  const pr = await githubRequest<GitHubPullRequest>(token, repoPath(`/pulls/${pullRequestNumber}`));
   if (pr.body?.merged_at) return "MERGED";
   if (pr.body?.state === "closed") return "CLOSED";
   const headSha = requiredCommitSha(pr.body?.head?.sha, "pull request head SHA");
@@ -315,8 +301,7 @@ async function pullRequestStatus(
     repoPath(`/commits/${headSha}/check-runs?per_page=100`),
   );
   const runs = checks.body?.check_runs ?? [];
-  if (runs.length === 0 || runs.some((run) => run.status !== "completed"))
-    return "CHECKS_PENDING";
+  if (runs.length === 0 || runs.some((run) => run.status !== "completed")) return "CHECKS_PENDING";
   const failureConclusions = new Set([
     "failure",
     "cancelled",
