@@ -1,0 +1,25 @@
+name: STUDIO03 hosted deploy
+
+on:
+  push:
+    branches: [game-studio03/read-models-provider-adapters]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+      - name: Require Supabase deployment credential
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: test -n "$SUPABASE_ACCESS_TOKEN"
+      - name: Deploy studio-operations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: npx --yes supabase@2.54.11 functions deploy studio-operations --project-ref mswgfxqhqhtltbrkkspy
