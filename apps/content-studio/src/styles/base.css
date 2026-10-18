@@ -15,7 +15,8 @@ body {
   min-width: 20rem;
   min-height: 100vh;
   margin: 0;
-  background: var(--studio-surface-canvas);
+  background: var(--studio-app-background);
+  background-attachment: fixed;
   color: var(--studio-text-primary);
 }
 
