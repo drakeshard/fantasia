@@ -18,7 +18,7 @@
   flex-direction: column;
   min-width: 0;
   border-right: 1px solid var(--studio-border-subtle);
-  background: var(--studio-color-midnight-950);
+  background: var(--studio-surface-sidebar);
 }
 
 .studio-shell__brand {

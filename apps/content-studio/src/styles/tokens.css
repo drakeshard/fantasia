@@ -42,6 +42,7 @@
   --studio-motion-feedback: 120ms;
   --studio-motion-panel: 180ms;
   --studio-motion-layout: 240ms;
+  --studio-motion-spinner: 700ms;
   --studio-ease-standard: cubic-bezier(0.2, 0, 0, 1);
 
   --studio-z-base: 0;

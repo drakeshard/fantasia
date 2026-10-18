@@ -12,7 +12,7 @@
 .studio-assets-drive-status {
   display: grid;
   gap: var(--studio-space-8);
-  border-left: 3px solid var(--studio-color-mint-300);
+  border-left: 3px solid var(--studio-validation-passed);
 }
 
 .studio-assets-drive-status .studio-assets-operation__heading > div {
@@ -27,7 +27,7 @@
   width: var(--studio-space-8);
   height: var(--studio-space-8);
   border-radius: var(--studio-radius-round);
-  background: var(--studio-color-mint-300);
+  background: var(--studio-validation-passed);
   transform: translateY(-50%);
   content: "";
 }

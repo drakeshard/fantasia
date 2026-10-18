@@ -25,6 +25,7 @@
   --studio-surface-panel: var(--studio-color-midnight-800);
   --studio-surface-raised: var(--studio-color-midnight-700);
   --studio-surface-overlay: var(--studio-color-midnight-650);
+  --studio-surface-sidebar: var(--studio-color-midnight-950);
   --studio-text-primary: var(--studio-color-ivory-100);
   --studio-text-secondary: var(--studio-color-slate-200);
   --studio-text-muted: var(--studio-color-slate-400);
@@ -36,6 +37,10 @@
   --studio-accent-primary: var(--studio-color-brass-300);
   --studio-accent-navigation: var(--studio-color-cyan-300);
   --studio-focus-ring: var(--studio-color-focus-300);
+  --studio-app-background:
+    radial-gradient(circle at 78% -8%, rgb(65 116 178 / 18%), transparent 34rem),
+    radial-gradient(circle at 8% 78%, rgb(33 114 139 / 10%), transparent 32rem),
+    linear-gradient(145deg, #050b12 0%, #08121c 46%, #0b1723 72%, #07111a 100%);
 
   /* Frozen Layer 3A–3D material vocabulary. */
   --studio-material-canvas: linear-gradient(145deg, #0b1420 0%, #101d2b 48%, #0d1825 100%);
@@ -55,16 +60,25 @@
   /* Shared component paint tokens. */
   --studio-button-primary-bg: linear-gradient(180deg, #f2d796 0%, #d7ad61 52%, #b98942 100%);
   --studio-button-primary-border: #efd08b;
+  --studio-button-primary-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 28%),
+    inset 0 -1px 0 rgb(78 50 13 / 36%),
+    0 0 18px color-mix(in srgb, var(--studio-accent-primary) 13%, transparent);
   --studio-button-secondary-bg: var(--studio-material-control);
   --studio-button-secondary-border: color-mix(in srgb, var(--studio-color-cyan-300) 30%, var(--studio-border-control));
   --studio-button-hover-bg: linear-gradient(180deg, rgb(37 79 108 / 92%), rgb(14 37 56 / 98%));
   --studio-control-bg: var(--studio-material-inset);
+  --studio-control-shadow:
+    inset 0 2px 7px rgb(0 0 0 / 26%),
+    inset 0 1px 0 rgb(255 255 255 / 3%);
   --studio-control-hover-border: color-mix(in srgb, var(--studio-color-cyan-300) 58%, var(--studio-border-control));
   --studio-surface-panel-bg: var(--studio-material-panel);
   --studio-surface-card-bg: var(--studio-material-raised);
   --studio-surface-inset-bg: var(--studio-material-inset);
+  --studio-surface-inset-shadow: inset 0 1px 6px rgb(0 0 0 / 25%);
   --studio-toolbar-bg: var(--studio-material-toolbar);
   --studio-dialog-bg: var(--studio-material-overlay);
+  --studio-dialog-backdrop: color-mix(in srgb, var(--studio-color-midnight-950) 78%, transparent);
   --studio-selected-bg: var(--studio-material-selected);
 
   --studio-lifecycle-working: var(--studio-color-gray-300);
@@ -85,12 +99,4 @@
   --studio-runtime-ready: #9ed9b8;
   --studio-runtime-published: var(--studio-color-brass-300);
   --studio-runtime-verification-warning: var(--studio-color-amber-300);
-}
-
-[data-studio-theme="fantasia-midnight"] body {
-  background:
-    radial-gradient(circle at 78% -8%, rgb(65 116 178 / 18%), transparent 34rem),
-    radial-gradient(circle at 8% 78%, rgb(33 114 139 / 10%), transparent 32rem),
-    linear-gradient(145deg, #050b12 0%, #08121c 46%, #0b1723 72%, #07111a 100%);
-  background-attachment: fixed;
 }
