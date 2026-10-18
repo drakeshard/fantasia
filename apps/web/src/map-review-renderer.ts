@@ -49,7 +49,9 @@ function tilePoints(point: ScreenPoint): number[] {
 }
 
 const blocked = new Set(layout.terrain.blockedCells.map(key));
-const elevations = new Map(layout.terrain.elevationCells.map((cell) => [key(cell), cell.level]));
+const elevations = new Map(
+  layout.terrain.elevationCells.map((cell) => [key(cell), cell.level]),
+);
 const routeAnchors = new Set(layout.cart.routeAnchors.map(key));
 const exitZone = new Set(layout.cart.exitZone.map(key));
 const road = new Set(
@@ -122,7 +124,9 @@ function drawTree(world: Container, point: ScreenPoint, seed: number): void {
   const trunkX = point.x + ((seed % 3) - 1) * 5;
   const trunkY = point.y - 12 - (seed % 2) * 4;
   world.addChild(
-    new Graphics().ellipse(trunkX, point.y + 1, 17, 6).fill({ color: 0x0a100c, alpha: 0.3 }),
+    new Graphics()
+      .ellipse(trunkX, point.y + 1, 17, 6)
+      .fill({ color: 0x0a100c, alpha: 0.3 }),
     new Graphics().rect(trunkX - 3, trunkY - 2, 6, 18).fill(0x5a4530),
     new Graphics()
       .circle(trunkX - 5, trunkY - 10, 14)
@@ -180,7 +184,10 @@ function drawUnitMarker(
   const body = new Graphics()
     .poly([-12, -12, 0, -21, 12, -12, 10, 12, 0, 17, -10, 12])
     .fill({ color: fill, alpha: reinforcement ? 0.58 : 0.94 })
-    .stroke({ color: reinforcement ? 0xd6b86f : 0xf1e3bb, width: reinforcement ? 2 : 1.5 });
+    .stroke({
+      color: reinforcement ? 0xd6b86f : 0xf1e3bb,
+      width: reinforcement ? 2 : 1.5,
+    });
   body.position.set(point.x, point.y - 22);
   const text = new Text({
     text: label,
@@ -195,7 +202,9 @@ function drawUnitMarker(
   text.anchor.set(0.5);
   text.position.set(point.x, point.y - 23);
   world.addChild(
-    new Graphics().ellipse(point.x, point.y - 2, 16, 5).fill({ color: 0x070b08, alpha: 0.42 }),
+    new Graphics()
+      .ellipse(point.x, point.y - 2, 16, 5)
+      .fill({ color: 0x070b08, alpha: 0.42 }),
     body,
     text,
   );
@@ -203,7 +212,9 @@ function drawUnitMarker(
 
 function drawCart(world: Container, point: ScreenPoint): void {
   world.addChild(
-    new Graphics().ellipse(point.x + 19, point.y + 1, 36, 8).fill({ color: 0x080b08, alpha: 0.35 }),
+    new Graphics()
+      .ellipse(point.x + 19, point.y + 1, 36, 8)
+      .fill({ color: 0x080b08, alpha: 0.35 }),
     new Graphics()
       .poly([
         point.x - 13,
@@ -256,7 +267,10 @@ export class MapReviewRenderer {
       resolution: Math.min(window.devicePixelRatio || 1, 2),
     });
     this.#app.canvas.dataset.testid = "b01-map-2p5d-canvas";
-    this.#app.canvas.setAttribute("aria-label", "CH01-B01 fixed 2.5D candidate battlefield review");
+    this.#app.canvas.setAttribute(
+      "aria-label",
+      "CH01-B01 fixed 2.5D candidate battlefield review",
+    );
     this.#host.replaceChildren(this.#app.canvas);
     this.#ready = true;
     this.#resizeObserver = new ResizeObserver(() => this.#resize());
@@ -297,7 +311,10 @@ export class MapReviewRenderer {
       }
     }
 
-    const xs = cells.flatMap(({ point }) => [point.x - TILE_WIDTH / 2, point.x + TILE_WIDTH / 2]);
+    const xs = cells.flatMap(({ point }) => [
+      point.x - TILE_WIDTH / 2,
+      point.x + TILE_WIDTH / 2,
+    ]);
     const ys = cells.flatMap(({ point }) => [point.y - 90, point.y + TILE_HEIGHT / 2 + 12]);
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
@@ -339,14 +356,23 @@ export class MapReviewRenderer {
       tile.on("pointertap", () => this.#onSelect(cell));
       world.addChild(tile);
       if (road.has(cellKey)) drawRoadDetail(world, point);
-      else if (!blocked.has(cellKey)) drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
+      else if (!blocked.has(cellKey)) {
+        drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
+      }
 
       if (this.#options.showRoute && cartClearance.has(cellKey)) {
         world.addChild(
           new Graphics()
             .poly(tilePoints(point))
-            .fill({ color: 0x82bfd0, alpha: routeAnchors.has(cellKey) ? 0.16 : 0.08 })
-            .stroke({ color: 0x9cd9e8, width: routeAnchors.has(cellKey) ? 1.6 : 0.8, alpha: 0.62 }),
+            .fill({
+              color: 0x82bfd0,
+              alpha: routeAnchors.has(cellKey) ? 0.16 : 0.08,
+            })
+            .stroke({
+              color: 0x9cd9e8,
+              width: routeAnchors.has(cellKey) ? 1.6 : 0.8,
+              alpha: 0.62,
+            }),
         );
       }
       if (this.#options.showRoute && exitZone.has(cellKey)) {
@@ -386,7 +412,10 @@ export class MapReviewRenderer {
       if (blocked.has(key(cell))) drawTree(world, point, cell.x * 13 + cell.y * 29);
     }
 
-    drawCart(world, projection(layout.cart.startAnchor, elevations.get(key(layout.cart.startAnchor)) ?? 0));
+    drawCart(
+      world,
+      projection(layout.cart.startAnchor, elevations.get(key(layout.cart.startAnchor)) ?? 0),
+    );
     if (!this.#options.showUnits) return;
     for (const entry of layout.deployment.initial) {
       drawUnitMarker(
