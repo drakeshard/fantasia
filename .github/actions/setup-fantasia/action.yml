@@ -1,6 +1,12 @@
 name: Setup Fantasia
 
-description: Prepare the Fantasia Node workspace and pinned shared-library artifacts.
+description: Prepare the Fantasia Node workspace with optional pinned shared-library artifacts.
+
+inputs:
+  prepare-shared:
+    description: Prepare and verify pinned RPG/Tactical package artifacts before install.
+    required: false
+    default: "true"
 
 runs:
   using: composite
@@ -15,10 +21,12 @@ runs:
       run: corepack enable
 
     - name: Prepare pinned shared-library artifacts
+      if: inputs.prepare-shared == 'true'
       shell: bash
       run: node scripts/prepare-shared-packages.mjs
 
     - name: Verify shared-library provenance
+      if: inputs.prepare-shared == 'true'
       shell: bash
       run: node scripts/verify-shared-packages.mjs
 
