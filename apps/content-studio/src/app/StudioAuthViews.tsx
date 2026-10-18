@@ -2,9 +2,9 @@ import type { JSX } from "preact";
 import { useState } from "preact/hooks";
 import {
   fetchStudioAuthorization,
-  signInStudio,
   type StoredStudioAuthSession,
   type StudioSessionState,
+  signInStudio,
 } from "../studio-session";
 import { PasswordField } from "../ui/PasswordField";
 import { Button, Spinner, StateMessage, Surface, TextField } from "../ui/primitives";
