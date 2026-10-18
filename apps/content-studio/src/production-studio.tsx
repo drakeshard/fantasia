@@ -1,5 +1,6 @@
 import { render } from "preact";
 import "./styles/tokens.css";
+import "./styles/theme-fantasia-midnight.css";
 import "./styles/base.css";
 import "./ui/primitives.css";
 import "./ui/semantic.css";
