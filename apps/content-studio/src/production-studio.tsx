@@ -129,6 +129,12 @@ function AuthorizedStudio({
   const { authorization, auth } = state;
   const isReadOnly = !authorization.capabilities.includes("registry.metadata.edit");
 
+  useEffect(() => {
+    document
+      .querySelector<HTMLElement>(".studio-production-root .studio-shell__fixture-note")
+      ?.remove();
+  }, []);
+
   return (
     <main class="studio-production-root" data-testid="studio-authorized">
       <StudioShell
@@ -136,7 +142,6 @@ function AuthorizedStudio({
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
         onModuleSelect={setActiveModule}
-        showFixtureNote={false}
         searchSlot={
           <TextField
             id="production-studio-search"
