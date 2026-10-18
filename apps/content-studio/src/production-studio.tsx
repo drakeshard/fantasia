@@ -8,16 +8,16 @@ import "./ui/workspace.css";
 import "./styles/material-fidelity.css";
 import "./styles/studio-auth.css";
 import "./styles/production-dashboard.css";
-import type { DashboardTargetModule, StudioReadModelsResponse } from "./dashboard-model";
+import type { StudioReadModelsResponse } from "./dashboard-model";
 import { ProductionDashboard } from "./production-dashboard";
 import {
   fetchStudioAuthorization,
   fetchStudioReadModels,
   restoreStudioSession,
-  type StoredStudioAuthSession,
-  type StudioSessionState,
   signInStudio,
   signOutStudio,
+  type StoredStudioAuthSession,
+  type StudioSessionState,
 } from "./studio-session";
 import { PasswordField } from "./ui/PasswordField";
 import { Button, Spinner, StateMessage, Surface, TextField } from "./ui/primitives";
@@ -100,15 +100,21 @@ function SignedOut({ onAuthorized }: { onAuthorized: (state: StudioSessionState)
   );
 }
 
-function Unauthorized({ auth, onSignedOut }: { auth: StoredStudioAuthSession; onSignedOut: () => void }) {
+function Unauthorized({
+  auth,
+  onSignedOut,
+}: {
+  auth: StoredStudioAuthSession;
+  onSignedOut: () => void;
+}) {
   return (
     <main class="studio-auth-gate" data-testid="studio-unauthorized">
       <Surface className="studio-auth-card">
         <p class="studio-auth-eyebrow">Authenticated · access not granted</p>
         <h1>Studio membership required</h1>
         <p>
-          {auth.email ?? "This authenticated user"} has no active Fantasia Content Studio membership.
-          Authentication alone is not Studio authorization.
+          {auth.email ?? "This authenticated user"} has no active Fantasia Content Studio
+          membership. Authentication alone is not Studio authorization.
         </p>
         <Button onClick={onSignedOut}>Sign out</Button>
       </Surface>
@@ -135,7 +141,11 @@ function replaceWorkspaceUrl(module: StudioModuleId, semanticId: string | null):
   if (semanticId) params.set("semanticId", semanticId);
   else params.delete("semanticId");
   const query = params.toString();
-  window.history.pushState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
+  window.history.pushState(
+    null,
+    "",
+    `${window.location.pathname}${query ? `?${query}` : ""}`,
+  );
 }
 
 type DashboardLoadState =
@@ -158,7 +168,9 @@ function AuthorizedStudio({
   const isReadOnly = !authorization.capabilities.includes("registry.metadata.edit");
 
   useEffect(() => {
-    document.querySelector<HTMLElement>(".studio-production-root .studio-shell__fixture-note")?.remove();
+    document
+      .querySelector<HTMLElement>(".studio-production-root .studio-shell__fixture-note")
+      ?.remove();
     let active = true;
     void fetchStudioReadModels(auth)
       .then((response) => {
@@ -193,7 +205,12 @@ function AuthorizedStudio({
     activeModule === "dashboard" ? (
       dashboard.status === "loading" ? (
         <DashboardTemplate
-          header={<TemplateFixtureHeading title="Production Dashboard" description="Loading normalized operational read models." />}
+          header={
+            <TemplateFixtureHeading
+              title="Production Dashboard"
+              description="Loading normalized operational read models."
+            />
+          }
         >
           <div class="studio-template-state" data-state="loading" data-testid="dashboard-loading">
             <Spinner label="Loading production Dashboard" />
@@ -210,7 +227,12 @@ function AuthorizedStudio({
         </DashboardTemplate>
       ) : dashboard.status === "error" ? (
         <DashboardTemplate
-          header={<TemplateFixtureHeading title="Production Dashboard" description="Operational read model failed to load." />}
+          header={
+            <TemplateFixtureHeading
+              title="Production Dashboard"
+              description="Operational read model failed to load."
+            />
+          }
         >
           <StateMessage title="Dashboard read failed" tone="error">
             {dashboard.message} Authoritative source data was not changed.
@@ -222,7 +244,11 @@ function AuthorizedStudio({
           ) : null}
         </DashboardTemplate>
       ) : (
-        <ProductionDashboard response={dashboard.response} readOnly={isReadOnly} onNavigate={navigate} />
+        <ProductionDashboard
+          response={dashboard.response}
+          readOnly={isReadOnly}
+          onNavigate={navigate}
+        />
       )
     ) : (
       <DashboardTemplate
@@ -261,7 +287,9 @@ function AuthorizedStudio({
             <strong>{auth.email ?? "Studio member"}</strong>
             <span>{authorization.role}</span>
             <small>{isReadOnly ? "Read-only capabilities" : "Trusted operations enabled"}</small>
-            <Button variant="quiet" onClick={onSignedOut}>Sign out</Button>
+            <Button variant="quiet" onClick={onSignedOut}>
+              Sign out
+            </Button>
           </Surface>
         }
       >
@@ -285,7 +313,8 @@ function ProductionStudio() {
   }, []);
 
   const signOut = async () => {
-    const auth = state.status === "authorized" || state.status === "unauthorized" ? state.auth : null;
+    const auth =
+      state.status === "authorized" || state.status === "unauthorized" ? state.auth : null;
     await signOutStudio(auth);
     setState({ status: "signed-out" });
   };
@@ -298,12 +327,16 @@ function ProductionStudio() {
     );
   }
   if (state.status === "signed-out") return <SignedOut onAuthorized={setState} />;
-  if (state.status === "unauthorized") return <Unauthorized auth={state.auth} onSignedOut={() => void signOut()} />;
+  if (state.status === "unauthorized") {
+    return <Unauthorized auth={state.auth} onSignedOut={() => void signOut()} />;
+  }
   if (state.status === "error") {
     return (
       <main class="studio-auth-gate" data-testid="studio-session-error">
         <Surface className="studio-auth-card">
-          <StateMessage title="Studio session unavailable" tone="error">{state.message}</StateMessage>
+          <StateMessage title="Studio session unavailable" tone="error">
+            {state.message}
+          </StateMessage>
           <Button onClick={() => setState({ status: "signed-out" })}>Return to sign in</Button>
         </Surface>
       </main>
