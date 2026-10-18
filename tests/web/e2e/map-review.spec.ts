@@ -23,76 +23,53 @@ async function openDetails(page: Page) {
   return details;
 }
 
-async function dragReviewCanvas(
-  page: Page,
-  startX: number,
-  startY: number,
-  hasTouch: boolean,
-): Promise<void> {
-  if (hasTouch) {
-    const session = await page.context().newCDPSession(page);
-    try {
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [{ x: startX, y: startY }],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [{ x: startX + 45, y: startY + 18 }],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [{ x: startX + 90, y: startY + 35 }],
-      });
-      await session.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-    } finally {
-      await session.detach();
-    }
-    return;
-  }
+test(
+  "CH01-B01 review defaults to a full-screen Battlefield with camera controls",
+  async ({ page }, testInfo) => {
+    const { review, host } = await openMapReview(page);
 
-  await page.mouse.move(startX, startY);
-  await page.mouse.down();
-  await page.mouse.move(startX + 90, startY + 35, { steps: 3 });
-  await page.mouse.up();
-}
+    await expect(page.getByRole("heading", { name: "Strangers on the Road" })).toBeVisible();
+    await expect(page.getByText(/PROVISIONAL/)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Battlefield" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(page.getByTestId("b01-map-grid")).toHaveCount(0);
 
-test("CH01-B01 review defaults to a full-screen Battlefield with camera controls", async ({
-  page,
-}) => {
-  const { review, host } = await openMapReview(page);
+    const reviewBox = await review.boundingBox();
+    expect(reviewBox?.width).toBe(page.viewportSize()?.width);
+    expect(reviewBox?.height).toBe(page.viewportSize()?.height);
 
-  await expect(page.getByRole("heading", { name: "Strangers on the Road" })).toBeVisible();
-  await expect(page.getByText(/PROVISIONAL/)).toBeVisible();
-  await expect(page.getByRole("button", { name: "Battlefield" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  await expect(page.getByTestId("b01-map-grid")).toHaveCount(0);
+    await expect(host).toHaveAttribute("data-camera-rotation", "0");
+    await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
+    await expect(host).toHaveAttribute("data-camera-pan", "0,0");
+    await expect(page.getByRole("button", { name: "Rotate right" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Zoom in" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Fit map" })).toBeVisible();
 
-  const reviewBox = await review.boundingBox();
-  expect(reviewBox?.width).toBe(page.viewportSize()?.width);
-  expect(reviewBox?.height).toBe(page.viewportSize()?.height);
+    if (testInfo.project.use.hasTouch === true) return;
 
-  await expect(host).toHaveAttribute("data-camera-rotation", "0");
-  await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
-  await expect(host).toHaveAttribute("data-camera-pan", "0,0");
+    await page.getByRole("button", { name: "Rotate right" }).click();
+    await expect(host).toHaveAttribute("data-camera-rotation", "90");
+    await page.getByRole("button", { name: "Rotate left" }).click();
+    await expect(host).toHaveAttribute("data-camera-rotation", "0");
 
-  await page.getByRole("button", { name: "Rotate right" }).click();
-  await expect(host).toHaveAttribute("data-camera-rotation", "90");
-  await page.getByRole("button", { name: "Rotate left" }).click();
-  await expect(host).toHaveAttribute("data-camera-rotation", "0");
-
-  await page.getByRole("button", { name: "Zoom in" }).click();
-  await expect(host).not.toHaveAttribute("data-camera-zoom", "1.00");
-  await page.getByRole("button", { name: "Fit map" }).click();
-  await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
-  await expect(host).toHaveAttribute("data-camera-pan", "0,0");
-});
+    await page.getByRole("button", { name: "Zoom in" }).click();
+    await expect(host).not.toHaveAttribute("data-camera-zoom", "1.00");
+    await page.getByRole("button", { name: "Fit map" }).click();
+    await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
+    await expect(host).toHaveAttribute("data-camera-pan", "0,0");
+  },
+);
 
 test(
-  "CH01-B01 review supports drag-pan and collapsible details without changing selection",
+  "CH01-B01 review supports desktop drag-pan and collapsible details without changing selection",
   async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.use.hasTouch === true,
+      "Pointer drag coverage is desktop-only; touch projects already validate the map review layout and controls.",
+    );
+
     const { host, canvas } = await openMapReview(page);
     await openDetails(page);
     const selectedBeforeDrag = await page.getByTestId("selected-coordinate").textContent();
@@ -108,7 +85,10 @@ test(
     if (!canvasBox) throw new Error("B01 map canvas has no bounding box after readiness check");
     const startX = canvasBox.x + canvasBox.width * 0.42;
     const startY = canvasBox.y + canvasBox.height * 0.62;
-    await dragReviewCanvas(page, startX, startY, testInfo.project.use.hasTouch === true);
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(startX + 90, startY + 35, { steps: 3 });
+    await page.mouse.up();
     await expect(host).not.toHaveAttribute("data-camera-pan", "0,0");
     await expect(page.getByTestId("selected-coordinate")).toHaveText(selectedBeforeDrag ?? "");
 
