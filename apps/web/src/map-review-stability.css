@@ -1,0 +1,25 @@
+html,
+body,
+#app {
+  height: 100%;
+  overflow: hidden;
+}
+
+.map-review {
+  min-height: 0;
+  max-height: 100dvh;
+}
+
+.map-review-battlefield-wrap,
+.map-review-battlefield {
+  min-width: 0;
+  min-height: 0;
+  contain: strict;
+}
+
+.map-review-battlefield canvas {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+  max-height: none;
+}
