@@ -85,7 +85,12 @@ const asset = {
       createdAt: "2026-10-18T08:00:00Z",
       source: source("11111111-1111-4111-8111-111111111111", 2),
       validations: [
-        { dimension: "Source Valid", outcome: "PASSED", blocking: false, checkedAt: "2026-10-18T08:00:00Z" },
+        {
+          dimension: "Source Valid",
+          outcome: "PASSED",
+          blocking: false,
+          checkedAt: "2026-10-18T08:00:00Z",
+        },
       ],
     },
     {
@@ -100,11 +105,20 @@ const asset = {
   ],
   relations: [],
   validations: [
-    { dimension: "Source Valid", outcome: "PASSED", blocking: false, checkedAt: "2026-10-18T08:00:00Z" },
+    {
+      dimension: "Source Valid",
+      outcome: "PASSED",
+      blocking: false,
+      checkedAt: "2026-10-18T08:00:00Z",
+    },
   ],
   runtimeDerivatives: [],
   history: [
-    { eventType: "registry.asset_version.created", occurredAt: "2026-10-18T08:00:00Z", sourceKind: "google-drive" },
+    {
+      eventType: "registry.asset_version.created",
+      occurredAt: "2026-10-18T08:00:00Z",
+      sourceKind: "google-drive",
+    },
   ],
   issues: [],
 };
@@ -135,12 +149,20 @@ async function mockStudio(page: Page, role: "Viewer" | "Editor") {
   await page.route("**/functions/v1/studio-operations", async (route) => {
     const contentType = route.request().headers()["content-type"] ?? "";
     if (!contentType.includes("application/json")) {
-      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ replayed: false }) });
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ replayed: false }),
+      });
       return;
     }
     const request = route.request().postDataJSON() as { type?: string };
     if (request.type === "studio.read_models.get") {
-      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(readModels) });
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(readModels),
+      });
       return;
     }
     if (request.type === "session.get") {
@@ -150,7 +172,8 @@ async function mockStudio(page: Page, role: "Viewer" | "Editor") {
         body: JSON.stringify({
           authorized: true,
           role,
-          capabilities: role === "Viewer" ? ["studio.read"] : ["studio.read", "registry.metadata.edit"],
+          capabilities:
+            role === "Viewer" ? ["studio.read"] : ["studio.read", "registry.metadata.edit"],
         }),
       });
       return;
@@ -160,6 +183,14 @@ async function mockStudio(page: Page, role: "Viewer" | "Editor") {
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({ connected: true, accountEmail: "owner@example.test" }),
+      });
+      return;
+    }
+    if (request.type === "registry.asset_source.access") {
+      await route.fulfill({
+        status: 200,
+        contentType: "image/png",
+        body: Buffer.from("preview-bytes"),
       });
       return;
     }
@@ -179,30 +210,42 @@ async function signIn(page: Page, role: "Viewer" | "Editor") {
   await page.getByRole("button", { name: "Sign in" }).click();
 }
 
-test("Viewer sees production Assets with retained history and no mutation access", async ({ page }) => {
+test("Viewer sees one asset-first workspace with retained history and no mutation access", async ({
+  page,
+}) => {
   await signIn(page, "Viewer");
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
-  await expect(page.getByText("Google Drive · Connected as owner@example.test", { exact: true })).toBeVisible();
-  await expect(page.getByText(asset.semanticId, { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByText("Google Drive · Connected as owner@example.test", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText(asset.semanticId, { exact: true })).toHaveCount(1);
+  await expect(page.getByTestId("asset-live-preview")).toBeVisible();
+  await expect(page.getByText("Semantic asset", { exact: true })).toHaveCount(0);
   await expect(page.getByText("v2").first()).toBeVisible();
   await expect(page.getByText("v1").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Upload new version" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Replace source" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Manage relations" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Make current" })).toBeDisabled();
   await expect(page.getByText("Read-only Assets workspace", { exact: true })).toBeVisible();
 });
 
-test("Editor uploads a source/master without provider plumbing in the form", async ({ page }) => {
+test("Editor replaces a source/master from a subordinate dialog without provider plumbing", async ({
+  page,
+}) => {
   await signIn(page, "Editor");
   await expect(page.getByLabel("Existing Google Drive file")).toHaveCount(0);
   await expect(page.getByLabel("Semantic asset ID")).toHaveCount(0);
+  await page.getByRole("button", { name: "Replace source" }).click();
+  await expect(page.getByRole("dialog", { name: "Replace source/master" })).toBeVisible();
   await page.locator("#asset-source-file").setInputFiles({
     name: "portrait.png",
     mimeType: "image/png",
     buffer: Buffer.from("source-master"),
   });
-  const operation = page.waitForRequest((request) =>
-    request.url().includes("/functions/v1/studio-operations") &&
-    (request.headers()["content-type"] ?? "").includes("multipart/form-data"),
+  const operation = page.waitForRequest(
+    (request) =>
+      request.url().includes("/functions/v1/studio-operations") &&
+      (request.headers()["content-type"] ?? "").includes("multipart/form-data"),
   );
   await page.getByRole("button", { name: "Upload new version" }).click();
   const request = await operation;
@@ -232,4 +275,18 @@ test("Editor can explicitly select a retained version without changing lifecycle
     versionId: "22222222-2222-4222-8222-222222222222",
   });
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
+});
+
+test("compact populated Assets keeps the selected workspace reachable without horizontal overflow", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 844, height: 390 });
+  await signIn(page, "Editor");
+  await expect(page.getByTestId("asset-live-preview")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Replace source" })).toBeVisible();
+  const geometry = await page.evaluate(() => ({
+    innerWidth: window.innerWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.innerWidth);
 });
