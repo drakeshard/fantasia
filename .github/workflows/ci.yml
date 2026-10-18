@@ -132,6 +132,8 @@ jobs:
               packages/game/*|packages/runtime/*)
                 game=true
                 ;;
+            esac
+            case "$path" in
               packages/game/package.json|packages/runtime/package.json)
                 dependency_scope=true
                 ;;
@@ -142,6 +144,8 @@ jobs:
               apps/web/*|tests/e2e/*|playwright.config.ts|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
                 game=true
                 ;;
+            esac
+            case "$path" in
               apps/web/package.json)
                 dependency_scope=true
                 ;;
@@ -159,6 +163,8 @@ jobs:
               apps/content-studio/*|tests/content-studio/*|playwright.content-studio.config.ts|.github/workflows/deploy-content-studio.yml|wrangler.content-studio.jsonc|scripts/check-content-studio-deployment.mjs|scripts/check-studio-registry.mjs|scripts/check-studio-auth.mjs|scripts/check-studio-read-model.mjs|scripts/check-studio-canonical-change.mjs|scripts/generate-studio-canonical-snapshot.mjs)
                 studio=true
                 ;;
+            esac
+            case "$path" in
               apps/content-studio/package.json)
                 dependency_scope=true
                 ;;
