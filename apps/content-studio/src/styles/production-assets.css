@@ -1,0 +1,117 @@
+.studio-assets-workspace .studio-collection__filters {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.studio-assets-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--studio-space-8);
+  margin-block: var(--studio-space-12);
+}
+
+.studio-assets-operations-grid {
+  display: grid;
+  gap: var(--studio-space-16);
+  margin-top: var(--studio-space-16);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+}
+
+.studio-assets-operation {
+  display: grid;
+  gap: var(--studio-space-12);
+  align-content: start;
+}
+
+.studio-assets-operation__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--studio-space-12);
+}
+
+.studio-assets-operation__heading > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.studio-assets-operation__heading span,
+.studio-assets-operation__heading small {
+  color: var(--studio-text-muted);
+  font-size: var(--studio-font-size-meta);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.studio-assets-operation__heading h4 {
+  margin: 0;
+}
+
+.studio-assets-form-grid,
+.studio-assets-source-choice {
+  display: grid;
+  gap: var(--studio-space-12);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.studio-assets-file-input {
+  min-height: var(--studio-target-min);
+  padding-block: 0.55rem;
+}
+
+.studio-assets-operation__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--studio-space-8);
+}
+
+.studio-assets-version-actions {
+  display: grid;
+  gap: var(--studio-space-8);
+}
+
+.studio-assets-version-action,
+.studio-assets-relation-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--studio-space-12);
+  min-width: 0;
+  padding: var(--studio-space-8);
+  border: 1px solid var(--studio-border-subtle);
+  border-radius: var(--studio-radius-panel);
+  background: var(--studio-material-inset);
+}
+
+.studio-assets-version-action > div:first-child {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.studio-assets-version-action > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--studio-space-4);
+}
+
+.studio-assets-version-action small {
+  color: var(--studio-text-muted);
+}
+
+.studio-assets-relation-action code {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .studio-assets-operation__heading,
+  .studio-assets-version-action,
+  .studio-assets-relation-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .studio-assets-version-action > div:last-child {
+    justify-content: flex-start;
+  }
+}

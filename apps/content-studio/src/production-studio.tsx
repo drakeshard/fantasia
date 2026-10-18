@@ -9,6 +9,7 @@ import "./styles/material-fidelity.css";
 import "./styles/studio-auth.css";
 import "./styles/production-dashboard.css";
 import "./styles/production-characters.css";
+import "./styles/production-assets.css";
 import { ProductionStudio } from "./app/ProductionStudio";
 
 const labMode = new URLSearchParams(window.location.search).get("lab") === "1";
