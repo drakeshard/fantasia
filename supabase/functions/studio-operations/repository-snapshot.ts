@@ -2,12 +2,14 @@ import type {
   RuntimeManifestSnapshot,
   StudioCanonicalSummary,
 } from "../../../packages/studio-read-model/src/index.ts";
+import identityCatalog from "../../../config/identity-ui-assets.json" with { type: "json" };
 import snapshot from "./canonical-snapshot.generated.json" with { type: "json" };
 
 const STORY_PATH = "content/narrative/story.json";
 const STORY_PRODUCTION_PATH = "content/narrative/story-production.json";
 const CHARACTER_PATH = "content/characters/characters.json";
 const ENCOUNTER_PATH = "content/encounters/candidates/ch01-b01.layout-candidate.json";
+const IDENTITY_UI_ASSET_PATH = "config/identity-ui-assets.json";
 const RUNTIME_MANIFEST_PATH = "config/runtime-assets.json";
 
 type StoryRow = readonly [
@@ -55,6 +57,15 @@ interface CompactRepositorySnapshot {
   };
 }
 
+interface IdentityCatalogOwner {
+  readonly semanticId: string;
+  readonly displayName: string;
+  readonly entityType: string;
+  readonly roles: readonly string[];
+  readonly visualStatus?: string;
+  readonly decisionReference?: string;
+}
+
 export interface RepositoryReadSnapshot {
   readonly revision: string;
   readonly canonicalModels: readonly StudioCanonicalSummary[];
@@ -67,7 +78,8 @@ function gitProvenance(source: string, revision: string, canonical: boolean) {
 
 // This compact deployment snapshot is mechanically projected from Git-owned canonical
 // sources by scripts/generate-studio-canonical-snapshot.mjs. Its revision records the
-// repository state represented by the bundled read projection.
+// repository state represented by the bundled read projection. The Identity/UI catalog
+// is also bundled from Git and contributes canonical owner identities without a network fetch.
 export function loadRepositorySnapshot(): RepositoryReadSnapshot {
   const compact = snapshot as CompactRepositorySnapshot;
   const canonicalModels: StudioCanonicalSummary[] = compact.storyRows.map((row) => {
@@ -129,6 +141,22 @@ export function loadRepositorySnapshot(): RepositoryReadSnapshot {
         rpg,
       },
       provenance: gitProvenance(CHARACTER_PATH, compact.revision, true),
+    });
+  }
+
+  for (const owner of identityCatalog.owners as readonly IdentityCatalogOwner[]) {
+    canonicalModels.push({
+      semanticId: owner.semanticId,
+      entityType: owner.entityType,
+      displayName: owner.displayName,
+      canonicalPath: IDENTITY_UI_ASSET_PATH,
+      canonicalData: {
+        semanticId: owner.semanticId,
+        roles: owner.roles,
+        visualStatus: owner.visualStatus ?? null,
+        decisionReference: owner.decisionReference ?? null,
+      },
+      provenance: gitProvenance(IDENTITY_UI_ASSET_PATH, compact.revision, true),
     });
   }
 
