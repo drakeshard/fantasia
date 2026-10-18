@@ -49,6 +49,9 @@ jobs:
       - name: Combined RPG/Tactical package consumer
         run: pnpm shared:consumer
 
+      - name: GAME-MAP05 diagnostic — full Biome output
+        run: pnpm exec biome check . --max-diagnostics=100
+
       - name: Formatting, lint, architecture, and determinism
         run: pnpm check
 
