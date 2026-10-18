@@ -13,7 +13,10 @@
 }
 
 .environment-scenes-title {
-  max-width: min(36rem, 46vw);
+  flex: 1 1 240px;
+  min-width: 220px;
+  max-width: none;
+  overflow: hidden;
 }
 
 .environment-scenes-description {
@@ -26,11 +29,17 @@
 }
 
 .environment-scene-switcher {
-  max-width: 34rem;
+  flex: 0 1 320px;
+  min-width: 260px;
+  max-width: 320px;
 }
 
 .environment-scene-switcher button {
-  white-space: nowrap;
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: 8px;
+  line-height: 1.08;
+  white-space: normal;
 }
 
 .environment-scenes-details {
