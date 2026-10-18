@@ -369,7 +369,10 @@ Deno.serve(async (request: Request) => {
       }
       const upload = parseAssetUploadForm(form);
       canonicalOwner(upload.ownerSemanticId);
-      const source = await uploadGoogleDriveFile(upload.file);
+      const source = await uploadGoogleDriveFile(
+        upload.file,
+        `${user.id}:${upload.idempotencyKey}`,
+      );
       return jsonResponse(
         await registerAssetSource(user.id, supabaseUrl, secretKey, upload, source),
       );
