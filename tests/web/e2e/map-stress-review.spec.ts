@@ -25,9 +25,7 @@ async function openDetails(page: Page) {
   return details;
 }
 
-test("GAME-MAP05 renders all 600 stress cells across the full elevation range", async ({
-  page,
-}) => {
+test("GAME-MAP05 renders all 600 stress cells with the review shell overlaid", async ({ page }) => {
   const { host } = await openStressReview(page);
 
   await expect(page.getByRole("heading", { name: "Elevation Extremes" })).toBeVisible();
@@ -38,6 +36,16 @@ test("GAME-MAP05 renders all 600 stress cells across the full elevation range", 
   await expect
     .poll(async () => Number(await host.getAttribute("data-elevation-face-count")))
     .toBeGreaterThan(0);
+
+  const topbar = page.locator(".map-review-topbar");
+  const modeSwitch = page.locator(".map-review-mode-switch");
+  await expect(topbar).toBeVisible();
+  await expect
+    .poll(() => topbar.evaluate((element) => getComputedStyle(element).position))
+    .toBe("absolute");
+  await expect
+    .poll(() => modeSwitch.evaluate((element) => getComputedStyle(element).display))
+    .toBe("inline-flex");
 });
 
 test("GAME-MAP05 Blueprint exposes exact 600-cell geometry and signed elevation sentinels", async ({
@@ -48,7 +56,10 @@ test("GAME-MAP05 Blueprint exposes exact 600-cell geometry and signed elevation 
 
   await expect(page.getByTestId("stress-map-grid").locator("button")).toHaveCount(600);
   await page.getByTestId("stress-map-cell-5-15").click();
-  await openDetails(page);
+  const details = await openDetails(page);
+  await expect
+    .poll(() => details.evaluate((element) => getComputedStyle(element).position))
+    .toBe("absolute");
   await expect(page.getByTestId("stress-selected-coordinate")).toHaveText("(5, 15)");
   await expect(page.getByTestId("stress-selected-elevation")).toHaveText("Elevation -7");
 
