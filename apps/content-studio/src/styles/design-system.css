@@ -7,11 +7,12 @@
  * 3. reset/base
  * 4. shared primitives
  * 5. semantic components
- * 6. workspace/composite components
- * 7. entity/asset shared compositions
+ * 6. workspace structure
+ * 7. shared composite presentation
+ * 8. entity/asset shared compositions
  *
  * Feature styles are imported separately by production-studio.tsx and may only
- * compose feature-prefixed layout hooks.
+ * compose feature-prefixed layout/content hooks.
  */
 @import "./tokens.css";
 @import "./theme-fantasia-midnight.css";
@@ -19,4 +20,5 @@
 @import "../ui/primitives.css";
 @import "../ui/semantic.css";
 @import "../ui/workspace.css";
+@import "../ui/composites.css";
 @import "../ui/entity-asset.css";
