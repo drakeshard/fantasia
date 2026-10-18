@@ -25,9 +25,11 @@ export function BattlefieldViewerApp() {
   const [showGrid, setShowGrid] = useState(false);
   const [showCoordinates, setShowCoordinates] = useState(false);
   const hostRef = useRef<HTMLDivElement>(null);
-  const rendererRef = useRef<BattlefieldRenderer>();
+  const rendererRef = useRef<BattlefieldRenderer | null>(null);
   const frame = useMemo(() => authoredSceneToBattlefieldFrame(fixture.scene), [fixture]);
-  const selectedCell = frame.cells.find((cell) => battlefieldCellKey(cell) === battlefieldCellKey(selected));
+  const selectedCell = frame.cells.find(
+    (cell) => battlefieldCellKey(cell) === battlefieldCellKey(selected),
+  );
 
   useEffect(() => {
     const host = hostRef.current;
@@ -53,7 +55,7 @@ export function BattlefieldViewerApp() {
       });
     });
     return () => {
-      rendererRef.current = undefined;
+      rendererRef.current = null;
       renderer.destroy();
     };
   }, []);
