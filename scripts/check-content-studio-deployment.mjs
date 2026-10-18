@@ -39,6 +39,10 @@ requireCondition(
   "Content Studio deployment must remain manually dispatched.",
 );
 requireCondition(
+  workflow.includes('test "$GITHUB_REF" = "refs/heads/main"'),
+  "Content Studio deployment must reject non-main workflow dispatch refs.",
+);
+requireCondition(
   workflow.includes("group: deploy-content-studio"),
   "Content Studio deployment must use independent concurrency.",
 );
