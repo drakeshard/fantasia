@@ -275,6 +275,12 @@ export class MapReviewRenderer {
   #dragged = false;
   #suppressTap = false;
   #tapTimer: number | undefined;
+  #world: Container | undefined;
+  #fitScale = 1;
+  #contentWidth = 1;
+  #contentHeight = 1;
+  #minX = 0;
+  #minY = 0;
 
   constructor(
     host: HTMLElement,
@@ -341,7 +347,7 @@ export class MapReviewRenderer {
     this.#zoom = 1;
     this.#panX = 0;
     this.#panY = 0;
-    this.#draw();
+    this.#applyCamera();
   }
 
   destroy(): void {
@@ -388,7 +394,7 @@ export class MapReviewRenderer {
     this.#panY += event.clientY - this.#lastPointerY;
     this.#lastPointerX = event.clientX;
     this.#lastPointerY = event.clientY;
-    this.#draw();
+    this.#applyCamera();
   };
 
   readonly #handlePointerUp = (event: PointerEvent): void => {
@@ -408,7 +414,23 @@ export class MapReviewRenderer {
 
   #setZoom(next: number): void {
     this.#zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, next));
-    this.#draw();
+    this.#applyCamera();
+  }
+
+  #applyCamera(): void {
+    this.#updateCameraDataset();
+    const world = this.#world;
+    if (!world) return;
+    const scale = this.#fitScale * this.#zoom;
+    world.scale.set(scale);
+    world.x =
+      (this.#app.screen.width - this.#contentWidth * scale) / 2 +
+      (PADDING - this.#minX) * scale +
+      this.#panX;
+    world.y =
+      (this.#app.screen.height - this.#contentHeight * scale) / 2 +
+      (PADDING - this.#minY) * scale +
+      this.#panY;
   }
 
   #resize(): void {
@@ -451,23 +473,24 @@ export class MapReviewRenderer {
     const maxX = Math.max(...xs);
     const minY = Math.min(...ys);
     const maxY = Math.max(...ys);
-    const contentWidth = maxX - minX + PADDING * 2;
-    const contentHeight = maxY - minY + PADDING * 2;
-    const fitScale = Math.min(
+    this.#contentWidth = maxX - minX + PADDING * 2;
+    this.#contentHeight = maxY - minY + PADDING * 2;
+    this.#minX = minX;
+    this.#minY = minY;
+    this.#fitScale = Math.min(
       1.3,
       Math.max(
         0.32,
-        Math.min(this.#app.screen.width / contentWidth, this.#app.screen.height / contentHeight),
+        Math.min(
+          this.#app.screen.width / this.#contentWidth,
+          this.#app.screen.height / this.#contentHeight,
+        ),
       ),
     );
-    const scale = fitScale * this.#zoom;
     const world = new Container();
-    world.scale.set(scale);
-    world.x =
-      (this.#app.screen.width - contentWidth * scale) / 2 + (PADDING - minX) * scale + this.#panX;
-    world.y =
-      (this.#app.screen.height - contentHeight * scale) / 2 + (PADDING - minY) * scale + this.#panY;
+    this.#world = world;
     this.#app.stage.addChild(world);
+    this.#applyCamera();
 
     const sorted = [...cells].sort((left, right) => {
       const depth = left.point.depth - right.point.depth;

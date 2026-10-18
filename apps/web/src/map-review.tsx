@@ -228,7 +228,9 @@ export function MapReviewApp() {
   const [showUnits, setShowUnits] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
-  const [detailsOpen, setDetailsOpen] = useState(true);
+  const [detailsOpen, setDetailsOpen] = useState(
+    () => window.innerWidth >= 1000 && window.innerHeight >= 600,
+  );
   const cameraRef = useRef<MapReviewRenderer | undefined>(undefined);
 
   const blocked = useMemo(
