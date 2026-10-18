@@ -1,0 +1,292 @@
+.studio-entity-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--studio-space-4);
+  width: 100%;
+}
+
+.studio-entity-heading__identity,
+.studio-entity-heading__status {
+  display: grid;
+  gap: var(--studio-space-1);
+}
+
+.studio-entity-heading__identity > span,
+.studio-entity-heading__status > span,
+.studio-asset-section-heading span,
+.studio-asset-inspector__header span,
+.studio-asset-card__state small {
+  color: var(--studio-text-muted);
+  font-size: var(--studio-font-size-xs);
+}
+
+.studio-entity-heading h3,
+.studio-asset-inspector h4,
+.studio-asset-inspector h5 {
+  margin: 0;
+  color: var(--studio-text-strong);
+}
+
+.studio-entity-heading code,
+.studio-asset-card code,
+.studio-asset-inspector code {
+  overflow-wrap: anywhere;
+  color: var(--studio-text-muted);
+}
+
+.studio-entity-heading__status {
+  justify-items: end;
+}
+
+.studio-entity-fact-group,
+.studio-entity-authority,
+.studio-evidence-stack {
+  display: grid;
+  gap: var(--studio-space-3);
+}
+
+.studio-entity-fact {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--studio-space-4);
+  padding: var(--studio-space-2) 0;
+  border-bottom: 1px solid var(--studio-border-subtle);
+}
+
+.studio-entity-fact:last-child {
+  border-bottom: 0;
+}
+
+.studio-entity-fact span {
+  color: var(--studio-text-muted);
+}
+
+.studio-entity-fact strong {
+  max-width: 65%;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.studio-entity-provenance-list,
+.studio-asset-version-list,
+.studio-asset-runtime-list,
+.studio-asset-relation-list,
+.studio-asset-issue-list {
+  display: grid;
+  gap: var(--studio-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.studio-entity-provenance-row,
+.studio-entity-history-row,
+.studio-asset-version-row {
+  display: grid;
+  gap: var(--studio-space-1);
+  padding: var(--studio-space-3);
+  border: 1px solid var(--studio-border-subtle);
+  border-radius: var(--studio-radius-md);
+  background: var(--studio-surface-inset);
+}
+
+.studio-entity-provenance-row > div,
+.studio-asset-version-row > div,
+.studio-asset-section-heading,
+.studio-asset-inspector__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--studio-space-3);
+}
+
+.studio-entity-validation-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--studio-space-3);
+}
+
+.studio-entity-validation-row p,
+.studio-asset-issue-list p,
+.studio-asset-version-row p {
+  margin: 0;
+}
+
+.studio-asset-board-composition {
+  display: grid;
+  gap: var(--studio-space-3);
+  min-width: 0;
+}
+
+.studio-asset-board-composition__body {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 1.65fr);
+  gap: var(--studio-space-4);
+  align-items: start;
+  min-width: 0;
+}
+
+.studio-asset-board-composition__list {
+  display: grid;
+  gap: var(--studio-space-2);
+  min-width: 0;
+}
+
+.studio-asset-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--studio-space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--studio-space-3);
+  border: 1px solid var(--studio-border-subtle);
+  border-radius: var(--studio-radius-md);
+  background: var(--studio-surface-raised);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.studio-asset-card:hover,
+.studio-asset-card:focus-visible,
+.studio-asset-card[aria-current="true"] {
+  border-color: var(--studio-border-active);
+  box-shadow: inset 3px 0 0 var(--studio-accent-primary);
+}
+
+.studio-asset-card__identity,
+.studio-asset-card__state {
+  display: grid;
+  gap: var(--studio-space-1);
+  min-width: 0;
+}
+
+.studio-asset-card__state {
+  justify-items: end;
+  text-align: right;
+}
+
+.studio-asset-inspector {
+  display: grid;
+  gap: var(--studio-space-4);
+  min-width: 0;
+}
+
+.studio-asset-inspector__header {
+  padding-bottom: var(--studio-space-3);
+  border-bottom: 1px solid var(--studio-border-subtle);
+}
+
+.studio-asset-inspector__header > div,
+.studio-asset-section-heading > div {
+  display: grid;
+  gap: var(--studio-space-1);
+  min-width: 0;
+}
+
+.studio-asset-inspector__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--studio-space-3);
+}
+
+.studio-asset-inspector__section {
+  display: grid;
+  gap: var(--studio-space-2);
+}
+
+.studio-asset-preview__frame {
+  display: grid;
+  place-items: center;
+  gap: var(--studio-space-2);
+  min-height: 12rem;
+  padding: var(--studio-space-4);
+  border: 1px dashed var(--studio-border-subtle);
+  border-radius: var(--studio-radius-md);
+  text-align: center;
+}
+
+.studio-asset-preview__frame > span {
+  font-size: 2rem;
+  color: var(--studio-accent-primary);
+}
+
+.studio-asset-source,
+.studio-asset-runtime-list > .studio-surface,
+.studio-asset-issue-list > .studio-surface {
+  display: grid;
+  gap: var(--studio-space-3);
+}
+
+.studio-asset-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--studio-space-2) var(--studio-space-4);
+  margin: 0;
+}
+
+.studio-asset-facts > div {
+  display: grid;
+  gap: var(--studio-space-1);
+  min-width: 0;
+}
+
+.studio-asset-facts dt {
+  color: var(--studio-text-muted);
+  font-size: var(--studio-font-size-xs);
+}
+
+.studio-asset-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.studio-asset-note,
+.studio-asset-version-row small {
+  color: var(--studio-text-muted);
+}
+
+@media (max-width: 900px) {
+  .studio-asset-board-composition__body,
+  .studio-asset-inspector__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-asset-board-composition__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .studio-entity-heading,
+  .studio-entity-provenance-row > div,
+  .studio-asset-card,
+  .studio-asset-section-heading,
+  .studio-asset-inspector__header {
+    flex-direction: column;
+  }
+
+  .studio-entity-heading__status,
+  .studio-asset-card__state {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .studio-entity-fact {
+    flex-direction: column;
+  }
+
+  .studio-entity-fact strong {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .studio-asset-board-composition__list,
+  .studio-asset-facts {
+    grid-template-columns: 1fr;
+  }
+}
