@@ -52,6 +52,7 @@ export type StudioShellProps = {
   onModuleSelect: (module: StudioModuleId) => void;
   searchSlot: ComponentChildren;
   sessionSlot: ComponentChildren;
+  showFixtureNote?: boolean;
   children: ComponentChildren;
 };
 
@@ -62,6 +63,7 @@ export function StudioShell({
   onModuleSelect,
   searchSlot,
   sessionSlot,
+  showFixtureNote = true,
   children,
 }: StudioShellProps) {
   return (
@@ -106,7 +108,9 @@ export function StudioShell({
             </button>
           ))}
         </nav>
-        <p class="studio-shell__fixture-note">UI Lab fixture · no route or auth mutation</p>
+        {showFixtureNote ? (
+          <p class="studio-shell__fixture-note">UI Lab fixture · no route or auth mutation</p>
+        ) : null}
       </aside>
 
       <div class="studio-shell__body">
@@ -299,160 +303,192 @@ function WorkspaceInspector({ label, open, onOpenChange, children }: InspectorPr
 
 type TemplateFrameProps = {
   kind: WorkspaceTemplateKind;
-  header: ComponentChildren;
-  toolbar?: ComponentChildren;
   children: ComponentChildren;
   inspector?: ComponentChildren;
   inspectorLabel?: string;
-  inspectorOpen?: boolean;
-  onInspectorOpenChange?: (open: boolean) => void;
-  className?: string;
 };
 
 function TemplateFrame({
   kind,
+  children,
+  inspector,
+  inspectorLabel = "Workspace inspector",
+}: TemplateFrameProps) {
+  const hasInspector = inspector !== undefined && inspector !== null;
+
+  return (
+    <section class="studio-template" data-template={kind}>
+      <div class="studio-template__main">{children}</div>
+      {hasInspector ? (
+        <WorkspaceInspector label={inspectorLabel} open onOpenChange={() => undefined}>
+          {inspector}
+        </WorkspaceInspector>
+      ) : null}
+    </section>
+  );
+}
+
+export function CollectionTemplate({
+  header,
+  toolbar,
+  filters,
+  summary,
+  children,
+  inspector,
+}: {
+  header: ComponentChildren;
+  toolbar: ComponentChildren;
+  filters?: ComponentChildren;
+  summary?: ComponentChildren;
+  children: ComponentChildren;
+  inspector?: ComponentChildren;
+}) {
+  return (
+    <div class="studio-template-shell">
+      {header}
+      <Toolbar label="Collection actions">{toolbar}</Toolbar>
+      {filters ? <Surface kind="inset">{filters}</Surface> : null}
+      {summary ? <Surface kind="card">{summary}</Surface> : null}
+      <TemplateFrame kind="collection" inspector={inspector}>
+        {children}
+      </TemplateFrame>
+    </div>
+  );
+}
+
+export function EntityTemplate({
+  header,
+  tabs,
+  inspector,
+  children,
+}: {
+  header: ComponentChildren;
+  tabs: ComponentChildren;
+  inspector: ComponentChildren;
+  children: ComponentChildren;
+}) {
+  return (
+    <div class="studio-template-shell">
+      {header}
+      {tabs}
+      <TemplateFrame kind="entity" inspector={inspector}>
+        {children}
+      </TemplateFrame>
+    </div>
+  );
+}
+
+export function AssetBoardTemplate({
+  header,
+  toolbar,
+  filters,
+  children,
+  inspector,
+}: {
+  header: ComponentChildren;
+  toolbar: ComponentChildren;
+  filters?: ComponentChildren;
+  children: ComponentChildren;
+  inspector?: ComponentChildren;
+}) {
+  return (
+    <div class="studio-template-shell">
+      {header}
+      <Toolbar label="Asset board actions">{toolbar}</Toolbar>
+      {filters ? <Surface kind="inset">{filters}</Surface> : null}
+      <TemplateFrame kind="asset-board" inspector={inspector}>
+        {children}
+      </TemplateFrame>
+    </div>
+  );
+}
+
+export function OperationalQueueTemplate({
   header,
   toolbar,
   children,
   inspector,
-  inspectorLabel = "Inspector",
-  inspectorOpen = true,
-  onInspectorOpenChange,
-  className,
-}: TemplateFrameProps) {
-  const hasInspector = inspector !== undefined && onInspectorOpenChange !== undefined;
-
+}: {
+  header: ComponentChildren;
+  toolbar: ComponentChildren;
+  children: ComponentChildren;
+  inspector?: ComponentChildren;
+}) {
   return (
-    <article
-      class={cx("studio-template", `studio-template--${kind}`, className)}
-      data-template={kind}
-    >
+    <div class="studio-template-shell">
       {header}
-      {toolbar ? <div class="studio-template__toolbar">{toolbar}</div> : null}
-      <div
-        class={cx(
-          "studio-template__body",
-          hasInspector && inspectorOpen && "studio-template__body--with-inspector",
-        )}
-      >
-        <div class="studio-template__content">{children}</div>
-        {hasInspector ? (
-          <WorkspaceInspector
-            label={inspectorLabel}
-            open={inspectorOpen}
-            onOpenChange={onInspectorOpenChange}
-          >
-            {inspector}
-          </WorkspaceInspector>
-        ) : null}
-      </div>
-    </article>
+      <Toolbar label="Queue actions">{toolbar}</Toolbar>
+      <TemplateFrame kind="operational-queue" inspector={inspector}>
+        {children}
+      </TemplateFrame>
+    </div>
   );
 }
 
-export type CollectionTemplateProps = Omit<TemplateFrameProps, "kind"> & {
-  filterSlot?: ComponentChildren;
-};
-
-export function CollectionTemplate({ filterSlot, children, ...props }: CollectionTemplateProps) {
+export function DashboardTemplate({
+  header,
+  summary,
+  children,
+}: {
+  header: ComponentChildren;
+  summary?: ComponentChildren;
+  children: ComponentChildren;
+}) {
   return (
-    <TemplateFrame {...props} kind="collection">
-      {filterSlot ? <div class="studio-collection__filters">{filterSlot}</div> : null}
-      <div class="studio-collection__results">{children}</div>
-    </TemplateFrame>
+    <div class="studio-template-shell">
+      {header}
+      {summary ? <Surface kind="card">{summary}</Surface> : null}
+      <TemplateFrame kind="dashboard">{children}</TemplateFrame>
+    </div>
   );
-}
-
-type WorkspaceTab = {
-  id: string;
-  label: string;
-  disabled?: boolean;
-};
-
-export type EntityWorkspaceTemplateProps = Omit<TemplateFrameProps, "kind" | "children"> & {
-  tabsId: string;
-  tabs: readonly WorkspaceTab[];
-  selectedTab: string;
-  onTabSelect: (id: string) => void;
-  panels: Readonly<Record<string, ComponentChildren>>;
-};
-
-export function EntityWorkspaceTemplate({
-  tabsId,
-  tabs,
-  selectedTab,
-  onTabSelect,
-  panels,
-  ...props
-}: EntityWorkspaceTemplateProps) {
-  return (
-    <TemplateFrame {...props} kind="entity">
-      <Tabs
-        id={tabsId}
-        label="Entity workspace sections"
-        tabs={tabs}
-        selectedId={selectedTab}
-        onSelect={onTabSelect}
-      />
-      {tabs.map((tab) => (
-        <TabPanel tabsId={tabsId} tabId={tab.id} selected={selectedTab === tab.id} key={tab.id}>
-          {panels[tab.id] ?? <WorkspaceStateRegion state="empty" />}
-        </TabPanel>
-      ))}
-    </TemplateFrame>
-  );
-}
-
-export function AssetBoardTemplate(props: Omit<TemplateFrameProps, "kind">) {
-  return <TemplateFrame {...props} kind="asset-board" />;
-}
-
-export function OperationalQueueTemplate(props: Omit<TemplateFrameProps, "kind">) {
-  return <TemplateFrame {...props} kind="operational-queue" />;
-}
-
-export function DashboardTemplate(props: Omit<TemplateFrameProps, "kind">) {
-  return <TemplateFrame {...props} kind="dashboard" />;
 }
 
 export function TemplateFixtureHeading({
   title,
   description,
-  status,
 }: {
   title: string;
   description: string;
-  status?: ComponentChildren;
 }) {
   return (
-    <Surface kind="inset" className="studio-template-fixture-heading">
-      <SectionHeading title={title} description={description} actions={status} />
-    </Surface>
+    <SectionHeading
+      title={title}
+      description={description}
+      actions={
+        <ActionGroup>
+          <Chip accent>Template fixture</Chip>
+        </ActionGroup>
+      }
+    />
   );
 }
 
-export function TemplateToolbar({ children }: { children: ComponentChildren }) {
-  return (
-    <Toolbar label="Workspace template actions">
-      <ActionGroup>{children}</ActionGroup>
-    </Toolbar>
-  );
-}
-
-export function AuthoritySummary({
-  validation,
-  runtimeReadiness,
+export function TemplateFixtureTabs({
+  id,
+  selectedId,
+  onSelect,
 }: {
-  validation: ValidationState;
-  runtimeReadiness: RuntimeReadinessState;
+  id: string;
+  selectedId: string;
+  onSelect: (id: string) => void;
 }) {
+  const tabs = [
+    { id: "overview", label: "Overview" },
+    { id: "gameplay", label: "Gameplay" },
+    { id: "assets", label: "Assets" },
+    { id: "history", label: "History" },
+  ] as const;
+
   return (
-    <div class="studio-authority-summary">
-      <Chip>Git definitions</Chip>
-      <Chip>Drive masters</Chip>
-      <Chip>Registry workflow</Chip>
-      <ValidationBadge state={validation} />
-      <RuntimeReadinessBadge state={runtimeReadiness} />
-    </div>
+    <>
+      <Tabs id={id} label="Workspace sections" tabs={tabs} selectedId={selectedId} onSelect={onSelect} />
+      {tabs.map((tab) => (
+        <TabPanel tabsId={id} tabId={tab.id} selected={selectedId === tab.id} key={tab.id}>
+          <StateMessage title={`${tab.label} section`}>
+            Waiting for the selected read model.
+          </StateMessage>
+        </TabPanel>
+      ))}
+    </>
   );
 }
