@@ -1,4 +1,4 @@
-import { render } from "preact";
+import { type JSX, render } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { Button, Spinner, StateMessage, Surface, TextField } from "./ui/primitives";
 import {
@@ -6,7 +6,6 @@ import {
   type StudioModuleId,
   StudioShell,
   TemplateFixtureHeading,
-  WorkspaceStateRegion,
 } from "./ui/workspace";
 import "./styles/tokens.css";
 import "./styles/base.css";
@@ -30,7 +29,7 @@ function SignedOut({ onAuthorized }: { onAuthorized: (state: StudioSessionState)
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const submit = async (event: Event) => {
+  const submit = async (event: JSX.TargetedSubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (pending) return;
     setPending(true);
@@ -118,7 +117,13 @@ function Unauthorized({
   );
 }
 
-function AuthorizedStudio({ state, onSignedOut }: { state: Extract<StudioSessionState, { status: "authorized" }>; onSignedOut: () => void }) {
+function AuthorizedStudio({
+  state,
+  onSignedOut,
+}: {
+  state: Extract<StudioSessionState, { status: "authorized" }>;
+  onSignedOut: () => void;
+}) {
   const [activeModule, setActiveModule] = useState<StudioModuleId>("dashboard");
   const [collapsed, setCollapsed] = useState(false);
   const { authorization, auth } = state;
@@ -163,7 +168,17 @@ function AuthorizedStudio({ state, onSignedOut }: { state: Extract<StudioSession
             />
           }
         >
-          <WorkspaceStateRegion state={isReadOnly ? "read-only" : "empty"} />
+          {isReadOnly ? (
+            <StateMessage title="Read-only access" tone="unavailable">
+              Your Viewer membership can inspect authorized Studio data. Privileged mutation actions
+              are not exposed.
+            </StateMessage>
+          ) : (
+            <StateMessage title="Workspace data not connected yet">
+              Authentication and trusted operations are active. Production read models arrive in
+              STUDIO03 and focused module issues.
+            </StateMessage>
+          )}
         </DashboardTemplate>
       </StudioShell>
     </main>
