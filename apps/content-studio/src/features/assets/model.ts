@@ -63,6 +63,10 @@ type AssetsResponse = StudioReadModelsResponse & {
   }[];
 };
 
+type CanonicalAwareModel = StudioReadModelsResponse["models"][number] & {
+  readonly canonical?: { readonly canonicalPath?: string };
+};
+
 export type AssetOwnerOption = {
   readonly semanticId: string;
   readonly displayName: string;
@@ -90,7 +94,7 @@ export function productionAssets(response: StudioReadModelsResponse): readonly P
       versionNumber: version.versionNumber,
       lifecycle: version.lifecycle,
       current: version.current,
-      createdAt: version.createdAt ?? undefined,
+      ...(version.createdAt ? { createdAt: version.createdAt } : {}),
       summary: version.current
         ? "Current source/master version."
         : "Retained historical source/master version.",
@@ -102,7 +106,7 @@ export function productionAssets(response: StudioReadModelsResponse): readonly P
 }
 
 export function assetOwnerOptions(response: StudioReadModelsResponse): readonly AssetOwnerOption[] {
-  return response.models
+  return (response.models as readonly CanonicalAwareModel[])
     .filter((model) => model.canonical?.canonicalPath && model.canonical.canonicalPath !== "[missing]")
     .map((model) => ({
       semanticId: model.semanticId,
