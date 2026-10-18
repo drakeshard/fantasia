@@ -1,0 +1,31 @@
+name: Setup Fantasia
+
+description: Prepare the Fantasia Node workspace and pinned shared-library artifacts.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      with:
+        node-version-file: .node-version
+
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Prepare pinned shared-library artifacts
+      shell: bash
+      run: node scripts/prepare-shared-packages.mjs
+
+    - name: Verify shared-library provenance
+      shell: bash
+      run: node scripts/verify-shared-packages.mjs
+
+    - name: Require committed lockfile
+      shell: bash
+      run: test -f pnpm-lock.yaml
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
