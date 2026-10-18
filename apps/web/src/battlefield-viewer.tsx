@@ -46,14 +46,13 @@ export function BattlefieldViewerApp() {
       },
     );
     rendererRef.current = renderer;
-    void renderer.init().then(() => {
-      renderer.update(frame, {
-        selectedCell: selected,
-        showGrid,
-        showCoordinates,
-        showUnits: fixture.showUnits,
-      });
+    renderer.update(frame, {
+      selectedCell: selected,
+      showGrid,
+      showCoordinates,
+      showUnits: fixture.showUnits,
     });
+    void renderer.init();
     return () => {
       rendererRef.current = null;
       renderer.destroy();
@@ -115,7 +114,7 @@ export function BattlefieldViewerApp() {
           <strong>{fixture.title}</strong>
           <span>{fixture.description}</span>
         </div>
-        <nav class="map-review-actions" aria-label="Battlefield fixtures">
+        <nav class="map-review-mode-switch" aria-label="Battlefield fixtures">
           {BATTLEFIELD_VIEWER_FIXTURES.map((candidate) => (
             <button
               type="button"
@@ -129,7 +128,7 @@ export function BattlefieldViewerApp() {
         </nav>
       </header>
 
-      <aside class="map-review-panel environment-scenes-panel" aria-label="Battlefield diagnostics">
+      <aside class="map-review-details environment-scenes-panel" aria-label="Battlefield diagnostics">
         <span class="map-review-kicker">Standardized Engine</span>
         <h2>{fixture.kind === "stress" ? "Stress fixture" : "Reference fixture"}</h2>
         <p data-testid="battlefield-selected-cell">{selectedSummary(selectedCell)}</p>
