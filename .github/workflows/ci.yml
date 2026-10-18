@@ -19,9 +19,11 @@ jobs:
     timeout-minutes: 5
     outputs:
       verify: ${{ steps.filter.outputs.verify }}
+      web: ${{ steps.filter.outputs.web }}
       game: ${{ steps.filter.outputs.game }}
       studio: ${{ steps.filter.outputs.studio }}
       visual: ${{ steps.filter.outputs.visual }}
+      story: ${{ steps.filter.outputs.story }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -42,9 +44,11 @@ jobs:
           if [[ "$EVENT_NAME" == "push" ]]; then
             {
               echo "verify=true"
+              echo "web=true"
               echo "game=true"
               echo "studio=true"
               echo "visual=true"
+              echo "story=true"
             } >> "$GITHUB_OUTPUT"
             echo "main push: full Quality suite selected"
             exit 0
@@ -58,6 +62,7 @@ jobs:
           game=false
           studio=false
           visual=false
+          story=false
           full=false
 
           for path in "${changed[@]}"; do
@@ -94,22 +99,36 @@ jobs:
                 visual=true
                 ;;
             esac
+
+            case "$path" in
+              apps/story-studio/*|content/*)
+                story=true
+                ;;
+            esac
           done
 
           if [[ "$full" == "true" ]]; then
             game=true
             studio=true
             visual=true
+            story=true
+          fi
+
+          web=false
+          if [[ "$game" == "true" || "$visual" == "true" ]]; then
+            web=true
           fi
 
           {
             echo "verify=$verify"
+            echo "web=$web"
             echo "game=$game"
             echo "studio=$studio"
             echo "visual=$visual"
+            echo "story=$story"
           } >> "$GITHUB_OUTPUT"
 
-          echo "Selected: verify=$verify game=$game studio=$studio visual=$visual full=$full"
+          echo "Selected: verify=$verify web=$web game=$game studio=$studio visual=$visual story=$story full=$full"
 
   verify:
     name: Fast verification
@@ -142,15 +161,19 @@ jobs:
       - name: Unit and integration tests
         run: pnpm test
 
-      - name: Build
-        run: pnpm build
+      - name: Build core packages
+        run: pnpm --filter @fantasia/runtime... build
 
-  browser-game:
-    name: Browser game
+      - name: Build legacy Story Studio
+        if: needs.classify.outputs.story == 'true'
+        run: pnpm story:build
+
+  web-validation:
+    name: Web validation
     needs: classify
-    if: needs.classify.outputs.game == 'true'
+    if: needs.classify.outputs.web == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -159,16 +182,69 @@ jobs:
         uses: ./.github/actions/setup-fantasia
 
       - name: Build web surface
-        run: pnpm --filter @fantasia/web... build
+        run: pnpm --filter @fantasia/web build
 
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Browser smoke
+        id: game
+        if: needs.classify.outputs.game == 'true'
+        continue-on-error: true
         run: pnpm test:e2e
 
-  browser-content-studio:
-    name: Browser Content Studio
+      - name: Pre-deploy visual capture
+        id: visual
+        if: needs.classify.outputs.visual == 'true'
+        continue-on-error: true
+        run: pnpm test:visual
+
+      - name: Upload visual review evidence
+        if: always() && needs.classify.outputs.visual == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fantasia-visual-review-${{ github.sha }}
+          path: |
+            visual-artifacts/
+            playwright-visual-report/
+            test-results-visual/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Require selected web suites to pass
+        if: always()
+        shell: bash
+        env:
+          GAME_SELECTED: ${{ needs.classify.outputs.game }}
+          GAME_OUTCOME: ${{ steps.game.outcome }}
+          VISUAL_SELECTED: ${{ needs.classify.outputs.visual }}
+          VISUAL_OUTCOME: ${{ steps.visual.outcome }}
+        run: |
+          set -euo pipefail
+
+          require_suite() {
+            local selected="$1"
+            local outcome="$2"
+            local name="$3"
+
+            if [[ "$selected" == "true" && "$outcome" != "success" ]]; then
+              echo "$name was selected but finished with: $outcome"
+              exit 1
+            fi
+
+            if [[ "$selected" != "true" && "$outcome" != "skipped" ]]; then
+              echo "$name was not selected but unexpectedly finished with: $outcome"
+              exit 1
+            fi
+          }
+
+          require_suite "$GAME_SELECTED" "$GAME_OUTCOME" "Browser smoke"
+          require_suite "$VISUAL_SELECTED" "$VISUAL_OUTCOME" "Visual review"
+
+          echo "All selected web suites passed."
+
+  content-studio-validation:
+    name: Content Studio validation
     needs: classify
     if: needs.classify.outputs.studio == 'true'
     runs-on: ubuntu-latest
@@ -181,7 +257,7 @@ jobs:
         uses: ./.github/actions/setup-fantasia
 
       - name: Build Content Studio surface
-        run: pnpm --filter @fantasia/content-studio... build
+        run: pnpm --filter @fantasia/content-studio build
 
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
@@ -189,49 +265,14 @@ jobs:
       - name: Content Studio primitive coverage
         run: pnpm test:content-studio
 
-  visual-review:
-    name: Visual review
-    needs: classify
-    if: needs.classify.outputs.visual == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Setup Fantasia
-        uses: ./.github/actions/setup-fantasia
-
-      - name: Build web surface
-        run: pnpm --filter @fantasia/web... build
-
-      - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Pre-deploy visual capture
-        run: pnpm test:visual
-
-      - name: Upload visual review evidence
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: fantasia-visual-review-${{ github.sha }}
-          path: |
-            visual-artifacts/
-            playwright-visual-report/
-            test-results-visual/
-          if-no-files-found: warn
-          retention-days: 7
-
   quality-gate:
     name: Quality gate
     if: always()
     needs:
       - classify
       - verify
-      - browser-game
-      - browser-content-studio
-      - visual-review
+      - web-validation
+      - content-studio-validation
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -241,12 +282,10 @@ jobs:
           CLASSIFY_RESULT: ${{ needs.classify.result }}
           VERIFY_SELECTED: ${{ needs.classify.outputs.verify }}
           VERIFY_RESULT: ${{ needs.verify.result }}
-          GAME_SELECTED: ${{ needs.classify.outputs.game }}
-          GAME_RESULT: ${{ needs.browser-game.result }}
+          WEB_SELECTED: ${{ needs.classify.outputs.web }}
+          WEB_RESULT: ${{ needs.web-validation.result }}
           STUDIO_SELECTED: ${{ needs.classify.outputs.studio }}
-          STUDIO_RESULT: ${{ needs.browser-content-studio.result }}
-          VISUAL_SELECTED: ${{ needs.classify.outputs.visual }}
-          VISUAL_RESULT: ${{ needs.visual-review.result }}
+          STUDIO_RESULT: ${{ needs.content-studio-validation.result }}
         run: |
           set -euo pipefail
 
@@ -272,8 +311,7 @@ jobs:
           }
 
           require_selected "$VERIFY_SELECTED" "$VERIFY_RESULT" "Fast verification"
-          require_selected "$GAME_SELECTED" "$GAME_RESULT" "Browser game"
-          require_selected "$STUDIO_SELECTED" "$STUDIO_RESULT" "Browser Content Studio"
-          require_selected "$VISUAL_SELECTED" "$VISUAL_RESULT" "Visual review"
+          require_selected "$WEB_SELECTED" "$WEB_RESULT" "Web validation"
+          require_selected "$STUDIO_SELECTED" "$STUDIO_RESULT" "Content Studio validation"
 
           echo "All selected Quality checks passed."
