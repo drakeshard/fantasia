@@ -86,7 +86,11 @@ function parseIdempotencyKey(value: unknown): string {
 
 function parseUuid(value: unknown, label: string): string {
   const candidate = typeof value === "string" ? value.trim() : "";
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)) {
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      candidate,
+    )
+  ) {
     throw new StudioOperationContractError(`${label} must be a UUID.`);
   }
   return candidate;
@@ -108,7 +112,8 @@ export function parseStudioOperationRequest(value: unknown): StudioOperationRequ
       throw new StudioOperationContractError("Entity-note payload is required.");
     }
     requireExactKeys(value.payload, ["semanticId", "note"]);
-    const semanticId = typeof value.payload.semanticId === "string" ? value.payload.semanticId.trim() : "";
+    const semanticId =
+      typeof value.payload.semanticId === "string" ? value.payload.semanticId.trim() : "";
     if (semanticId.length < 1 || semanticId.length > 200 || /\s/.test(semanticId)) {
       throw new StudioOperationContractError("Semantic ID is invalid.");
     }
