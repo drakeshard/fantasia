@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { battlefieldUnitVisualId } from "../../apps/web/src/battlefield-scene.js";
 import {
   FANTASIA_BATTLEFIELD_RENDER_PROFILE,
   FANTASIA_BATTLEFIELD_VISUAL_CATALOG,
@@ -7,6 +6,7 @@ import {
   terrainVisualForCell,
   visibleSquareNeighbors,
 } from "../../apps/web/src/battlefield-presentation.js";
+import { battlefieldUnitVisualId } from "../../apps/web/src/battlefield-scene.js";
 
 describe("Fantasia battlefield presentation metadata", () => {
   it("centralizes the isometric cell and elevation metrics", () => {
