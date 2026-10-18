@@ -668,7 +668,8 @@ export class MapReviewRenderer {
       });
       world.addChild(tile);
       if (this.#terrainKinds.get(cellKey) === "road") drawRoadDetail(world, point);
-      else if (!this.#blocked.has(cellKey)) drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
+      else if (!this.#blocked.has(cellKey))
+        drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
 
       if (this.#options.showRoute && this.#routeClearance.has(cellKey)) {
         world.addChild(
