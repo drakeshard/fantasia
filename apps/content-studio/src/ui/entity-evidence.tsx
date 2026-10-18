@@ -116,7 +116,11 @@ export function EntityAuthoritySummary({
       <div class="studio-entity-fact">
         <span>Registry lifecycle</span>
         <strong>
-          {lifecycleState ? <LifecycleBadge state={lifecycleState} /> : lifecycle ?? "Not registered"}
+          {lifecycleState ? (
+            <LifecycleBadge state={lifecycleState} />
+          ) : (
+            (lifecycle ?? "Not registered")
+          )}
         </strong>
       </div>
       {provenance.length === 0 ? (
@@ -126,7 +130,10 @@ export function EntityAuthoritySummary({
       ) : (
         <div class="studio-entity-provenance-list">
           {provenance.map((item, index) => (
-            <div class="studio-entity-provenance-row" key={`${item.authority}:${item.source ?? index}`}>
+            <div
+              class="studio-entity-provenance-row"
+              key={`${item.authority}:${item.source ?? index}`}
+            >
               <div>
                 <strong>{item.authority}</strong>
                 <span>{item.canonical ? "Canonical authority" : "Observation / metadata"}</span>
@@ -172,7 +179,9 @@ export function RelationEvidence({
           sourceId={sourceSemanticId}
           targetId={relation.targetSemanticId}
           targetLabel={relation.targetSemanticId}
-          note={relation.valid ? "Registered target is valid." : "Blocking: target is not registered."}
+          note={
+            relation.valid ? "Registered target is valid." : "Blocking: target is not registered."
+          }
         />
       ))}
     </EvidenceStack>
@@ -199,7 +208,11 @@ export function ValidationEvidence({
       {validations.map((validation) => {
         const state = validationStateFromRegistry(validation.outcome, validation.blocking);
         return (
-          <Surface kind="inset" className="studio-entity-validation-row" key={`${validation.dimension}:${validation.outcome}`}>
+          <Surface
+            kind="inset"
+            className="studio-entity-validation-row"
+            key={`${validation.dimension}:${validation.outcome}`}
+          >
             <ValidationBadge state={state} />
             <div>
               <strong>{validation.dimension}</strong>
