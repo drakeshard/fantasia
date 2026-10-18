@@ -1,12 +1,5 @@
 import { type JSX, render } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { Button, Spinner, StateMessage, Surface, TextField } from "./ui/primitives";
-import {
-  DashboardTemplate,
-  type StudioModuleId,
-  StudioShell,
-  TemplateFixtureHeading,
-} from "./ui/workspace";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./ui/primitives.css";
@@ -22,6 +15,14 @@ import {
   type StoredStudioAuthSession,
   type StudioSessionState,
 } from "./studio-session";
+import { PasswordField } from "./ui/PasswordField";
+import { Button, Spinner, StateMessage, Surface, TextField } from "./ui/primitives";
+import {
+  DashboardTemplate,
+  type StudioModuleId,
+  StudioShell,
+  TemplateFixtureHeading,
+} from "./ui/workspace";
 
 function SignedOut({ onAuthorized }: { onAuthorized: (state: StudioSessionState) => void }) {
   const [email, setEmail] = useState("");
@@ -72,10 +73,9 @@ function SignedOut({ onAuthorized }: { onAuthorized: (state: StudioSessionState)
             autoComplete="username"
             required
           />
-          <TextField
+          <PasswordField
             id="studio-auth-password"
             label="Password"
-            type="password"
             value={password}
             onInput={(event) => setPassword(event.currentTarget.value)}
             autoComplete="current-password"
