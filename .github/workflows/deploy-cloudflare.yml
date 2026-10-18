@@ -23,6 +23,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Require main deployment ref
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "Production deployment must be dispatched from main; received $GITHUB_REF"
+            exit 1
+          }
+
       - name: Validate deployment configuration
         run: |
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
@@ -33,8 +40,8 @@ jobs:
       - name: Setup Fantasia
         uses: ./.github/actions/setup-fantasia
 
-      - name: Build Fantasia
-        run: pnpm build
+      - name: Build player web surface
+        run: pnpm --filter @fantasia/web build
 
       - name: Deploy Workers Static Assets
         run: pnpm dlx wrangler@4.148.0 deploy --config wrangler.jsonc
