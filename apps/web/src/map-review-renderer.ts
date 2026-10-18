@@ -244,7 +244,10 @@ function drawCart(world: Container, point: ScreenPoint): void {
       ])
       .fill(0x755237)
       .stroke({ color: 0xc29d65, width: 1.5 }),
-    new Graphics().rect(point.x - 1, point.y - 31, 26, 14).fill(0x8f734c).stroke({ color: 0xd0b27a, width: 1 }),
+    new Graphics()
+      .rect(point.x - 1, point.y - 31, 26, 14)
+      .fill(0x8f734c)
+      .stroke({ color: 0xd0b27a, width: 1 }),
     new Graphics()
       .circle(point.x - 7, point.y - 2, 6)
       .circle(point.x + 31, point.y + 4, 6)
@@ -374,7 +377,10 @@ export class MapReviewRenderer {
 
   readonly #handlePointerMove = (event: PointerEvent): void => {
     if (event.pointerId !== this.#pointerId) return;
-    const fromStart = Math.hypot(event.clientX - this.#pointerStartX, event.clientY - this.#pointerStartY);
+    const fromStart = Math.hypot(
+      event.clientX - this.#pointerStartX,
+      event.clientY - this.#pointerStartY,
+    );
     if (!this.#dragged && fromStart < DRAG_THRESHOLD) return;
     this.#dragged = true;
     this.#suppressTap = true;
@@ -449,7 +455,10 @@ export class MapReviewRenderer {
     const contentHeight = maxY - minY + PADDING * 2;
     const fitScale = Math.min(
       1.3,
-      Math.max(0.32, Math.min(this.#app.screen.width / contentWidth, this.#app.screen.height / contentHeight)),
+      Math.max(
+        0.32,
+        Math.min(this.#app.screen.width / contentWidth, this.#app.screen.height / contentHeight),
+      ),
     );
     const scale = fitScale * this.#zoom;
     const world = new Container();
@@ -555,11 +564,7 @@ export class MapReviewRenderer {
     for (const entry of layout.deployment.reinforcements) {
       drawUnitMarker(
         world,
-        projection(
-          entry.entryCell,
-          elevations.get(key(entry.entryCell)) ?? 0,
-          this.#rotation,
-        ),
+        projection(entry.entryCell, elevations.get(key(entry.entryCell)) ?? 0, this.#rotation),
         entry.id.startsWith("forager") ? "enemy" : "allied",
         reinforcementLabel(entry),
         true,

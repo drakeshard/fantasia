@@ -331,14 +331,27 @@ export function MapReviewApp() {
         </fieldset>
 
         {mode === "battlefield" ? (
-          <div class="map-review-camera-controls" aria-label="Review camera controls">
-            <button type="button" aria-label="Rotate left" onClick={() => cameraRef.current?.rotateLeft()}>
+          <fieldset class="map-review-camera-controls">
+            <legend class="map-review-mode-legend">Review camera controls</legend>
+            <button
+              type="button"
+              aria-label="Rotate left"
+              onClick={() => cameraRef.current?.rotateLeft()}
+            >
               ↺
             </button>
-            <button type="button" aria-label="Rotate right" onClick={() => cameraRef.current?.rotateRight()}>
+            <button
+              type="button"
+              aria-label="Rotate right"
+              onClick={() => cameraRef.current?.rotateRight()}
+            >
               ↻
             </button>
-            <button type="button" aria-label="Zoom out" onClick={() => cameraRef.current?.zoomOut()}>
+            <button
+              type="button"
+              aria-label="Zoom out"
+              onClick={() => cameraRef.current?.zoomOut()}
+            >
               −
             </button>
             <button type="button" aria-label="Zoom in" onClick={() => cameraRef.current?.zoomIn()}>
@@ -347,7 +360,7 @@ export function MapReviewApp() {
             <button type="button" aria-label="Fit map" onClick={() => cameraRef.current?.fit()}>
               Fit
             </button>
-          </div>
+          </fieldset>
         ) : null}
 
         <button
@@ -393,7 +406,8 @@ export function MapReviewApp() {
             ) : null}
             {selectedReinforcement ? (
               <p>
-                <strong>Entry phase:</strong> {selectedReinforcement.phase} · {selectedReinforcement.beatId}
+                <strong>Entry phase:</strong> {selectedReinforcement.phase} ·{" "}
+                {selectedReinforcement.beatId}
               </p>
             ) : null}
             {selectedReinforcement && "note" in selectedReinforcement ? (
@@ -441,11 +455,21 @@ export function MapReviewApp() {
 
           <section class="map-review-legend" aria-label="Map legend">
             <h2>Legend</h2>
-            <span><i class="legend-road" /> road/approach</span>
-            <span><i class="legend-blocked" /> woodland / blocked</span>
-            <span><i class="legend-ridge" /> +1 ridge</span>
-            <span><i class="legend-cart" /> cart clearance</span>
-            <span><i class="legend-exit" /> exit</span>
+            <span>
+              <i class="legend-road" /> road/approach
+            </span>
+            <span>
+              <i class="legend-blocked" /> woodland / blocked
+            </span>
+            <span>
+              <i class="legend-ridge" /> +1 ridge
+            </span>
+            <span>
+              <i class="legend-cart" /> cart clearance
+            </span>
+            <span>
+              <i class="legend-exit" /> exit
+            </span>
             <p>Allies · protected civilians · enemies · outlined entry markers</p>
           </section>
 
@@ -460,8 +484,9 @@ export function MapReviewApp() {
           </section>
 
           <footer class="map-review-footer">
-            <strong>Geometry review only.</strong> Camera pan, zoom and rotation are non-authoritative.
-            Cart/civilian mechanics, phase triggers, victory/failure, AI and balance remain unresolved.
+            <strong>Geometry review only.</strong> Camera pan, zoom and rotation are
+            non-authoritative. Cart/civilian mechanics, phase triggers, victory/failure, AI and
+            balance remain unresolved.
           </footer>
         </aside>
       ) : null}
