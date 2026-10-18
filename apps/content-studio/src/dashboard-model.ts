@@ -1,5 +1,3 @@
-import type { StudioEntityReadModel } from "../../../packages/studio-read-model/src/index";
-
 export type DashboardTargetModule =
   | "dashboard"
   | "characters"
@@ -10,6 +8,42 @@ export type DashboardTargetModule =
   | "enemies"
   | "assets"
   | "releases";
+
+export interface DashboardEntityReadModel {
+  readonly semanticId: string;
+  readonly entityType: string;
+  readonly displayName: string;
+  readonly lifecycle: string | null;
+  readonly validations: readonly {
+    readonly dimension: string;
+    readonly outcome: string;
+    readonly blocking: boolean;
+  }[];
+  readonly provenance: readonly {
+    readonly authority: string;
+    readonly observedAt?: string;
+  }[];
+  readonly issues: readonly {
+    readonly code: string;
+    readonly severity: string;
+    readonly message: string;
+  }[];
+  readonly assets: readonly {
+    readonly semanticId: string;
+    readonly role: string;
+    readonly variant: string | null;
+    readonly derivativeRequired: boolean;
+    readonly currentVersion: {
+      readonly sourceAvailable: boolean;
+      readonly provenance: { readonly observedAt?: string };
+    } | null;
+    readonly runtimeDerivatives: readonly unknown[];
+    readonly issues: readonly {
+      readonly severity: string;
+      readonly message: string;
+    }[];
+  }[];
+}
 
 export interface StudioCanonicalProposalSummary {
   readonly changeRequestId: string;
@@ -44,7 +78,7 @@ export interface StudioReadModelsResponse {
     readonly offset: number;
     readonly limit: number;
   };
-  readonly models: readonly StudioEntityReadModel[];
+  readonly models: readonly DashboardEntityReadModel[];
   readonly canonicalProposals: StudioCanonicalProposalFeed;
 }
 
@@ -111,7 +145,7 @@ function moduleForEntityType(entityType: string): DashboardTargetModule {
 }
 
 function entityItem(
-  model: StudioEntityReadModel,
+  model: DashboardEntityReadModel,
   suffix: string,
   title: string,
   detail: string,
@@ -128,7 +162,7 @@ function entityItem(
   };
 }
 
-function reviewItems(models: readonly StudioEntityReadModel[]): DashboardAttentionItem[] {
+function reviewItems(models: readonly DashboardEntityReadModel[]): DashboardAttentionItem[] {
   return models
     .filter((model) => normalizedLifecycle(model.lifecycle) === "IN REVIEW")
     .map((model) =>
@@ -142,7 +176,7 @@ function reviewItems(models: readonly StudioEntityReadModel[]): DashboardAttenti
     );
 }
 
-function validationItems(models: readonly StudioEntityReadModel[]): DashboardAttentionItem[] {
+function validationItems(models: readonly DashboardEntityReadModel[]): DashboardAttentionItem[] {
   const items: DashboardAttentionItem[] = [];
   for (const model of models) {
     const blocking = model.validations.filter(
@@ -171,7 +205,7 @@ const sourceIntegrityCodes = new Set([
   "canonical-path-mismatch",
 ]);
 
-function sourceIntegrityItems(models: readonly StudioEntityReadModel[]): DashboardAttentionItem[] {
+function sourceIntegrityItems(models: readonly DashboardEntityReadModel[]): DashboardAttentionItem[] {
   const items: DashboardAttentionItem[] = [];
   for (const model of models) {
     const issues = model.issues.filter((issue) => sourceIntegrityCodes.has(issue.code));
@@ -189,7 +223,7 @@ function sourceIntegrityItems(models: readonly StudioEntityReadModel[]): Dashboa
   return items;
 }
 
-function assetEvidenceItems(models: readonly StudioEntityReadModel[]): DashboardAttentionItem[] {
+function assetEvidenceItems(models: readonly DashboardEntityReadModel[]): DashboardAttentionItem[] {
   const items: DashboardAttentionItem[] = [];
   for (const model of models) {
     for (const asset of model.assets) {
@@ -220,7 +254,7 @@ function assetEvidenceItems(models: readonly StudioEntityReadModel[]): Dashboard
 }
 
 function runtimeUnpublishedItems(
-  models: readonly StudioEntityReadModel[],
+  models: readonly DashboardEntityReadModel[],
 ): DashboardAttentionItem[] {
   return models
     .filter((model) => normalizedLifecycle(model.lifecycle) === "RUNTIME READY")
