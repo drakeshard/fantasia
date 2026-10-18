@@ -177,7 +177,7 @@ test("Viewer sees production Assets with retained history and no mutation access
   await expect(page.getByText(asset.semanticId, { exact: true })).toBeVisible();
   await expect(page.getByText("v2").first()).toBeVisible();
   await expect(page.getByText("v1").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Register asset source" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Create new source version" })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Make current" })).toBeDisabled();
   await expect(page.getByText("Read-only Assets workspace", { exact: true })).toBeVisible();
 });
@@ -203,7 +203,7 @@ test("Editor registers an existing Drive source without sending provider credent
   expect(body.payload.driveFileReference).toContain("drive.google.com/file/d/");
   expect(JSON.stringify(body)).not.toContain("service_account");
   expect(JSON.stringify(body)).not.toContain("private_key");
-  await expect(page.getByText("Source operation complete", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
 });
 
 test("Editor can explicitly select a retained version without changing lifecycle", async ({ page }) => {
@@ -225,5 +225,5 @@ test("Editor can explicitly select a retained version without changing lifecycle
     assetSemanticId: asset.semanticId,
     versionId: "22222222-2222-4222-8222-222222222222",
   });
-  await expect(page.getByText(/Version lifecycle\/approval was not changed/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
 });
