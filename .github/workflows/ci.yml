@@ -9,13 +9,114 @@ permissions:
   contents: read
 
 concurrency:
-  group: quality-v2-${{ github.workflow }}-${{ github.ref }}
+  group: quality-v3-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  quality:
+  classify:
+    name: Classify changes
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 5
+    outputs:
+      verify: ${{ steps.filter.outputs.verify }}
+      game: ${{ steps.filter.outputs.game }}
+      studio: ${{ steps.filter.outputs.studio }}
+      visual: ${{ steps.filter.outputs.visual }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Select required checks
+        id: filter
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          # main is the final integration gate: always execute the complete suite.
+          if [[ "$EVENT_NAME" == "push" ]]; then
+            {
+              echo "verify=true"
+              echo "game=true"
+              echo "studio=true"
+              echo "visual=true"
+            } >> "$GITHUB_OUTPUT"
+            echo "main push: full Quality suite selected"
+            exit 0
+          fi
+
+          mapfile -t changed < <(git diff --name-only --diff-filter=ACMRTD "$BASE_SHA" "$HEAD_SHA")
+          printf 'Changed files:\n'
+          printf '  %s\n' "${changed[@]}"
+
+          verify=false
+          game=false
+          studio=false
+          visual=false
+          full=false
+
+          for path in "${changed[@]}"; do
+            # Documentation-only changes intentionally avoid dependency installation and tests.
+            case "$path" in
+              *.md|docs/*|.github/ISSUE_TEMPLATE/*)
+                continue
+                ;;
+            esac
+
+            verify=true
+
+            # Changes to CI/toolchain/shared package plumbing are intentionally conservative.
+            case "$path" in
+              .github/workflows/ci.yml|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.node-version|biome.json|tsconfig*.json|scripts/*|patches/*|config/*|packages/*)
+                full=true
+                ;;
+            esac
+
+            case "$path" in
+              apps/web/*|tests/e2e/*|playwright.config.ts|content/*|art/*)
+                game=true
+                ;;
+            esac
+
+            case "$path" in
+              apps/content-studio/*|tests/content-studio/*|playwright.content-studio.config.ts|content/*)
+                studio=true
+                ;;
+            esac
+
+            case "$path" in
+              apps/web/*|tests/visual/*|playwright.visual.config.ts|content/*|art/*)
+                visual=true
+                ;;
+            esac
+          done
+
+          if [[ "$full" == "true" ]]; then
+            game=true
+            studio=true
+            visual=true
+          fi
+
+          {
+            echo "verify=$verify"
+            echo "game=$game"
+            echo "studio=$studio"
+            echo "visual=$visual"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Selected: verify=$verify game=$game studio=$studio visual=$visual full=$full"
+
+  verify:
+    name: Fast verification
+    needs: classify
+    if: needs.classify.outputs.verify == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -61,14 +162,119 @@ jobs:
       - name: Build
         run: pnpm build
 
+  browser-game:
+    name: Browser game
+    needs: classify
+    if: needs.classify.outputs.game == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+
+      - name: Verify shared-library provenance
+        run: node scripts/verify-shared-packages.mjs
+
+      - name: Require committed lockfile
+        run: test -f pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web surface
+        run: pnpm --filter @fantasia/web... build
+
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Browser smoke
         run: pnpm test:e2e
 
+  browser-content-studio:
+    name: Browser Content Studio
+    needs: classify
+    if: needs.classify.outputs.studio == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+
+      - name: Verify shared-library provenance
+        run: node scripts/verify-shared-packages.mjs
+
+      - name: Require committed lockfile
+        run: test -f pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Content Studio surface
+        run: pnpm --filter @fantasia/content-studio... build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Content Studio primitive coverage
         run: pnpm test:content-studio
+
+  visual-review:
+    name: Visual review
+    needs: classify
+    if: needs.classify.outputs.visual == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
+
+      - name: Verify shared-library provenance
+        run: node scripts/verify-shared-packages.mjs
+
+      - name: Require committed lockfile
+        run: test -f pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web surface
+        run: pnpm --filter @fantasia/web... build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Pre-deploy visual capture
         run: pnpm test:visual
@@ -84,3 +290,58 @@ jobs:
             test-results-visual/
           if-no-files-found: warn
           retention-days: 7
+
+  quality-gate:
+    name: Quality gate
+    if: always()
+    needs:
+      - classify
+      - verify
+      - browser-game
+      - browser-content-studio
+      - visual-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require selected checks to pass
+        shell: bash
+        env:
+          CLASSIFY_RESULT: ${{ needs.classify.result }}
+          VERIFY_SELECTED: ${{ needs.classify.outputs.verify }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+          GAME_SELECTED: ${{ needs.classify.outputs.game }}
+          GAME_RESULT: ${{ needs.browser-game.result }}
+          STUDIO_SELECTED: ${{ needs.classify.outputs.studio }}
+          STUDIO_RESULT: ${{ needs.browser-content-studio.result }}
+          VISUAL_SELECTED: ${{ needs.classify.outputs.visual }}
+          VISUAL_RESULT: ${{ needs.visual-review.result }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$CLASSIFY_RESULT" != "success" ]]; then
+            echo "Change classification failed: $CLASSIFY_RESULT"
+            exit 1
+          fi
+
+          require_selected() {
+            local selected="$1"
+            local result="$2"
+            local name="$3"
+
+            if [[ "$selected" == "true" && "$result" != "success" ]]; then
+              echo "$name was selected but finished with: $result"
+              exit 1
+            fi
+
+            if [[ "$selected" != "true" && "$result" != "skipped" ]]; then
+              echo "$name was not selected but unexpectedly finished with: $result"
+              exit 1
+            fi
+          }
+
+          require_selected "$VERIFY_SELECTED" "$VERIFY_RESULT" "Fast verification"
+          require_selected "$GAME_SELECTED" "$GAME_RESULT" "Browser game"
+          require_selected "$STUDIO_SELECTED" "$STUDIO_RESULT" "Browser Content Studio"
+          require_selected "$VISUAL_SELECTED" "$VISUAL_RESULT" "Visual review"
+
+          echo "All selected Quality checks passed."
