@@ -6,6 +6,43 @@ export interface MapReviewCell {
   readonly y: number;
 }
 
+export interface MapReviewElevationCell extends MapReviewCell {
+  readonly level: number;
+}
+
+export type MapReviewTerrainKind = "road" | "ridge" | "track" | "basin" | "plateau";
+
+export interface MapReviewTerrainRegion {
+  readonly kind: MapReviewTerrainKind;
+  readonly cells: readonly MapReviewCell[];
+}
+
+export interface MapReviewUnitMarker {
+  readonly cell: MapReviewCell;
+  readonly side: string;
+  readonly label: string;
+  readonly reinforcement: boolean;
+}
+
+export interface MapReviewRendererScene {
+  readonly bounds: {
+    readonly minX: number;
+    readonly maxX: number;
+    readonly minY: number;
+    readonly maxY: number;
+  };
+  readonly blockedCells: readonly MapReviewCell[];
+  readonly elevationCells: readonly MapReviewElevationCell[];
+  readonly terrainRegions: readonly MapReviewTerrainRegion[];
+  readonly routeAnchors: readonly MapReviewCell[];
+  readonly routeClearanceCells: readonly MapReviewCell[];
+  readonly exitZone: readonly MapReviewCell[];
+  readonly units: readonly MapReviewUnitMarker[];
+  readonly cartStart?: MapReviewCell;
+  readonly testIdPrefix: string;
+  readonly ariaLabel: string;
+}
+
 export interface MapReviewRendererOptions {
   readonly showGrid: boolean;
   readonly showCoordinates: boolean;
@@ -23,6 +60,11 @@ interface DisplayCell extends ScreenPoint {
   readonly depth: number;
 }
 
+interface VisibleNeighbors {
+  readonly left: MapReviewCell;
+  readonly right: MapReviewCell;
+}
+
 const TILE_WIDTH = 84;
 const TILE_HEIGHT = 42;
 const ELEVATION_STEP = 24;
@@ -36,11 +78,75 @@ function key(cell: MapReviewCell): string {
   return `${cell.x},${cell.y}`;
 }
 
-function rotatedCell(cell: MapReviewCell, rotation: number): MapReviewCell {
-  const x = cell.x - layout.bounds.minX;
-  const y = cell.y - layout.bounds.minY;
-  const width = layout.bounds.maxX - layout.bounds.minX;
-  const height = layout.bounds.maxY - layout.bounds.minY;
+function markerLabel(entry: (typeof layout.deployment.initial)[number]): string {
+  if (entry.id === "mc") return "MC";
+  if (entry.id === "julie") return "J";
+  if (entry.id.startsWith("civilian")) return "C";
+  if (entry.id.startsWith("local-escort")) return "E";
+  if (entry.id.startsWith("forager")) return "F";
+  return "•";
+}
+
+function reinforcementLabel(entry: (typeof layout.deployment.reinforcements)[number]): string {
+  if (entry.id === "hangaku" || entry.id === "la-hire") return "?";
+  if (entry.id.startsWith("forager-reinforcement")) return "R";
+  return "+";
+}
+
+function cartClearanceFor(routeAnchors: readonly MapReviewCell[]): MapReviewCell[] {
+  return routeAnchors.flatMap((anchor) => [anchor, { x: anchor.x + 1, y: anchor.y }]);
+}
+
+const b01RoadCells = layout.environmentIntent.functionalRegions
+  .filter((region) => ["west-approach", "central-road", "east-bend"].includes(region.id))
+  .flatMap((region) => region.cells);
+const b01RidgeCells = layout.environmentIntent.functionalRegions
+  .filter((region) => region.id === "north-ridge")
+  .flatMap((region) => region.cells);
+const b01TrackCells = layout.environmentIntent.functionalRegions
+  .filter((region) => region.id === "south-track")
+  .flatMap((region) => region.cells);
+
+const B01_SCENE: MapReviewRendererScene = {
+  bounds: layout.bounds,
+  blockedCells: layout.terrain.blockedCells,
+  elevationCells: layout.terrain.elevationCells,
+  terrainRegions: [
+    { kind: "road", cells: b01RoadCells },
+    { kind: "ridge", cells: b01RidgeCells },
+    { kind: "track", cells: b01TrackCells },
+  ],
+  routeAnchors: layout.cart.routeAnchors,
+  routeClearanceCells: cartClearanceFor(layout.cart.routeAnchors),
+  exitZone: layout.cart.exitZone,
+  units: [
+    ...layout.deployment.initial.map((entry) => ({
+      cell: entry.cell,
+      side: entry.side,
+      label: markerLabel(entry),
+      reinforcement: false,
+    })),
+    ...layout.deployment.reinforcements.map((entry) => ({
+      cell: entry.entryCell,
+      side: entry.id.startsWith("forager") ? "enemy" : "allied",
+      label: reinforcementLabel(entry),
+      reinforcement: true,
+    })),
+  ],
+  cartStart: layout.cart.startAnchor,
+  testIdPrefix: "b01-map-2p5d",
+  ariaLabel: "CH01-B01 interactive 2.5D candidate battlefield review",
+};
+
+function rotatedCell(
+  cell: MapReviewCell,
+  rotation: number,
+  bounds: MapReviewRendererScene["bounds"],
+): MapReviewCell {
+  const x = cell.x - bounds.minX;
+  const y = cell.y - bounds.minY;
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
   switch (rotation) {
     case 1:
       return { x: y, y: width - x };
@@ -53,13 +159,43 @@ function rotatedCell(cell: MapReviewCell, rotation: number): MapReviewCell {
   }
 }
 
-function projection(cell: MapReviewCell, elevation: number, rotation: number): DisplayCell {
-  const display = rotatedCell(cell, rotation);
+function projection(
+  cell: MapReviewCell,
+  elevation: number,
+  rotation: number,
+  bounds: MapReviewRendererScene["bounds"],
+): DisplayCell {
+  const display = rotatedCell(cell, rotation, bounds);
   return {
     x: (display.x - display.y) * (TILE_WIDTH / 2),
     y: (display.x + display.y) * (TILE_HEIGHT / 2) - elevation * ELEVATION_STEP,
     depth: display.x + display.y,
   };
+}
+
+function visibleNeighbors(cell: MapReviewCell, rotation: number): VisibleNeighbors {
+  switch (rotation) {
+    case 1:
+      return {
+        left: { x: cell.x - 1, y: cell.y },
+        right: { x: cell.x, y: cell.y + 1 },
+      };
+    case 2:
+      return {
+        left: { x: cell.x, y: cell.y - 1 },
+        right: { x: cell.x - 1, y: cell.y },
+      };
+    case 3:
+      return {
+        left: { x: cell.x + 1, y: cell.y },
+        right: { x: cell.x, y: cell.y - 1 },
+      };
+    default:
+      return {
+        left: { x: cell.x, y: cell.y + 1 },
+        right: { x: cell.x + 1, y: cell.y },
+      };
+  }
 }
 
 function tilePoints(point: ScreenPoint): number[] {
@@ -75,74 +211,61 @@ function tilePoints(point: ScreenPoint): number[] {
   ];
 }
 
-const blocked = new Set(layout.terrain.blockedCells.map(key));
-const elevations = new Map(layout.terrain.elevationCells.map((cell) => [key(cell), cell.level]));
-const routeAnchors = new Set(layout.cart.routeAnchors.map(key));
-const exitZone = new Set(layout.cart.exitZone.map(key));
-const road = new Set(
-  layout.environmentIntent.functionalRegions
-    .filter((region) => ["west-approach", "central-road", "east-bend"].includes(region.id))
-    .flatMap((region) => region.cells.map(key)),
-);
-const northRidge = new Set(
-  layout.environmentIntent.functionalRegions
-    .filter((region) => region.id === "north-ridge")
-    .flatMap((region) => region.cells.map(key)),
-);
-const southTrack = new Set(
-  layout.environmentIntent.functionalRegions
-    .filter((region) => region.id === "south-track")
-    .flatMap((region) => region.cells.map(key)),
-);
-
-const cartClearance = (() => {
-  const cells = new Set<string>();
-  for (const anchor of layout.cart.routeAnchors) {
-    cells.add(key(anchor));
-    cells.add(key({ x: anchor.x + 1, y: anchor.y }));
-  }
-  return cells;
-})();
-
-function terrainFill(cell: MapReviewCell): number {
-  const cellKey = key(cell);
-  if (road.has(cellKey)) return 0x766849;
-  if (northRidge.has(cellKey)) return 0x66704c;
-  if (southTrack.has(cellKey)) return 0x5f6747;
+function terrainFill(kind: MapReviewTerrainKind | undefined, cell: MapReviewCell): number {
+  if (kind === "road") return 0x766849;
+  if (kind === "ridge") return 0x66704c;
+  if (kind === "track") return 0x5f6747;
+  if (kind === "basin") return 0x3d5147;
+  if (kind === "plateau") return 0x756845;
   return (cell.x + cell.y) % 2 === 0 ? 0x4f633f : 0x566a44;
 }
 
-function drawElevationWalls(world: Container, point: ScreenPoint, elevation: number): void {
-  if (elevation <= 0) return;
-  const baseY = point.y + elevation * ELEVATION_STEP;
-  world.addChild(
-    new Graphics()
-      .poly([
-        point.x - TILE_WIDTH / 2,
-        point.y,
-        point.x,
-        point.y + TILE_HEIGHT / 2,
-        point.x,
-        baseY + TILE_HEIGHT / 2,
-        point.x - TILE_WIDTH / 2,
-        baseY,
-      ])
-      .fill(0x3f412d)
-      .stroke({ color: 0x77704b, width: 1, alpha: 0.65 }),
-    new Graphics()
-      .poly([
-        point.x + TILE_WIDTH / 2,
-        point.y,
-        point.x,
-        point.y + TILE_HEIGHT / 2,
-        point.x,
-        baseY + TILE_HEIGHT / 2,
-        point.x + TILE_WIDTH / 2,
-        baseY,
-      ])
-      .fill(0x343829)
-      .stroke({ color: 0x625f43, width: 1, alpha: 0.62 }),
-  );
+function drawElevationWalls(
+  world: Container,
+  point: ScreenPoint,
+  leftDrop: number,
+  rightDrop: number,
+): number {
+  let faces = 0;
+  if (leftDrop > 0) {
+    const baseY = point.y + leftDrop * ELEVATION_STEP;
+    world.addChild(
+      new Graphics()
+        .poly([
+          point.x - TILE_WIDTH / 2,
+          point.y,
+          point.x,
+          point.y + TILE_HEIGHT / 2,
+          point.x,
+          baseY + TILE_HEIGHT / 2,
+          point.x - TILE_WIDTH / 2,
+          baseY,
+        ])
+        .fill(0x3f412d)
+        .stroke({ color: 0x77704b, width: 1, alpha: 0.65 }),
+    );
+    faces += 1;
+  }
+  if (rightDrop > 0) {
+    const baseY = point.y + rightDrop * ELEVATION_STEP;
+    world.addChild(
+      new Graphics()
+        .poly([
+          point.x + TILE_WIDTH / 2,
+          point.y,
+          point.x,
+          point.y + TILE_HEIGHT / 2,
+          point.x,
+          baseY + TILE_HEIGHT / 2,
+          point.x + TILE_WIDTH / 2,
+          baseY,
+        ])
+        .fill(0x343829)
+        .stroke({ color: 0x625f43, width: 1, alpha: 0.62 }),
+    );
+    faces += 1;
+  }
+  return faces;
 }
 
 function drawTree(world: Container, point: ScreenPoint, seed: number): void {
@@ -179,21 +302,6 @@ function drawFieldDetail(world: Container, point: ScreenPoint, seed: number): vo
   }
   detail.stroke({ color: 0xb6a66e, width: 1, alpha: 0.22 });
   world.addChild(detail);
-}
-
-function markerLabel(entry: (typeof layout.deployment.initial)[number]): string {
-  if (entry.id === "mc") return "MC";
-  if (entry.id === "julie") return "J";
-  if (entry.id.startsWith("civilian")) return "C";
-  if (entry.id.startsWith("local-escort")) return "E";
-  if (entry.id.startsWith("forager")) return "F";
-  return "•";
-}
-
-function reinforcementLabel(entry: (typeof layout.deployment.reinforcements)[number]): string {
-  if (entry.id === "hangaku" || entry.id === "la-hire") return "?";
-  if (entry.id.startsWith("forager-reinforcement")) return "R";
-  return "+";
 }
 
 function drawUnitMarker(
@@ -256,9 +364,20 @@ function drawCart(world: Container, point: ScreenPoint): void {
   );
 }
 
+function signedElevation(level: number): string {
+  return level > 0 ? `+${level}` : String(level);
+}
+
 export class MapReviewRenderer {
   readonly #host: HTMLElement;
   readonly #onSelect: (cell: MapReviewCell) => void;
+  readonly #scene: MapReviewRendererScene;
+  readonly #blocked: ReadonlySet<string>;
+  readonly #elevations: ReadonlyMap<string, number>;
+  readonly #routeAnchors: ReadonlySet<string>;
+  readonly #routeClearance: ReadonlySet<string>;
+  readonly #exitZone: ReadonlySet<string>;
+  readonly #terrainKinds: ReadonlyMap<string, MapReviewTerrainKind>;
   readonly #app = new Application();
   #ready = false;
   #resizeObserver: ResizeObserver | undefined;
@@ -286,10 +405,22 @@ export class MapReviewRenderer {
     host: HTMLElement,
     options: MapReviewRendererOptions,
     onSelect: (cell: MapReviewCell) => void,
+    scene: MapReviewRendererScene = B01_SCENE,
   ) {
     this.#host = host;
     this.#options = options;
     this.#onSelect = onSelect;
+    this.#scene = scene;
+    this.#blocked = new Set(scene.blockedCells.map(key));
+    this.#elevations = new Map(scene.elevationCells.map((cell) => [key(cell), cell.level]));
+    this.#routeAnchors = new Set(scene.routeAnchors.map(key));
+    this.#routeClearance = new Set(scene.routeClearanceCells.map(key));
+    this.#exitZone = new Set(scene.exitZone.map(key));
+    const terrainKinds = new Map<string, MapReviewTerrainKind>();
+    for (const region of scene.terrainRegions) {
+      for (const cell of region.cells) terrainKinds.set(key(cell), region.kind);
+    }
+    this.#terrainKinds = terrainKinds;
   }
 
   async init(): Promise<void> {
@@ -301,8 +432,8 @@ export class MapReviewRenderer {
       resolution: Math.min(window.devicePixelRatio || 1, 2),
     });
     const canvas = this.#app.canvas;
-    canvas.dataset.testid = "b01-map-2p5d-canvas";
-    canvas.setAttribute("aria-label", "CH01-B01 interactive 2.5D candidate battlefield review");
+    canvas.dataset.testid = `${this.#scene.testIdPrefix}-canvas`;
+    canvas.setAttribute("aria-label", this.#scene.ariaLabel);
     canvas.style.touchAction = "none";
     this.#host.replaceChildren(canvas);
     canvas.addEventListener("wheel", this.#handleWheel, { passive: false });
@@ -448,6 +579,20 @@ export class MapReviewRenderer {
     this.#host.dataset.cameraPan = `${Math.round(this.#panX)},${Math.round(this.#panY)}`;
   }
 
+  #isInside(cell: MapReviewCell): boolean {
+    return (
+      cell.x >= this.#scene.bounds.minX &&
+      cell.x <= this.#scene.bounds.maxX &&
+      cell.y >= this.#scene.bounds.minY &&
+      cell.y <= this.#scene.bounds.maxY
+    );
+  }
+
+  #elevationAt(cell: MapReviewCell): number {
+    if (!this.#isInside(cell)) return 0;
+    return this.#elevations.get(key(cell)) ?? 0;
+  }
+
   #draw(): void {
     if (!this.#ready) return;
     this.#updateCameraDataset();
@@ -459,11 +604,15 @@ export class MapReviewRenderer {
       elevation: number;
       point: DisplayCell;
     }> = [];
-    for (let y = layout.bounds.minY; y <= layout.bounds.maxY; y += 1) {
-      for (let x = layout.bounds.minX; x <= layout.bounds.maxX; x += 1) {
+    for (let y = this.#scene.bounds.minY; y <= this.#scene.bounds.maxY; y += 1) {
+      for (let x = this.#scene.bounds.minX; x <= this.#scene.bounds.maxX; x += 1) {
         const cell = { x, y };
-        const elevation = elevations.get(key(cell)) ?? 0;
-        cells.push({ cell, elevation, point: projection(cell, elevation, this.#rotation) });
+        const elevation = this.#elevationAt(cell);
+        cells.push({
+          cell,
+          elevation,
+          point: projection(cell, elevation, this.#rotation, this.#scene.bounds),
+        });
       }
     }
 
@@ -497,12 +646,16 @@ export class MapReviewRenderer {
       return depth !== 0 ? depth : left.elevation - right.elevation;
     });
 
+    let elevationFaceCount = 0;
     for (const { cell, elevation, point } of sorted) {
       const cellKey = key(cell);
-      drawElevationWalls(world, point, elevation);
+      const neighbors = visibleNeighbors(cell, this.#rotation);
+      const leftDrop = Math.max(0, elevation - this.#elevationAt(neighbors.left));
+      const rightDrop = Math.max(0, elevation - this.#elevationAt(neighbors.right));
+      elevationFaceCount += drawElevationWalls(world, point, leftDrop, rightDrop);
       const tile = new Graphics()
         .poly(tilePoints(point))
-        .fill({ color: terrainFill(cell), alpha: 1 })
+        .fill({ color: terrainFill(this.#terrainKinds.get(cellKey), cell), alpha: 1 })
         .stroke({
           color: this.#options.showGrid ? 0x9c9a79 : 0x48583e,
           width: this.#options.showGrid ? 0.9 : 0.35,
@@ -514,22 +667,22 @@ export class MapReviewRenderer {
         if (!this.#suppressTap) this.#onSelect(cell);
       });
       world.addChild(tile);
-      if (road.has(cellKey)) drawRoadDetail(world, point);
-      else if (!blocked.has(cellKey)) drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
+      if (this.#terrainKinds.get(cellKey) === "road") drawRoadDetail(world, point);
+      else if (!this.#blocked.has(cellKey)) drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
 
-      if (this.#options.showRoute && cartClearance.has(cellKey)) {
+      if (this.#options.showRoute && this.#routeClearance.has(cellKey)) {
         world.addChild(
           new Graphics()
             .poly(tilePoints(point))
-            .fill({ color: 0x82bfd0, alpha: routeAnchors.has(cellKey) ? 0.16 : 0.08 })
+            .fill({ color: 0x82bfd0, alpha: this.#routeAnchors.has(cellKey) ? 0.16 : 0.08 })
             .stroke({
               color: 0x9cd9e8,
-              width: routeAnchors.has(cellKey) ? 1.6 : 0.8,
+              width: this.#routeAnchors.has(cellKey) ? 1.6 : 0.8,
               alpha: 0.62,
             }),
         );
       }
-      if (this.#options.showRoute && exitZone.has(cellKey)) {
+      if (this.#options.showRoute && this.#exitZone.has(cellKey)) {
         world.addChild(
           new Graphics()
             .poly(tilePoints(point))
@@ -547,7 +700,7 @@ export class MapReviewRenderer {
       }
       if (this.#options.showCoordinates) {
         const coordinate = new Text({
-          text: `${cell.x},${cell.y}${elevation ? ` +${elevation}` : ""}`,
+          text: `${cell.x},${cell.y}${elevation ? ` ${signedElevation(elevation)}` : ""}`,
           style: {
             fill: 0xf4efe5,
             fontFamily: "ui-monospace, monospace",
@@ -563,34 +716,34 @@ export class MapReviewRenderer {
     }
 
     for (const { cell, point } of sorted) {
-      if (blocked.has(key(cell))) drawTree(world, point, cell.x * 13 + cell.y * 29);
+      if (this.#blocked.has(key(cell))) drawTree(world, point, cell.x * 13 + cell.y * 29);
     }
 
-    drawCart(
-      world,
-      projection(
-        layout.cart.startAnchor,
-        elevations.get(key(layout.cart.startAnchor)) ?? 0,
-        this.#rotation,
-      ),
-    );
-    if (!this.#options.showUnits) return;
-    for (const entry of layout.deployment.initial) {
-      drawUnitMarker(
+    const elevationValues = cells.map(({ elevation }) => elevation);
+    this.#host.dataset.renderedCellCount = String(cells.length);
+    this.#host.dataset.elevationMin = String(Math.min(...elevationValues));
+    this.#host.dataset.elevationMax = String(Math.max(...elevationValues));
+    this.#host.dataset.elevationFaceCount = String(elevationFaceCount);
+
+    if (this.#scene.cartStart) {
+      drawCart(
         world,
-        projection(entry.cell, elevations.get(key(entry.cell)) ?? 0, this.#rotation),
-        entry.side,
-        markerLabel(entry),
-        false,
+        projection(
+          this.#scene.cartStart,
+          this.#elevationAt(this.#scene.cartStart),
+          this.#rotation,
+          this.#scene.bounds,
+        ),
       );
     }
-    for (const entry of layout.deployment.reinforcements) {
+    if (!this.#options.showUnits) return;
+    for (const unit of this.#scene.units) {
       drawUnitMarker(
         world,
-        projection(entry.entryCell, elevations.get(key(entry.entryCell)) ?? 0, this.#rotation),
-        entry.id.startsWith("forager") ? "enemy" : "allied",
-        reinforcementLabel(entry),
-        true,
+        projection(unit.cell, this.#elevationAt(unit.cell), this.#rotation, this.#scene.bounds),
+        unit.side,
+        unit.label,
+        unit.reinforcement,
       );
     }
   }
