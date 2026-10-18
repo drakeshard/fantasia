@@ -10,20 +10,85 @@
   -webkit-font-smoothing: antialiased;
 }
 
-* { box-sizing: border-box; }
-html, body, #app { width: 100%; min-width: 100%; min-height: 100%; margin: 0; }
-body { min-height: 100dvh; overflow-x: hidden; background: var(--ui-canvas-deep); color: var(--ui-text); }
-body, button, input, select, summary, textarea { font-family: var(--ui-font-body); }
-button, summary { font: inherit; }
-button { color: inherit; }
-button, summary, select, input { min-height: var(--ui-target-min); }
-button:focus-visible, summary:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus); outline-offset: var(--ui-focus-offset); }
-h1, h2, h3, h4, p, dl, dd, figure, fieldset { margin-top: 0; }
-h1, h2, h3 { text-wrap: balance; }
-p { line-height: var(--ui-line-body); }
-img, svg, canvas { max-width: 100%; }
-button, input, select { accent-color: var(--ui-accent); }
-::selection { color: var(--ui-text-heading); background: rgb(122 167 255 / 32%); }
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#app {
+  width: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--ui-canvas-deep);
+  color: var(--ui-text);
+}
+body,
+button,
+input,
+select,
+summary,
+textarea {
+  font-family: var(--ui-font-body);
+}
+button,
+summary {
+  font: inherit;
+}
+button {
+  color: inherit;
+}
+button,
+summary,
+select,
+input {
+  min-height: var(--ui-target-min);
+}
+button:focus-visible,
+summary:focus-visible,
+select:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+h1,
+h2,
+h3,
+h4,
+p,
+dl,
+dd,
+figure,
+fieldset {
+  margin-top: 0;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  line-height: var(--ui-line-body);
+}
+img,
+svg,
+canvas {
+  max-width: 100%;
+}
+button,
+input,
+select {
+  accent-color: var(--ui-accent);
+}
+::selection {
+  color: var(--ui-text-heading);
+  background: rgb(122 167 255 / 32%);
+}
 
 .hud-eyebrow {
   margin: 0 0 var(--ui-space-2);
@@ -48,11 +113,39 @@ button, input, select { accent-color: var(--ui-accent); }
   font-weight: var(--ui-font-weight-semibold);
   cursor: pointer;
 }
-.ui-button:hover:not(:disabled), .action-button:hover:not(:disabled), .choice-button:hover:not(:disabled), .turn-order-entry:hover:not(:disabled) { border-color: rgb(201 167 96 / 55%); background: var(--ui-surface-raised); }
-.ui-button:disabled, .action-button:disabled, .choice-button:disabled, .turn-order-entry:disabled { border-color: var(--ui-disabled-border); color: var(--ui-disabled-text); cursor: not-allowed; opacity: var(--ui-opacity-disabled-soft); }
-.ui-button.primary { border-color: var(--ui-accent); color: var(--ui-on-accent); background: linear-gradient(180deg, var(--ui-text-heading), #eee3cf); font-weight: var(--ui-font-weight-bold); }
-.ui-button.secondary { background: var(--ui-surface-raised); }
+.ui-button:hover:not(:disabled),
+.action-button:hover:not(:disabled),
+.choice-button:hover:not(:disabled),
+.turn-order-entry:hover:not(:disabled) {
+  border-color: rgb(201 167 96 / 55%);
+  background: var(--ui-surface-raised);
+}
+.ui-button:disabled,
+.action-button:disabled,
+.choice-button:disabled,
+.turn-order-entry:disabled {
+  border-color: var(--ui-disabled-border);
+  color: var(--ui-disabled-text);
+  cursor: not-allowed;
+  opacity: var(--ui-opacity-disabled-soft);
+}
+.ui-button.primary {
+  border-color: var(--ui-accent);
+  color: var(--ui-on-accent);
+  background: linear-gradient(180deg, var(--ui-text-heading), #eee3cf);
+  font-weight: var(--ui-font-weight-bold);
+}
+.ui-button.secondary {
+  background: var(--ui-surface-raised);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .001ms !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

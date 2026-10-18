@@ -69,4 +69,6 @@
   color: var(--ui-text-secondary);
 }
 
-.settings-dialog { position: relative; }
+.settings-dialog {
+  position: relative;
+}
