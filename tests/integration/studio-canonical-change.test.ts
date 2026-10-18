@@ -133,9 +133,7 @@ describe("Studio canonical Git change proposal", () => {
     expect(storyBranch).not.toBe("main");
 
     const characterBranch = canonicalProposalBranchName(characterRequest, "studio06-proof-003");
-    expect(characterBranch).toBe(
-      "studio/character/character.production.hero/studio06-proof-003",
-    );
+    expect(characterBranch).toBe("studio/character/character.production.hero/studio06-proof-003");
     expect(characterBranch).not.toBe("main");
   });
 
