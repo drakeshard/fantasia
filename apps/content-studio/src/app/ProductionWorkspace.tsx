@@ -4,11 +4,7 @@ import { ProductionCharacters } from "../features/characters";
 import { ProductionDashboard } from "../production-dashboard";
 import type { StoredStudioAuthSession } from "../studio-session";
 import { Spinner, StateMessage } from "../ui/primitives";
-import {
-  DashboardTemplate,
-  type StudioModuleId,
-  TemplateFixtureHeading,
-} from "../ui/workspace";
+import { DashboardTemplate, type StudioModuleId, TemplateFixtureHeading } from "../ui/workspace";
 import type { StudioReadModelState } from "./use-studio-read-models";
 
 function ReadModelLoading({ label }: { label: string }) {
