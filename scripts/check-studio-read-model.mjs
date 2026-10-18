@@ -80,11 +80,7 @@ requireText(
   "exposeProviderReference: false",
   "Provider references must be redacted by default.",
 );
-requireText(
-  adapters,
-  "content/narrative/story.json",
-  "Story canonical authority must remain story.json.",
-);
+requireText(adapters, "content/narrative/story.json", "Story canonical authority must remain story.json.");
 requireText(
   adapters,
   "content/narrative/story-production.json",
@@ -121,7 +117,8 @@ for (const sourcePath of [
 if (
   !generatedSnapshot ||
   typeof generatedSnapshot.revision !== "string" ||
-  !Array.isArray(generatedSnapshot.canonicalModels) ||
+  !Array.isArray(generatedSnapshot.storyRows) ||
+  !Array.isArray(generatedSnapshot.encounter) ||
   !generatedSnapshot.runtimeManifest
 ) {
   throw new Error("Generated Studio canonical deployment snapshot is malformed.");
