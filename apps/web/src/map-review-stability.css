@@ -17,6 +17,7 @@ body,
  * The map review is an isolated full-screen developer surface. Pixi's
  * auto-density canvas has a larger backing store than its CSS box; none of
  * that intrinsic size may be allowed to grow the document or review root.
+ * Keep these bounds stable for both pointer and touch review interactions.
  * Important declarations are intentional because Vite can merge CSS chunks
  * in dependency order that differs from source import order.
  */
