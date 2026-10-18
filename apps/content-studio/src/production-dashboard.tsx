@@ -1,5 +1,9 @@
 import type { JSX } from "preact";
-import { buildStudioDashboard, type DashboardTargetModule, type StudioReadModelsResponse } from "./dashboard-model";
+import {
+  buildStudioDashboard,
+  type DashboardTargetModule,
+  type StudioReadModelsResponse,
+} from "./dashboard-model";
 import { Chip, SectionHeading, StateMessage, Surface } from "./ui/primitives";
 import { DashboardTemplate } from "./ui/workspace";
 
@@ -25,7 +29,9 @@ export function ProductionDashboard({
   onNavigate: (module: DashboardTargetModule, semanticId: string | null) => void;
 }) {
   const projection = buildStudioDashboard(response);
-  const unavailableCount = projection.sections.filter((section) => section.state === "unavailable").length;
+  const unavailableCount = projection.sections.filter(
+    (section) => section.state === "unavailable",
+  ).length;
 
   return (
     <DashboardTemplate
@@ -42,24 +48,33 @@ export function ProductionDashboard({
     >
       {readOnly ? (
         <StateMessage title="Read-only access" tone="unavailable">
-          Viewer access can inspect the same operational truth. No mutation action is exposed from this Dashboard.
+          Viewer access can inspect the same operational truth. No mutation action is exposed from
+          this Dashboard.
         </StateMessage>
       ) : null}
 
       {projection.state === "partial" ? (
         <StateMessage title="Partial operational picture" tone="unavailable">
-          One or more implemented sources are unavailable or canonical/registry integrity needs attention. Missing sources are not represented as zero.
+          One or more implemented sources are unavailable or canonical/registry integrity needs
+          attention. Missing sources are not represented as zero.
         </StateMessage>
       ) : projection.state === "empty" ? (
         <StateMessage title="No implemented attention items">
-          Implemented Dashboard sources returned zero attention items. Unimplemented Layer 5 records remain explicitly unavailable below.
+          Implemented Dashboard sources returned zero attention items. Unimplemented Layer 5 records
+          remain explicitly unavailable below.
         </StateMessage>
       ) : null}
 
-      <section class="studio-dashboard-freshness" aria-label="Dashboard source freshness" data-testid="dashboard-freshness">
+      <section
+        class="studio-dashboard-freshness"
+        aria-label="Dashboard source freshness"
+        data-testid="dashboard-freshness"
+      >
         <Surface kind="card">
           <span>Git revision</span>
-          <strong title={response.freshness.gitRevision}>{response.freshness.gitRevision.slice(0, 12)}</strong>
+          <strong title={response.freshness.gitRevision}>
+            {response.freshness.gitRevision.slice(0, 12)}
+          </strong>
           <small>{response.freshness.gitState}</small>
         </Surface>
         <Surface kind="card">
@@ -84,7 +99,11 @@ export function ProductionDashboard({
           <Surface kind="card" className="studio-dashboard-section" key={section.id}>
             <SectionHeading
               title={section.label}
-              description={section.state === "unavailable" ? "Source unavailable / not implemented" : "Implemented operational source"}
+              description={
+                section.state === "unavailable"
+                  ? "Source unavailable / not implemented"
+                  : "Implemented operational source"
+              }
               actions={
                 section.state === "unavailable" ? (
                   <Chip>Unavailable</Chip>
@@ -99,11 +118,16 @@ export function ProductionDashboard({
                 {section.unavailableReason ?? "This operational source is unavailable."}
               </StateMessage>
             ) : section.items.length === 0 ? (
-              <p class="studio-dashboard-zero">No attention items returned by this implemented source.</p>
+              <p class="studio-dashboard-zero">
+                No attention items returned by this implemented source.
+              </p>
             ) : (
               <ul class="studio-dashboard-attention-list">
                 {section.items.map((item) => (
-                  <li class={`studio-dashboard-attention studio-dashboard-attention--${item.severity}`} key={item.id}>
+                  <li
+                    class={`studio-dashboard-attention studio-dashboard-attention--${item.severity}`}
+                    key={item.id}
+                  >
                     <div class="studio-dashboard-attention__copy">
                       <span class="studio-dashboard-attention__severity">{item.severity}</span>
                       <strong>{item.title}</strong>
