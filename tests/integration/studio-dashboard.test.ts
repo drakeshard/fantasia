@@ -5,31 +5,44 @@ import {
   type StudioReadModelsResponse,
 } from "../../apps/content-studio/src/dashboard-model";
 
-function model(overrides: Partial<StudioEntityReadModel> = {}): StudioEntityReadModel {
+function model(overrides: Record<string, unknown> = {}): StudioEntityReadModel {
   return {
+    readModelVersion: 1,
     semanticId: "story.s01.ch01.b01",
     entityType: "story",
     displayName: "Strangers on the Road",
+    canonical: {
+      semanticId: "story.s01.ch01.b01",
+      entityType: "story",
+      displayName: "Strangers on the Road",
+      canonicalPath: "content/narrative/story.json",
+      canonicalData: {},
+      provenance: {
+        authority: "git",
+        source: "content/narrative/story.json",
+        revision: "0123456789abcdef0123456789abcdef01234567",
+        canonical: true,
+      },
+    },
     lifecycle: "IN REVIEW",
-    canonical: null,
-    registry: null,
+    schemaVersion: 1,
     validations: [],
     assets: [],
     relations: [],
-    runtime: [],
+    history: [],
     provenance: [],
     issues: [],
     permissions: {
       role: "Viewer",
       capabilities: ["studio.read"],
-      canEditMetadata: false,
-      canProposeCanonicalChanges: false,
+      canRead: true,
+      canEditRegistryMetadata: false,
       canApprove: false,
       canFreeze: false,
       canManageMembership: false,
     },
     ...overrides,
-  } as StudioEntityReadModel;
+  } as unknown as StudioEntityReadModel;
 }
 
 function response(
@@ -60,16 +73,7 @@ describe("Content Studio production Dashboard", () => {
     const projection = buildStudioDashboard(
       response([
         model({
-          validations: [
-            {
-              semanticId: "validation.story.s01.ch01.b01.content",
-              dimension: "content",
-              outcome: "FAILED",
-              blocking: true,
-              message: "Missing required branch beat.",
-              observedAt: "2026-10-18T04:00:00Z",
-            },
-          ],
+          validations: [{ dimension: "content", outcome: "FAILED", blocking: true }],
           issues: [
             {
               code: "canonical-path-mismatch",
@@ -118,7 +122,9 @@ describe("Content Studio production Dashboard", () => {
       }),
     );
 
-    const proposalSection = projection.sections.find((section) => section.id === "canonical-proposals");
+    const proposalSection = projection.sections.find(
+      (section) => section.id === "canonical-proposals",
+    );
     expect(proposalSection?.state).toBe("unavailable");
     expect(proposalSection?.unavailableReason).toContain("not deployed");
     expect(projection.state).toBe("partial");
