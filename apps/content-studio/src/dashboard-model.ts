@@ -124,8 +124,7 @@ function entityItem(
     severity,
     semanticId: model.semanticId,
     module: moduleForEntityType(model.entityType),
-    updatedAt:
-      model.provenance.find((item) => item.authority === "registry")?.observedAt ?? null,
+    updatedAt: model.provenance.find((item) => item.authority === "registry")?.observedAt ?? null,
   };
 }
 
@@ -220,7 +219,9 @@ function assetEvidenceItems(models: readonly StudioEntityReadModel[]): Dashboard
   return items;
 }
 
-function runtimeUnpublishedItems(models: readonly StudioEntityReadModel[]): DashboardAttentionItem[] {
+function runtimeUnpublishedItems(
+  models: readonly StudioEntityReadModel[],
+): DashboardAttentionItem[] {
   return models
     .filter((model) => normalizedLifecycle(model.lifecycle) === "RUNTIME READY")
     .map((model) =>
