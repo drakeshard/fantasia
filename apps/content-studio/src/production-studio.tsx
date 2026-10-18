@@ -14,18 +14,18 @@ import {
   fetchStudioAuthorization,
   fetchStudioReadModels,
   restoreStudioSession,
-  signInStudio,
-  signOutStudio,
   type StoredStudioAuthSession,
   type StudioSessionState,
+  signInStudio,
+  signOutStudio,
 } from "./studio-session";
 import { PasswordField } from "./ui/PasswordField";
 import { Button, Spinner, StateMessage, Surface, TextField } from "./ui/primitives";
 import {
   DashboardTemplate,
-  studioModules,
   type StudioModuleId,
   StudioShell,
+  studioModules,
   TemplateFixtureHeading,
 } from "./ui/workspace";
 
@@ -141,11 +141,7 @@ function replaceWorkspaceUrl(module: StudioModuleId, semanticId: string | null):
   if (semanticId) params.set("semanticId", semanticId);
   else params.delete("semanticId");
   const query = params.toString();
-  window.history.pushState(
-    null,
-    "",
-    `${window.location.pathname}${query ? `?${query}` : ""}`,
-  );
+  window.history.pushState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
 }
 
 type DashboardLoadState =
