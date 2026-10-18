@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { Button, StateMessage, Surface } from "./primitives";
+import { StateMessage, Surface } from "./primitives";
 import { LifecycleBadge, RelationCard, ValidationBadge, VersionBadge } from "./semantic";
 import { lifecycleStateFromRegistry } from "./semantic-model";
 
@@ -123,7 +123,11 @@ function AssetCard({
         <code>{asset.semanticId}</code>
       </span>
       <span class="studio-asset-card__state">
-        {lifecycle ? <LifecycleBadge state={lifecycle} /> : <span>{asset.lifecycle ?? "Lifecycle unavailable"}</span>}
+        {lifecycle ? (
+          <LifecycleBadge state={lifecycle} />
+        ) : (
+          <span>{asset.lifecycle ?? "Lifecycle unavailable"}</span>
+        )}
         <small>{sourceState(asset)}</small>
       </span>
     </button>
@@ -170,7 +174,9 @@ function AssetSourcePanel({ asset }: { asset: AssetBoardRecord }) {
         </div>
         <div>
           <dt>Provider reference</dt>
-          <dd><code>{reference}</code></dd>
+          <dd>
+            <code>{reference}</code>
+          </dd>
         </div>
         <div>
           <dt>Media type</dt>
@@ -212,7 +218,7 @@ function AssetPreview({ asset }: { asset: AssetBoardRecord }) {
   const previewAvailable = asset.currentVersion?.operations?.includes("preview") ?? false;
   return (
     <Surface kind="inset" className="studio-asset-preview">
-      <div class="studio-asset-preview__frame" aria-label={`Preview structure for ${asset.semanticId}`}>
+      <div class="studio-asset-preview__frame">
         <span aria-hidden="true">◇</span>
         <strong>{asset.role}</strong>
         <code>{asset.semanticId}</code>
@@ -232,8 +238,8 @@ function AssetVersionHistory({ asset }: { asset: AssetBoardRecord }) {
     return (
       <StateMessage title="Version history not included" tone="unavailable">
         The current read model exposes the current version only. Historical versions are not
-        inferred or overwritten; the production Assets workspace must read retained registry
-        history explicitly.
+        inferred or overwritten; the production Assets workspace must read retained registry history
+        explicitly.
       </StateMessage>
     );
   }
@@ -242,7 +248,8 @@ function AssetVersionHistory({ asset }: { asset: AssetBoardRecord }) {
     <ol class="studio-asset-version-list" aria-label={`Version history for ${asset.semanticId}`}>
       {versions.map((version) => {
         const lifecycle = lifecycleStateFromRegistry(version.lifecycle);
-        const label = version.versionNumber !== null ? `v${version.versionNumber}` : version.versionId;
+        const label =
+          version.versionNumber !== null ? `v${version.versionNumber}` : version.versionId;
         return (
           <li class="studio-asset-version-row" key={version.versionId}>
             <div>
@@ -262,7 +269,9 @@ function AssetRuntimeEvidence({ asset }: { asset: AssetBoardRecord }) {
   if (asset.runtimeDerivatives.length === 0) {
     return (
       <StateMessage
-        title={asset.derivativeRequired ? "Required derivative not registered" : "No runtime derivative"}
+        title={
+          asset.derivativeRequired ? "Required derivative not registered" : "No runtime derivative"
+        }
         tone={asset.derivativeRequired ? "unavailable" : "neutral"}
       >
         Runtime derivative evidence remains separate from source/master approval and lifecycle.
@@ -282,11 +291,30 @@ function AssetRuntimeEvidence({ asset }: { asset: AssetBoardRecord }) {
             <span>{derivative.technicalState}</span>
           </div>
           <dl class="studio-asset-facts">
-            <div><dt>Format</dt><dd>{derivative.outputFormat}</dd></div>
-            <div><dt>Media type</dt><dd>{derivative.mediaType}</dd></div>
-            <div><dt>Registry runtime path</dt><dd><code>{derivative.runtimePath ?? "Not registered"}</code></dd></div>
-            <div><dt>Accepted Git manifest mapping</dt><dd>{derivative.manifestMapped ? "Mapped" : "Not mapped"}</dd></div>
-            <div><dt>Accepted runtime path</dt><dd><code>{derivative.acceptedRuntimePath ?? "Not accepted"}</code></dd></div>
+            <div>
+              <dt>Format</dt>
+              <dd>{derivative.outputFormat}</dd>
+            </div>
+            <div>
+              <dt>Media type</dt>
+              <dd>{derivative.mediaType}</dd>
+            </div>
+            <div>
+              <dt>Registry runtime path</dt>
+              <dd>
+                <code>{derivative.runtimePath ?? "Not registered"}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Accepted Git manifest mapping</dt>
+              <dd>{derivative.manifestMapped ? "Mapped" : "Not mapped"}</dd>
+            </div>
+            <div>
+              <dt>Accepted runtime path</dt>
+              <dd>
+                <code>{derivative.acceptedRuntimePath ?? "Not accepted"}</code>
+              </dd>
+            </div>
           </dl>
         </Surface>
       ))}
@@ -331,7 +359,13 @@ function AssetIssues({ asset }: { asset: AssetBoardRecord }) {
       {asset.issues.map((issue, index) => (
         <Surface kind="inset" key={`${issue.code ?? "issue"}:${index}`}>
           <ValidationBadge
-            state={issue.severity === "blocking" ? "blocking" : issue.severity === "warning" ? "warning" : "unknown"}
+            state={
+              issue.severity === "blocking"
+                ? "blocking"
+                : issue.severity === "warning"
+                  ? "warning"
+                  : "unknown"
+            }
           />
           <strong>{issue.code ?? "Asset issue"}</strong>
           <p>{issue.message}</p>
@@ -347,7 +381,10 @@ export function AssetInspector({ asset }: { asset: AssetBoardRecord }) {
       <header class="studio-asset-inspector__header">
         <div>
           <span>Semantic asset</span>
-          <h4>{asset.role}{asset.variant ? ` · ${asset.variant}` : ""}</h4>
+          <h4>
+            {asset.role}
+            {asset.variant ? ` · ${asset.variant}` : ""}
+          </h4>
           <code>{asset.semanticId}</code>
         </div>
         <span>{sourceState(asset)}</span>
@@ -388,7 +425,11 @@ export function AssetBoard({
   const [selectedSemanticId, setSelectedSemanticId] = useState<string | null>(null);
 
   if (availability === "loading") {
-    return <StateMessage title="Loading asset board">Waiting for registered asset evidence.</StateMessage>;
+    return (
+      <StateMessage title="Loading asset board">
+        Waiting for registered asset evidence.
+      </StateMessage>
+    );
   }
   if (availability === "error") {
     return (
@@ -400,8 +441,8 @@ export function AssetBoard({
   if (availability === "unavailable") {
     return (
       <StateMessage title="Asset evidence unavailable" tone="unavailable">
-        The current trusted read boundary did not provide asset evidence. This is not an empty
-        asset claim.
+        The current trusted read boundary did not provide asset evidence. This is not an empty asset
+        claim.
       </StateMessage>
     );
   }
