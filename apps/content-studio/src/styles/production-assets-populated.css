@@ -91,7 +91,9 @@
   white-space: nowrap;
 }
 
-.studio-assets-browser-controls__active { color: var(--studio-accent-primary) !important; }
+.studio-assets-browser-controls__actions > .studio-assets-browser-controls__active {
+  color: var(--studio-accent-primary);
+}
 
 .studio-assets-selector--rail {
   display: grid;
