@@ -10,18 +10,18 @@ const tokenResponse = {
 
 const owner = {
   readModelVersion: 1,
-  semanticId: "character.production.hero",
-  entityType: "character",
-  displayName: "MC",
+  semanticId: "identity.brand.fantasia",
+  entityType: "brand-identity",
+  displayName: "Fantasia",
   canonical: {
-    semanticId: "character.production.hero",
-    entityType: "character",
-    displayName: "MC",
-    canonicalPath: "content/characters/characters.json",
-    canonicalData: {},
+    semanticId: "identity.brand.fantasia",
+    entityType: "brand-identity",
+    displayName: "Fantasia",
+    canonicalPath: "config/identity-ui-assets.json",
+    canonicalData: { roles: ["brand-crest", "brand-wordmark"] },
     provenance: {
       authority: "git",
-      source: "content/characters/characters.json",
+      source: "config/identity-ui-assets.json",
       revision,
       canonical: true,
     },
@@ -129,7 +129,9 @@ test("empty Assets keeps creation compact until Add Asset is requested", async (
   await signIn(page);
 
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
-  await expect(page.getByText("Google Drive · Connected as owner@example.test", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Google Drive · Connected as owner@example.test", { exact: true }),
+  ).toBeVisible();
   await expect(page.getByText("No assets yet", { exact: true })).toBeVisible();
 
   await expect(page.getByLabel("Search assets")).toHaveCount(0);
@@ -141,22 +143,24 @@ test("empty Assets keeps creation compact until Add Asset is requested", async (
   const dialog = page.getByRole("dialog", { name: "Add Asset" });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByLabel("Upload file")).toBeVisible();
-  await expect(dialog.getByLabel("Owner")).toBeVisible();
-  await expect(dialog.getByLabel("Asset type")).toBeVisible();
+  await expect(dialog.getByLabel("Asset type")).toHaveValue("brand-crest");
+  await expect(dialog.getByLabel("Owner")).toHaveValue("identity.brand.fantasia");
   await expect(dialog.getByLabel("Variant · optional")).toBeVisible();
   await expect(dialog.getByLabel("Semantic asset ID")).toHaveCount(0);
   await expect(dialog.getByText(/Semantic ID:/)).toHaveCount(0);
 });
 
-test("Add Asset dialog derives identity and uses the trusted multipart upload", async ({ page }) => {
+test("Add Asset dialog derives controlled identity and uses the trusted multipart upload", async ({
+  page,
+}) => {
   await signIn(page);
   await page.getByRole("button", { name: "+ Add Asset" }).click();
 
   const dialog = page.getByRole("dialog", { name: "Add Asset" });
   await dialog.getByLabel("Upload file").setInputFiles({
-    name: "portrait.png",
-    mimeType: "image/png",
-    buffer: Buffer.from("source-master"),
+    name: "fantasia-crest.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from("<svg></svg>"),
   });
 
   const operation = page.waitForRequest(
@@ -168,7 +172,9 @@ test("Add Asset dialog derives identity and uses the trusted multipart upload", 
   await dialog.getByRole("button", { name: "Add Asset" }).click();
   const request = await operation;
 
-  expect(request.postData()).toContain("asset.character.production.hero.portrait.base");
+  expect(request.postData()).toContain("asset.identity.brand.fantasia.brand-crest.base");
+  expect(request.postData()).toContain("identity.brand.fantasia");
+  expect(request.postData()).toContain("brand-crest");
   expect(request.postData()).not.toContain("service_account");
   expect(request.postData()).not.toContain("private_key");
   await expect(dialog).toHaveCount(0);
