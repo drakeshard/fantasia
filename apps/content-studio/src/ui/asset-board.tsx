@@ -455,7 +455,7 @@ export function AssetBoard({
     );
   }
 
-  const selected = assets.find((asset) => asset.semanticId === selectedSemanticId) ?? assets[0];
+  const selected = assets.find((asset) => asset.semanticId === selectedSemanticId) ?? assets[0]!;
   return (
     <div class="studio-asset-board-composition" data-testid="asset-board-composition">
       {readOnly ? (
