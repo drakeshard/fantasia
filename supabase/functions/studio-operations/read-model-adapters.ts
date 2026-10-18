@@ -14,10 +14,7 @@ const RUNTIME_MANIFEST_PATH = "config/runtime-assets.json";
 
 export interface AssetSourceProviderAdapter {
   readonly kind: string;
-  describe(
-    version: RegistryAssetVersionRecord,
-    exposeReference: boolean,
-  ): StudioAssetSourceSummary;
+  describe(version: RegistryAssetVersionRecord, exposeReference: boolean): StudioAssetSourceSummary;
 }
 
 export class RegistryBackedAssetSourceAdapter implements AssetSourceProviderAdapter {
@@ -126,9 +123,7 @@ function productionPreviewFor(
   };
 }
 
-export function normalizeCanonicalModels(
-  snapshot: GitSnapshot,
-): readonly StudioCanonicalSummary[] {
+export function normalizeCanonicalModels(snapshot: GitSnapshot): readonly StudioCanonicalSummary[] {
   const story = requireRecord(snapshot.story, "Story source");
   const production = requireRecord(snapshot.storyProduction, "Story production preview");
   if (!Array.isArray(story.sagas))

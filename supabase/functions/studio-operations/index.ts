@@ -15,10 +15,7 @@ import {
   StudioOperationContractError,
 } from "./contract.ts";
 import { registryOnlyReadModels } from "./missing-canonical.ts";
-import {
-  normalizeCanonicalModels,
-  normalizeRuntimeManifest,
-} from "./read-model-adapters.ts";
+import { normalizeCanonicalModels, normalizeRuntimeManifest } from "./read-model-adapters.ts";
 import { loadRepositorySnapshot } from "./repository-snapshot.ts";
 
 const corsHeaders = {
