@@ -1,5 +1,8 @@
 import { useState } from "preact/hooks";
-import { createCharacterDisplayNameProposal, type StoredStudioAuthSession } from "../../studio-session";
+import {
+  createCharacterDisplayNameProposal,
+  type StoredStudioAuthSession,
+} from "../../studio-session";
 import type { CharacterReadModel } from "./model";
 
 export type CharacterProposalState =
