@@ -1,9 +1,6 @@
 import { useMemo, useState } from "preact/hooks";
 import type { DashboardEntityReadModel, StudioReadModelsResponse } from "./dashboard-model";
-import {
-  createCharacterDisplayNameProposal,
-  type StoredStudioAuthSession,
-} from "./studio-session";
+import { createCharacterDisplayNameProposal, type StoredStudioAuthSession } from "./studio-session";
 import { Button, Chip, StateMessage, Surface, TextField } from "./ui/primitives";
 import {
   CollectionTemplate,
@@ -46,7 +43,8 @@ const characterTabs = [
 
 function valueText(value: unknown): string {
   if (value === null || value === undefined) return "Not registered";
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return String(value);
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean")
+    return String(value);
   return JSON.stringify(value);
 }
 
@@ -104,7 +102,9 @@ function CharacterCollection({
       }
     >
       {visible.length === 0 ? (
-        <StateMessage title={models.length === 0 ? "No canonical characters" : "No matching characters"}>
+        <StateMessage
+          title={models.length === 0 ? "No canonical characters" : "No matching characters"}
+        >
           {models.length === 0
             ? "The canonical Git source returned no character definitions. Empty is not treated as unavailable."
             : "Change the filter to show another canonical character."}
@@ -125,7 +125,9 @@ function CharacterCollection({
               </span>
               <span class="studio-character-row__status">
                 <Chip>{model.lifecycle ?? "registry unregistered"}</Chip>
-                <Chip>{model.issues.length === 0 ? "no read issues" : `${model.issues.length} issues`}</Chip>
+                <Chip>
+                  {model.issues.length === 0 ? "no read issues" : `${model.issues.length} issues`}
+                </Chip>
               </span>
             </button>
           ))}
@@ -157,9 +159,14 @@ function CharacterEntity({
     | { readonly kind: "error"; readonly message: string }
   >({ kind: "clean" });
   const data = model.canonical.canonicalData;
-  const rpg = typeof data.rpg === "object" && data.rpg !== null ? (data.rpg as Record<string, unknown>) : {};
-  const attributes = typeof rpg.attributes === "object" && rpg.attributes !== null ? (rpg.attributes as Record<string, unknown>) : {};
-  const hp = typeof rpg.hp === "object" && rpg.hp !== null ? (rpg.hp as Record<string, unknown>) : {};
+  const rpg =
+    typeof data.rpg === "object" && data.rpg !== null ? (data.rpg as Record<string, unknown>) : {};
+  const attributes =
+    typeof rpg.attributes === "object" && rpg.attributes !== null
+      ? (rpg.attributes as Record<string, unknown>)
+      : {};
+  const hp =
+    typeof rpg.hp === "object" && rpg.hp !== null ? (rpg.hp as Record<string, unknown>) : {};
 
   const propose = async () => {
     if (!canPropose || proposalState.kind === "pending") return;
@@ -177,7 +184,10 @@ function CharacterEntity({
         url: typeof proposal?.pullRequestUrl === "string" ? proposal.pullRequestUrl : null,
       });
     } catch (error) {
-      setProposalState({ kind: "error", message: error instanceof Error ? error.message : "Character proposal failed." });
+      setProposalState({
+        kind: "error",
+        message: error instanceof Error ? error.message : "Character proposal failed.",
+      });
     }
   };
 
@@ -200,7 +210,10 @@ function CharacterEntity({
       </Surface>
       <Surface kind="inset" className="studio-character-editor">
         <h4>Supported canonical edit</h4>
-        <p>STUDIO06 intentionally exposes only the character display name through the controlled Git proposal path.</p>
+        <p>
+          STUDIO06 intentionally exposes only the character display name through the controlled Git
+          proposal path.
+        </p>
         <TextField
           id={`display-name-${model.semanticId}`}
           label="Display name"
@@ -221,7 +234,8 @@ function CharacterEntity({
         </Button>
         {!canPropose ? (
           <StateMessage title="Read-only access" tone="unavailable">
-            This role can inspect canonical character facts but cannot create canonical change proposals.
+            This role can inspect canonical character facts but cannot create canonical change
+            proposals.
           </StateMessage>
         ) : null}
         {proposalState.kind === "success" ? (
@@ -230,7 +244,9 @@ function CharacterEntity({
             {proposalState.url ? ` PR: ${proposalState.url}` : ""}
           </StateMessage>
         ) : proposalState.kind === "error" ? (
-          <StateMessage title="Proposal failed" tone="error">{proposalState.message}</StateMessage>
+          <StateMessage title="Proposal failed" tone="error">
+            {proposalState.message}
+          </StateMessage>
         ) : null}
       </Surface>
     </div>
@@ -248,7 +264,9 @@ function CharacterEntity({
       </Surface>
       <Surface kind="inset">
         <h4>RPG attributes</h4>
-        {Object.entries(attributes).map(([key, value]) => <Fact label={key} value={value} key={key} />)}
+        {Object.entries(attributes).map(([key, value]) => (
+          <Fact label={key} value={value} key={key} />
+        ))}
       </Surface>
     </div>
   );
@@ -256,21 +274,82 @@ function CharacterEntity({
   const panels = {
     overview,
     gameplay,
-    skills: <EmptyEvidence>No character-to-skill relations are registered in the current read model.</EmptyEvidence>,
-    equipment: <EmptyEvidence>No character-to-equipment relations are registered in the current read model.</EmptyEvidence>,
-    assets: model.assets.length === 0 ? <EmptyEvidence>No asset records are registered for this character.</EmptyEvidence> : (
-      <div class="studio-character-stack">{model.assets.map((asset) => <Surface kind="inset" key={asset.semanticId}><strong>{asset.role}</strong><code>{asset.semanticId}</code><span>{asset.currentVersion?.sourceAvailable ? "source registered" : "source unavailable"}</span></Surface>)}</div>
+    skills: (
+      <EmptyEvidence>
+        No character-to-skill relations are registered in the current read model.
+      </EmptyEvidence>
     ),
-    story: <EmptyEvidence>Story relationships will appear when semantic character relations are registered; text-name matches are not treated as authority.</EmptyEvidence>,
-    relations: model.relations.length === 0 ? <EmptyEvidence>No semantic relations are registered for this character.</EmptyEvidence> : (
-      <div class="studio-character-stack">{model.relations.map((relation) => <Surface kind="inset" key={`${relation.type}:${relation.targetSemanticId}`}><strong>{relation.type}</strong><code>{relation.targetSemanticId}</code><span>{relation.valid ? "valid" : "invalid target"}</span></Surface>)}</div>
+    equipment: (
+      <EmptyEvidence>
+        No character-to-equipment relations are registered in the current read model.
+      </EmptyEvidence>
     ),
-    validation: model.validations.length === 0 ? <EmptyEvidence>No validation results are registered for this character.</EmptyEvidence> : (
-      <div class="studio-character-stack">{model.validations.map((validation) => <Surface kind="inset" key={`${validation.dimension}:${validation.outcome}`}><strong>{validation.dimension}</strong><span>{validation.outcome}{validation.blocking ? " · blocking" : ""}</span></Surface>)}</div>
+    assets:
+      model.assets.length === 0 ? (
+        <EmptyEvidence>No asset records are registered for this character.</EmptyEvidence>
+      ) : (
+        <div class="studio-character-stack">
+          {model.assets.map((asset) => (
+            <Surface kind="inset" key={asset.semanticId}>
+              <strong>{asset.role}</strong>
+              <code>{asset.semanticId}</code>
+              <span>
+                {asset.currentVersion?.sourceAvailable ? "source registered" : "source unavailable"}
+              </span>
+            </Surface>
+          ))}
+        </div>
+      ),
+    story: (
+      <EmptyEvidence>
+        Story relationships will appear when semantic character relations are registered; text-name
+        matches are not treated as authority.
+      </EmptyEvidence>
     ),
-    history: model.history.length === 0 ? <EmptyEvidence>No registry history is registered for this character.</EmptyEvidence> : (
-      <div class="studio-character-stack">{model.history.map((event) => <Surface kind="inset" key={`${event.eventType}:${event.occurredAt}`}><strong>{event.eventType}</strong><span>{event.occurredAt}</span><small>{event.sourceKind ?? "source unspecified"}</small></Surface>)}</div>
-    ),
+    relations:
+      model.relations.length === 0 ? (
+        <EmptyEvidence>No semantic relations are registered for this character.</EmptyEvidence>
+      ) : (
+        <div class="studio-character-stack">
+          {model.relations.map((relation) => (
+            <Surface kind="inset" key={`${relation.type}:${relation.targetSemanticId}`}>
+              <strong>{relation.type}</strong>
+              <code>{relation.targetSemanticId}</code>
+              <span>{relation.valid ? "valid" : "invalid target"}</span>
+            </Surface>
+          ))}
+        </div>
+      ),
+    validation:
+      model.validations.length === 0 ? (
+        <EmptyEvidence>No validation results are registered for this character.</EmptyEvidence>
+      ) : (
+        <div class="studio-character-stack">
+          {model.validations.map((validation) => (
+            <Surface kind="inset" key={`${validation.dimension}:${validation.outcome}`}>
+              <strong>{validation.dimension}</strong>
+              <span>
+                {validation.outcome}
+                {validation.blocking ? " · blocking" : ""}
+              </span>
+            </Surface>
+          ))}
+        </div>
+      ),
+    history:
+      model.history.length === 0 ? (
+        <EmptyEvidence>No registry history is registered for this character.</EmptyEvidence>
+      ) : (
+        <div class="studio-character-stack">
+          {model.history.map((event) => (
+            <Surface kind="inset" key={`${event.eventType}:${event.occurredAt}`}>
+              <strong>{event.eventType}</strong>
+              <span>{event.occurredAt}</span>
+              <small>{event.sourceKind ?? "source unspecified"}</small>
+            </Surface>
+          ))}
+        </div>
+      ),
   } as const;
 
   return (
@@ -282,7 +361,11 @@ function CharacterEntity({
           status={<Chip>{model.lifecycle ?? "registry unregistered"}</Chip>}
         />
       }
-      toolbar={<Button variant="quiet" onClick={onBack}>Back to Characters</Button>}
+      toolbar={
+        <Button variant="quiet" onClick={onBack}>
+          Back to Characters
+        </Button>
+      }
       tabsId={`character-${model.semanticId}`}
       tabs={characterTabs}
       selectedTab={tab}
@@ -305,23 +388,44 @@ export function ProductionCharacters({
   semanticId: string | null;
   onSemanticIdChange: (semanticId: string | null) => void;
 }) {
-  const characters = response.models.filter((model) => model.entityType === "character") as readonly CharacterReadModel[];
-  const selected = semanticId ? characters.find((model) => model.semanticId === semanticId) : undefined;
+  const characters = response.models.filter(
+    (model) => model.entityType === "character",
+  ) as readonly CharacterReadModel[];
+  const selected = semanticId
+    ? characters.find((model) => model.semanticId === semanticId)
+    : undefined;
 
   if (semanticId && !selected) {
     return (
       <CollectionTemplate
-        header={<TemplateFixtureHeading title="Character not found" description="The requested semantic ID is not present in the current canonical read model." />}
+        header={
+          <TemplateFixtureHeading
+            title="Character not found"
+            description="The requested semantic ID is not present in the current canonical read model."
+          />
+        }
       >
-        <StateMessage title="Canonical character unavailable" tone="error">{semanticId}</StateMessage>
+        <StateMessage title="Canonical character unavailable" tone="error">
+          {semanticId}
+        </StateMessage>
         <Button onClick={() => onSemanticIdChange(null)}>Return to Characters</Button>
       </CollectionTemplate>
     );
   }
 
   return selected ? (
-    <CharacterEntity model={selected} revision={response.revision} auth={auth} canPropose={canPropose} onBack={() => onSemanticIdChange(null)} />
+    <CharacterEntity
+      model={selected}
+      revision={response.revision}
+      auth={auth}
+      canPropose={canPropose}
+      onBack={() => onSemanticIdChange(null)}
+    />
   ) : (
-    <CharacterCollection models={characters} selectedSemanticId={semanticId} onSelect={onSemanticIdChange} />
+    <CharacterCollection
+      models={characters}
+      selectedSemanticId={semanticId}
+      onSelect={onSemanticIdChange}
+    />
   );
 }
