@@ -20,8 +20,10 @@ import {
 } from "./asset-contract.ts";
 import {
   GoogleDriveProviderError,
+  googleDriveOAuthAuthorizationUrl,
   inspectGoogleDriveFile,
   readGoogleDriveSource,
+  refreshGoogleDriveAccessToken,
   uploadGoogleDriveFile,
   type GoogleDriveSourceMetadata,
 } from "./google-drive-provider.ts";
@@ -55,9 +57,7 @@ function environmentKey(directName: string, collectionName: string): string {
     const candidate = parsed.default;
     if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
   }
-  throw new Error(
-    `Missing required Edge Function environment key: ${directName}/${collectionName}`,
-  );
+  throw new Error(`Missing required Edge Function environment key: ${directName}/${collectionName}`);
 }
 
 async function parseJsonResponse(response: Response): Promise<unknown> {
@@ -93,11 +93,78 @@ async function callRpc(
   const result = await parseJsonResponse(response);
   if (!response.ok) {
     const error = result as { code?: unknown; message?: unknown } | null;
-    const message =
-      error && typeof error.message === "string" ? error.message : "Studio operation failed.";
+    const message = error && typeof error.message === "string" ? error.message : "Studio operation failed.";
     throw new StudioOperationContractError(message, statusForDatabaseError(error?.code));
   }
   return result;
+}
+
+async function sha256Hex(value: string): Promise<string> {
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)));
+  return [...digest].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function oauthState(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  return btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
+}
+
+type GoogleDriveCredentials = {
+  readonly accessToken: string;
+  readonly sourceFolderId: string;
+  readonly accountEmail: string;
+};
+
+async function googleDriveCredentials(
+  userId: string,
+  supabaseUrl: string,
+  secretKey: string,
+): Promise<GoogleDriveCredentials> {
+  let value: unknown;
+  try {
+    value = await callRpc(supabaseUrl, secretKey, "get_studio_google_drive_credentials", {
+      p_actor_user_id: userId,
+    });
+  } catch (error) {
+    if (error instanceof StudioOperationContractError && error.status === 404) {
+      throw new GoogleDriveProviderError("Connect Google Drive in Assets before using source/master operations.", 409);
+    }
+    throw error;
+  }
+  if (!value || typeof value !== "object") throw new GoogleDriveProviderError("Google Drive connection is malformed.", 503);
+  const credentials = value as Record<string, unknown>;
+  if (
+    typeof credentials.refreshToken !== "string" ||
+    typeof credentials.sourceFolderId !== "string" ||
+    typeof credentials.accountEmail !== "string"
+  ) {
+    throw new GoogleDriveProviderError("Google Drive connection is incomplete.", 503);
+  }
+  return {
+    accessToken: await refreshGoogleDriveAccessToken(credentials.refreshToken),
+    sourceFolderId: credentials.sourceFolderId,
+    accountEmail: credentials.accountEmail,
+  };
+}
+
+async function googleDriveConnectBegin(
+  userId: string,
+  supabaseUrl: string,
+  secretKey: string,
+): Promise<unknown> {
+  const state = oauthState();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+  await callRpc(supabaseUrl, secretKey, "create_studio_google_drive_oauth_state", {
+    p_actor_user_id: userId,
+    p_state_hash: await sha256Hex(state),
+    p_expires_at: expiresAt,
+  });
+  const callbackUrl = `${supabaseUrl}/functions/v1/studio-google-drive-oauth`;
+  return {
+    authorizationUrl: googleDriveOAuthAuthorizationUrl(state, callbackUrl),
+    callbackUrl,
+    expiresAt,
+  };
 }
 
 function asSession(value: unknown): {
@@ -117,9 +184,7 @@ function asSession(value: unknown): {
 }
 
 function asRegistrySnapshot(value: unknown): AssetWorkspaceRegistrySnapshot {
-  if (!value || typeof value !== "object") {
-    throw new Error("Studio registry snapshot is malformed.");
-  }
+  if (!value || typeof value !== "object") throw new Error("Studio registry snapshot is malformed.");
   const snapshot = value as Record<string, unknown>;
   const requiredArrays = [
     "contentEntities",
@@ -132,13 +197,9 @@ function asRegistrySnapshot(value: unknown): AssetWorkspaceRegistrySnapshot {
     "changeEvents",
   ] as const;
   for (const key of requiredArrays) {
-    if (!Array.isArray(snapshot[key])) {
-      throw new Error(`Studio registry snapshot ${key} is malformed.`);
-    }
+    if (!Array.isArray(snapshot[key])) throw new Error(`Studio registry snapshot ${key} is malformed.`);
   }
-  if (typeof snapshot.observedAt !== "string") {
-    throw new Error("Studio registry snapshot observedAt is malformed.");
-  }
+  if (typeof snapshot.observedAt !== "string") throw new Error("Studio registry snapshot observedAt is malformed.");
   return value as AssetWorkspaceRegistrySnapshot;
 }
 
@@ -147,34 +208,21 @@ async function readDashboardCanonicalProposals(
   supabaseUrl: string,
   secretKey: string,
 ): Promise<unknown> {
-  const response = await fetch(
-    `${supabaseUrl}/rest/v1/rpc/get_studio_dashboard_canonical_proposals`,
-    {
-      method: "POST",
-      headers: {
-        apikey: secretKey,
-        authorization: `Bearer ${secretKey}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ p_user_id: userId }),
+  const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_studio_dashboard_canonical_proposals`, {
+    method: "POST",
+    headers: {
+      apikey: secretKey,
+      authorization: `Bearer ${secretKey}`,
+      "content-type": "application/json",
     },
-  );
+    body: JSON.stringify({ p_user_id: userId }),
+  });
   if (!response.ok) {
-    return {
-      state: "unavailable",
-      observedAt: null,
-      items: [],
-      message: "Canonical proposal summary source is unavailable.",
-    };
+    return { state: "unavailable", observedAt: null, items: [], message: "Canonical proposal summary source is unavailable." };
   }
   const result = await parseJsonResponse(response);
   if (!result || typeof result !== "object") {
-    return {
-      state: "unavailable",
-      observedAt: null,
-      items: [],
-      message: "Canonical proposal summary source returned an invalid response.",
-    };
+    return { state: "unavailable", observedAt: null, items: [], message: "Canonical proposal summary source returned an invalid response." };
   }
   return result;
 }
@@ -203,30 +251,19 @@ async function readModels(
   const runtimeManifest = repositorySnapshot.runtimeManifest;
   const canonicalIds = new Set(canonicalModels.map((model) => model.semanticId));
   const models = [
-    ...canonicalModels.map((canonical) =>
-      composeStudioEntity({
-        canonical,
-        registry: registry as RegistrySnapshot,
-        runtimeManifest,
-        permissions,
-        exposeProviderReference: false,
-      }),
-    ),
-    ...registryOnlyReadModels(
-      registry as RegistrySnapshot,
-      canonicalIds,
+    ...canonicalModels.map((canonical) => composeStudioEntity({
+      canonical,
+      registry: registry as RegistrySnapshot,
       runtimeManifest,
       permissions,
-    ),
+      exposeProviderReference: false,
+    })),
+    ...registryOnlyReadModels(registry as RegistrySnapshot, canonicalIds, runtimeManifest, permissions),
   ];
-  const selected = query.semanticId
-    ? models.filter((model) => model.semanticId === query.semanticId)
-    : models;
+  const selected = query.semanticId ? models.filter((model) => model.semanticId === query.semanticId) : models;
   const search = searchStudioEntities(selected, query);
   const selectedIds = new Set(search.rows.map((row) => row.semanticId));
-  const pageModels: readonly StudioEntityReadModel[] = selected.filter((model) =>
-    selectedIds.has(model.semanticId),
-  );
+  const pageModels: readonly StudioEntityReadModel[] = selected.filter((model) => selectedIds.has(model.semanticId));
   return {
     readModelVersion: 1,
     revision: repositorySnapshot.revision,
@@ -244,9 +281,7 @@ async function readModels(
 }
 
 function canonicalOwner(ownerSemanticId: string) {
-  const canonical = loadRepositorySnapshot().canonicalModels.find(
-    (model) => model.semanticId === ownerSemanticId,
-  );
+  const canonical = loadRepositorySnapshot().canonicalModels.find((model) => model.semanticId === ownerSemanticId);
   if (!canonical) {
     throw new StudioOperationContractError(
       "Asset owner must resolve through a supported canonical repository adapter.",
@@ -306,14 +341,13 @@ async function sourceAccessResponse(
     p_actor_user_id: userId,
     p_version_id: versionId,
   });
-  if (!value || typeof value !== "object") {
-    throw new StudioOperationContractError("Asset source response is malformed.", 500);
-  }
+  if (!value || typeof value !== "object") throw new StudioOperationContractError("Asset source response is malformed.", 500);
   const source = value as Record<string, unknown>;
   if (source.providerKind !== "google-drive" || typeof source.providerRef !== "string") {
     throw new StudioOperationContractError("Asset source provider is not supported.", 409);
   }
-  const { metadata, bytes } = await readGoogleDriveSource(source.providerRef);
+  const drive = await googleDriveCredentials(userId, supabaseUrl, secretKey);
+  const { metadata, bytes } = await readGoogleDriveSource(source.providerRef, drive.accessToken);
   const mediaType = typeof metadata.mimeType === "string"
     ? metadata.mimeType
     : typeof source.mediaType === "string"
@@ -343,9 +377,7 @@ Deno.serve(async (request: Request) => {
 
   try {
     const authorization = request.headers.get("authorization");
-    if (!authorization?.startsWith("Bearer ")) {
-      return jsonResponse({ message: "Authentication required." }, 401);
-    }
+    if (!authorization?.startsWith("Bearer ")) return jsonResponse({ message: "Authentication required." }, 401);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")?.replace(/\/$/, "");
     if (!supabaseUrl) throw new Error("Missing SUPABASE_URL.");
@@ -357,9 +389,7 @@ Deno.serve(async (request: Request) => {
     });
     if (!userResponse.ok) return jsonResponse({ message: "Authentication required." }, 401);
     const user = (await userResponse.json()) as { id?: unknown };
-    if (typeof user.id !== "string") {
-      return jsonResponse({ message: "Authentication required." }, 401);
-    }
+    if (typeof user.id !== "string") return jsonResponse({ message: "Authentication required." }, 401);
 
     const contentType = request.headers.get("content-type")?.toLowerCase() ?? "";
     if (contentType.startsWith("multipart/form-data")) {
@@ -369,51 +399,59 @@ Deno.serve(async (request: Request) => {
       }
       const upload = parseAssetUploadForm(form);
       canonicalOwner(upload.ownerSemanticId);
+      const drive = await googleDriveCredentials(user.id, supabaseUrl, secretKey);
       const source = await uploadGoogleDriveFile(
         upload.file,
         `${user.id}:${upload.idempotencyKey}`,
+        drive.sourceFolderId,
+        drive.accessToken,
       );
-      return jsonResponse(
-        await registerAssetSource(user.id, supabaseUrl, secretKey, upload, source),
-      );
+      return jsonResponse(await registerAssetSource(user.id, supabaseUrl, secretKey, upload, source));
     }
 
     const requestBody = await request.json();
+    if (requestBody && typeof requestBody === "object" && !Array.isArray(requestBody)) {
+      const type = (requestBody as Record<string, unknown>).type;
+      if (type === "provider.google_drive.status") {
+        return jsonResponse(await callRpc(supabaseUrl, secretKey, "get_studio_google_drive_connection", {
+          p_actor_user_id: user.id,
+        }));
+      }
+      if (type === "provider.google_drive.connect.begin") {
+        return jsonResponse(await googleDriveConnectBegin(user.id, supabaseUrl, secretKey));
+      }
+    }
+
     const assetOperation = parseStudioAssetOperationRequest(requestBody);
     if (assetOperation?.type === STUDIO_ASSET_SOURCE_REGISTER) {
       canonicalOwner(assetOperation.payload.ownerSemanticId);
-      const source = await inspectGoogleDriveFile(assetOperation.payload.driveFileReference);
-      return jsonResponse(
-        await registerAssetSource(
-          user.id,
-          supabaseUrl,
-          secretKey,
-          { idempotencyKey: assetOperation.idempotencyKey, ...assetOperation.payload },
-          source,
-        ),
-      );
+      const drive = await googleDriveCredentials(user.id, supabaseUrl, secretKey);
+      const source = await inspectGoogleDriveFile(assetOperation.payload.driveFileReference, drive.accessToken);
+      return jsonResponse(await registerAssetSource(
+        user.id,
+        supabaseUrl,
+        secretKey,
+        { idempotencyKey: assetOperation.idempotencyKey, ...assetOperation.payload },
+        source,
+      ));
     }
     if (assetOperation?.type === STUDIO_ASSET_VERSION_SELECT) {
-      return jsonResponse(
-        await callRpc(supabaseUrl, secretKey, "execute_studio_asset_version_select_command", {
-          p_actor_user_id: user.id,
-          p_idempotency_key: assetOperation.idempotencyKey,
-          p_asset_semantic_id: assetOperation.payload.assetSemanticId,
-          p_version_id: assetOperation.payload.versionId,
-        }),
-      );
+      return jsonResponse(await callRpc(supabaseUrl, secretKey, "execute_studio_asset_version_select_command", {
+        p_actor_user_id: user.id,
+        p_idempotency_key: assetOperation.idempotencyKey,
+        p_asset_semantic_id: assetOperation.payload.assetSemanticId,
+        p_version_id: assetOperation.payload.versionId,
+      }));
     }
     if (assetOperation?.type === STUDIO_ASSET_RELATION_SET) {
-      return jsonResponse(
-        await callRpc(supabaseUrl, secretKey, "execute_studio_asset_relation_set_command", {
-          p_actor_user_id: user.id,
-          p_idempotency_key: assetOperation.idempotencyKey,
-          p_source_asset_id: assetOperation.payload.sourceAssetId,
-          p_relation_type: assetOperation.payload.relationType,
-          p_target_asset_id: assetOperation.payload.targetAssetId,
-          p_active: assetOperation.payload.active,
-        }),
-      );
+      return jsonResponse(await callRpc(supabaseUrl, secretKey, "execute_studio_asset_relation_set_command", {
+        p_actor_user_id: user.id,
+        p_idempotency_key: assetOperation.idempotencyKey,
+        p_source_asset_id: assetOperation.payload.sourceAssetId,
+        p_relation_type: assetOperation.payload.relationType,
+        p_target_asset_id: assetOperation.payload.targetAssetId,
+        p_active: assetOperation.payload.active,
+      }));
     }
     if (assetOperation?.type === STUDIO_ASSET_SOURCE_ACCESS) {
       return sourceAccessResponse(
@@ -460,10 +498,7 @@ Deno.serve(async (request: Request) => {
     if (error instanceof StudioOperationContractError || error instanceof GoogleDriveProviderError) {
       return jsonResponse({ message: error.message }, error.status);
     }
-    console.error(
-      "studio-operations failed",
-      error instanceof Error ? error.message : "unknown error",
-    );
+    console.error("studio-operations failed", error instanceof Error ? error.message : "unknown error");
     return jsonResponse({ message: "Studio operation service failed." }, 500);
   }
 });

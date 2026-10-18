@@ -60,6 +60,7 @@ export function ProductionWorkspace({
   auth,
   isReadOnly,
   canProposeCanonical,
+  canManageMembership,
   onRefreshReadModels,
   navigate,
 }: {
@@ -69,6 +70,7 @@ export function ProductionWorkspace({
   auth: StoredStudioAuthSession;
   isReadOnly: boolean;
   canProposeCanonical: boolean;
+  canManageMembership: boolean;
   onRefreshReadModels: () => Promise<void>;
   navigate: (module: StudioModuleId, semanticId?: string | null) => void;
 }) {
@@ -96,6 +98,7 @@ export function ProductionWorkspace({
         response={response}
         auth={auth}
         readOnly={isReadOnly}
+        canManageDrive={canManageMembership}
         semanticId={activeSemanticId}
         onRefresh={onRefreshReadModels}
       />
