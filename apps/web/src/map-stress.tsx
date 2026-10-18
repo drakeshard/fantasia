@@ -39,7 +39,7 @@ function BattlefieldStressReview({
   readonly controllerRef: RendererRef;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const rendererRef = useRef<StressMapRenderer>();
+  const rendererRef = useRef<StressMapRenderer | undefined>(undefined);
   const options = useMemo<StressMapRendererOptions>(
     () => ({ selected, showGrid, showCoordinates }),
     [selected, showGrid, showCoordinates],
@@ -158,7 +158,7 @@ export function MapStressApp() {
   const [detailsOpen, setDetailsOpen] = useState(
     () => window.innerWidth >= 1000 && window.innerHeight >= 600,
   );
-  const cameraRef = useRef<StressMapRenderer>();
+  const cameraRef = useRef<StressMapRenderer | undefined>(undefined);
   const selectedData = STRESS_MAP_BY_KEY.get(key(selected)) ?? STRESS_MAP_MIN_SENTINEL;
 
   return (
