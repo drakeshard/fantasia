@@ -161,9 +161,7 @@ function drawTerrainDetail(world: Container, cell: StressMapCellData, point: Scr
   }
   if (cell.terrain === "basin") {
     world.addChild(
-      new Graphics()
-        .ellipse(point.x, point.y + 1, 23, 6)
-        .fill({ color: 0x7aa7b5, alpha: 0.12 }),
+      new Graphics().ellipse(point.x, point.y + 1, 23, 6).fill({ color: 0x7aa7b5, alpha: 0.12 }),
     );
   }
 }
@@ -363,7 +361,9 @@ export class StressMapRenderer {
   #draw(): void {
     if (!this.#ready) return;
     this.#updateCameraDataset();
-    this.#app.stage.removeChildren().forEach((child) => child.destroy({ children: true }));
+    this.#app.stage.removeChildren().forEach((child) => {
+      child.destroy({ children: true });
+    });
 
     const cells = STRESS_MAP_CELLS.map((cell) => ({
       cell,
@@ -372,7 +372,10 @@ export class StressMapRenderer {
     const xs = cells.flatMap(({ point }) => [point.x - TILE_WIDTH / 2, point.x + TILE_WIDTH / 2]);
     const ys = cells.flatMap(({ cell, point }) => {
       const baseline = projection(cell, 0, this.#rotation);
-      return [Math.min(point.y, baseline.y) - 52, Math.max(point.y, baseline.y) + TILE_HEIGHT / 2 + 20];
+      return [
+        Math.min(point.y, baseline.y) - 52,
+        Math.max(point.y, baseline.y) + TILE_HEIGHT / 2 + 20,
+      ];
     });
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
