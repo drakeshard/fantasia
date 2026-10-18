@@ -12,10 +12,7 @@ import {
   stressSignedElevation,
   stressTerrainLabel,
 } from "./map-stress-data.js";
-import {
-  MapStressRenderer,
-  type MapStressRendererOptions,
-} from "./map-stress-renderer.js";
+import { MapStressRenderer, type MapStressRendererOptions } from "./map-stress-renderer.js";
 
 type ReviewMode = "battlefield" | "blueprint";
 
@@ -68,11 +65,7 @@ function BattlefieldStressReview({
 
   return (
     <div class="map-review-battlefield-wrap">
-      <div
-        class="map-review-battlefield"
-        ref={hostRef}
-        data-testid="stress-map-2p5d-host"
-      />
+      <div class="map-review-battlefield" ref={hostRef} data-testid="stress-map-2p5d-host" />
       <div class="map-review-camera-note" aria-hidden="true">
         32×24 stress field · drag to pan · wheel or controls to zoom · rotation is presentation-only
       </div>
@@ -89,14 +82,8 @@ function BlueprintStressReview({
   readonly showCoordinates: boolean;
   readonly onSelect: (cell: StressCell) => void;
 }) {
-  const columns = Array.from(
-    { length: STRESS_WIDTH },
-    (_, index) => STRESS_BOUNDS.minX + index,
-  );
-  const rows = Array.from(
-    { length: STRESS_HEIGHT },
-    (_, index) => STRESS_BOUNDS.minY + index,
-  );
+  const columns = Array.from({ length: STRESS_WIDTH }, (_, index) => STRESS_BOUNDS.minX + index);
+  const rows = Array.from({ length: STRESS_HEIGHT }, (_, index) => STRESS_BOUNDS.minY + index);
 
   return (
     <div class="map-review-board-scroll map-stress-board-scroll">
@@ -253,18 +240,10 @@ export function MapStressApp() {
             >
               −
             </button>
-            <button
-              type="button"
-              aria-label="Zoom in"
-              onClick={() => cameraRef.current?.zoomIn()}
-            >
+            <button type="button" aria-label="Zoom in" onClick={() => cameraRef.current?.zoomIn()}>
               +
             </button>
-            <button
-              type="button"
-              aria-label="Fit map"
-              onClick={() => cameraRef.current?.fit()}
-            >
+            <button type="button" aria-label="Fit map" onClick={() => cameraRef.current?.fit()}>
               Fit
             </button>
           </fieldset>
@@ -324,10 +303,7 @@ export function MapStressApp() {
             </label>
           </section>
 
-          <section
-            class="map-review-legend map-stress-summary"
-            aria-label="Stress fixture summary"
-          >
+          <section class="map-review-legend map-stress-summary" aria-label="Stress fixture summary">
             <h2>Fixture</h2>
             <span>Grid</span>
             <strong>
