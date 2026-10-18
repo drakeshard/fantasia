@@ -10,13 +10,17 @@ test("asset board keeps semantic identity separate from provider references and 
 }) => {
   const board = page.locator('[data-template="asset-board"]').last();
   await expect(board.getByTestId("asset-board-composition")).toBeVisible();
-  await expect(board.getByText("character.example.portrait.base", { exact: true }).first()).toBeVisible();
+  await expect(
+    board.getByText("character.example.portrait.base", { exact: true }).first(),
+  ).toBeVisible();
   await expect(board.getByText("Redacted by trusted read boundary", { exact: true })).toBeVisible();
   await expect(board.getByText("image/png", { exact: true })).toBeVisible();
   await expect(board.getByText("2400 × 3200", { exact: true })).toBeVisible();
   await expect(board.getByText("sha256:example-checksum-v3", { exact: true })).toBeVisible();
   await expect(board.getByText("Mapped", { exact: true })).toBeVisible();
-  await expect(board.getByText("characters/example/portrait-base.webp", { exact: true }).first()).toBeVisible();
+  await expect(
+    board.getByText("characters/example/portrait-base.webp", { exact: true }).first(),
+  ).toBeVisible();
 });
 
 test("asset board retains version history and exposes relation and validation evidence independently", async ({
@@ -37,7 +41,9 @@ test("asset selection surfaces a missing current version without fabricating sou
   const board = page.locator('[data-template="asset-board"]').last();
   await board.getByRole("button", { name: /Battle sprite/ }).click();
   await expect(board.getByText("No current asset version", { exact: true })).toBeVisible();
-  await expect(board.getByText("Required derivative not registered", { exact: true })).toBeVisible();
+  await expect(
+    board.getByText("Required derivative not registered", { exact: true }),
+  ).toBeVisible();
   await expect(board.getByText("current-version-missing", { exact: true })).toBeVisible();
 });
 
