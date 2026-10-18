@@ -1,4 +1,5 @@
-import { type JSX, useState } from "preact/hooks";
+import type { JSX } from "preact";
+import { useState } from "preact/hooks";
 import {
   fetchStudioAuthorization,
   signInStudio,
