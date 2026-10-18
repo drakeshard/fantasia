@@ -9,6 +9,12 @@
   margin-block: var(--studio-space-12);
 }
 
+.studio-assets-drive-status {
+  display: grid;
+  gap: var(--studio-space-8);
+  padding-block: var(--studio-space-12);
+}
+
 .studio-assets-operations-grid {
   display: grid;
   gap: var(--studio-space-16);
@@ -16,10 +22,24 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
 }
 
-.studio-assets-operation {
+.studio-assets-operation,
+.studio-assets-create-form {
   display: grid;
   gap: var(--studio-space-12);
   align-content: start;
+}
+
+#add-asset-dialog {
+  width: min(720px, calc(100vw - 32px));
+}
+
+#add-asset-dialog .studio-assets-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#add-asset-dialog .studio-assets-operation__actions {
+  justify-content: flex-end;
+  padding-top: var(--studio-space-4);
 }
 
 .studio-assets-operation__heading {
@@ -109,6 +129,10 @@
   .studio-assets-relation-action {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  #add-asset-dialog .studio-assets-form-grid {
+    grid-template-columns: 1fr;
   }
 
   .studio-assets-version-action > div:last-child {

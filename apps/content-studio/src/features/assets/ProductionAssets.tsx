@@ -4,6 +4,7 @@ import type { StoredStudioAuthSession } from "../../studio-session";
 import { AssetBoard } from "../../ui/asset-board";
 import {
   Button,
+  Dialog,
   SelectField,
   StateMessage,
   Surface,
@@ -104,10 +105,10 @@ function GoogleDriveConnection({
   }
 
   return (
-    <Surface kind="inset" className="studio-assets-operation">
+    <Surface kind="inset" className="studio-assets-drive-status">
       <div class="studio-assets-operation__heading">
         <div>
-          <span>Source/master provider</span>
+          <span>Source/master</span>
           <h4>
             {status?.connected
               ? `Google Drive · Connected as ${status.accountEmail ?? "connected account"}`
@@ -116,30 +117,28 @@ function GoogleDriveConnection({
         </div>
         {canManage ? (
           <Button variant="secondary" pending={pending} onClick={() => void connect()}>
-            {status?.connected ? "Reconnect Google Drive" : "Connect Google Drive"}
+            {status?.connected ? "Reconnect" : "Connect Google Drive"}
           </Button>
         ) : null}
       </div>
-      <p>
-        Studio uses your connected personal Drive only for source/master files. Runtime authority and
-        semantic identity remain outside provider filenames and file IDs.
-      </p>
       {message ? <StateMessage title="Google Drive">{message}</StateMessage> : null}
     </Surface>
   );
 }
 
-function SourceMutationPanel({
+function SourceMutationForm({
   selected,
   response,
   auth,
   readOnly,
+  compact = false,
   onCompleted,
 }: {
   selected: ProductionAsset | null;
   response: StudioReadModelsResponse;
   auth: StoredStudioAuthSession;
   readOnly: boolean;
+  compact?: boolean;
   onCompleted: () => Promise<void>;
 }) {
   const owners = assetOwnerOptions(response);
@@ -170,14 +169,14 @@ function SourceMutationPanel({
         derivativeRequired: selected?.derivativeRequired ?? false,
         file,
       });
-      setResult({
-        kind: "success",
-        message: selected
-          ? "A new retained source/master version was created and made current."
-          : "The asset was created and its first source/master version was uploaded to Google Drive.",
-      });
       setFile(null);
       await onCompleted();
+      if (selected) {
+        setResult({
+          kind: "success",
+          message: "A new retained source/master version was created and made current.",
+        });
+      }
     } catch (error) {
       setResult({
         kind: "error",
@@ -188,19 +187,23 @@ function SourceMutationPanel({
     }
   }
 
-  return (
-    <Surface kind="inset" className="studio-assets-operation">
-      <div class="studio-assets-operation__heading">
-        <div>
-          <span>Source/master</span>
-          <h4>{selected ? "Upload replacement" : "+ Add Asset"}</h4>
+  const content = (
+    <>
+      {!compact ? (
+        <div class="studio-assets-operation__heading">
+          <div>
+            <span>Source/master</span>
+            <h4>Upload replacement</h4>
+          </div>
+          <small>{readOnly ? "Read-only" : "Editor operation"}</small>
         </div>
-        <small>{readOnly ? "Read-only" : "Editor operation"}</small>
-      </div>
-      <p>
-        Uploading creates a WORKING retained version in the registry. It does not approve, freeze,
-        publish, or mark the asset runtime-ready.
-      </p>
+      ) : null}
+      {!compact ? (
+        <p>
+          A replacement creates a new WORKING retained version. It does not approve, freeze, publish,
+          or mark the asset runtime-ready.
+        </p>
+      ) : null}
       <label class="ui-field" for="asset-source-file">
         <span class="ui-field__label">Upload file</span>
         <input
@@ -210,10 +213,6 @@ function SourceMutationPanel({
           disabled={readOnly}
           onChange={(event) => setFile(event.currentTarget.files?.[0] ?? null)}
         />
-        <span class="ui-field__message">
-          The trusted Studio backend uploads this file into Fantasia / Production Assets / Source
-          Masters.
-        </span>
       </label>
       {owners.length === 0 ? (
         <StateMessage title="No canonical owners available" tone="unavailable">
@@ -250,7 +249,6 @@ function SourceMutationPanel({
             disabled={readOnly || identityLocked}
             onInput={(event) => setVariant(event.currentTarget.value)}
             placeholder="base"
-            hint={identityLocked ? "" : `Semantic ID: ${assetSemanticId}`}
           />
         </div>
       )}
@@ -272,6 +270,14 @@ function SourceMutationPanel({
           {result.message}
         </StateMessage>
       ) : null}
+    </>
+  );
+
+  return compact ? (
+    <div class="studio-assets-create-form">{content}</div>
+  ) : (
+    <Surface kind="inset" className="studio-assets-operation">
+      {content}
     </Surface>
   );
 }
@@ -494,7 +500,7 @@ export function ProductionAssets({
   const [readiness, setReadiness] = useState("all");
   const [source, setSource] = useState("all");
   const [selectedId, setSelectedId] = useState<string | null>(semanticId);
-  const [creating, setCreating] = useState(allAssets.length === 0);
+  const [creating, setCreating] = useState(false);
 
   const owners = unique(allAssets.map((asset) => asset.ownerSemanticId));
   const roles = unique(allAssets.map((asset) => asset.role));
@@ -521,10 +527,8 @@ export function ProductionAssets({
     });
   }, [allAssets, lifecycle, owner, readiness, role, source, text, variant]);
 
-  const selected = creating
-    ? null
-    : (allAssets.find((asset) => asset.semanticId === selectedId) ?? filtered[0] ?? null);
-  const selectionKey = selected?.semanticId ?? "new-asset";
+  const selected = allAssets.find((asset) => asset.semanticId === selectedId) ?? filtered[0] ?? null;
+  const selectionKey = selected?.semanticId ?? "no-selection";
 
   return (
     <CollectionTemplate
@@ -532,7 +536,7 @@ export function ProductionAssets({
       header={
         <TemplateFixtureHeading
           title="Assets"
-          description="Drive-authoritative source/master assets, retained registry versions, semantic relations and read-only runtime evidence."
+          description="Source/master assets, retained versions, relations and runtime evidence."
         />
       }
       toolbar={
@@ -549,88 +553,98 @@ export function ProductionAssets({
         </TemplateToolbar>
       }
       filterSlot={
-        <>
-          <TextField
-            id="assets-search"
-            label="Search assets"
-            type="search"
-            value={text}
-            onInput={(event) => setText(event.currentTarget.value)}
-            placeholder="Semantic ID, owner, role"
-          />
-          <SelectField
-            id="assets-owner-filter"
-            label="Owner"
-            value={owner}
-            onChange={(event) => setOwner(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All owners" },
-              ...owners.map((value) => ({ value, label: value })),
-            ]}
-          />
-          <SelectField
-            id="assets-role-filter"
-            label="Role"
-            value={role}
-            onChange={(event) => setRole(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All roles" },
-              ...roles.map((value) => ({ value, label: value })),
-            ]}
-          />
-          <SelectField
-            id="assets-variant-filter"
-            label="Variant"
-            value={variant}
-            onChange={(event) => setVariant(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All variants" },
-              ...variants.map((value) => ({ value, label: value })),
-            ]}
-          />
-          <SelectField
-            id="assets-lifecycle-filter"
-            label="Lifecycle"
-            value={lifecycle}
-            onChange={(event) => setLifecycle(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All lifecycle states" },
-              ...lifecycleOptions.map((value) => ({ value, label: value })),
-            ]}
-          />
-          <SelectField
-            id="assets-readiness-filter"
-            label="Readiness"
-            value={readiness}
-            onChange={(event) => setReadiness(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All readiness" },
-              { value: "ready", label: "Ready" },
-              { value: "warning", label: "Warning" },
-              { value: "blocked", label: "Blocked" },
-              { value: "unknown", label: "Unknown" },
-            ]}
-          />
-          <SelectField
-            id="assets-source-filter"
-            label="Source/master"
-            value={source}
-            onChange={(event) => setSource(event.currentTarget.value)}
-            options={[
-              { value: "all", label: "All source states" },
-              { value: "available", label: "Source available" },
-              { value: "missing", label: "Source missing" },
-            ]}
-          />
-        </>
+        allAssets.length > 0 ? (
+          <>
+            <TextField
+              id="assets-search"
+              label="Search assets"
+              type="search"
+              value={text}
+              onInput={(event) => setText(event.currentTarget.value)}
+              placeholder="Semantic ID, owner, role"
+            />
+            <SelectField
+              id="assets-owner-filter"
+              label="Owner"
+              value={owner}
+              onChange={(event) => setOwner(event.currentTarget.value)}
+              options={[
+                { value: "all", label: "All owners" },
+                ...owners.map((value) => ({ value, label: value })),
+              ]}
+            />
+            <SelectField
+              id="assets-role-filter"
+              label="Role"
+              value={role}
+              onChange={(event) => setRole(event.currentTarget.value)}
+              options={[
+                { value: "all", label: "All roles" },
+                ...roles.map((value) => ({ value, label: value })),
+              ]}
+            />
+            <SelectField
+              id="assets-variant-filter"
+              label="Variant"
+              value={variant}
+              onChange={(event) => setVariant(event.currentTarget.value)}
+              options={[
+                { value: "all", label: "All variants" },
+                ...variants.map((value) => ({ value, label: value })),
+              ]}
+            />
+            <SelectField
+              id="assets-lifecycle-filter"
+              label="Lifecycle"
+              value={lifecycle}
+              onChange={(event) => setLifecycle(event.currentTarget.value)}
+              options={[
+                { value: "all", label: "All lifecycle states" },
+                ...lifecycleOptions.map((value) => ({ value, label: value })),
+              ]}
+            />
+            <SelectField
+              id="assets-readiness-filter"
+              label="Readiness"
+              value={readiness}
+              onChange={(event) => setReadiness(event.currentTarget.value)}
+              options={[
+                { value: "all", label: "All readiness" },
+                { value: "ready", label: "Ready" },
+                { value: "warning", label: "Warning" },
+                { value: "blocked", label: "Blocked" },
+                { value: "unknown", label: "Unknown" },
+              ]}
+            />
+            <SelectField
+              id="assets-source-filter"
+              label="Source/master"
+              value={source}
+              onChange={(event) => setSource(event.currentTarget.value)}
+              options={[
+                { value: "all", label: "All source states" },
+                { value: "available", label: "Source available" },
+                { value: "missing", label: "Source missing" },
+              ]}
+            />
+          </>
+        ) : null
       }
     >
       <GoogleDriveConnection auth={auth} canManage={canManageDrive} />
 
       {allAssets.length === 0 ? (
-        <StateMessage title="No semantic assets registered yet">
-          Connect Google Drive, then add the first production source/master. No fixture assets are
-          shown in production.
+        <StateMessage
+          title="No assets yet"
+          action={
+            !readOnly ? (
+              <Button variant="primary" onClick={() => setCreating(true)}>
+                Add first asset
+              </Button>
+            ) : undefined
+          }
+        >
+          Upload the first source/master when you are ready.
         </StateMessage>
       ) : filtered.length === 0 ? (
         <StateMessage title="No assets match these filters">
@@ -641,12 +655,9 @@ export function ProductionAssets({
           {filtered.map((asset) => (
             <Button
               key={asset.semanticId}
-              variant={!creating && selected?.semanticId === asset.semanticId ? "secondary" : "quiet"}
-              aria-pressed={!creating && selected?.semanticId === asset.semanticId}
-              onClick={() => {
-                setCreating(false);
-                setSelectedId(asset.semanticId);
-              }}
+              variant={selected?.semanticId === asset.semanticId ? "secondary" : "quiet"}
+              aria-pressed={selected?.semanticId === asset.semanticId}
+              onClick={() => setSelectedId(asset.semanticId)}
             >
               {asset.role} · {asset.ownerDisplayName}
             </Button>
@@ -667,16 +678,16 @@ export function ProductionAssets({
         </AssetBoardTemplate>
       ) : null}
 
-      <div class="studio-assets-operations-grid">
-        <SourceMutationPanel
-          key={`source:${selectionKey}`}
-          selected={selected}
-          response={response}
-          auth={auth}
-          readOnly={readOnly}
-          onCompleted={onRefresh}
-        />
-        {selected ? (
+      {selected ? (
+        <div class="studio-assets-operations-grid">
+          <SourceMutationForm
+            key={`source:${selectionKey}`}
+            selected={selected}
+            response={response}
+            auth={auth}
+            readOnly={readOnly}
+            onCompleted={onRefresh}
+          />
           <VersionOperations
             key={`versions:${selectionKey}`}
             asset={selected}
@@ -684,8 +695,6 @@ export function ProductionAssets({
             readOnly={readOnly}
             onCompleted={onRefresh}
           />
-        ) : null}
-        {selected ? (
           <RelationOperations
             key={`relations:${selectionKey}`}
             asset={selected}
@@ -694,8 +703,31 @@ export function ProductionAssets({
             readOnly={readOnly}
             onCompleted={onRefresh}
           />
-        ) : null}
-      </div>
+        </div>
+      ) : null}
+
+      {creating ? (
+        <Dialog
+          id="add-asset-dialog"
+          open
+          onOpenChange={setCreating}
+          title="Add Asset"
+          description="Upload a source/master, choose its owner and type, then add it. Studio handles the semantic identity and Google Drive location."
+        >
+          <SourceMutationForm
+            selected={null}
+            response={response}
+            auth={auth}
+            readOnly={readOnly}
+            compact
+            onCompleted={async () => {
+              await onRefresh();
+              setCreating(false);
+            }}
+          />
+        </Dialog>
+      ) : null}
+
       {readOnly ? (
         <StateMessage title="Read-only Assets workspace" tone="unavailable">
           Your Studio role can inspect semantic assets, retained versions, validation and runtime
