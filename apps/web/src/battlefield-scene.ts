@@ -21,6 +21,13 @@ export interface BattlefieldUnitMarker {
   readonly label: string;
 }
 
+/**
+ * Authoring-oriented battlefield source data.
+ *
+ * This contract intentionally contains no DOM, accessibility, test, camera, or
+ * performance-probe metadata. Hosts own those concerns and adapt this source
+ * into the standardized BattlefieldRenderFrame consumed by the renderer.
+ */
 export interface BattlefieldRenderScene {
   readonly id: string;
   readonly bounds: BattlefieldBounds;
@@ -33,8 +40,6 @@ export interface BattlefieldRenderScene {
   readonly exitZone: readonly BattlefieldCellCoord[];
   readonly units: readonly BattlefieldUnitMarker[];
   readonly cartStart?: BattlefieldCellCoord;
-  readonly testIdPrefix: string;
-  readonly ariaLabel: string;
 }
 
 export function battlefieldUnitVisualId(
