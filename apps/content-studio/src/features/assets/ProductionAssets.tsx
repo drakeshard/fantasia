@@ -25,6 +25,12 @@ import {
   uploadDriveAssetSource,
   type GoogleDriveConnectionStatus,
 } from "./api";
+import {
+  identityUiAssetRoles,
+  identityUiOwnersForRole,
+  identityUiRoleLabel,
+  identityUiRoleOptions,
+} from "./identity-ui-catalog";
 import { assetOwnerOptions, productionAssets, type ProductionAsset } from "./model";
 
 const lifecycleOptions = [
@@ -36,16 +42,6 @@ const lifecycleOptions = [
   "RUNTIME READY",
   "PUBLISHED",
   "RETIRED",
-] as const;
-
-const commonAssetTypes = [
-  "portrait",
-  "battle-sprite",
-  "concept-art",
-  "equipment-design",
-  "map",
-  "ui",
-  "audio",
 ] as const;
 
 function unique(values: readonly (string | null)[]): string[] {
@@ -141,11 +137,15 @@ function SourceMutationForm({
   compact?: boolean;
   onCompleted: () => Promise<void>;
 }) {
-  const owners = assetOwnerOptions(response);
+  const canonicalOwners = assetOwnerOptions(response);
+  const initialRole = selected?.role ?? identityUiAssetRoles[0]?.id ?? "";
+  const initialOwners = selected
+    ? canonicalOwners.filter((owner) => owner.semanticId === selected.ownerSemanticId)
+    : identityUiOwnersForRole(initialRole, canonicalOwners);
+  const [role, setRole] = useState(initialRole);
   const [ownerSemanticId, setOwnerSemanticId] = useState(
-    selected?.ownerSemanticId ?? owners[0]?.semanticId ?? "",
+    selected?.ownerSemanticId ?? initialOwners[0]?.semanticId ?? "",
   );
-  const [role, setRole] = useState(selected?.role ?? "portrait");
   const [variant, setVariant] = useState(selected?.variant ?? "base");
   const [file, setFile] = useState<File | null>(null);
   const [pending, setPending] = useState(false);
@@ -153,8 +153,23 @@ function SourceMutationForm({
     null,
   );
   const identityLocked = selected !== null;
+  const owners = selected
+    ? canonicalOwners.filter((owner) => owner.semanticId === selected.ownerSemanticId)
+    : identityUiOwnersForRole(role, canonicalOwners);
+  const roleOptions = selected
+    ? unique([selected.role, ...identityUiAssetRoles.map((item) => item.id)]).map((value) => ({
+        value,
+        label: identityUiRoleLabel(value),
+      }))
+    : identityUiRoleOptions();
   const assetSemanticId = selected?.semanticId ?? semanticAssetId(ownerSemanticId, role, variant);
   const canSubmit = Boolean(ownerSemanticId && role.trim() && file && assetSemanticId);
+
+  function chooseRole(nextRole: string) {
+    setRole(nextRole);
+    const nextOwners = identityUiOwnersForRole(nextRole, canonicalOwners);
+    setOwnerSemanticId(nextOwners[0]?.semanticId ?? "");
+  }
 
   async function submit() {
     if (readOnly || !canSubmit || pending || !file) return;
@@ -214,32 +229,29 @@ function SourceMutationForm({
           onChange={(event) => setFile(event.currentTarget.files?.[0] ?? null)}
         />
       </label>
-      {owners.length === 0 ? (
-        <StateMessage title="No canonical owners available" tone="unavailable">
-          Asset registration requires an owner produced by a supported canonical Git adapter.
+      {roleOptions.length === 0 ? (
+        <StateMessage title="No controlled asset types available" tone="unavailable">
+          Identity/UI asset registration requires a Git-controlled asset type catalog.
         </StateMessage>
       ) : (
         <div class="studio-assets-form-grid">
-          <SelectField
-            id="asset-owner"
-            label="Owner"
-            value={ownerSemanticId}
-            disabled={readOnly || identityLocked}
-            onChange={(event) => setOwnerSemanticId(event.currentTarget.value)}
-            options={owners.map((owner) => ({
-              value: owner.semanticId,
-              label: `${owner.displayName} · ${owner.entityType}`,
-            }))}
-          />
           <SelectField
             id="asset-role"
             label="Asset type"
             value={role}
             disabled={readOnly || identityLocked}
-            onChange={(event) => setRole(event.currentTarget.value)}
-            options={unique([selected?.role ?? null, ...commonAssetTypes]).map((value) => ({
-              value,
-              label: value,
+            onChange={(event) => chooseRole(event.currentTarget.value)}
+            options={roleOptions}
+          />
+          <SelectField
+            id="asset-owner"
+            label="Owner"
+            value={ownerSemanticId}
+            disabled={readOnly || identityLocked || owners.length === 0}
+            onChange={(event) => setOwnerSemanticId(event.currentTarget.value)}
+            options={owners.map((owner) => ({
+              value: owner.semanticId,
+              label: owner.displayName,
             }))}
           />
           <TextField
@@ -252,6 +264,12 @@ function SourceMutationForm({
           />
         </div>
       )}
+      {!identityLocked && owners.length === 0 ? (
+        <StateMessage title="No canonical owners for this asset type" tone="unavailable">
+          This asset type is controlled by the shared Identity/UI catalog and cannot be registered
+          until its canonical owner definitions are available in the deployed Studio snapshot.
+        </StateMessage>
+      ) : null}
       <div class="studio-assets-operation__actions">
         <Button
           variant="primary"
@@ -712,7 +730,7 @@ export function ProductionAssets({
           open
           onOpenChange={setCreating}
           title="Add Asset"
-          description="Upload a source/master, choose its owner and type, then add it. Studio handles the semantic identity and Google Drive location."
+          description="Upload a source/master, choose its controlled asset type and owner, then add it. Studio handles the semantic identity and Google Drive location."
         >
           <SourceMutationForm
             selected={null}
