@@ -7,6 +7,7 @@ test("CH01-B01 review is a full-screen camera workspace with exact blueprint fal
 
   const review = page.getByRole("main", { name: "CH01-B01 candidate map review" });
   const host = page.getByTestId("b01-map-2p5d-host");
+  const detailsToggle = page.locator(".map-review-details-toggle");
   await expect(review).toBeVisible();
   await expect(page.getByRole("heading", { name: "Strangers on the Road" })).toBeVisible();
   await expect(page.getByText(/PROVISIONAL/)).toBeVisible();
@@ -37,14 +38,17 @@ test("CH01-B01 review is a full-screen camera workspace with exact blueprint fal
   await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
   await expect(host).toHaveAttribute("data-camera-pan", "0,0");
 
+  if ((await detailsToggle.textContent()) === "Details") await detailsToggle.click();
+  await expect(page.getByRole("complementary", { name: "Map review details" })).toBeVisible();
   const selectedBeforeDrag = await page.getByTestId("selected-coordinate").textContent();
+
   const canvasBox = await page.getByTestId("b01-map-2p5d-canvas").boundingBox();
   if (!canvasBox) throw new Error("B01 map canvas has no bounding box");
-  const startX = canvasBox.x + canvasBox.width * 0.48;
-  const startY = canvasBox.y + canvasBox.height * 0.55;
+  const startX = canvasBox.x + canvasBox.width * 0.42;
+  const startY = canvasBox.y + canvasBox.height * 0.62;
   await page.mouse.move(startX, startY);
   await page.mouse.down();
-  await page.mouse.move(startX + 90, startY + 35, { steps: 5 });
+  await page.mouse.move(startX + 90, startY + 35, { steps: 3 });
   await page.mouse.up();
   await expect(host).not.toHaveAttribute("data-camera-pan", "0,0");
   await expect(page.getByTestId("selected-coordinate")).toHaveText(selectedBeforeDrag ?? "");
@@ -53,6 +57,7 @@ test("CH01-B01 review is a full-screen camera workspace with exact blueprint fal
   await expect(page.getByRole("complementary", { name: "Map review details" })).toHaveCount(0);
   await page.getByRole("button", { name: "Details" }).click();
   await expect(page.getByRole("complementary", { name: "Map review details" })).toBeVisible();
+  await page.getByRole("button", { name: "Hide details" }).click();
 
   await page.getByRole("button", { name: "Blueprint" }).click();
   await expect(page.getByRole("button", { name: "Blueprint" })).toHaveAttribute(
@@ -62,16 +67,21 @@ test("CH01-B01 review is a full-screen camera workspace with exact blueprint fal
   await expect(page.getByTestId("b01-map-grid").locator("button")).toHaveCount(216);
 
   await page.getByTestId("map-cell-10-2").click();
+  await page.getByRole("button", { name: "Details" }).click();
   await expect(page.getByTestId("selected-coordinate")).toHaveText("(10, 2)");
   await expect(page.getByTestId("selected-label")).toHaveText("Unknown Warrior");
   await expect(page.getByText("Elevation +1", { exact: true })).toBeVisible();
   await expect(page.getByText(/hangaku-intervention/)).toBeVisible();
+  await page.getByRole("button", { name: "Hide details" }).click();
 
   await page.getByTestId("map-cell-4-6").click();
+  await page.getByRole("button", { name: "Details" }).click();
   await expect(page.getByTestId("selected-coordinate")).toHaveText("(4, 6)");
   await expect(page.getByText("Cart route anchor", { exact: true })).toBeVisible();
   await expect(page.getByText("Inside tested 2×1 cart clearance", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Hide details" }).click();
 
   await page.getByTestId("map-cell-16-5").click();
+  await page.getByRole("button", { name: "Details" }).click();
   await expect(page.getByText("East exit zone", { exact: true })).toBeVisible();
 });
