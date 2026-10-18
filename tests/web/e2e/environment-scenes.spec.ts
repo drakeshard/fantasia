@@ -69,6 +69,7 @@ test("environment review defaults to the 64x64 Ghost Sea Hunt stress scene", asy
   await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
   if (testInfo.project.use.hasTouch === true) return;
 
+  await page.getByRole("button", { name: "Hide details" }).click();
   await page.getByRole("button", { name: "Rotate right" }).click();
   await expect(host).toHaveAttribute("data-camera-rotation", "90");
   await page.getByRole("button", { name: "Zoom in" }).click();
