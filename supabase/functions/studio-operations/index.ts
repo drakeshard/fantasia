@@ -11,6 +11,7 @@ import {
   normalizeRuntimeManifest,
   loadGitSnapshot,
 } from "./read-model-adapters.ts";
+import { registryOnlyReadModels } from "./missing-canonical.ts";
 import {
   parseStudioOperationRequest,
   STUDIO_ENTITY_NOTE_SET,
@@ -65,19 +66,28 @@ async function callRpc(
 ): Promise<unknown> {
   const response = await fetch(`${supabaseUrl}/rest/v1/rpc/${rpcName}`, {
     method: "POST",
-    headers: { apikey: secretKey, authorization: `Bearer ${secretKey}`, "content-type": "application/json" },
+    headers: {
+      apikey: secretKey,
+      authorization: `Bearer ${secretKey}`,
+      "content-type": "application/json",
+    },
     body: JSON.stringify(rpcBody),
   });
   const result = await parseJsonResponse(response);
   if (!response.ok) {
     const error = result as { code?: unknown; message?: unknown } | null;
-    const message = error && typeof error.message === "string" ? error.message : "Studio operation failed.";
+    const message =
+      error && typeof error.message === "string" ? error.message : "Studio operation failed.";
     throw new StudioOperationContractError(message, statusForDatabaseError(error?.code));
   }
   return result;
 }
 
-function asSession(value: unknown): { authorized: boolean; role: string | null; capabilities: readonly string[] } {
+function asSession(value: unknown): {
+  authorized: boolean;
+  role: string | null;
+  capabilities: readonly string[];
+} {
   if (!value || typeof value !== "object") throw new Error("Studio session response is malformed.");
   const session = value as Record<string, unknown>;
   return {
@@ -102,9 +112,13 @@ function asRegistrySnapshot(value: unknown): RegistrySnapshot {
     "changeEvents",
   ] as const;
   for (const key of requiredArrays) {
-    if (!Array.isArray(snapshot[key])) throw new Error(`Studio registry snapshot ${key} is malformed.`);
+    if (!Array.isArray(snapshot[key])) {
+      throw new Error(`Studio registry snapshot ${key} is malformed.`);
+    }
   }
-  if (typeof snapshot.observedAt !== "string") throw new Error("Studio registry snapshot observedAt is malformed.");
+  if (typeof snapshot.observedAt !== "string") {
+    throw new Error("Studio registry snapshot observedAt is malformed.");
+  }
   return value as RegistrySnapshot;
 }
 
@@ -127,15 +141,27 @@ async function readModels(
   const runtimeManifest = normalizeRuntimeManifest(gitSnapshot);
   const permissions = permissionPresentation(session.role, session.capabilities);
   const canonicalModels = normalizeCanonicalModels(gitSnapshot);
-  const models = canonicalModels.map((canonical) =>
-    composeStudioEntity({ canonical, registry, runtimeManifest, permissions, exposeProviderReference: false }),
-  );
+  const canonicalIds = new Set(canonicalModels.map((model) => model.semanticId));
+  const models = [
+    ...canonicalModels.map((canonical) =>
+      composeStudioEntity({
+        canonical,
+        registry,
+        runtimeManifest,
+        permissions,
+        exposeProviderReference: false,
+      }),
+    ),
+    ...registryOnlyReadModels(registry, canonicalIds, runtimeManifest, permissions),
+  ];
   const selected = query.semanticId
     ? models.filter((model) => model.semanticId === query.semanticId)
     : models;
   const search = searchStudioEntities(selected, query);
   const selectedIds = new Set(search.rows.map((row) => row.semanticId));
-  const pageModels: readonly StudioEntityReadModel[] = selected.filter((model) => selectedIds.has(model.semanticId));
+  const pageModels: readonly StudioEntityReadModel[] = selected.filter((model) =>
+    selectedIds.has(model.semanticId),
+  );
   return {
     readModelVersion: 1,
     revision: gitSnapshot.revision,
@@ -155,11 +181,16 @@ Deno.serve(async (request: Request) => {
 
   try {
     const authorization = request.headers.get("authorization");
-    if (!authorization?.startsWith("Bearer ")) return jsonResponse({ message: "Authentication required." }, 401);
+    if (!authorization?.startsWith("Bearer ")) {
+      return jsonResponse({ message: "Authentication required." }, 401);
+    }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")?.replace(/\/$/, "");
     if (!supabaseUrl) throw new Error("Missing SUPABASE_URL.");
-    const publishableKey = environmentKey("SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEYS");
+    const publishableKey = environmentKey(
+      "SUPABASE_PUBLISHABLE_KEY",
+      "SUPABASE_PUBLISHABLE_KEYS",
+    );
     const secretKey = environmentKey("SUPABASE_SECRET_KEY", "SUPABASE_SECRET_KEYS");
 
     const userResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
@@ -201,8 +232,13 @@ Deno.serve(async (request: Request) => {
     }
     return jsonResponse(await callRpc(supabaseUrl, secretKey, rpcName, rpcBody));
   } catch (error) {
-    if (error instanceof StudioOperationContractError) return jsonResponse({ message: error.message }, error.status);
-    console.error("studio-operations failed", error instanceof Error ? error.message : "unknown error");
+    if (error instanceof StudioOperationContractError) {
+      return jsonResponse({ message: error.message }, error.status);
+    }
+    console.error(
+      "studio-operations failed",
+      error instanceof Error ? error.message : "unknown error",
+    );
     return jsonResponse({ message: "Studio operation service failed." }, 500);
   }
 });
