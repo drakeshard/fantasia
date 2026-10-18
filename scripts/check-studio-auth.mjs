@@ -8,7 +8,10 @@ const migration = await readFile(
   "utf8",
 );
 const proposalMigration = await readFile(
-  path.join(root, "supabase/migrations/20261018093000_game_studio04_canonical_change_proposals.sql"),
+  path.join(
+    root,
+    "supabase/migrations/20261018093000_game_studio04_canonical_change_proposals.sql",
+  ),
   "utf8",
 );
 const contract = await readFile(
