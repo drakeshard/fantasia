@@ -390,7 +390,7 @@ export function ProductionCharacters({
 }) {
   const characters = response.models.filter(
     (model) => model.entityType === "character",
-  ) as readonly CharacterReadModel[];
+  ) as unknown as readonly CharacterReadModel[];
   const selected = semanticId
     ? characters.find((model) => model.semanticId === semanticId)
     : undefined;
