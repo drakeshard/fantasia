@@ -1,6 +1,0 @@
-/* GAME-UI25 migration bridge.
- * The historical root import remains stable while Fantasia v2 owns all current production composition.
- * Remove this bridge when the root stylesheet list is simplified in a later structural cleanup.
- */
-@import "./fantasia-v2.css";
-@import "./fantasia-v2-structure.css";
