@@ -10,6 +10,15 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
 }
 
+function withoutComments(source) {
+  return source.replace(/\/\*[\s\S]*?\*\//g, "");
+}
+
+function hasRawPalette(source) {
+  const css = withoutComments(source);
+  return /#[0-9a-fA-F]{3,8}(?![\w-])|\brgba?\s*\(|\bhsla?\s*\(/.test(css);
+}
+
 function fail(message) {
   console.error(`Content Studio design-system check failed: ${message}`);
   process.exitCode = 1;
@@ -37,25 +46,26 @@ const forbiddenSharedSelectors = [
 
 for (const file of productionStyleFiles()) {
   const source = fs.readFileSync(file, "utf8");
+  const css = withoutComments(source);
   const relative = path.relative(root, file);
 
   for (const selector of forbiddenSharedSelectors) {
-    if (source.includes(selector)) {
+    if (css.includes(selector)) {
       fail(`${relative} reaches into shared selector ${selector}; use a feature-prefixed hook or change the shared owner.`);
     }
   }
 
-  if (/#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(/.test(source)) {
+  if (hasRawPalette(source)) {
     fail(`${relative} contains a raw palette value; feature CSS must consume Studio theme variables.`);
   }
 
-  if (source.includes("!important")) {
+  if (css.includes("!important")) {
     fail(`${relative} contains !important; fix ownership/specificity instead.`);
   }
 }
 
 const tokens = read("apps/content-studio/src/styles/tokens.css");
-if (/#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(/.test(tokens)) {
+if (hasRawPalette(tokens)) {
   fail("tokens.css contains palette values; structural tokens must stay theme-neutral.");
 }
 
@@ -64,7 +74,7 @@ if (!theme.includes('[data-studio-theme="fantasia-midnight"]')) {
   fail("theme-fantasia-midnight.css must scope the title theme explicitly.");
 }
 
-const fidelity = read("apps/content-studio/src/styles/material-fidelity.css");
+const fidelity = withoutComments(read("apps/content-studio/src/styles/material-fidelity.css"));
 for (const selector of forbiddenSharedSelectors) {
   if (fidelity.includes(selector)) {
     fail(`material-fidelity.css still styles shared selector ${selector}; production paint belongs to shared UI owners.`);
