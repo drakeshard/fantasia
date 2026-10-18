@@ -228,7 +228,8 @@ export async function fetchStudioReadModels(
             state: "unavailable",
             observedAt: null,
             items: [],
-            message: "Canonical proposal summary source is not deployed in this read-model response.",
+            message:
+              "Canonical proposal summary source is not deployed in this read-model response.",
           },
   };
 }
