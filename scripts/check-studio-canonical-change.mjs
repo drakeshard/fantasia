@@ -80,8 +80,10 @@ assert(
   "GitHub credentials must stay server-side.",
 );
 assert(
-  browser.includes('"studio-canonical-change"') && browser.includes('"set-display-name"'),
-  "Characters UI must use the trusted canonical-change boundary.",
+  browser.includes("/functions/v1/studio-canonical-change") &&
+    browser.includes("studioCanonicalChangeFunctionUrl") &&
+    browser.includes('"set-display-name"'),
+  "Characters UI must use the explicit trusted canonical-change boundary.",
 );
 assert(
   edge.includes("prepare_studio_canonical_change_proposal") &&
