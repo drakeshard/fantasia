@@ -1,7 +1,15 @@
+html,
+body,
+#app {
+  height: 100%;
+  overflow: hidden;
+}
+
 .map-review {
-  position: relative;
-  width: 100vw;
-  height: 100dvh;
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
   overflow: hidden;
   color: #f4efe5;
   background: #070c14;
@@ -518,22 +526,24 @@
 
   .map-review-camera-note {
     bottom: 5px;
-    font-size: 8px;
+    max-width: calc(100% - 12px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
-@media (max-width: 760px) {
-  .map-review-title .map-review-kicker,
+@media (max-width: 740px) {
+  .map-review-title {
+    min-width: 0;
+  }
+
   .map-review-title .map-review-warning {
     display: none;
   }
 
-  .map-review-title {
-    min-width: 120px;
-  }
-
-  .map-review-camera-controls {
-    padding-left: 3px;
-    gap: 1px;
+  .map-review-details {
+    width: min(62vw, 300px);
+    min-width: 230px;
   }
 }
