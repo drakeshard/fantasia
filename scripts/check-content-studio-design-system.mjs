@@ -6,10 +6,10 @@ const root = process.cwd();
 const studioRoot = path.join(root, "apps", "content-studio");
 const stylesRoot = path.join(studioRoot, "src", "styles");
 const uiRoot = path.join(studioRoot, "src", "ui");
+const contractPath = "apps/content-studio/design-system-contract.json";
 const tokenPath = "apps/content-studio/src/styles/tokens.css";
 const themePath = "apps/content-studio/src/styles/theme-fantasia-midnight.css";
 const basePath = "apps/content-studio/src/styles/base.css";
-const themeScope = '[data-studio-theme="fantasia-midnight"]';
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
@@ -50,6 +50,66 @@ function studioDeclarations(source) {
 
 function studioReferences(source) {
   return [...withoutComments(source).matchAll(/var\(\s*(--studio-[\w-]+)/g)].map((match) => match[1]);
+}
+
+let designSystemContract;
+try {
+  designSystemContract = JSON.parse(read(contractPath));
+} catch (error) {
+  fail(`${contractPath} must contain valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+  designSystemContract = {};
+}
+
+if (designSystemContract.schemaVersion !== 1) {
+  fail(`${contractPath} must use schemaVersion 1.`);
+}
+
+const themeId = designSystemContract.theme?.id;
+const themeScope = designSystemContract.theme?.scope;
+if (typeof themeId !== "string" || themeId.length === 0) {
+  fail(`${contractPath} must define theme.id.`);
+}
+if (themeScope !== `[data-studio-theme="${themeId}"]`) {
+  fail(`${contractPath} theme.scope must exactly match its data-studio-theme id.`);
+}
+
+const requiredThemeTokens = Array.isArray(designSystemContract.requiredThemeTokens)
+  ? designSystemContract.requiredThemeTokens
+  : [];
+if (requiredThemeTokens.length === 0) {
+  fail(`${contractPath} must define requiredThemeTokens.`);
+}
+const uniqueRequiredThemeTokens = new Set(requiredThemeTokens);
+if (uniqueRequiredThemeTokens.size !== requiredThemeTokens.length) {
+  fail(`${contractPath} contains duplicate requiredThemeTokens.`);
+}
+for (const token of requiredThemeTokens) {
+  if (typeof token !== "string" || !token.startsWith("--studio-")) {
+    fail(`${contractPath} contains invalid theme token ${String(token)}.`);
+  }
+}
+
+const contrastPairs = Array.isArray(designSystemContract.contrastPairs)
+  ? designSystemContract.contrastPairs
+  : [];
+if (contrastPairs.length === 0) {
+  fail(`${contractPath} must define representative contrastPairs.`);
+}
+for (const [index, pair] of contrastPairs.entries()) {
+  if (
+    typeof pair?.foreground !== "string" ||
+    typeof pair?.background !== "string" ||
+    !uniqueRequiredThemeTokens.has(pair.foreground) ||
+    !uniqueRequiredThemeTokens.has(pair.background)
+  ) {
+    fail(`${contractPath} contrastPairs[${index}] must reference required theme tokens.`);
+  }
+  if (pair?.minimum !== 3 && pair?.minimum !== 4.5) {
+    fail(`${contractPath} contrastPairs[${index}] minimum must be 3 or 4.5.`);
+  }
+  if (typeof pair?.purpose !== "string" || pair.purpose.trim().length === 0) {
+    fail(`${contractPath} contrastPairs[${index}] must explain its purpose.`);
+  }
 }
 
 const forbiddenSharedSelectors = [
@@ -93,10 +153,10 @@ if (hasRawPalette(tokens)) {
 const theme = read(themePath);
 const themeCss = withoutComments(theme).trim();
 if (!themeCss.startsWith(`${themeScope} {`)) {
-  fail("theme-fantasia-midnight.css must begin with the explicit title-theme scope.");
+  fail(`${themePath} must begin with the title-theme scope from ${contractPath}.`);
 }
 if ((themeCss.match(/{/g) ?? []).length !== 1 || (themeCss.match(/}/g) ?? []).length !== 1) {
-  fail("theme-fantasia-midnight.css must only remap tokens in the title-theme scope; DOM/component selectors belong to shared CSS owners.");
+  fail(`${themePath} must only remap tokens in the title-theme scope; DOM/component selectors belong to shared CSS owners.`);
 }
 
 const contractOwners = new Map();
@@ -114,28 +174,6 @@ for (const [relativePath, source] of [
   }
 }
 
-const requiredThemeTokens = [
-  "--studio-app-background",
-  "--studio-surface-canvas",
-  "--studio-surface-panel",
-  "--studio-surface-raised",
-  "--studio-text-primary",
-  "--studio-text-secondary",
-  "--studio-text-muted",
-  "--studio-border-subtle",
-  "--studio-border-control",
-  "--studio-border-active",
-  "--studio-accent-primary",
-  "--studio-accent-navigation",
-  "--studio-focus-ring",
-  "--studio-button-primary-bg",
-  "--studio-button-secondary-bg",
-  "--studio-control-bg",
-  "--studio-dialog-bg",
-  "--studio-validation-passed",
-  "--studio-validation-warning",
-  "--studio-validation-blocking",
-];
 for (const token of requiredThemeTokens) {
   if (contractOwners.get(token) !== themePath) {
     fail(`${themePath} is missing required semantic/theme contract ${token}.`);
@@ -200,5 +238,5 @@ for (const requiredImport of requiredImports) {
 }
 
 if (!process.exitCode) {
-  console.log("Content Studio design-system ownership and token contracts: OK");
+  console.log("Content Studio design-system ownership, theme contract, and accessibility contract: OK");
 }
