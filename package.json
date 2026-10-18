@@ -36,7 +36,7 @@
     "test:content-studio": "playwright test --config=playwright.content-studio.config.ts",
     "test:visual": "playwright test --config=playwright.visual.config.ts",
     "build": "pnpm -r build && pnpm story:build",
-    "verify": "pnpm audit && pnpm foundation:consumer && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e && pnpm test:content-studio"
+    "verify": "pnpm run audit && pnpm foundation:consumer && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e && pnpm test:content-studio"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

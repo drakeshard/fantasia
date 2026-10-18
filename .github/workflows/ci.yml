@@ -83,25 +83,25 @@ jobs:
             esac
 
             case "$path" in
-              apps/web/*|tests/e2e/*|playwright.config.ts|content/*|art/*)
+              apps/web/*|tests/e2e/*|playwright.config.ts|content/*|art/*|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
                 game=true
                 ;;
             esac
 
             case "$path" in
-              apps/content-studio/*|tests/content-studio/*|playwright.content-studio.config.ts|content/*)
+              apps/content-studio/*|tests/content-studio/*|playwright.content-studio.config.ts|content/*|.github/workflows/deploy-content-studio.yml|wrangler.content-studio.jsonc)
                 studio=true
                 ;;
             esac
 
             case "$path" in
-              apps/web/*|tests/visual/*|playwright.visual.config.ts|content/*|art/*)
+              apps/web/*|tests/visual/*|playwright.visual.config.ts|content/*|art/*|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
                 visual=true
                 ;;
             esac
 
             case "$path" in
-              apps/story-studio/*|content/*)
+              apps/story-studio/*|content/*|.github/workflows/deploy-story-studio.yml|wrangler.story-studio.jsonc)
                 story=true
                 ;;
             esac
@@ -144,7 +144,7 @@ jobs:
         uses: ./.github/actions/setup-fantasia
 
       - name: Dependency audit
-        run: pnpm audit
+        run: pnpm run audit
 
       - name: Foundation package consumer
         run: pnpm foundation:consumer
