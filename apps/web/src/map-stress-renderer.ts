@@ -387,7 +387,10 @@ export class MapStressRenderer {
     }
 
     const directions = visibleNeighborDirections(this.#rotation);
-    const xs = cells.flatMap(({ point }) => [point.x - TILE_WIDTH / 2, point.x + TILE_WIDTH / 2]);
+    const xs = cells.flatMap(({ point }) => [
+      point.x - TILE_WIDTH / 2,
+      point.x + TILE_WIDTH / 2,
+    ]);
     const ys = cells.flatMap(({ cell, elevation, point }) => {
       let maxDrop = 0;
       for (const direction of directions) {
@@ -395,7 +398,10 @@ export class MapStressRenderer {
         if (!isInside(neighbor)) continue;
         maxDrop = Math.max(maxDrop, elevation - stressElevationAt(neighbor));
       }
-      return [point.y - TILE_HEIGHT / 2 - 18, point.y + TILE_HEIGHT / 2 + maxDrop * ELEVATION_STEP];
+      return [
+        point.y - TILE_HEIGHT / 2 - 18,
+        point.y + TILE_HEIGHT / 2 + maxDrop * ELEVATION_STEP,
+      ];
     });
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
