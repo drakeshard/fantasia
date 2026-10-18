@@ -205,7 +205,9 @@ const sourceIntegrityCodes = new Set([
   "canonical-path-mismatch",
 ]);
 
-function sourceIntegrityItems(models: readonly DashboardEntityReadModel[]): DashboardAttentionItem[] {
+function sourceIntegrityItems(
+  models: readonly DashboardEntityReadModel[],
+): DashboardAttentionItem[] {
   const items: DashboardAttentionItem[] = [];
   for (const model of models) {
     const issues = model.issues.filter((issue) => sourceIntegrityCodes.has(issue.code));
