@@ -375,7 +375,9 @@ export class MapStressRenderer {
   #draw(): void {
     if (!this.#ready) return;
     this.#updateCameraDataset();
-    this.#app.stage.removeChildren().forEach((child) => child.destroy({ children: true }));
+    this.#app.stage.removeChildren().forEach((child) => {
+      child.destroy({ children: true });
+    });
 
     const cells: Array<{ cell: StressCell; elevation: number; point: DisplayCell }> = [];
     for (let y = STRESS_BOUNDS.minY; y <= STRESS_BOUNDS.maxY; y += 1) {
@@ -387,10 +389,7 @@ export class MapStressRenderer {
     }
 
     const directions = visibleNeighborDirections(this.#rotation);
-    const xs = cells.flatMap(({ point }) => [
-      point.x - TILE_WIDTH / 2,
-      point.x + TILE_WIDTH / 2,
-    ]);
+    const xs = cells.flatMap(({ point }) => [point.x - TILE_WIDTH / 2, point.x + TILE_WIDTH / 2]);
     const ys = cells.flatMap(({ cell, elevation, point }) => {
       let maxDrop = 0;
       for (const direction of directions) {
@@ -398,10 +397,7 @@ export class MapStressRenderer {
         if (!isInside(neighbor)) continue;
         maxDrop = Math.max(maxDrop, elevation - stressElevationAt(neighbor));
       }
-      return [
-        point.y - TILE_HEIGHT / 2 - 18,
-        point.y + TILE_HEIGHT / 2 + maxDrop * ELEVATION_STEP,
-      ];
+      return [point.y - TILE_HEIGHT / 2 - 18, point.y + TILE_HEIGHT / 2 + maxDrop * ELEVATION_STEP];
     });
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
