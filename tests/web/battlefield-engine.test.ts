@@ -22,7 +22,10 @@ describe("standardized battlefield engine", () => {
       indexedCellCount: 80,
       projectedCellCount: 80,
     });
-    expect(compiled.cellByKey.get("5:3")).toMatchObject({ elevation: 2, terrainVisualId: "terrain.ridge" });
+    expect(compiled.cellByKey.get("5:3")).toMatchObject({
+      elevation: 2,
+      terrainVisualId: "terrain.ridge",
+    });
     expect(compiled.unitByCellKey.get("4:3")?.label).toBe("VIP");
   });
 
@@ -53,14 +56,17 @@ describe("standardized battlefield engine", () => {
   it.each([
     ["Ghost Sea", GHOST_SEA_HUNT],
     ["Avalon", AVALON_ARTHURIA_CONFRONTATION],
-  ])("compiles the 64x64 %s scene as a stress fixture without timing thresholds", (_name, fixture) => {
-    const frame = authoredSceneToBattlefieldFrame(fixture.scene);
-    const compiled = compileBattlefieldFrame(frame);
+  ])(
+    "compiles the 64x64 %s scene as a stress fixture without timing thresholds",
+    (_name, fixture) => {
+      const frame = authoredSceneToBattlefieldFrame(fixture.scene);
+      const compiled = compileBattlefieldFrame(frame);
 
-    expect(frame.cells).toHaveLength(4096);
-    expect(compiled.stats.cellCount).toBe(4096);
-    expect(compiled.stats.indexedCellCount).toBe(4096);
-    expect(compiled.stats.projectedCellCount).toBe(4096);
-    expect(compiled.cellByKey.get(battlefieldCellKey(fixture.focusCell))).toBeDefined();
-  });
+      expect(frame.cells).toHaveLength(4096);
+      expect(compiled.stats.cellCount).toBe(4096);
+      expect(compiled.stats.indexedCellCount).toBe(4096);
+      expect(compiled.stats.projectedCellCount).toBe(4096);
+      expect(compiled.cellByKey.get(battlefieldCellKey(fixture.focusCell))).toBeDefined();
+    },
+  );
 });
