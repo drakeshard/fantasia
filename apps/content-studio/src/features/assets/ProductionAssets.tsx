@@ -427,6 +427,7 @@ export function ProductionAssets({
     allAssets.find((asset) => asset.semanticId === selectedId) ??
     filtered[0] ??
     null;
+  const selectionKey = selected?.semanticId ?? "new-asset";
 
   return (
     <CollectionTemplate
@@ -490,9 +491,9 @@ export function ProductionAssets({
       ) : null}
 
       <div class="studio-assets-operations-grid">
-        <SourceMutationPanel selected={selected} response={response} auth={auth} readOnly={readOnly} onCompleted={onRefresh} />
-        {selected ? <VersionOperations asset={selected} auth={auth} readOnly={readOnly} onCompleted={onRefresh} /> : null}
-        {selected ? <RelationOperations asset={selected} allAssets={allAssets} auth={auth} readOnly={readOnly} onCompleted={onRefresh} /> : null}
+        <SourceMutationPanel key={`source:${selectionKey}`} selected={selected} response={response} auth={auth} readOnly={readOnly} onCompleted={onRefresh} />
+        {selected ? <VersionOperations key={`versions:${selectionKey}`} asset={selected} auth={auth} readOnly={readOnly} onCompleted={onRefresh} /> : null}
+        {selected ? <RelationOperations key={`relations:${selectionKey}`} asset={selected} allAssets={allAssets} auth={auth} readOnly={readOnly} onCompleted={onRefresh} /> : null}
       </div>
       {readOnly ? (
         <StateMessage title="Read-only Assets workspace" tone="unavailable">
