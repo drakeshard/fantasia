@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import layout from "../../../content/encounters/candidates/ch01-b01.layout-candidate.json";
 import {
-  MapReviewRenderer,
   type MapReviewCell,
+  MapReviewRenderer,
   type MapReviewRendererOptions,
 } from "./map-review-renderer";
 
@@ -286,7 +286,8 @@ export function MapReviewApp() {
       </header>
 
       <section class="map-review-toolbar" aria-label="Map review controls">
-        <div class="map-review-mode-switch" role="group" aria-label="Review mode">
+        <fieldset class="map-review-mode-switch">
+          <legend class="map-review-mode-legend">Review mode</legend>
           <button
             type="button"
             class={mode === "battlefield" ? "is-active" : ""}
@@ -303,7 +304,7 @@ export function MapReviewApp() {
           >
             Blueprint
           </button>
-        </div>
+        </fieldset>
         {mode === "battlefield" ? (
           <label>
             <input
