@@ -4,6 +4,7 @@ export type StudioRole = (typeof STUDIO_ROLES)[number];
 export const STUDIO_CAPABILITIES = [
   "studio.read",
   "registry.metadata.edit",
+  "canonical.change.propose",
   "review.approve",
   "review.freeze",
   "studio.membership.manage",
@@ -12,9 +13,20 @@ export type StudioCapability = (typeof STUDIO_CAPABILITIES)[number];
 
 const roleCapabilities: Readonly<Record<StudioRole, readonly StudioCapability[]>> = {
   Viewer: ["studio.read"],
-  Editor: ["studio.read", "registry.metadata.edit"],
-  Approver: ["studio.read", "registry.metadata.edit", "review.approve", "review.freeze"],
-  Admin: ["studio.read", "registry.metadata.edit", "studio.membership.manage"],
+  Editor: ["studio.read", "registry.metadata.edit", "canonical.change.propose"],
+  Approver: [
+    "studio.read",
+    "registry.metadata.edit",
+    "canonical.change.propose",
+    "review.approve",
+    "review.freeze",
+  ],
+  Admin: [
+    "studio.read",
+    "registry.metadata.edit",
+    "canonical.change.propose",
+    "studio.membership.manage",
+  ],
 };
 
 export function isStudioRole(value: unknown): value is StudioRole {

@@ -7,6 +7,13 @@ const migration = await readFile(
   path.join(root, "supabase/migrations/20261018070000_game_studio02_identity_operations.sql"),
   "utf8",
 );
+const proposalMigration = await readFile(
+  path.join(
+    root,
+    "supabase/migrations/20261018093000_game_studio04_canonical_change_proposals.sql",
+  ),
+  "utf8",
+);
 const contract = await readFile(
   path.join(root, "supabase/functions/studio-operations/contract.ts"),
   "utf8",
@@ -22,6 +29,10 @@ function requireText(source, fragment, message) {
     throw new Error(message ?? `Missing required fragment: ${fragment}`);
 }
 
+function requirePattern(source, pattern, message) {
+  if (!pattern.test(source)) throw new Error(message);
+}
+
 function forbid(source, pattern, message) {
   if (pattern.test(source)) throw new Error(message);
 }
@@ -31,30 +42,60 @@ for (const role of ["Viewer", "Editor", "Approver", "Admin"]) {
   requireText(migration, `'${role}'`, `Database role enum is missing ${role}.`);
 }
 
-requireText(
+requirePattern(
   contract,
-  'Approver: ["studio.read", "registry.metadata.edit", "review.approve", "review.freeze"]',
+  /Editor:\s*\[[^\]]*"studio\.read"[^\]]*"registry\.metadata\.edit"[^\]]*"canonical\.change\.propose"[^\]]*\]/,
+  "Editor proposal capability contract drifted.",
+);
+requirePattern(
+  contract,
+  /Approver:\s*\[[^\]]*"studio\.read"[^\]]*"registry\.metadata\.edit"[^\]]*"canonical\.change\.propose"[^\]]*"review\.approve"[^\]]*"review\.freeze"[^\]]*\]/,
   "Approver capability contract drifted.",
 );
-requireText(
+requirePattern(
   contract,
-  'Admin: ["studio.read", "registry.metadata.edit", "studio.membership.manage"]',
+  /Admin:\s*\[[^\]]*"studio\.read"[^\]]*"registry\.metadata\.edit"[^\]]*"canonical\.change\.propose"[^\]]*"studio\.membership\.manage"[^\]]*\]/,
   "Admin capability contract drifted.",
 );
 forbid(
   contract,
-  /Admin:[^\n]+review\.approve/,
+  /Viewer:\s*\[[^\]]*canonical\.change\.propose/,
+  "Viewer must not receive canonical proposal authority.",
+);
+forbid(
+  contract,
+  /Admin:\s*\[[^\]]*review\.approve/,
   "Admin must not implicitly receive approval authority.",
 );
 forbid(
   contract,
-  /Admin:[^\n]+review\.freeze/,
+  /Admin:\s*\[[^\]]*review\.freeze/,
   "Admin must not implicitly receive freeze authority.",
 );
 forbid(
   contract,
-  /Approver:[^\n]+studio\.membership\.manage/,
+  /Approver:\s*\[[^\]]*studio\.membership\.manage/,
   "Approver must not receive Studio membership administration.",
+);
+requireText(
+  proposalMigration,
+  "'canonical.change.propose'",
+  "STUDIO04 database role capabilities must include canonical proposal authority.",
+);
+requirePattern(
+  proposalMigration,
+  /when 'Editor'[\s\S]*?'canonical\.change\.propose'/,
+  "STUDIO04 database Editor role must receive proposal authority.",
+);
+requirePattern(
+  proposalMigration,
+  /when 'Approver'[\s\S]*?'canonical\.change\.propose'[\s\S]*?'review\.approve'[\s\S]*?'review\.freeze'/,
+  "STUDIO04 database Approver role capability contract drifted.",
+);
+requirePattern(
+  proposalMigration,
+  /when 'Admin'[\s\S]*?'canonical\.change\.propose'[\s\S]*?'studio\.membership\.manage'/,
+  "STUDIO04 database Admin role capability contract drifted.",
 );
 
 requireText(

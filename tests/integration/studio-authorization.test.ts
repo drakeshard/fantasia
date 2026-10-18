@@ -11,12 +11,19 @@ describe("Studio authorization contract", () => {
     expect(STUDIO_ROLES).toEqual(["Viewer", "Editor", "Approver", "Admin"]);
   });
 
-  it("keeps editing, approval, and administration capabilities distinct", () => {
+  it("keeps proposal, approval, and administration capabilities distinct", () => {
     expect(capabilitiesForRole("Viewer")).toEqual(["studio.read"]);
-    expect(capabilitiesForRole("Editor")).toEqual(["studio.read", "registry.metadata.edit"]);
+    expect(capabilitiesForRole("Viewer")).not.toContain("canonical.change.propose");
+    expect(capabilitiesForRole("Editor")).toEqual([
+      "studio.read",
+      "registry.metadata.edit",
+      "canonical.change.propose",
+    ]);
+    expect(capabilitiesForRole("Approver")).toContain("canonical.change.propose");
     expect(capabilitiesForRole("Approver")).toContain("review.approve");
     expect(capabilitiesForRole("Approver")).toContain("review.freeze");
     expect(capabilitiesForRole("Approver")).not.toContain("studio.membership.manage");
+    expect(capabilitiesForRole("Admin")).toContain("canonical.change.propose");
     expect(capabilitiesForRole("Admin")).toContain("studio.membership.manage");
     expect(capabilitiesForRole("Admin")).not.toContain("review.approve");
     expect(capabilitiesForRole("Admin")).not.toContain("review.freeze");
