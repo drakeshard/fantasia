@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { StudioEntityReadModel } from "../../packages/studio-read-model/src/index";
 import {
   buildStudioDashboard,
   type StudioReadModelsResponse,
 } from "../../apps/content-studio/src/dashboard-model";
+import type { StudioEntityReadModel } from "../../packages/studio-read-model/src/index";
 
 function model(overrides: Record<string, unknown> = {}): StudioEntityReadModel {
   return {
@@ -86,7 +86,9 @@ describe("Content Studio production Dashboard", () => {
     );
 
     expect(projection.sections.find((section) => section.id === "review")?.items).toHaveLength(1);
-    expect(projection.sections.find((section) => section.id === "validation")?.items).toHaveLength(1);
+    expect(projection.sections.find((section) => section.id === "validation")?.items).toHaveLength(
+      1,
+    );
     expect(
       projection.sections.find((section) => section.id === "source-integrity")?.items,
     ).toHaveLength(1);
