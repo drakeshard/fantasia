@@ -1,11 +1,11 @@
 import type { ComponentChildren, ComponentProps } from "preact";
-import { useEffect, useId, useRef } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 
 function cx(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(" ");
 }
 
-type ButtonProps = Omit<ComponentProps<"button">, "class"> & {
+type ButtonProps = Omit<ComponentProps<"button">, "class" | "className"> & {
   variant?: "primary" | "secondary" | "quiet";
   pending?: boolean;
   className?: string;
@@ -14,7 +14,7 @@ type ButtonProps = Omit<ComponentProps<"button">, "class"> & {
 export function Button({
   variant = "secondary",
   pending = false,
-  disabled,
+  disabled = false,
   className,
   children,
   ...props
@@ -23,10 +23,11 @@ export function Button({
     <button
       {...props}
       class={cx("ui-button", `ui-button--${variant}`, className)}
-      disabled={Boolean(disabled || pending)}
-      aria-busy={pending || undefined}
+      disabled={disabled || pending}
+      aria-busy={pending}
     >
-      {pending ? <Spinner label="Working" /> : children}
+      {pending ? <Spinner label="Working" size="small" /> : null}
+      <span>{children}</span>
     </button>
   );
 }
@@ -44,15 +45,6 @@ export function IconButton({ label, icon, ...props }: IconButtonProps) {
   );
 }
 
-type ChipProps = {
-  children: ComponentChildren;
-  accent?: boolean;
-};
-
-export function Chip({ children, accent = false }: ChipProps) {
-  return <span class={cx("ui-chip", accent && "ui-chip--accent")}>{children}</span>;
-}
-
 type FieldBaseProps = {
   id: string;
   label: string;
@@ -62,10 +54,18 @@ type FieldBaseProps = {
   disabled?: boolean;
 };
 
-function FieldMessage({ id, hint, error }: { id: string; hint?: string; error?: string }) {
+function FieldMessage({
+  id,
+  hint,
+  error,
+}: {
+  id: string;
+  hint?: string | undefined;
+  error?: string | undefined;
+}) {
   if (error) {
     return (
-      <span class="ui-field__message ui-field__message--error" id={`${id}-error`} role="alert">
+      <span class="ui-field__message ui-field__message--error" id={`${id}-error`}>
         {error}
       </span>
     );
@@ -88,7 +88,7 @@ function describedBy(id: string, hint?: string, error?: string) {
 
 type TextFieldProps = FieldBaseProps &
   Omit<ComponentProps<"input">, "id" | "type" | "disabled" | "required" | "class"> & {
-    type?: "text" | "search" | "email" | "password";
+    type?: "text" | "search" | "email";
   };
 
 export function TextField({
@@ -183,7 +183,7 @@ export function SelectField({
       </span>
       <select
         {...props}
-        class="ui-control"
+        class="ui-control ui-control--select"
         id={id}
         required={required}
         disabled={disabled}
@@ -210,40 +210,16 @@ type CheckboxProps = Omit<ComponentProps<"input">, "id" | "type" | "class"> & {
 export function Checkbox({ id, label, description, ...props }: CheckboxProps) {
   return (
     <label class="ui-checkbox" for={id}>
-      <input {...props} id={id} type="checkbox" />
-      <span class="ui-checkbox__box" aria-hidden="true" />
+      <input {...props} class="ui-checkbox__input" id={id} type="checkbox" />
       <span class="ui-checkbox__copy">
-        <strong>{label}</strong>
-        {description ? <span>{description}</span> : null}
+        <span class="ui-checkbox__label">{label}</span>
+        {description ? <span class="ui-checkbox__description">{description}</span> : null}
       </span>
     </label>
   );
 }
 
-export function Spinner({ label }: { label: string }) {
-  return (
-    <span class="ui-spinner" role="status" aria-label={label}>
-      <span aria-hidden="true" />
-    </span>
-  );
-}
-
-type StateMessageProps = {
-  title: string;
-  tone?: "neutral" | "success" | "warning" | "error" | "unavailable";
-  children: ComponentChildren;
-};
-
-export function StateMessage({ title, tone = "neutral", children }: StateMessageProps) {
-  return (
-    <div class={cx("ui-state-message", `ui-state-message--${tone}`)} role={tone === "error" ? "alert" : "status"}>
-      <strong>{title}</strong>
-      <div>{children}</div>
-    </div>
-  );
-}
-
-type Tab = {
+type TabItem = {
   id: string;
   label: string;
   disabled?: boolean;
@@ -252,7 +228,7 @@ type Tab = {
 type TabsProps = {
   id: string;
   label: string;
-  tabs: readonly Tab[];
+  tabs: readonly TabItem[];
   selectedId: string;
   onSelect: (id: string) => void;
 };
@@ -260,17 +236,19 @@ type TabsProps = {
 export function Tabs({ id, label, tabs, selectedId, onSelect }: TabsProps) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
 
-  const moveFocus = (index: number, direction: 1 | -1) => {
-    let nextIndex = index;
-    for (let attempts = 0; attempts < tabs.length; attempts += 1) {
-      nextIndex = (nextIndex + direction + tabs.length) % tabs.length;
-      const nextTab = tabs[nextIndex];
-      if (nextTab && !nextTab.disabled) {
-        refs.current[nextIndex]?.focus();
-        onSelect(nextTab.id);
-        break;
-      }
-    }
+  const moveFocus = (currentIndex: number, direction: 1 | -1) => {
+    const enabled = tabs
+      .map((tab, index) => (tab.disabled ? -1 : index))
+      .filter((index) => index >= 0);
+    if (enabled.length === 0) return;
+    const enabledPosition = enabled.indexOf(currentIndex);
+    const nextPosition = (enabledPosition + direction + enabled.length) % enabled.length;
+    const nextIndex = enabled[nextPosition];
+    if (nextIndex === undefined) return;
+    const nextTab = tabs[nextIndex];
+    if (!nextTab) return;
+    refs.current[nextIndex]?.focus();
+    onSelect(nextTab.id);
   };
 
   return (
@@ -390,118 +368,167 @@ export function ActionGroup({ children }: { children: ComponentChildren }) {
   return <div class="ui-action-group">{children}</div>;
 }
 
-type DataTableProps = {
-  label: string;
-  children: ComponentChildren;
-};
-
-export function DataTable({ label, children }: DataTableProps) {
+export function List({ children, label }: { children: ComponentChildren; label?: string }) {
   return (
-    <div class="ui-data-table-wrap">
-      <table class="ui-data-table" aria-label={label}>
+    <ul class="ui-list" aria-label={label}>
+      {children}
+    </ul>
+  );
+}
+
+export function DataTable({ children, label }: { children: ComponentChildren; label: string }) {
+  return (
+    <div class="ui-table-frame">
+      <table class="ui-table" aria-label={label}>
         {children}
       </table>
     </div>
   );
 }
 
-type ProgressBarProps = {
+export function Chip({
+  children,
+  accent = false,
+}: {
+  children: ComponentChildren;
+  accent?: boolean;
+}) {
+  return <span class={cx("ui-chip", accent && "ui-chip--accent")}>{children}</span>;
+}
+
+export function Spinner({ label, size = "normal" }: { label: string; size?: "small" | "normal" }) {
+  return (
+    <span class={cx("ui-spinner", size === "small" && "ui-spinner--small")} role="status">
+      <span class="ui-spinner__mark" aria-hidden="true" />
+      <span class="ui-visually-hidden">{label}</span>
+    </span>
+  );
+}
+
+export function ProgressBar({
+  label,
+  value,
+  max = 100,
+}: {
   label: string;
   value: number;
   max?: number;
+}) {
+  return (
+    <label class="ui-progress">
+      <span>{label}</span>
+      <progress max={max} value={value} />
+      <span class="ui-progress__value">
+        {value} / {max}
+      </span>
+    </label>
+  );
+}
+
+type StateMessageProps = {
+  title: string;
+  children: ComponentChildren;
+  tone?: "neutral" | "unavailable" | "error";
+  action?: ComponentChildren;
 };
 
-export function ProgressBar({ label, value, max = 100 }: ProgressBarProps) {
+export function StateMessage({ title, children, tone = "neutral", action }: StateMessageProps) {
   return (
-    <div class="ui-progress">
-      <div class="ui-progress__copy">
-        <span>{label}</span>
-        <span>{Math.round((value / max) * 100)}%</span>
-      </div>
-      <progress max={max} value={value} aria-label={label} />
+    <div
+      class={cx("ui-state-message", `ui-state-message--${tone}`)}
+      role={tone === "error" ? "alert" : undefined}
+    >
+      <strong>{title}</strong>
+      <span>{children}</span>
+      {action ? <div class="ui-state-message__action">{action}</div> : null}
     </div>
   );
 }
 
 type DialogProps = {
-  id?: string;
+  id: string;
   open: boolean;
+  onOpenChange: (open: boolean) => void;
   title: string;
   description?: string;
   children: ComponentChildren;
   actions?: ComponentChildren;
-  placement?: "dialog" | "drawer";
-  onOpenChange: (open: boolean) => void;
+  placement?: "modal" | "drawer";
 };
 
 export function Dialog({
   id,
   open,
+  onOpenChange,
   title,
   description,
   children,
   actions,
-  placement = "dialog",
-  onOpenChange,
+  placement = "modal",
 }: DialogProps) {
-  const generatedId = useId();
-  const dialogId = id ?? generatedId;
-  const dialogRef = useRef<HTMLDialogElement | null>(null);
-  const openerRef = useRef<HTMLElement | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const titleId = `${id}-title`;
+  const descriptionId = `${id}-description`;
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
     if (open && !dialog.open) {
-      openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      restoreFocusRef.current =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
       dialog.showModal();
-      const autofocus = dialog.querySelector<HTMLElement>("[data-autofocus]");
-      autofocus?.focus();
-    } else if (!open && dialog.open) {
+      queueMicrotask(() => {
+        const target = dialog.querySelector<HTMLElement>(
+          "[data-autofocus], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled)",
+        );
+        target?.focus();
+      });
+      return;
+    }
+
+    if (!open && dialog.open) {
       dialog.close();
+      const restoreTarget = restoreFocusRef.current;
+      restoreFocusRef.current = null;
+      queueMicrotask(() => restoreTarget?.focus());
     }
   }, [open]);
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    const onClose = () => {
-      if (open) onOpenChange(false);
-      openerRef.current?.focus();
-    };
-    const onCancel = (event: Event) => {
-      event.preventDefault();
-      onOpenChange(false);
-    };
-
-    dialog.addEventListener("close", onClose);
-    dialog.addEventListener("cancel", onCancel);
-    return () => {
-      dialog.removeEventListener("close", onClose);
-      dialog.removeEventListener("cancel", onCancel);
-    };
-  }, [open, onOpenChange]);
+  useEffect(
+    () => () => {
+      restoreFocusRef.current?.focus();
+    },
+    [],
+  );
 
   return (
     <dialog
+      id={id}
       class={cx("ui-dialog", placement === "drawer" && "ui-dialog--drawer")}
       ref={dialogRef}
-      aria-labelledby={`${dialogId}-title`}
-      aria-describedby={description ? `${dialogId}-description` : undefined}
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
+      onCancel={(event) => {
+        event.preventDefault();
+        onOpenChange(false);
+      }}
     >
-      <div class="ui-dialog__surface">
-        <header class="ui-dialog__header">
-          <div>
-            <h2 id={`${dialogId}-title`}>{title}</h2>
-            {description ? <p id={`${dialogId}-description`}>{description}</p> : null}
-          </div>
-          <IconButton label="Close" icon="×" variant="quiet" onClick={() => onOpenChange(false)} />
-        </header>
-        <div class="ui-dialog__body">{children}</div>
-        {actions ? <footer class="ui-dialog__actions">{actions}</footer> : null}
+      <div class="ui-dialog__header">
+        <div>
+          <h2 id={titleId}>{title}</h2>
+          {description ? <p id={descriptionId}>{description}</p> : null}
+        </div>
+        <IconButton
+          label="Close dialog"
+          icon="×"
+          variant="quiet"
+          onClick={() => onOpenChange(false)}
+        />
       </div>
+      <div class="ui-dialog__body">{children}</div>
+      {actions ? <div class="ui-dialog__actions">{actions}</div> : null}
     </dialog>
   );
 }
