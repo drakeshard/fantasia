@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: quality-v4-${{ github.workflow }}-${{ github.ref }}
+  group: quality-v5-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -19,10 +19,20 @@ jobs:
     timeout-minutes: 5
     outputs:
       verify: ${{ steps.filter.outputs.verify }}
+      core: ${{ steps.filter.outputs.core }}
+      audit: ${{ steps.filter.outputs.audit }}
+      game_unit: ${{ steps.filter.outputs.game_unit }}
+      runtime_unit: ${{ steps.filter.outputs.runtime_unit }}
+      web_unit: ${{ steps.filter.outputs.web_unit }}
+      content_unit: ${{ steps.filter.outputs.content_unit }}
       web: ${{ steps.filter.outputs.web }}
       game: ${{ steps.filter.outputs.game }}
-      studio: ${{ steps.filter.outputs.studio }}
       visual: ${{ steps.filter.outputs.visual }}
+      studio: ${{ steps.filter.outputs.studio }}
+      studio_static: ${{ steps.filter.outputs.studio_static }}
+      studio_unit: ${{ steps.filter.outputs.studio_unit }}
+      studio_browser: ${{ steps.filter.outputs.studio_browser }}
+      studio_audit: ${{ steps.filter.outputs.studio_audit }}
       story: ${{ steps.filter.outputs.story }}
     steps:
       - name: Checkout
@@ -56,10 +66,18 @@ jobs:
           printf 'Changed files:\n'
           printf '  %s\n' "${changed[@]}"
 
-          verify=false
+          core=false
+          audit=false
+          game_unit=false
+          runtime_unit=false
+          web_unit=false
+          content_unit=false
           game=false
-          studio=false
           visual=false
+          studio_static=false
+          studio_unit=false
+          studio_browser=false
+          studio_audit=false
           story=false
           full=false
           lockfile_changed=false
@@ -72,47 +90,67 @@ jobs:
                 ;;
             esac
 
-            # The Quality workflow itself controls every lane, so changes to it require all lanes.
             case "$path" in
               .github/workflows/ci.yml)
                 full=true
                 ;;
             esac
 
-            # Shared bootstrap/workspace tooling affects the npm-backed core/player/Studio paths, not Story Studio.
+            # Workspace-wide npm/tooling changes affect every npm-backed owner.
             case "$path" in
-              .github/actions/*|package.json|pnpm-workspace.yaml|tsconfig*.json)
-                verify=true
+              .github/actions/*|pnpm-workspace.yaml|tsconfig*.json|vitest.config.ts)
+                core=true
+                game_unit=true
+                runtime_unit=true
+                web_unit=true
+                content_unit=true
                 game=true
-                studio=true
                 visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
                 ;;
             esac
 
             case "$path" in
               package.json)
+                core=true
+                audit=true
+                game_unit=true
+                runtime_unit=true
+                web_unit=true
+                content_unit=true
+                game=true
+                visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
                 dependency_scope=true
                 ;;
               pnpm-lock.yaml)
                 lockfile_changed=true
                 ;;
               biome.json)
-                verify=true
+                core=true
+                web_unit=true
+                studio_unit=true
                 ;;
-            esac
-
-            # Node version also governs the legacy Story deployment path.
-            case "$path" in
               .node-version)
-                verify=true
+                core=true
+                game_unit=true
+                runtime_unit=true
+                web_unit=true
+                content_unit=true
                 game=true
-                studio=true
                 visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
                 story=true
                 ;;
             esac
 
-            # Current patches are player presentation dependencies, not Studio/Story dependencies.
+            # Current patches affect the player presentation dependency graph.
             case "$path" in
               patches/*)
                 game=true
@@ -120,117 +158,204 @@ jobs:
                 ;;
             esac
 
-            # Renderer-neutral game/runtime code and its non-browser tests.
+            # Renderer-neutral source changes fan out through real dependents.
             case "$path" in
-              packages/game/*|packages/runtime/*|tests/integration/*|tests/smoke/*)
-                verify=true
+              packages/game/*)
+                core=true
+                game_unit=true
+                runtime_unit=true
+                game=true
                 ;;
-            esac
-
-            # Game/runtime packages feed the player application, but not Content Studio.
-            case "$path" in
-              packages/game/*|packages/runtime/*)
+              packages/runtime/*)
+                core=true
+                runtime_unit=true
                 game=true
                 ;;
             esac
             case "$path" in
               packages/game/package.json|packages/runtime/package.json)
+                audit=true
                 dependency_scope=true
                 ;;
             esac
 
-            # Player application and player browser tests.
+            # Node tests are owner-scoped. Editing/removing a test never selects downstream consumers.
             case "$path" in
-              apps/web/*|tests/e2e/*|playwright.config.ts|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
+              tests/game/*)
+                game_unit=true
+                ;;
+              tests/runtime/*)
+                runtime_unit=true
+                ;;
+              tests/web/unit/*)
+                web_unit=true
+                ;;
+              tests/content/*)
+                content_unit=true
+                ;;
+            esac
+
+            # Player application and browser suites.
+            case "$path" in
+              apps/web/*)
+                web_unit=true
                 game=true
+                visual=true
+                ;;
+              tests/web/e2e/*|playwright.config.ts)
+                game=true
+                ;;
+              tests/web/visual/*|playwright.visual.config.ts|art/*)
+                visual=true
+                ;;
+              .github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
+                game=true
+                visual=true
                 ;;
             esac
             case "$path" in
               apps/web/package.json)
+                audit=true
                 dependency_scope=true
                 ;;
             esac
 
-            # Player implementation changes need visual evidence. Visual-test or art-only changes do not run game E2E.
+            # Content Studio source, server contracts, and browser coverage are independent from the player.
             case "$path" in
-              apps/web/*|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc|tests/visual/*|playwright.visual.config.ts|art/*)
-                visual=true
+              packages/studio-read-model/*)
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
                 ;;
-            esac
-
-            # Content Studio is an independent application/browser surface.
-            case "$path" in
-              apps/content-studio/*|tests/content-studio/*|playwright.content-studio.config.ts|.github/workflows/deploy-content-studio.yml|wrangler.content-studio.jsonc|scripts/check-content-studio-deployment.mjs|scripts/check-studio-registry.mjs|scripts/check-studio-auth.mjs|scripts/check-studio-read-model.mjs|scripts/check-studio-canonical-change.mjs|scripts/generate-studio-canonical-snapshot.mjs)
-                studio=true
+              apps/content-studio/*)
+                studio_static=true
+                studio_browser=true
+                ;;
+              tests/studio/unit/*)
+                studio_unit=true
+                ;;
+              tests/studio/browser/*|playwright.content-studio.config.ts)
+                studio_browser=true
+                ;;
+              supabase/functions/studio-*/*)
+                studio_static=true
+                studio_unit=true
+                ;;
+              scripts/check-content-studio-deployment.mjs|scripts/check-studio-registry.mjs|scripts/check-studio-auth.mjs|scripts/check-studio-read-model.mjs|scripts/check-studio-canonical-change.mjs|scripts/generate-studio-canonical-snapshot.mjs)
+                studio_static=true
+                ;;
+              .github/workflows/deploy-content-studio.yml|wrangler.content-studio.jsonc)
+                studio_static=true
+                studio_browser=true
                 ;;
             esac
             case "$path" in
               apps/content-studio/package.json)
+                studio_audit=true
                 dependency_scope=true
                 ;;
             esac
 
-            # Legacy Story Studio remains independent pending its controlled retirement lane.
+            # Player/backend Node contracts do not imply a browser run.
+            case "$path" in
+              supabase/functions/trusted-command/*)
+                web_unit=true
+                ;;
+              supabase/migrations/*)
+                web_unit=true
+                studio_static=true
+                studio_unit=true
+                ;;
+            esac
+
+            # Legacy Story Studio remains independent pending controlled retirement.
             case "$path" in
               apps/story-studio/*|.github/workflows/deploy-story-studio.yml|wrangler.story-studio.jsonc)
                 story=true
                 ;;
             esac
 
-            # Canonical content has real consumers across all four surfaces plus core content checks.
+            # Canonical content is shared, but each consumer runs only its relevant suite.
             case "$path" in
               content/*)
-                verify=true
+                content_unit=true
+                runtime_unit=true
                 game=true
-                studio=true
                 visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
                 story=true
                 ;;
             esac
 
-            # Runtime semantic manifest is shared by core/player runtime validation and Studio publishing.
+            # Runtime semantic manifest is consumed by runtime/player and Studio publishing.
             case "$path" in
               config/runtime-assets.json)
-                verify=true
+                core=true
+                runtime_unit=true
                 game=true
-                studio=true
+                studio_static=true
+                studio_unit=true
                 ;;
             esac
 
-            # RPG/Tactical artifact plumbing is game/core infrastructure only.
+            # RPG/Tactical artifact plumbing belongs to renderer-neutral core plus its real player consumer.
             case "$path" in
               config/shared-library-pins.json|config/shared-library-provenance.json|scripts/prepare-shared-packages.mjs|scripts/verify-shared-packages.mjs|scripts/check-shared-consumer.mjs)
-                verify=true
+                core=true
+                game_unit=true
+                runtime_unit=true
                 game=true
                 ;;
             esac
 
-            # Studio-specific scripts above intentionally stop here; do not leak them into core verification.
+            # Studio scripts above intentionally stop there; remaining scripts/config are core tooling.
             case "$path" in
               scripts/check-content-studio-deployment.mjs|scripts/check-studio-registry.mjs|scripts/check-studio-auth.mjs|scripts/check-studio-read-model.mjs|scripts/check-studio-canonical-change.mjs|scripts/generate-studio-canonical-snapshot.mjs)
                 ;;
               scripts/*|config/*)
-                verify=true
+                core=true
                 ;;
             esac
           done
 
           # A normal dependency update changes a package manifest plus the shared lockfile.
-          # Let the manifest own the surface routing. A lockfile-only edit has no owner signal,
-          # so validate every npm-backed surface conservatively without dragging in Story Studio.
+          # The manifest owns routing. A lockfile-only edit has no owner signal, so validate all npm-backed owners.
           if [[ "$lockfile_changed" == "true" && "$dependency_scope" != "true" ]]; then
-            verify=true
+            core=true
+            audit=true
+            game_unit=true
+            runtime_unit=true
+            web_unit=true
+            content_unit=true
             game=true
-            studio=true
             visual=true
+            studio_static=true
+            studio_unit=true
+            studio_browser=true
+            studio_audit=true
           fi
 
           if [[ "$full" == "true" ]]; then
-            verify=true
+            core=true
+            audit=true
+            game_unit=true
+            runtime_unit=true
+            web_unit=true
+            content_unit=true
             game=true
-            studio=true
             visual=true
+            studio_static=true
+            studio_unit=true
+            studio_browser=true
+            studio_audit=true
             story=true
+          fi
+
+          verify=false
+          if [[ "$core" == "true" || "$audit" == "true" || "$game_unit" == "true" || "$runtime_unit" == "true" || "$web_unit" == "true" || "$content_unit" == "true" ]]; then
+            verify=true
           fi
 
           web=false
@@ -238,19 +363,34 @@ jobs:
             web=true
           fi
 
+          studio=false
+          if [[ "$studio_static" == "true" || "$studio_unit" == "true" || "$studio_browser" == "true" || "$studio_audit" == "true" ]]; then
+            studio=true
+          fi
+
           {
             echo "verify=$verify"
+            echo "core=$core"
+            echo "audit=$audit"
+            echo "game_unit=$game_unit"
+            echo "runtime_unit=$runtime_unit"
+            echo "web_unit=$web_unit"
+            echo "content_unit=$content_unit"
             echo "web=$web"
             echo "game=$game"
-            echo "studio=$studio"
             echo "visual=$visual"
+            echo "studio=$studio"
+            echo "studio_static=$studio_static"
+            echo "studio_unit=$studio_unit"
+            echo "studio_browser=$studio_browser"
+            echo "studio_audit=$studio_audit"
             echo "story=$story"
           } >> "$GITHUB_OUTPUT"
 
-          echo "Selected: verify=$verify web=$web game=$game studio=$studio visual=$visual story=$story full=$full lockfile=$lockfile_changed dependency_scope=$dependency_scope"
+          echo "Selected: verify=$verify core=$core audit=$audit game_unit=$game_unit runtime_unit=$runtime_unit web_unit=$web_unit content_unit=$content_unit web=$web game=$game visual=$visual studio=$studio studio_static=$studio_static studio_unit=$studio_unit studio_browser=$studio_browser studio_audit=$studio_audit story=$story full=$full"
 
   verify:
-    name: Fast verification
+    name: Core and Node validation
     needs: classify
     if: needs.classify.outputs.verify == 'true'
     runs-on: ubuntu-latest
@@ -263,24 +403,47 @@ jobs:
         uses: ./.github/actions/setup-fantasia
 
       - name: Dependency audit
+        if: needs.classify.outputs.audit == 'true'
         run: pnpm run audit
 
       - name: Foundation package consumer
+        if: needs.classify.outputs.core == 'true'
         run: pnpm foundation:consumer
 
       - name: Combined RPG/Tactical package consumer
+        if: needs.classify.outputs.core == 'true'
         run: pnpm shared:consumer
 
       - name: Core formatting, architecture, determinism, assets, and backend self-test
+        if: needs.classify.outputs.core == 'true'
         run: pnpm check:core
 
       - name: Typecheck core packages
+        if: needs.classify.outputs.core == 'true'
         run: pnpm --filter @fantasia/runtime... typecheck
 
-      - name: Unit and integration tests
-        run: pnpm test
+      - name: Game domain tests
+        if: needs.classify.outputs.game_unit == 'true'
+        run: pnpm test:game
+
+      - name: Runtime tests
+        if: needs.classify.outputs.runtime_unit == 'true'
+        run: pnpm test:runtime
+
+      - name: Web unit formatting
+        if: needs.classify.outputs.web_unit == 'true'
+        run: pnpm check:web:unit:format
+
+      - name: Web unit tests
+        if: needs.classify.outputs.web_unit == 'true'
+        run: pnpm test:web:unit
+
+      - name: Content contract tests
+        if: needs.classify.outputs.content_unit == 'true'
+        run: pnpm test:content
 
       - name: Build core packages
+        if: needs.classify.outputs.core == 'true'
         run: pnpm --filter @fantasia/runtime... build
 
   web-validation:
@@ -309,13 +472,13 @@ jobs:
         id: game
         if: needs.classify.outputs.game == 'true'
         continue-on-error: true
-        run: pnpm test:e2e
+        run: pnpm test:web:e2e
 
       - name: Pre-deploy visual capture
         id: visual
         if: needs.classify.outputs.visual == 'true'
         continue-on-error: true
-        run: pnpm test:visual
+        run: pnpm test:web:visual
 
       - name: Upload visual review evidence
         if: always() && needs.classify.outputs.visual == 'true'
@@ -376,20 +539,37 @@ jobs:
         with:
           prepare-shared: "false"
 
+      - name: Content Studio dependency audit
+        if: needs.classify.outputs.studio_audit == 'true'
+        run: pnpm run audit
+
       - name: Content Studio static and contract checks
+        if: needs.classify.outputs.studio_static == 'true'
         run: pnpm check:studio
 
+      - name: Content Studio unit formatting
+        if: needs.classify.outputs.studio_unit == 'true'
+        run: pnpm check:studio:unit:format
+
+      - name: Content Studio unit tests
+        if: needs.classify.outputs.studio_unit == 'true'
+        run: pnpm test:studio:unit
+
       - name: Typecheck Content Studio surface
+        if: needs.classify.outputs.studio_browser == 'true'
         run: pnpm --filter @fantasia/content-studio typecheck
 
       - name: Build Content Studio surface
+        if: needs.classify.outputs.studio_browser == 'true'
         run: pnpm --filter @fantasia/content-studio build
 
       - name: Install Chromium
+        if: needs.classify.outputs.studio_browser == 'true'
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Content Studio browser coverage
-        run: pnpm test:content-studio
+        if: needs.classify.outputs.studio_browser == 'true'
+        run: pnpm test:studio:browser
 
   story-validation:
     name: Story Studio validation
@@ -436,7 +616,7 @@ jobs:
             exit 1
           fi
 
-          require_selected() {
+          require_job() {
             local selected="$1"
             local result="$2"
             local name="$3"
@@ -452,9 +632,9 @@ jobs:
             fi
           }
 
-          require_selected "$VERIFY_SELECTED" "$VERIFY_RESULT" "Fast verification"
-          require_selected "$WEB_SELECTED" "$WEB_RESULT" "Web validation"
-          require_selected "$STUDIO_SELECTED" "$STUDIO_RESULT" "Content Studio validation"
-          require_selected "$STORY_SELECTED" "$STORY_RESULT" "Story Studio validation"
+          require_job "$VERIFY_SELECTED" "$VERIFY_RESULT" "Core and Node validation"
+          require_job "$WEB_SELECTED" "$WEB_RESULT" "Web validation"
+          require_job "$STUDIO_SELECTED" "$STUDIO_RESULT" "Content Studio validation"
+          require_job "$STORY_SELECTED" "$STORY_RESULT" "Story Studio validation"
 
-          echo "All selected Quality checks passed."
+          echo "All selected Quality jobs passed."
