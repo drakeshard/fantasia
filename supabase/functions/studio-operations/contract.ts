@@ -124,14 +124,24 @@ function parseReadQuery(value: unknown): StudioReadQueryPayload {
   ) {
     throw new StudioOperationContractError("Readiness filter is invalid.");
   }
+
+  const text = parseOptionalText(value.text, "Search text", 200);
+  const semanticId = parseOptionalText(value.semanticId, "Semantic ID", 240);
+  const entityType = parseOptionalText(value.entityType, "Entity type", 80);
+  const lifecycle = parseOptionalText(value.lifecycle, "Lifecycle", 80);
+  const offset = parseOptionalInteger(value.offset, "Offset", 0, 100000);
+  const limit = parseOptionalInteger(value.limit, "Limit", 1, 100);
+
   return {
-    text: parseOptionalText(value.text, "Search text", 200),
-    semanticId: parseOptionalText(value.semanticId, "Semantic ID", 240),
-    entityType: parseOptionalText(value.entityType, "Entity type", 80),
-    lifecycle: parseOptionalText(value.lifecycle, "Lifecycle", 80),
-    readiness: readiness as StudioReadQueryPayload["readiness"],
-    offset: parseOptionalInteger(value.offset, "Offset", 0, 100000),
-    limit: parseOptionalInteger(value.limit, "Limit", 1, 100),
+    ...(text !== undefined ? { text } : {}),
+    ...(semanticId !== undefined ? { semanticId } : {}),
+    ...(entityType !== undefined ? { entityType } : {}),
+    ...(lifecycle !== undefined ? { lifecycle } : {}),
+    ...(readiness !== undefined
+      ? { readiness: readiness as NonNullable<StudioReadQueryPayload["readiness"]> }
+      : {}),
+    ...(offset !== undefined ? { offset } : {}),
+    ...(limit !== undefined ? { limit } : {}),
   };
 }
 
