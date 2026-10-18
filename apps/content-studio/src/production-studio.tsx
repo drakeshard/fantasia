@@ -10,10 +10,10 @@ import "./styles/studio-auth.css";
 import {
   fetchStudioAuthorization,
   restoreStudioSession,
-  signInStudio,
-  signOutStudio,
   type StoredStudioAuthSession,
   type StudioSessionState,
+  signInStudio,
+  signOutStudio,
 } from "./studio-session";
 import { PasswordField } from "./ui/PasswordField";
 import { Button, Spinner, StateMessage, Surface, TextField } from "./ui/primitives";
@@ -199,7 +199,8 @@ function ProductionStudio() {
   }, []);
 
   const signOut = async () => {
-    const auth = state.status === "authorized" || state.status === "unauthorized" ? state.auth : null;
+    const auth =
+      state.status === "authorized" || state.status === "unauthorized" ? state.auth : null;
     await signOutStudio(auth);
     setState({ status: "signed-out" });
   };
