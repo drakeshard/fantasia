@@ -62,7 +62,7 @@ export const STRESS_MAP_CELLS: readonly StressMapCellData[] = Array.from(
   },
 );
 
-export const STRESS_MAP_BY_KEY = new Map(
+export const STRESS_MAP_BY_KEY: ReadonlyMap<string, StressMapCellData> = new Map(
   STRESS_MAP_CELLS.map((cell) => [`${cell.x},${cell.y}`, cell] as const),
 );
 
