@@ -17,7 +17,7 @@
     "backend:acceptance:self-test": "node scripts/backend-acceptance.mjs --self-test",
     "check": "pnpm check:format && pnpm check:architecture && pnpm check:determinism && pnpm check:content-studio-deployment && pnpm check:studio-registry && pnpm check:studio-auth && pnpm check:studio-read-model && pnpm check:studio-canonical-change && pnpm assets:verify && pnpm backend:acceptance:self-test",
     "check:write": "biome check --write .",
-    "check:format": "biome check --max-diagnostics=200 .",
+    "check:format": "biome check .",
     "check:architecture": "node scripts/check-architecture.mjs",
     "check:determinism": "node scripts/check-determinism.mjs",
     "check:content-studio-deployment": "node scripts/check-content-studio-deployment.mjs",
