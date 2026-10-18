@@ -6,70 +6,89 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = async (relativePath) =>
   JSON.parse(await readFile(path.join(root, relativePath), "utf8"));
 
+const STORY_PATH = "content/narrative/story.json";
+const STORY_PRODUCTION_PATH = "content/narrative/story-production.json";
+const ENCOUNTER_PATH = "content/encounters/candidates/ch01-b01.layout-candidate.json";
+const RUNTIME_MANIFEST_PATH = "config/runtime-assets.json";
+
 const [story, storyProduction, encounter, runtimeManifest] = await Promise.all([
-  source("content/narrative/story.json"),
-  source("content/narrative/story-production.json"),
-  source("content/encounters/candidates/ch01-b01.layout-candidate.json"),
-  source("config/runtime-assets.json"),
+  source(STORY_PATH),
+  source(STORY_PRODUCTION_PATH),
+  source(ENCOUNTER_PATH),
+  source(RUNTIME_MANIFEST_PATH),
 ]);
-
-const beatIds = new Set();
-const projectedStory = {
-  schemaVersion: story.schemaVersion,
-  project: story.project,
-  sagas: story.sagas.map((saga) => ({
-    id: saga.id,
-    title: saga.title,
-    chapters: saga.chapters.map((chapter) => ({
-      id: chapter.id,
-      title: chapter.title,
-      status: chapter.status,
-      nodes: chapter.nodes.map((node) => ({
-        id: node.id,
-        title: node.title,
-        type: node.type,
-        status: node.status,
-        scriptStatus: node.scriptStatus,
-        location: node.location,
-        time: node.time,
-        beats: (node.beats ?? []).map((beat) => {
-          beatIds.add(beat.id);
-          return { id: beat.id };
-        }),
-      })),
-    })),
-  })),
-};
-
-const productionBeats = Object.fromEntries(
-  [...beatIds]
-    .filter((beatId) => Object.hasOwn(storyProduction.beats ?? {}, beatId))
-    .map((beatId) => [beatId, { available: true }]),
-);
-
-const projectedEncounter = {
-  id: encounter.id,
-  stageId: encounter.stageId,
-  title: encounter.title,
-  status: encounter.status,
-  gameD222Compliance: encounter.gameD222Compliance,
-  bounds: encounter.bounds,
-  environmentIntent: encounter.environmentIntent,
-  deployment: encounter.deployment,
-};
 
 const revision = process.env.CANONICAL_GIT_REVISION?.trim();
 if (!revision) throw new Error("CANONICAL_GIT_REVISION is required.");
 
+const semanticPart = (value) =>
+  value.toLocaleLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const gitProvenance = (sourcePath, canonical) => ({
+  authority: "git",
+  source: sourcePath,
+  revision,
+  canonical,
+});
+
+const canonicalModels = [];
+for (const saga of story.sagas) {
+  for (const chapter of saga.chapters) {
+    for (const node of chapter.nodes) {
+      const hasProductionPreview = (node.beats ?? []).some((beat) =>
+        Object.hasOwn(storyProduction.beats ?? {}, beat.id),
+      );
+      canonicalModels.push({
+        semanticId: `story.${semanticPart(saga.id)}.${semanticPart(chapter.id)}.${semanticPart(node.id)}`,
+        entityType: "story",
+        displayName: node.title,
+        canonicalPath: STORY_PATH,
+        canonicalData: {
+          sagaId: saga.id,
+          chapterId: chapter.id,
+          nodeId: node.id,
+          title: node.title,
+          type: node.type ?? null,
+          status: node.status ?? null,
+          scriptStatus: node.scriptStatus ?? null,
+        },
+        provenance: gitProvenance(STORY_PATH, true),
+        ...(hasProductionPreview
+          ? {
+              preview: {
+                data: { profile: storyProduction.profile ?? null, available: true },
+                provenance: gitProvenance(STORY_PRODUCTION_PATH, false),
+              },
+            }
+          : {}),
+      });
+    }
+  }
+}
+
+canonicalModels.push({
+  semanticId: `map.s01.ch01.${semanticPart(encounter.stageId.replace(/^CH01-/i, ""))}`,
+  entityType: "map-encounter",
+  displayName: encounter.title,
+  canonicalPath: ENCOUNTER_PATH,
+  canonicalData: {
+    id: encounter.id ?? null,
+    stageId: encounter.stageId,
+    title: encounter.title,
+    status: encounter.status ?? null,
+    gameD222Compliance: encounter.gameD222Compliance ?? null,
+  },
+  provenance: gitProvenance(ENCOUNTER_PATH, true),
+});
+
 const snapshot = {
   revision,
-  story: projectedStory,
-  storyProduction: {
-    profile: storyProduction.profile ?? null,
-    beats: productionBeats,
+  canonicalModels,
+  runtimeManifest: {
+    schemaVersion: runtimeManifest.schemaVersion,
+    revision,
+    path: RUNTIME_MANIFEST_PATH,
+    assets: runtimeManifest.assets,
   },
-  encounter: projectedEncounter,
-  runtimeManifest,
 };
 
 const output = path.join(
