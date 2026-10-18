@@ -12,6 +12,10 @@ const adapters = await readFile(
   path.join(root, "supabase/functions/studio-operations/read-model-adapters.ts"),
   "utf8",
 );
+const repositorySnapshot = await readFile(
+  path.join(root, "supabase/functions/studio-operations/repository-snapshot.ts"),
+  "utf8",
+);
 const migration = await readFile(
   path.join(root, "supabase/migrations/20261018081500_game_studio03_registry_read_snapshot.sql"),
   "utf8",
@@ -51,7 +55,16 @@ requireText(
   "get_studio_registry_read_snapshot",
   "Read-model API must compose through the private registry snapshot RPC.",
 );
-requireText(api, "loadGitSnapshot()", "Read-model API must use the canonical Git adapter.");
+requireText(
+  api,
+  "loadRepositorySnapshot()",
+  "Read-model API must use the versioned canonical repository snapshot.",
+);
+requireText(
+  api,
+  'gitState: "deployment-snapshot"',
+  "Read-model freshness must disclose deploy-time Git snapshot semantics.",
+);
 requireText(
   api,
   "exposeProviderReference: false",
@@ -77,6 +90,22 @@ requireText(
   "AssetSourceProviderAdapter",
   "Provider-neutral asset source adapter is required.",
 );
+for (const sourcePath of [
+  "../../../content/narrative/story.json",
+  "../../../content/narrative/story-production.json",
+  "../../../content/encounters/candidates/ch01-b01.layout-candidate.json",
+  "../../../config/runtime-assets.json",
+])
+  requireText(
+    repositorySnapshot,
+    sourcePath,
+    `Canonical deployment snapshot must import Git-owned source ${sourcePath}.`,
+  );
+requireText(
+  repositorySnapshot,
+  "CANONICAL_GIT_REVISION",
+  "Canonical deployment snapshot must record Git revision context.",
+);
 requireText(
   migration,
   "studio_registry.has_capability(p_user_id, 'studio.read')",
@@ -88,9 +117,14 @@ forbid(
   "STUDIO03 registry snapshot must remain read-only.",
 );
 forbid(
-  adapters,
+  `${adapters}\n${repositorySnapshot}`,
   /GITHUB_TOKEN|GOOGLE_(API|DRIVE).*KEY|SUPABASE_(SECRET|SERVICE_ROLE)/i,
   "Provider/Git adapters must not hard-code privileged credentials.",
+);
+forbid(
+  repositorySnapshot,
+  /raw\.githubusercontent\.com|api\.github\.com/i,
+  "Canonical deployment snapshot must not depend on unauthenticated private-repository fetches.",
 );
 forbid(
   docs,
