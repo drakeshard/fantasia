@@ -2,6 +2,7 @@ import type {
   StudioRole,
   StudioSessionResult,
 } from "../../../supabase/functions/studio-operations/contract";
+import type { StudioReadModelsResponse } from "./dashboard-model";
 
 const defaultSupabaseUrl = "https://mswgfxqhqhtltbrkkspy.supabase.co";
 const defaultPublishableKey = "sb_publishable_Okszqzy-4qQaYGB_mLlzlA_-AWqA_3y";
@@ -67,6 +68,30 @@ async function parseResponseBody(response: Response): Promise<Record<string, unk
   } catch {
     return {};
   }
+}
+
+async function studioOperation(
+  session: StoredStudioAuthSession,
+  requestBody: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+  const response = await fetch(`${studioSupabaseUrl}/functions/v1/studio-operations`, {
+    method: "POST",
+    headers: {
+      apikey: studioPublishableKey,
+      authorization: `Bearer ${session.accessToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  });
+  const body = await parseResponseBody(response);
+  if (response.status === 401) {
+    clearStudioAuthSession();
+    throw new Error("Studio session is no longer valid.");
+  }
+  if (!response.ok) {
+    throw new Error(typeof body.message === "string" ? body.message : "Studio operation failed.");
+  }
+  return body;
 }
 
 export function loadStoredStudioAuthSession(): StoredStudioAuthSession | null {
@@ -147,35 +172,52 @@ export async function ensureFreshStudioAuthSession(
 export async function fetchStudioAuthorization(
   session: StoredStudioAuthSession,
 ): Promise<StudioSessionResult> {
-  const response = await fetch(`${studioSupabaseUrl}/functions/v1/studio-operations`, {
-    method: "POST",
-    headers: {
-      apikey: studioPublishableKey,
-      authorization: `Bearer ${session.accessToken}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({ type: "session.get" }),
-  });
-  const body = await parseResponseBody(response);
-  if (response.status === 401) {
-    clearStudioAuthSession();
-    throw new Error("Studio session is no longer valid.");
-  }
-  if (!response.ok) {
-    throw new Error(
-      typeof body.message === "string" ? body.message : "Studio authorization failed.",
-    );
-  }
+  const body = await studioOperation(session, { type: "session.get" });
   if (typeof body.authorized !== "boolean") {
     throw new Error("Studio authorization response was invalid.");
   }
-  if (!body.authorized) {
-    return { authorized: false, role: null, capabilities: [] };
-  }
+  if (!body.authorized) return { authorized: false, role: null, capabilities: [] };
   if (typeof body.role !== "string" || !Array.isArray(body.capabilities)) {
     throw new Error("Studio authorization response was invalid.");
   }
   return body as unknown as StudioSessionResult;
+}
+
+export async function fetchStudioReadModels(
+  session: StoredStudioAuthSession,
+): Promise<StudioReadModelsResponse> {
+  const body = await studioOperation(session, {
+    type: "studio.read_models.get",
+    payload: { offset: 0, limit: 100 },
+  });
+  if (
+    typeof body.readModelVersion !== "number" ||
+    typeof body.revision !== "string" ||
+    !body.freshness ||
+    typeof body.freshness !== "object" ||
+    !body.search ||
+    typeof body.search !== "object" ||
+    !Array.isArray(body.models)
+  ) {
+    throw new Error("Studio read-model response was invalid.");
+  }
+
+  const normalized = body as unknown as Omit<StudioReadModelsResponse, "canonicalProposals"> & {
+    canonicalProposals?: StudioReadModelsResponse["canonicalProposals"];
+  };
+  return {
+    ...normalized,
+    canonicalProposals:
+      normalized.canonicalProposals?.state === "available" ||
+      normalized.canonicalProposals?.state === "unavailable"
+        ? normalized.canonicalProposals
+        : {
+            state: "unavailable",
+            observedAt: null,
+            items: [],
+            message: "Canonical proposal summary source is not deployed in this read-model response.",
+          },
+  };
 }
 
 export async function restoreStudioSession(): Promise<StudioSessionState> {
