@@ -89,8 +89,14 @@ function BlueprintStressReview({
   readonly showCoordinates: boolean;
   readonly onSelect: (cell: StressCell) => void;
 }) {
-  const columns = Array.from({ length: STRESS_WIDTH }, (_, index) => STRESS_BOUNDS.minX + index);
-  const rows = Array.from({ length: STRESS_HEIGHT }, (_, index) => STRESS_BOUNDS.minY + index);
+  const columns = Array.from(
+    { length: STRESS_WIDTH },
+    (_, index) => STRESS_BOUNDS.minX + index,
+  );
+  const rows = Array.from(
+    { length: STRESS_HEIGHT },
+    (_, index) => STRESS_BOUNDS.minY + index,
+  );
 
   return (
     <div class="map-review-board-scroll map-stress-board-scroll">
@@ -198,7 +204,9 @@ export function MapStressApp() {
         <div class="map-review-title">
           <span class="map-review-kicker">GAME-MAP05 · developer stress review</span>
           <h1>Elevation Stress Field</h1>
-          <span class="map-review-warning">EXPERIMENTAL · NON-CANONICAL · NOT GAME-D222 COMPLIANT</span>
+          <span class="map-review-warning">
+            EXPERIMENTAL · NON-CANONICAL · NOT GAME-D222 COMPLIANT
+          </span>
         </div>
 
         <fieldset class="map-review-mode-switch">
@@ -224,19 +232,39 @@ export function MapStressApp() {
         {mode === "battlefield" ? (
           <fieldset class="map-review-camera-controls">
             <legend class="map-review-mode-legend">Review camera controls</legend>
-            <button type="button" aria-label="Rotate left" onClick={() => cameraRef.current?.rotateLeft()}>
+            <button
+              type="button"
+              aria-label="Rotate left"
+              onClick={() => cameraRef.current?.rotateLeft()}
+            >
               ↺
             </button>
-            <button type="button" aria-label="Rotate right" onClick={() => cameraRef.current?.rotateRight()}>
+            <button
+              type="button"
+              aria-label="Rotate right"
+              onClick={() => cameraRef.current?.rotateRight()}
+            >
               ↻
             </button>
-            <button type="button" aria-label="Zoom out" onClick={() => cameraRef.current?.zoomOut()}>
+            <button
+              type="button"
+              aria-label="Zoom out"
+              onClick={() => cameraRef.current?.zoomOut()}
+            >
               −
             </button>
-            <button type="button" aria-label="Zoom in" onClick={() => cameraRef.current?.zoomIn()}>
+            <button
+              type="button"
+              aria-label="Zoom in"
+              onClick={() => cameraRef.current?.zoomIn()}
+            >
               +
             </button>
-            <button type="button" aria-label="Fit map" onClick={() => cameraRef.current?.fit()}>
+            <button
+              type="button"
+              aria-label="Fit map"
+              onClick={() => cameraRef.current?.fit()}
+            >
               Fit
             </button>
           </fieldset>
@@ -254,7 +282,11 @@ export function MapStressApp() {
       </header>
 
       {detailsOpen ? (
-        <aside id="map-stress-details" class="map-review-details" aria-label="Terrain stress details">
+        <aside
+          id="map-stress-details"
+          class="map-review-details"
+          aria-label="Terrain stress details"
+        >
           <section class="map-review-inspector" aria-live="polite">
             <p class="map-review-kicker">Selected cell</p>
             <h2 data-testid="stress-selected-coordinate">
@@ -292,21 +324,36 @@ export function MapStressApp() {
             </label>
           </section>
 
-          <section class="map-review-legend map-stress-summary" aria-label="Stress fixture summary">
+          <section
+            class="map-review-legend map-stress-summary"
+            aria-label="Stress fixture summary"
+          >
             <h2>Fixture</h2>
-            <span>Grid</span><strong>{STRESS_WIDTH}×{STRESS_HEIGHT}</strong>
-            <span>Cells</span><strong data-testid="stress-cell-count">{STRESS_CELL_COUNT}</strong>
-            <span>Elevation</span><strong>{STRESS_MIN_ELEVATION}…+{STRESS_MAX_ELEVATION}</strong>
-            <span>Levels present</span><strong data-testid="stress-level-count">{presentLevels.length}</strong>
-            <p>All 15 integer levels from −7 through +7 are present. Vertical faces are based on neighbor-relative height differences, not a zero-elevation baseline.</p>
+            <span>Grid</span>
+            <strong>
+              {STRESS_WIDTH}×{STRESS_HEIGHT}
+            </strong>
+            <span>Cells</span>
+            <strong data-testid="stress-cell-count">{STRESS_CELL_COUNT}</strong>
+            <span>Elevation</span>
+            <strong>
+              {STRESS_MIN_ELEVATION}…+{STRESS_MAX_ELEVATION}
+            </strong>
+            <span>Levels present</span>
+            <strong data-testid="stress-level-count">{presentLevels.length}</strong>
+            <p>
+              All 15 integer levels from −7 through +7 are present. Vertical faces are based on
+              neighbor-relative height differences, not a zero-elevation baseline.
+            </p>
           </section>
 
           <section class="map-review-footer">
             <strong>Review boundary</strong>
             <p>
-              This fixture tests renderer readability and camera behavior only. It defines no climb/drop rules,
-              movement costs, cover, line of sight, encounter balance, story geography or production routing.
-              CH01-B01 remains a separate provisional candidate under its existing owner gate.
+              This fixture tests renderer readability and camera behavior only. It defines no
+              climb/drop rules, movement costs, cover, line of sight, encounter balance, story
+              geography or production routing. CH01-B01 remains a separate provisional candidate
+              under its existing owner gate.
             </p>
           </section>
         </aside>
