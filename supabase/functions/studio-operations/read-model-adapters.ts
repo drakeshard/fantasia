@@ -7,8 +7,6 @@ import type {
   StudioProvenance,
 } from "../../../packages/studio-read-model/src/index.ts";
 
-const REPOSITORY = "drakeshard/fantasia";
-const DEFAULT_REF = "main";
 const STORY_PATH = "content/narrative/story.json";
 const STORY_PRODUCTION_PATH = "content/narrative/story-production.json";
 const ENCOUNTER_PATH = "content/encounters/candidates/ch01-b01.layout-candidate.json";
@@ -16,7 +14,10 @@ const RUNTIME_MANIFEST_PATH = "config/runtime-assets.json";
 
 export interface AssetSourceProviderAdapter {
   readonly kind: string;
-  describe(version: RegistryAssetVersionRecord, exposeReference: boolean): StudioAssetSourceSummary;
+  describe(
+    version: RegistryAssetVersionRecord,
+    exposeReference: boolean,
+  ): StudioAssetSourceSummary;
 }
 
 export class RegistryBackedAssetSourceAdapter implements AssetSourceProviderAdapter {
@@ -46,14 +47,14 @@ export class RegistryBackedAssetSourceAdapter implements AssetSourceProviderAdap
       provenance: {
         authority: "provider",
         source: version.provider_kind,
-        observedAt: version.updated_at,
+        ...(version.updated_at ? { observedAt: version.updated_at } : {}),
         canonical: true,
       },
     };
   }
 }
 
-interface GitSnapshot {
+export interface GitSnapshot {
   readonly revision: string;
   readonly story: unknown;
   readonly storyProduction: unknown;
@@ -104,42 +105,6 @@ function semanticPart(value: string): string {
     .replace(/^-|-$/g, "");
 }
 
-async function fetchJsonAtRevision(path: string, revision: string): Promise<unknown> {
-  const response = await fetch(
-    `https://raw.githubusercontent.com/${REPOSITORY}/${revision}/${path}`,
-    {
-      headers: { accept: "application/json", "user-agent": "fantasia-content-studio" },
-    },
-  );
-  if (!response.ok)
-    throw new Error(`Canonical Git source unavailable: ${path} (${response.status}).`);
-  try {
-    return await response.json();
-  } catch {
-    throw new Error(`Canonical Git source malformed: ${path}.`);
-  }
-}
-
-export async function loadGitSnapshot(ref = DEFAULT_REF): Promise<GitSnapshot> {
-  const branchResponse = await fetch(
-    `https://api.github.com/repos/${REPOSITORY}/commits/${encodeURIComponent(ref)}`,
-    {
-      headers: { accept: "application/vnd.github+json", "user-agent": "fantasia-content-studio" },
-    },
-  );
-  if (!branchResponse.ok)
-    throw new Error(`Unable to resolve canonical Git revision (${branchResponse.status}).`);
-  const branch = requireRecord(await branchResponse.json(), "Git revision response");
-  const revision = requireString(branch.sha, "Git revision");
-  const [story, storyProduction, encounter, runtimeManifest] = await Promise.all([
-    fetchJsonAtRevision(STORY_PATH, revision),
-    fetchJsonAtRevision(STORY_PRODUCTION_PATH, revision),
-    fetchJsonAtRevision(ENCOUNTER_PATH, revision),
-    fetchJsonAtRevision(RUNTIME_MANIFEST_PATH, revision),
-  ]);
-  return { revision, story, storyProduction, encounter, runtimeManifest };
-}
-
 function gitProvenance(path: string, revision: string, canonical: boolean): StudioProvenance {
   return { authority: "git", source: path, revision, canonical };
 }
@@ -161,7 +126,9 @@ function productionPreviewFor(
   };
 }
 
-export function normalizeCanonicalModels(snapshot: GitSnapshot): readonly StudioCanonicalSummary[] {
+export function normalizeCanonicalModels(
+  snapshot: GitSnapshot,
+): readonly StudioCanonicalSummary[] {
   const story = requireRecord(snapshot.story, "Story source");
   const production = requireRecord(snapshot.storyProduction, "Story production preview");
   if (!Array.isArray(story.sagas))
@@ -189,6 +156,7 @@ export function normalizeCanonicalModels(snapshot: GitSnapshot): readonly Studio
             })
           : [];
         const semanticId = `story.${semanticPart(sagaId)}.${semanticPart(chapterId)}.${semanticPart(nodeId)}`;
+        const preview = productionPreviewFor(beatIds, production, snapshot.revision);
         models.push({
           semanticId,
           entityType: "story",
@@ -208,7 +176,7 @@ export function normalizeCanonicalModels(snapshot: GitSnapshot): readonly Studio
             beats: node.beats ?? [],
           },
           provenance: gitProvenance(STORY_PATH, snapshot.revision, true),
-          preview: productionPreviewFor(beatIds, production, snapshot.revision),
+          ...(preview ? { preview } : {}),
         });
       }
     }
