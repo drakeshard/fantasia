@@ -75,6 +75,10 @@
 
 /* Compact landscape must retain authoritative facts and primary commitments. */
 @media (max-width: 900px), (max-height: 499px) {
+  .game-control:not(.has-compact-label) .game-control-label {
+    display: inline;
+  }
+
   .characters-screen .character-card {
     grid-template-columns: 32px minmax(0, 1fr) auto;
   }
