@@ -11,6 +11,10 @@ type Deployment = (typeof layout.deployment.initial)[number];
 type Reinforcement = (typeof layout.deployment.reinforcements)[number];
 type ReviewMode = "battlefield" | "blueprint";
 
+interface RendererRef {
+  current: MapReviewRenderer | undefined;
+}
+
 function cellKey(cell: Cell): string {
   return `${cell.x},${cell.y}`;
 }
@@ -73,6 +77,7 @@ function BattlefieldReview({
   showRoute,
   showUnits,
   onSelect,
+  controllerRef,
 }: {
   readonly selected: Cell;
   readonly showGrid: boolean;
@@ -80,17 +85,12 @@ function BattlefieldReview({
   readonly showRoute: boolean;
   readonly showUnits: boolean;
   readonly onSelect: (cell: Cell) => void;
+  readonly controllerRef: RendererRef;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<MapReviewRenderer | undefined>(undefined);
   const options = useMemo<MapReviewRendererOptions>(
-    () => ({
-      selected,
-      showGrid,
-      showCoordinates,
-      showRoute,
-      showUnits,
-    }),
+    () => ({ selected, showGrid, showCoordinates, showRoute, showUnits }),
     [selected, showGrid, showCoordinates, showRoute, showUnits],
   );
   const initialOptionsRef = useRef(options);
@@ -101,15 +101,17 @@ function BattlefieldReview({
     let disposed = false;
     const renderer = new MapReviewRenderer(host, initialOptionsRef.current, onSelect);
     rendererRef.current = renderer;
+    controllerRef.current = renderer;
     void renderer.init().then(() => {
       if (disposed) renderer.destroy();
     });
     return () => {
       disposed = true;
       if (rendererRef.current === renderer) rendererRef.current = undefined;
+      if (controllerRef.current === renderer) controllerRef.current = undefined;
       renderer.destroy();
     };
-  }, [onSelect]);
+  }, [controllerRef, onSelect]);
 
   useEffect(() => {
     rendererRef.current?.update(options);
@@ -119,7 +121,7 @@ function BattlefieldReview({
     <div class="map-review-battlefield-wrap">
       <div class="map-review-battlefield" ref={hostRef} data-testid="b01-map-2p5d-host" />
       <div class="map-review-camera-note" aria-hidden="true">
-        Fixed oblique review · same square geometry · camera is non-authoritative
+        Drag to pan · wheel or controls to zoom · rotation is presentation-only
       </div>
     </div>
   );
@@ -226,6 +228,10 @@ export function MapReviewApp() {
   const [showUnits, setShowUnits] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(
+    () => window.innerWidth >= 1000 && window.innerHeight >= 600,
+  );
+  const cameraRef = useRef<MapReviewRenderer | undefined>(undefined);
 
   const blocked = useMemo(
     () => new Set(layout.terrain.blockedCells.map((cell) => cellKey(cell))),
@@ -271,21 +277,41 @@ export function MapReviewApp() {
 
   return (
     <main class="map-review" aria-label="CH01-B01 candidate map review">
-      <header class="map-review-header">
-        <div>
-          <p class="map-review-kicker">Developer visual review · {layout.stageId}</p>
-          <h1>{layout.title}</h1>
-          <p class="map-review-warning">
-            PROVISIONAL LAYOUT CANDIDATE — not production gameplay and not GAME-D222 compliant.
-          </p>
-        </div>
-        <div class="map-review-status">
-          <strong>18 × 12</strong>
-          <span>2D geometry · fixed 2.5D review projection</span>
-        </div>
-      </header>
+      <section class="map-review-stage" aria-label="Candidate battlefield">
+        {mode === "battlefield" ? (
+          <BattlefieldReview
+            selected={selected}
+            showGrid={showGrid}
+            showCoordinates={showCoordinates}
+            showRoute={showRoute}
+            showUnits={showUnits}
+            onSelect={setSelected}
+            controllerRef={cameraRef}
+          />
+        ) : (
+          <BlueprintReview
+            selected={selected}
+            showRoute={showRoute}
+            showUnits={showUnits}
+            showCoordinates={showCoordinates}
+            blocked={blocked}
+            elevations={elevations}
+            route={route}
+            routeFootprint={routeFootprint}
+            exit={exit}
+            road={road}
+            onSelect={setSelected}
+          />
+        )}
+      </section>
 
-      <section class="map-review-toolbar" aria-label="Map review controls">
+      <header class="map-review-topbar">
+        <div class="map-review-title">
+          <span class="map-review-kicker">{layout.stageId} · developer review</span>
+          <h1>{layout.title}</h1>
+          <span class="map-review-warning">PROVISIONAL · NOT GAME-D222 COMPLIANT</span>
+        </div>
+
         <fieldset class="map-review-mode-switch">
           <legend class="map-review-mode-legend">Review mode</legend>
           <button
@@ -305,70 +331,132 @@ export function MapReviewApp() {
             Blueprint
           </button>
         </fieldset>
+
         {mode === "battlefield" ? (
-          <label>
-            <input
-              type="checkbox"
-              checked={showGrid}
-              onChange={(event) => setShowGrid(event.currentTarget.checked)}
-            />
-            Grid
-          </label>
+          <fieldset class="map-review-camera-controls">
+            <legend class="map-review-mode-legend">Review camera controls</legend>
+            <button
+              type="button"
+              aria-label="Rotate left"
+              onClick={() => cameraRef.current?.rotateLeft()}
+            >
+              ↺
+            </button>
+            <button
+              type="button"
+              aria-label="Rotate right"
+              onClick={() => cameraRef.current?.rotateRight()}
+            >
+              ↻
+            </button>
+            <button
+              type="button"
+              aria-label="Zoom out"
+              onClick={() => cameraRef.current?.zoomOut()}
+            >
+              −
+            </button>
+            <button type="button" aria-label="Zoom in" onClick={() => cameraRef.current?.zoomIn()}>
+              +
+            </button>
+            <button type="button" aria-label="Fit map" onClick={() => cameraRef.current?.fit()}>
+              Fit
+            </button>
+          </fieldset>
         ) : null}
-        <label>
-          <input
-            type="checkbox"
-            checked={showRoute}
-            onChange={(event) => setShowRoute(event.currentTarget.checked)}
-          />
-          Cart route + exit
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={showUnits}
-            onChange={(event) => setShowUnits(event.currentTarget.checked)}
-          />
-          Deployments + entries
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={showCoordinates}
-            onChange={(event) => setShowCoordinates(event.currentTarget.checked)}
-          />
-          Coordinates
-        </label>
-      </section>
 
-      <div class="map-review-layout">
-        <section class="map-review-board-panel" aria-label="Candidate battlefield">
-          {mode === "battlefield" ? (
-            <BattlefieldReview
-              selected={selected}
-              showGrid={showGrid}
-              showCoordinates={showCoordinates}
-              showRoute={showRoute}
-              showUnits={showUnits}
-              onSelect={setSelected}
-            />
-          ) : (
-            <BlueprintReview
-              selected={selected}
-              showRoute={showRoute}
-              showUnits={showUnits}
-              showCoordinates={showCoordinates}
-              blocked={blocked}
-              elevations={elevations}
-              route={route}
-              routeFootprint={routeFootprint}
-              exit={exit}
-              road={road}
-              onSelect={setSelected}
-            />
-          )}
+        <button
+          type="button"
+          class="map-review-details-toggle"
+          aria-expanded={detailsOpen}
+          aria-controls="map-review-details"
+          onClick={() => setDetailsOpen((open) => !open)}
+        >
+          {detailsOpen ? "Hide details" : "Details"}
+        </button>
+      </header>
 
-          <div class="map-review-legend">
+      {detailsOpen ? (
+        <aside id="map-review-details" class="map-review-details" aria-label="Map review details">
+          <section class="map-review-inspector" aria-live="polite">
+            <p class="map-review-kicker">Selected cell</p>
+            <h2 data-testid="selected-coordinate">
+              ({selected.x}, {selected.y})
+            </h2>
+            <p class="map-review-selected-label" data-testid="selected-label">
+              {selectedInitial?.label ??
+                (selectedReinforcement && "knowledgeLabel" in selectedReinforcement
+                  ? selectedReinforcement.knowledgeLabel
+                  : selectedReinforcement && "label" in selectedReinforcement
+                    ? selectedReinforcement.label
+                    : "No deployment")}
+            </p>
+            <ul>
+              {selectedFacts.map((fact) => (
+                <li key={fact}>{fact}</li>
+              ))}
+            </ul>
+            {selectedRegions.length > 0 ? (
+              <p>
+                <strong>Regions:</strong> {selectedRegions.join(", ")}
+              </p>
+            ) : null}
+            {selectedInitial && "storyConstraint" in selectedInitial ? (
+              <p>
+                <strong>Story constraint:</strong> {selectedInitial.storyConstraint}
+              </p>
+            ) : null}
+            {selectedReinforcement ? (
+              <p>
+                <strong>Entry phase:</strong> {selectedReinforcement.phase} ·{" "}
+                {selectedReinforcement.beatId}
+              </p>
+            ) : null}
+            {selectedReinforcement && "note" in selectedReinforcement ? (
+              <p>{selectedReinforcement.note}</p>
+            ) : null}
+          </section>
+
+          <section class="map-review-layers" aria-label="Review layers">
+            <h2>Review layers</h2>
+            {mode === "battlefield" ? (
+              <label>
+                <input
+                  type="checkbox"
+                  checked={showGrid}
+                  onChange={(event) => setShowGrid(event.currentTarget.checked)}
+                />
+                Grid
+              </label>
+            ) : null}
+            <label>
+              <input
+                type="checkbox"
+                checked={showRoute}
+                onChange={(event) => setShowRoute(event.currentTarget.checked)}
+              />
+              Cart route + exit
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={showUnits}
+                onChange={(event) => setShowUnits(event.currentTarget.checked)}
+              />
+              Deployments + entries
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={showCoordinates}
+                onChange={(event) => setShowCoordinates(event.currentTarget.checked)}
+              />
+              Coordinates
+            </label>
+          </section>
+
+          <section class="map-review-legend" aria-label="Map legend">
+            <h2>Legend</h2>
             <span>
               <i class="legend-road" /> road/approach
             </span>
@@ -384,67 +472,26 @@ export function MapReviewApp() {
             <span>
               <i class="legend-exit" /> exit
             </span>
-            <span>Allies · protected civilians · enemies · outlined entry markers</span>
-          </div>
-        </section>
+            <p>Allies · protected civilians · enemies · outlined entry markers</p>
+          </section>
 
-        <aside class="map-review-inspector" aria-live="polite">
-          <p class="map-review-kicker">Selected cell</p>
-          <h2 data-testid="selected-coordinate">
-            ({selected.x}, {selected.y})
-          </h2>
-          <p class="map-review-selected-label" data-testid="selected-label">
-            {selectedInitial?.label ??
-              (selectedReinforcement && "knowledgeLabel" in selectedReinforcement
-                ? selectedReinforcement.knowledgeLabel
-                : selectedReinforcement && "label" in selectedReinforcement
-                  ? selectedReinforcement.label
-                  : "No deployment")}
-          </p>
-          <ul>
-            {selectedFacts.map((fact) => (
-              <li key={fact}>{fact}</li>
+          <section class="map-review-phases" aria-label="Story phase geometry notes">
+            <h2>Battle beat geometry</h2>
+            {layout.phaseAnnotations.map((phase) => (
+              <article key={phase.beatId}>
+                <strong>{phase.beatId}</strong>
+                <p>{phase.geometryIntent}</p>
+              </article>
             ))}
-          </ul>
-          {selectedRegions.length > 0 ? (
-            <p>
-              <strong>Regions:</strong> {selectedRegions.join(", ")}
-            </p>
-          ) : null}
-          {selectedInitial && "storyConstraint" in selectedInitial ? (
-            <p>
-              <strong>Story constraint:</strong> {selectedInitial.storyConstraint}
-            </p>
-          ) : null}
-          {selectedReinforcement ? (
-            <p>
-              <strong>Entry phase:</strong> {selectedReinforcement.phase} ·{" "}
-              {selectedReinforcement.beatId}
-            </p>
-          ) : null}
-          {selectedReinforcement && "note" in selectedReinforcement ? (
-            <p>{selectedReinforcement.note}</p>
-          ) : null}
+          </section>
+
+          <footer class="map-review-footer">
+            <strong>Geometry review only.</strong> Camera pan, zoom and rotation are
+            non-authoritative. Cart/civilian mechanics, phase triggers, victory/failure, AI and
+            balance remain unresolved.
+          </footer>
         </aside>
-      </div>
-
-      <section class="map-review-phases" aria-label="Story phase geometry notes">
-        <h2>Battle beat geometry</h2>
-        <div>
-          {layout.phaseAnnotations.map((phase) => (
-            <article key={phase.beatId}>
-              <strong>{phase.beatId}</strong>
-              <p>{phase.geometryIntent}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <footer class="map-review-footer">
-        <strong>Review purpose:</strong> approve, correct, or reject geometry only. The 2.5D view is
-        a deterministic projection of the same candidate data; cart/civilian mechanics, phase
-        triggers, victory/failure, AI and balance remain unresolved.
-      </footer>
+      ) : null}
     </main>
   );
 }

@@ -19,19 +19,46 @@ interface ScreenPoint {
   readonly y: number;
 }
 
+interface DisplayCell extends ScreenPoint {
+  readonly depth: number;
+}
+
 const TILE_WIDTH = 84;
 const TILE_HEIGHT = 42;
 const ELEVATION_STEP = 24;
 const PADDING = 76;
+const MIN_ZOOM = 0.6;
+const MAX_ZOOM = 2.4;
+const ZOOM_STEP = 1.16;
+const DRAG_THRESHOLD = 5;
 
 function key(cell: MapReviewCell): string {
   return `${cell.x},${cell.y}`;
 }
 
-function projection(cell: MapReviewCell, elevation = 0): ScreenPoint {
+function rotatedCell(cell: MapReviewCell, rotation: number): MapReviewCell {
+  const x = cell.x - layout.bounds.minX;
+  const y = cell.y - layout.bounds.minY;
+  const width = layout.bounds.maxX - layout.bounds.minX;
+  const height = layout.bounds.maxY - layout.bounds.minY;
+  switch (rotation) {
+    case 1:
+      return { x: y, y: width - x };
+    case 2:
+      return { x: width - x, y: height - y };
+    case 3:
+      return { x: height - y, y: x };
+    default:
+      return { x, y };
+  }
+}
+
+function projection(cell: MapReviewCell, elevation: number, rotation: number): DisplayCell {
+  const display = rotatedCell(cell, rotation);
   return {
-    x: (cell.x - cell.y) * (TILE_WIDTH / 2),
-    y: (cell.x + cell.y) * (TILE_HEIGHT / 2) - elevation * ELEVATION_STEP,
+    x: (display.x - display.y) * (TILE_WIDTH / 2),
+    y: (display.x + display.y) * (TILE_HEIGHT / 2) - elevation * ELEVATION_STEP,
+    depth: display.x + display.y,
   };
 }
 
@@ -180,10 +207,7 @@ function drawUnitMarker(
   const body = new Graphics()
     .poly([-12, -12, 0, -21, 12, -12, 10, 12, 0, 17, -10, 12])
     .fill({ color: fill, alpha: reinforcement ? 0.58 : 0.94 })
-    .stroke({
-      color: reinforcement ? 0xd6b86f : 0xf1e3bb,
-      width: reinforcement ? 2 : 1.5,
-    });
+    .stroke({ color: reinforcement ? 0xd6b86f : 0xf1e3bb, width: reinforcement ? 2 : 1.5 });
   body.position.set(point.x, point.y - 22);
   const text = new Text({
     text: label,
@@ -239,6 +263,24 @@ export class MapReviewRenderer {
   #ready = false;
   #resizeObserver: ResizeObserver | undefined;
   #options: MapReviewRendererOptions;
+  #rotation = 0;
+  #zoom = 1;
+  #panX = 0;
+  #panY = 0;
+  #pointerId: number | undefined;
+  #pointerStartX = 0;
+  #pointerStartY = 0;
+  #lastPointerX = 0;
+  #lastPointerY = 0;
+  #dragged = false;
+  #suppressTap = false;
+  #tapTimer: number | undefined;
+  #world: Container | undefined;
+  #fitScale = 1;
+  #contentWidth = 1;
+  #contentHeight = 1;
+  #minX = 0;
+  #minY = 0;
 
   constructor(
     host: HTMLElement,
@@ -258,9 +300,16 @@ export class MapReviewRenderer {
       autoDensity: true,
       resolution: Math.min(window.devicePixelRatio || 1, 2),
     });
-    this.#app.canvas.dataset.testid = "b01-map-2p5d-canvas";
-    this.#app.canvas.setAttribute("aria-label", "CH01-B01 fixed 2.5D candidate battlefield review");
-    this.#host.replaceChildren(this.#app.canvas);
+    const canvas = this.#app.canvas;
+    canvas.dataset.testid = "b01-map-2p5d-canvas";
+    canvas.setAttribute("aria-label", "CH01-B01 interactive 2.5D candidate battlefield review");
+    canvas.style.touchAction = "none";
+    this.#host.replaceChildren(canvas);
+    canvas.addEventListener("wheel", this.#handleWheel, { passive: false });
+    canvas.addEventListener("pointerdown", this.#handlePointerDown);
+    canvas.addEventListener("pointermove", this.#handlePointerMove);
+    canvas.addEventListener("pointerup", this.#handlePointerUp);
+    canvas.addEventListener("pointercancel", this.#handlePointerUp);
     this.#ready = true;
     this.#resizeObserver = new ResizeObserver(() => this.#resize());
     this.#resizeObserver.observe(this.#host);
@@ -272,33 +321,149 @@ export class MapReviewRenderer {
     if (this.#ready) this.#draw();
   }
 
+  zoomIn(): void {
+    this.#setZoom(this.#zoom * ZOOM_STEP);
+  }
+
+  zoomOut(): void {
+    this.#setZoom(this.#zoom / ZOOM_STEP);
+  }
+
+  rotateLeft(): void {
+    this.#rotation = (this.#rotation + 3) % 4;
+    this.#panX = 0;
+    this.#panY = 0;
+    this.#draw();
+  }
+
+  rotateRight(): void {
+    this.#rotation = (this.#rotation + 1) % 4;
+    this.#panX = 0;
+    this.#panY = 0;
+    this.#draw();
+  }
+
+  fit(): void {
+    this.#zoom = 1;
+    this.#panX = 0;
+    this.#panY = 0;
+    this.#applyCamera();
+  }
+
   destroy(): void {
     this.#resizeObserver?.disconnect();
     this.#resizeObserver = undefined;
+    if (this.#tapTimer !== undefined) window.clearTimeout(this.#tapTimer);
     if (!this.#ready) return;
+    const canvas = this.#app.canvas;
+    canvas.removeEventListener("wheel", this.#handleWheel);
+    canvas.removeEventListener("pointerdown", this.#handlePointerDown);
+    canvas.removeEventListener("pointermove", this.#handlePointerMove);
+    canvas.removeEventListener("pointerup", this.#handlePointerUp);
+    canvas.removeEventListener("pointercancel", this.#handlePointerUp);
     this.#app.destroy(true, { children: true });
     this.#ready = false;
+  }
+
+  readonly #handleWheel = (event: WheelEvent): void => {
+    event.preventDefault();
+    this.#setZoom(this.#zoom * (event.deltaY < 0 ? ZOOM_STEP : 1 / ZOOM_STEP));
+  };
+
+  readonly #handlePointerDown = (event: PointerEvent): void => {
+    if (this.#pointerId !== undefined) return;
+    this.#pointerId = event.pointerId;
+    this.#pointerStartX = event.clientX;
+    this.#pointerStartY = event.clientY;
+    this.#lastPointerX = event.clientX;
+    this.#lastPointerY = event.clientY;
+    this.#dragged = false;
+    this.#app.canvas.setPointerCapture(event.pointerId);
+  };
+
+  readonly #handlePointerMove = (event: PointerEvent): void => {
+    if (event.pointerId !== this.#pointerId) return;
+    const fromStart = Math.hypot(
+      event.clientX - this.#pointerStartX,
+      event.clientY - this.#pointerStartY,
+    );
+    if (!this.#dragged && fromStart < DRAG_THRESHOLD) return;
+    this.#dragged = true;
+    this.#suppressTap = true;
+    this.#panX += event.clientX - this.#lastPointerX;
+    this.#panY += event.clientY - this.#lastPointerY;
+    this.#lastPointerX = event.clientX;
+    this.#lastPointerY = event.clientY;
+    this.#applyCamera();
+  };
+
+  readonly #handlePointerUp = (event: PointerEvent): void => {
+    if (event.pointerId !== this.#pointerId) return;
+    if (this.#app.canvas.hasPointerCapture(event.pointerId)) {
+      this.#app.canvas.releasePointerCapture(event.pointerId);
+    }
+    this.#pointerId = undefined;
+    if (this.#dragged) {
+      if (this.#tapTimer !== undefined) window.clearTimeout(this.#tapTimer);
+      this.#tapTimer = window.setTimeout(() => {
+        this.#suppressTap = false;
+      }, 80);
+    }
+    this.#dragged = false;
+  };
+
+  #setZoom(next: number): void {
+    this.#zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, next));
+    this.#applyCamera();
+  }
+
+  #applyCamera(): void {
+    this.#updateCameraDataset();
+    const world = this.#world;
+    if (!world) return;
+    const scale = this.#fitScale * this.#zoom;
+    world.scale.set(scale);
+    world.x =
+      (this.#app.screen.width - this.#contentWidth * scale) / 2 +
+      (PADDING - this.#minX) * scale +
+      this.#panX;
+    world.y =
+      (this.#app.screen.height - this.#contentHeight * scale) / 2 +
+      (PADDING - this.#minY) * scale +
+      this.#panY;
   }
 
   #resize(): void {
     if (!this.#ready) return;
     this.#app.renderer.resize(
-      Math.max(480, Math.floor(this.#host.clientWidth)),
-      Math.max(300, Math.floor(this.#host.clientHeight)),
+      Math.max(320, Math.floor(this.#host.clientWidth)),
+      Math.max(240, Math.floor(this.#host.clientHeight)),
     );
     this.#draw();
   }
 
+  #updateCameraDataset(): void {
+    this.#host.dataset.cameraRotation = String(this.#rotation * 90);
+    this.#host.dataset.cameraZoom = this.#zoom.toFixed(2);
+    this.#host.dataset.cameraPan = `${Math.round(this.#panX)},${Math.round(this.#panY)}`;
+  }
+
   #draw(): void {
+    if (!this.#ready) return;
+    this.#updateCameraDataset();
     this.#app.stage.removeChildren().forEach((child) => {
       child.destroy({ children: true });
     });
-    const cells: Array<{ cell: MapReviewCell; elevation: number; point: ScreenPoint }> = [];
+    const cells: Array<{
+      cell: MapReviewCell;
+      elevation: number;
+      point: DisplayCell;
+    }> = [];
     for (let y = layout.bounds.minY; y <= layout.bounds.maxY; y += 1) {
       for (let x = layout.bounds.minX; x <= layout.bounds.maxX; x += 1) {
         const cell = { x, y };
         const elevation = elevations.get(key(cell)) ?? 0;
-        cells.push({ cell, elevation, point: projection(cell, elevation) });
+        cells.push({ cell, elevation, point: projection(cell, elevation, this.#rotation) });
       }
     }
 
@@ -308,23 +473,27 @@ export class MapReviewRenderer {
     const maxX = Math.max(...xs);
     const minY = Math.min(...ys);
     const maxY = Math.max(...ys);
-    const contentWidth = maxX - minX + PADDING * 2;
-    const contentHeight = maxY - minY + PADDING * 2;
-    const scale = Math.min(
-      1.18,
+    this.#contentWidth = maxX - minX + PADDING * 2;
+    this.#contentHeight = maxY - minY + PADDING * 2;
+    this.#minX = minX;
+    this.#minY = minY;
+    this.#fitScale = Math.min(
+      1.3,
       Math.max(
-        0.42,
-        Math.min(this.#app.screen.width / contentWidth, this.#app.screen.height / contentHeight),
+        0.32,
+        Math.min(
+          this.#app.screen.width / this.#contentWidth,
+          this.#app.screen.height / this.#contentHeight,
+        ),
       ),
     );
     const world = new Container();
-    world.scale.set(scale);
-    world.x = (this.#app.screen.width - contentWidth * scale) / 2 + (PADDING - minX) * scale;
-    world.y = (this.#app.screen.height - contentHeight * scale) / 2 + (PADDING - minY) * scale;
+    this.#world = world;
     this.#app.stage.addChild(world);
+    this.#applyCamera();
 
     const sorted = [...cells].sort((left, right) => {
-      const depth = left.cell.x + left.cell.y - (right.cell.x + right.cell.y);
+      const depth = left.point.depth - right.point.depth;
       return depth !== 0 ? depth : left.elevation - right.elevation;
     });
 
@@ -341,21 +510,18 @@ export class MapReviewRenderer {
         });
       tile.eventMode = "static";
       tile.cursor = "pointer";
-      tile.on("pointertap", () => this.#onSelect(cell));
+      tile.on("pointertap", () => {
+        if (!this.#suppressTap) this.#onSelect(cell);
+      });
       world.addChild(tile);
       if (road.has(cellKey)) drawRoadDetail(world, point);
-      else if (!blocked.has(cellKey)) {
-        drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
-      }
+      else if (!blocked.has(cellKey)) drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
 
       if (this.#options.showRoute && cartClearance.has(cellKey)) {
         world.addChild(
           new Graphics()
             .poly(tilePoints(point))
-            .fill({
-              color: 0x82bfd0,
-              alpha: routeAnchors.has(cellKey) ? 0.16 : 0.08,
-            })
+            .fill({ color: 0x82bfd0, alpha: routeAnchors.has(cellKey) ? 0.16 : 0.08 })
             .stroke({
               color: 0x9cd9e8,
               width: routeAnchors.has(cellKey) ? 1.6 : 0.8,
@@ -402,13 +568,17 @@ export class MapReviewRenderer {
 
     drawCart(
       world,
-      projection(layout.cart.startAnchor, elevations.get(key(layout.cart.startAnchor)) ?? 0),
+      projection(
+        layout.cart.startAnchor,
+        elevations.get(key(layout.cart.startAnchor)) ?? 0,
+        this.#rotation,
+      ),
     );
     if (!this.#options.showUnits) return;
     for (const entry of layout.deployment.initial) {
       drawUnitMarker(
         world,
-        projection(entry.cell, elevations.get(key(entry.cell)) ?? 0),
+        projection(entry.cell, elevations.get(key(entry.cell)) ?? 0, this.#rotation),
         entry.side,
         markerLabel(entry),
         false,
@@ -417,7 +587,7 @@ export class MapReviewRenderer {
     for (const entry of layout.deployment.reinforcements) {
       drawUnitMarker(
         world,
-        projection(entry.entryCell, elevations.get(key(entry.entryCell)) ?? 0),
+        projection(entry.entryCell, elevations.get(key(entry.entryCell)) ?? 0, this.#rotation),
         entry.id.startsWith("forager") ? "enemy" : "allied",
         reinforcementLabel(entry),
         true,

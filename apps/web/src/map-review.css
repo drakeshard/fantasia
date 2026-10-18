@@ -1,99 +1,112 @@
 .map-review {
-  min-height: 100%;
-  box-sizing: border-box;
-  padding: clamp(10px, 1.5vw, 22px);
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
   color: #f4efe5;
-  background:
-    radial-gradient(circle at 72% 16%, rgb(201 167 96 / 10%), transparent 32%),
-    linear-gradient(160deg, #0b1220, #070c14 72%);
+  background: #070c14;
   font-family: "Source Sans 3", Inter, system-ui, sans-serif;
 }
 
-.map-review-header,
-.map-review-layout,
-.map-review-toolbar,
-.map-review-phases,
-.map-review-footer {
-  width: min(100%, 1680px);
-  margin-inline: auto;
+.map-review-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgb(99 119 80 / 19%), transparent 50%),
+    linear-gradient(180deg, #101c27, #0a1119 70%, #080d13);
 }
 
-.map-review-header {
+.map-review-battlefield-wrap,
+.map-review-battlefield {
+  position: absolute;
+  inset: 0;
+}
+
+.map-review-battlefield-wrap {
+  overflow: hidden;
+  box-shadow: inset 0 0 100px rgb(0 0 0 / 35%);
+}
+
+.map-review-battlefield canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.map-review-camera-note {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  translate: -50% 0;
+  padding: 5px 9px;
+  border: 1px solid rgb(184 197 209 / 18%);
+  border-radius: 2px;
+  background: rgb(7 12 20 / 76%);
+  color: #a7b4bf;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+
+.map-review-topbar {
+  position: absolute;
+  z-index: 20;
+  top: 10px;
+  left: 10px;
+  right: 10px;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 10px;
+  align-items: center;
+  gap: 9px;
+  min-height: 58px;
+  padding: 7px 8px 7px 12px;
+  border: 1px solid rgb(201 167 96 / 24%);
+  border-radius: 3px;
+  background: rgb(7 12 20 / 88%);
+  box-shadow: 0 9px 30px rgb(0 0 0 / 24%);
+  backdrop-filter: blur(8px);
 }
 
-.map-review-header h1,
-.map-review-inspector h2,
-.map-review-phases h2 {
+.map-review-title {
+  display: grid;
+  min-width: 260px;
+  margin-right: auto;
+}
+
+.map-review-title h1,
+.map-review-details h2 {
   margin: 0;
+  color: #fff7e7;
   font-family: "Source Serif 4", Georgia, serif;
   font-weight: 600;
 }
 
-.map-review-header h1 {
-  color: #fff7e7;
-  font-size: clamp(27px, 3.3vw, 46px);
-  line-height: 1;
+.map-review-title h1 {
+  font-size: clamp(18px, 2vw, 28px);
+  line-height: 1.05;
 }
 
 .map-review-kicker {
-  margin: 0 0 5px;
+  margin: 0 0 2px;
   color: #c9a760;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .map-review-warning {
-  margin: 7px 0 0;
+  margin-top: 3px;
   color: #dcb76a;
-  font-size: 12px;
+  font-size: 9px;
   font-weight: 800;
-}
-
-.map-review-status {
-  display: grid;
-  min-width: 210px;
-  padding: 9px 12px;
-  border: 1px solid rgb(201 167 96 / 36%);
-  border-radius: 2px;
-  background: rgb(11 18 32 / 88%);
-  text-align: right;
-}
-
-.map-review-status strong {
-  color: #fff7e7;
-  font:
-    600 22px "Source Serif 4",
-    Georgia,
-    serif;
-}
-
-.map-review-status span {
-  color: #b8c5d1;
-  font-size: 11px;
-}
-
-.map-review-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 7px 18px;
-  margin-bottom: 9px;
-  padding: 7px 9px;
-  border: 1px solid rgb(201 167 96 / 18%);
-  border-radius: 2px;
-  background: rgb(17 29 43 / 82%);
+  letter-spacing: 0.05em;
 }
 
 .map-review-mode-switch {
   position: relative;
   display: inline-flex;
+  flex: 0 0 auto;
   margin: 0;
   padding: 2px;
   border: 1px solid rgb(184 197 209 / 20%);
@@ -110,17 +123,23 @@
   white-space: nowrap;
 }
 
-.map-review-mode-switch button {
-  min-height: 38px;
-  padding: 0 13px;
-  border: 0;
-  border-radius: 1px;
+.map-review-mode-switch button,
+.map-review-camera-controls button,
+.map-review-details-toggle {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 2px;
   background: transparent;
-  color: #b8c5d1;
+  color: #dce4ea;
   font: inherit;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 750;
   cursor: pointer;
+}
+
+.map-review-mode-switch button {
+  padding-inline: 13px;
 }
 
 .map-review-mode-switch button.is-active {
@@ -129,91 +148,210 @@
   box-shadow: inset 0 0 0 1px #c9a760;
 }
 
+.map-review-camera-controls {
+  display: inline-flex;
+  gap: 3px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0 0 0 7px;
+  border: 0;
+  border-left: 1px solid rgb(184 197 209 / 16%);
+}
+
+.map-review-camera-controls button,
+.map-review-details-toggle {
+  border-color: rgb(184 197 209 / 16%);
+  background: rgb(17 29 43 / 86%);
+}
+
+.map-review-camera-controls button:hover,
+.map-review-details-toggle:hover {
+  border-color: rgb(201 167 96 / 46%);
+  background: #19293a;
+}
+
+.map-review-details-toggle {
+  min-width: 94px;
+  padding-inline: 12px;
+}
+
 .map-review-mode-switch button:focus-visible,
-.map-review-toolbar input:focus-visible {
+.map-review-camera-controls button:focus-visible,
+.map-review-details-toggle:focus-visible,
+.map-review-details input:focus-visible,
+.map-review-cell:focus-visible {
   outline: 2px solid #7aa7ff;
   outline-offset: 2px;
 }
 
-.map-review-toolbar label {
-  display: inline-flex;
+.map-review-details {
+  position: absolute;
+  z-index: 18;
+  top: 84px;
+  right: 10px;
+  bottom: 10px;
+  width: clamp(290px, 27vw, 390px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 13px;
+  border: 1px solid rgb(201 167 96 / 24%);
+  border-radius: 3px;
+  background: rgb(9 16 27 / 94%);
+  box-shadow: -12px 12px 38px rgb(0 0 0 / 28%);
+  backdrop-filter: blur(10px);
+  scrollbar-color: #435469 #0b1220;
+}
+
+.map-review-inspector,
+.map-review-layers,
+.map-review-legend,
+.map-review-phases,
+.map-review-footer {
+  padding: 0 0 13px;
+  margin: 0 0 13px;
+  border-bottom: 1px solid rgb(184 197 209 / 13%);
+}
+
+.map-review-details h2 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.map-review-inspector h2 {
+  margin-bottom: 2px;
+  font-size: 27px;
+}
+
+.map-review-selected-label {
+  margin: 3px 0 10px;
+  color: #e0c27a;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.map-review-inspector ul {
+  margin: 0 0 10px;
+  padding-left: 19px;
+  color: #d6e0e7;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.map-review-inspector p:not(.map-review-kicker):not(.map-review-selected-label),
+.map-review-footer,
+.map-review-legend p,
+.map-review-phases p {
+  color: #b8c5d1;
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.map-review-layers {
+  display: grid;
+  gap: 2px;
+}
+
+.map-review-layers label {
+  display: flex;
   align-items: center;
+  gap: 9px;
   min-height: 38px;
-  gap: 7px;
   color: #dce4ea;
   font-size: 12px;
 }
 
-.map-review-toolbar input {
+.map-review-layers input {
   width: 18px;
   height: 18px;
   accent-color: #c9a760;
 }
 
-.map-review-layout {
+.map-review-legend {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
-  gap: 10px;
-  align-items: stretch;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px 12px;
+  color: #b8c5d1;
+  font-size: 11px;
 }
 
-.map-review-board-panel,
-.map-review-inspector,
-.map-review-phases {
-  border: 1px solid rgb(201 167 96 / 22%);
-  border-radius: 2px;
-  background: rgb(11 18 32 / 90%);
+.map-review-legend h2,
+.map-review-legend p {
+  grid-column: 1 / -1;
 }
 
-.map-review-board-panel {
-  min-width: 0;
-  padding: 7px;
+.map-review-legend p {
+  margin: 3px 0 0;
 }
 
-.map-review-battlefield-wrap {
-  position: relative;
-  min-height: clamp(420px, 64vh, 700px);
-  overflow: hidden;
-  border: 1px solid rgb(184 197 209 / 14%);
-  border-radius: 2px;
-  background:
-    radial-gradient(ellipse at 50% 42%, rgb(99 119 80 / 19%), transparent 50%),
-    linear-gradient(180deg, #101c27, #0a1119 70%, #080d13);
-  box-shadow: inset 0 0 70px rgb(0 0 0 / 32%);
+.map-review-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.map-review-battlefield {
-  position: absolute;
-  inset: 0;
+.map-review-legend i {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgb(255 255 255 / 25%);
 }
 
-.map-review-battlefield canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
+.legend-road {
+  background: #766849;
+}
+.legend-blocked {
+  background: #29452d;
+}
+.legend-ridge {
+  background: #66704c;
+  box-shadow: inset 0 0 0 2px rgb(189 163 101 / 45%);
+}
+.legend-cart {
+  background: #334231;
+  box-shadow: inset 0 0 0 2px rgb(139 199 232 / 60%);
+}
+.legend-exit {
+  background: #334231;
+  outline: 2px solid rgb(117 200 168 / 82%);
+  outline-offset: -3px;
 }
 
-.map-review-camera-note {
-  position: absolute;
-  right: 8px;
-  bottom: 7px;
-  padding: 4px 7px;
-  border: 1px solid rgb(184 197 209 / 14%);
-  background: rgb(7 12 20 / 78%);
-  color: #9daab5;
-  font-size: 9px;
-  letter-spacing: 0.04em;
-  pointer-events: none;
+.map-review-phases article {
+  padding: 8px 0;
+  border-top: 1px solid rgb(201 167 96 / 14%);
+}
+
+.map-review-phases article:first-of-type {
+  border-top: 0;
+}
+
+.map-review-phases strong {
+  color: #d5b46d;
+  font-size: 10px;
+}
+
+.map-review-phases p {
+  margin: 3px 0 0;
+}
+
+.map-review-footer {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .map-review-board-scroll {
+  position: absolute;
+  inset: 82px 10px 10px;
   overflow: auto;
   overscroll-behavior: contain;
-  padding: 2px;
+  padding: 34px;
+  background: radial-gradient(circle at 50% 35%, rgb(201 167 96 / 6%), transparent 40%), #0a1119;
 }
 
 .map-review-board {
-  --map-cell: clamp(38px, 4.1vw, 64px);
+  --map-cell: clamp(42px, 4.5vw, 68px);
   display: grid;
   grid-template-columns: 28px repeat(18, var(--map-cell));
   grid-auto-rows: var(--map-cell);
@@ -251,26 +389,21 @@
 .map-review-cell.is-passable:nth-child(odd) {
   background: #384936;
 }
-
 .map-review-cell.is-road {
   background: #665d43;
 }
-
 .map-review-cell.is-blocked {
   background:
     repeating-linear-gradient(135deg, rgb(10 16 17 / 22%) 0 6px, transparent 6px 12px), #242d27;
   border-color: rgb(115 132 116 / 26%);
 }
-
 .map-review-cell.is-elevated {
   box-shadow: inset 0 0 0 3px rgb(189 163 101 / 34%);
   background: #565d3d;
 }
-
 .map-review-cell.is-cart-clearance {
   box-shadow: inset 0 0 0 3px rgb(139 199 232 / 42%);
 }
-
 .map-review-cell.is-cart-anchor::after {
   content: "";
   position: absolute;
@@ -278,21 +411,13 @@
   border-top: 2px dashed rgb(189 224 231 / 82%);
   pointer-events: none;
 }
-
 .map-review-cell.is-exit {
   outline: 2px solid rgb(117 200 168 / 82%);
   outline-offset: -3px;
 }
-
 .map-review-cell.is-selected {
   z-index: 2;
   outline: 3px solid #e0c27a;
-  outline-offset: -3px;
-}
-
-.map-review-cell:focus-visible {
-  z-index: 3;
-  outline: 3px solid #7aa7ff;
   outline-offset: -3px;
 }
 
@@ -312,7 +437,6 @@
   top: 2px;
   color: rgb(240 237 221 / 52%);
 }
-
 .map-review-elevation {
   right: 3px;
   top: 2px;
@@ -334,247 +458,82 @@
     serif;
 }
 
-.map-review-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  padding: 7px 3px 1px;
-  color: #b8c5d1;
-  font-size: 10px;
-}
-
-.map-review-legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.map-review-legend i {
-  width: 12px;
-  height: 12px;
-  border: 1px solid rgb(255 255 255 / 25%);
-}
-
-.legend-road {
-  background: #766849;
-}
-
-.legend-blocked {
-  background: #29452d;
-}
-
-.legend-ridge {
-  background: #66704c;
-  box-shadow: inset 0 0 0 2px rgb(189 163 101 / 45%);
-}
-
-.legend-cart {
-  background: #334231;
-  box-shadow: inset 0 0 0 2px rgb(139 199 232 / 60%);
-}
-
-.legend-exit {
-  background: #334231;
-  outline: 2px solid rgb(117 200 168 / 82%);
-  outline-offset: -3px;
-}
-
-.map-review-inspector {
-  min-width: 0;
-  padding: 12px;
-}
-
-.map-review-inspector h2 {
-  color: #fff7e7;
-  font-size: 27px;
-}
-
-.map-review-selected-label {
-  margin: 4px 0 12px;
-  color: #e0c27a;
-  font-weight: 800;
-}
-
-.map-review-inspector ul {
-  margin: 0 0 11px;
-  padding-left: 19px;
-  color: #d6e0e7;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.map-review-inspector p:not(.map-review-kicker):not(.map-review-selected-label) {
-  color: #b8c5d1;
-  font-size: 11px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-
-.map-review-phases {
-  margin-top: 9px;
-  padding: 10px;
-}
-
-.map-review-phases h2 {
-  margin-bottom: 7px;
-  color: #fff7e7;
-  font-size: 18px;
-}
-
-.map-review-phases > div {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.map-review-phases article {
-  min-width: 0;
-  padding: 8px;
-  border-top: 2px solid rgb(201 167 96 / 40%);
-  background: rgb(255 255 255 / 2%);
-}
-
-.map-review-phases strong {
-  color: #d5b46d;
-  font-size: 10px;
-}
-
-.map-review-phases p {
-  margin: 4px 0 0;
-  color: #b8c5d1;
-  font-size: 10px;
-  line-height: 1.35;
-}
-
-.map-review-footer {
-  padding: 7px 2px 0;
-  color: #9aa8b3;
-  font-size: 10px;
-}
-
-@media (max-width: 900px), (max-height: 500px) {
-  .map-review {
-    padding: 6px;
+@media (max-width: 1000px), (max-height: 520px) {
+  .map-review-topbar {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    min-height: 48px;
+    padding: 4px 5px 4px 8px;
+    gap: 5px;
   }
 
-  .map-review-header {
-    align-items: center;
-    margin-bottom: 5px;
+  .map-review-title {
+    min-width: 180px;
   }
 
-  .map-review-header h1 {
-    font-size: 23px;
+  .map-review-title h1 {
+    font-size: 17px;
   }
 
-  .map-review-kicker {
-    margin-bottom: 2px;
-    font-size: 9px;
-  }
-
+  .map-review-kicker,
   .map-review-warning {
-    margin-top: 2px;
-    font-size: 9px;
-  }
-
-  .map-review-status {
-    min-width: 165px;
-    padding: 5px 7px;
-  }
-
-  .map-review-status strong {
-    font-size: 16px;
-  }
-
-  .map-review-status span {
-    font-size: 8px;
-  }
-
-  .map-review-toolbar {
-    margin-bottom: 5px;
-    padding: 3px 5px;
-    gap: 3px 9px;
+    font-size: 7px;
   }
 
   .map-review-mode-switch button,
-  .map-review-toolbar label {
-    min-height: 32px;
+  .map-review-camera-controls button,
+  .map-review-details-toggle {
+    min-width: 38px;
+    min-height: 38px;
     font-size: 10px;
   }
 
   .map-review-mode-switch button {
-    padding-inline: 9px;
+    padding-inline: 8px;
   }
 
-  .map-review-layout {
-    grid-template-columns: minmax(0, 1fr) 190px;
-    gap: 5px;
+  .map-review-details-toggle {
+    min-width: 76px;
+    padding-inline: 8px;
   }
 
-  .map-review-board-panel,
-  .map-review-inspector {
-    padding: 4px;
+  .map-review-details {
+    top: 62px;
+    right: 6px;
+    bottom: 6px;
+    width: min(42vw, 330px);
+    min-width: 250px;
+    padding: 10px;
   }
 
-  .map-review-battlefield-wrap {
-    min-height: 250px;
-    height: calc(100vh - 138px);
-  }
-
-  .map-review-camera-note {
-    font-size: 7px;
+  .map-review-board-scroll {
+    inset: 60px 6px 6px;
+    padding: 18px;
   }
 
   .map-review-board {
-    --map-cell: 33px;
+    --map-cell: 36px;
   }
 
-  .map-review-legend {
-    gap: 2px 8px;
-    padding-top: 4px;
+  .map-review-camera-note {
+    bottom: 5px;
     font-size: 8px;
-  }
-
-  .map-review-inspector h2 {
-    font-size: 20px;
-  }
-
-  .map-review-selected-label {
-    margin-bottom: 6px;
-    font-size: 11px;
-  }
-
-  .map-review-inspector ul {
-    margin-bottom: 4px;
-    font-size: 9px;
-    line-height: 1.3;
-  }
-
-  .map-review-inspector p:not(.map-review-kicker):not(.map-review-selected-label) {
-    margin-block: 4px;
-    font-size: 8px;
-  }
-
-  .map-review-phases,
-  .map-review-footer {
-    display: none;
   }
 }
 
-@media (max-width: 650px) {
-  .map-review-header {
-    display: block;
-  }
-
-  .map-review-status {
+@media (max-width: 760px) {
+  .map-review-title .map-review-kicker,
+  .map-review-title .map-review-warning {
     display: none;
   }
 
-  .map-review-layout {
-    grid-template-columns: 1fr;
+  .map-review-title {
+    min-width: 120px;
   }
 
-  .map-review-battlefield-wrap {
-    min-height: 330px;
-    height: 58vh;
+  .map-review-camera-controls {
+    padding-left: 3px;
+    gap: 1px;
   }
 }
