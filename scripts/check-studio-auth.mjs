@@ -41,37 +41,37 @@ for (const role of ["Viewer", "Editor", "Approver", "Admin"]) {
 
 requirePattern(
   contract,
-  /Editor:\s*\[[\s\S]*?"studio\.read"[\s\S]*?"registry\.metadata\.edit"[\s\S]*?"canonical\.change\.propose"[\s\S]*?\]/,
+  /Editor:\s*\[[^\]]*"studio\.read"[^\]]*"registry\.metadata\.edit"[^\]]*"canonical\.change\.propose"[^\]]*\]/,
   "Editor proposal capability contract drifted.",
 );
 requirePattern(
   contract,
-  /Approver:\s*\[[\s\S]*?"studio\.read"[\s\S]*?"registry\.metadata\.edit"[\s\S]*?"canonical\.change\.propose"[\s\S]*?"review\.approve"[\s\S]*?"review\.freeze"[\s\S]*?\]/,
+  /Approver:\s*\[[^\]]*"studio\.read"[^\]]*"registry\.metadata\.edit"[^\]]*"canonical\.change\.propose"[^\]]*"review\.approve"[^\]]*"review\.freeze"[^\]]*\]/,
   "Approver capability contract drifted.",
 );
 requirePattern(
   contract,
-  /Admin:\s*\[[\s\S]*?"studio\.read"[\s\S]*?"registry\.metadata\.edit"[\s\S]*?"canonical\.change\.propose"[\s\S]*?"studio\.membership\.manage"[\s\S]*?\]/,
+  /Admin:\s*\[[^\]]*"studio\.read"[^\]]*"registry\.metadata\.edit"[^\]]*"canonical\.change\.propose"[^\]]*"studio\.membership\.manage"[^\]]*\]/,
   "Admin capability contract drifted.",
 );
 forbid(
   contract,
-  /Viewer:\s*\[[\s\S]*?canonical\.change\.propose[\s\S]*?\]/,
+  /Viewer:\s*\[[^\]]*canonical\.change\.propose/,
   "Viewer must not receive canonical proposal authority.",
 );
 forbid(
   contract,
-  /Admin:\s*\[[\s\S]*?review\.approve[\s\S]*?\]/,
+  /Admin:\s*\[[^\]]*review\.approve/,
   "Admin must not implicitly receive approval authority.",
 );
 forbid(
   contract,
-  /Admin:\s*\[[\s\S]*?review\.freeze[\s\S]*?\]/,
+  /Admin:\s*\[[^\]]*review\.freeze/,
   "Admin must not implicitly receive freeze authority.",
 );
 forbid(
   contract,
-  /Approver:\s*\[[\s\S]*?studio\.membership\.manage[\s\S]*?\]/,
+  /Approver:\s*\[[^\]]*studio\.membership\.manage/,
   "Approver must not receive Studio membership administration.",
 );
 requireText(
