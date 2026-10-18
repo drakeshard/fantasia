@@ -6,7 +6,7 @@ GAME-STUDIO03 defines the read boundary consumed by later Content Studio workspa
 
 A Studio entity read model is composed from separate authorities rather than flattened into a new source of truth:
 
-- **Git canonical structured content** supplies gameplay/content facts. The initial proof adapters consume the repository-owned `content/narrative/story.json` and `content/encounters/candidates/ch01-b01.layout-candidate.json` files bundled into the trusted server deployment from one recorded Git revision.
+- **Git canonical structured content** supplies gameplay/content facts. The initial proof adapters read repository-owned `content/narrative/story.json` and `content/encounters/candidates/ch01-b01.layout-candidate.json` and mechanically generate the normalized server read projection used by the deployed function.
 - **Git non-canonical preview metadata** may enrich a view when explicitly marked non-canonical. `content/narrative/story-production.json` is the first proof.
 - **Studio registry** supplies semantic identity metadata, lifecycle, versions, relations, validations, derivatives and audit/workflow state.
 - **Provider/source authority** supplies source/master availability and media metadata. Provider location is replaceable metadata and is never the semantic asset identity.
@@ -24,13 +24,15 @@ Browser components should consume these normalized contracts. They must not join
 
 Canonical adapters are server-side and must:
 
-1. consume one coherent repository snapshot and record the Git revision represented by that deployment;
+1. derive from one coherent repository state and record the Git revision represented by that deployment;
 2. use repository paths as provenance, not as semantic identity;
 3. preserve source data truthfully rather than copying canonical values into registry metadata;
 4. emit stable semantic IDs for composition;
 5. fail or emit an explicit partial state when source data is unavailable or malformed.
 
-The proof implementation bundles the real Git-owned JSON files into the Edge Function deployment instead of requiring a GitHub credential at runtime. This is important because Fantasia is a private repository: no GitHub token is exposed to browser code, stored in the registry, or required by this read path. A deployment is therefore an explicit Git snapshot, not a hidden long-lived cache.
+The proof implementation generates `canonical-snapshot.generated.json` from the real Git-owned Story, Story production, encounter and runtime-manifest sources. The generated artifact contains only the normalized fields required by the read API, plus source provenance and the recorded Git revision. `check:studio-read-model` regenerates the projection in check mode and fails if it is stale, so the deployment artifact cannot silently diverge from its Git sources.
+
+This avoids requiring a GitHub credential at runtime for the private Fantasia repository. No GitHub token is exposed to browser code, stored in the registry, or required by this read path. A deployment is an explicit revision-stamped Git read projection, not a second authoring source or hidden cache.
 
 New Characters, Equipment, Skills, Enemies, Story or Maps & Encounters adapters should follow the same pattern and add deterministic tests for their identity mapping. If a later adapter needs live repository access rather than a deployment snapshot, that access must remain server-side and must preserve the same provenance and credential boundary.
 
@@ -48,7 +50,7 @@ GAME-STUDIO03 does not configure a live Google Drive credential inside the appli
 
 ## Runtime manifest
 
-The runtime adapter is read-only. `config/runtime-assets.json` stays Git-owned and is bundled from the same recorded repository snapshot as the other canonical proof sources. Registry derivative state is compared with accepted manifest mappings so runtime-ready/published mismatches remain visible. This issue never mutates or publishes the manifest.
+The runtime adapter is read-only. `config/runtime-assets.json` stays Git-owned and its accepted mappings are projected from the same recorded repository state as the other canonical proof sources. Registry derivative state is compared with accepted manifest mappings so runtime-ready/published mismatches remain visible. This issue never mutates or publishes the manifest.
 
 ## Search
 
@@ -60,8 +62,8 @@ The shared `StudioIssueCode` union distinguishes canonical unavailable/malformed
 
 ## Freshness and caching
 
-The proof implementation performs no long-lived application cache. Canonical repository files are bundled directly from a recorded Git revision during deployment and the read API reports that revision with `gitState: deployment-snapshot`. Registry state is read per request and reports its observation time; provider metadata is explicitly reported as registry-observed rather than live-fetched. A canonical repository change therefore requires a server deployment before the Studio advertises the new revision, making freshness explicit instead of silently serving an unversioned copy. No Redis or additional cache infrastructure is introduced.
+The proof implementation performs no long-lived application cache. The generated canonical read projection records the Git revision it represents and the API reports that revision with `gitState: deployment-snapshot`. Registry state is read per request and reports its observation time; provider metadata is explicitly reported as registry-observed rather than live-fetched. A canonical repository change therefore requires regeneration and server deployment before the Studio advertises the new revision. No Redis or additional cache infrastructure is introduced.
 
 ## Security boundary
 
-The browser sends only its Supabase Auth bearer token to the existing `studio-operations` Edge Function. The function validates the user through Supabase Auth, uses STUDIO02 membership/capabilities, accesses the private registry with server credentials and consumes Git-owned canonical files from the versioned server deployment. Service-role/secret keys and future Drive credentials must never enter browser code. No GitHub credential is required by the proof read path. There is no Git write path and no provider mutation path.
+The browser sends only its Supabase Auth bearer token to the existing `studio-operations` Edge Function. The function validates the user through Supabase Auth, uses STUDIO02 membership/capabilities, accesses the private registry with server credentials and consumes the versioned canonical read projection generated from Git-owned sources. Service-role/secret keys and future Drive credentials must never enter browser code. No GitHub credential is required by the proof read path. There is no Git write path and no provider mutation path.
