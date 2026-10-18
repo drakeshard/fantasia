@@ -1,10 +1,8 @@
 /*
  * GAME-STUDIO10B — production Assets visual fidelity.
- *
- * Layer 3C is the direct composition reference; Layer 3A owns the shared shell and
- * Layer 5A/5B establish the accepted production-density/material family. This file
- * stays presentation-only: registry, OAuth, lifecycle and source/master semantics
- * remain owned by the existing application/backend contracts.
+ * Layer 3C is the direct board reference; 3A owns the shell and 5A/5B establish
+ * the accepted material/density family. Presentation only: registry, OAuth,
+ * lifecycle and source/master semantics remain unchanged.
  */
 
 .studio-assets-workspace {
@@ -24,7 +22,8 @@
   height: 20rem;
   pointer-events: none;
   background:
-    linear-gradient(135deg, transparent 49.5%, rgb(98 215 244 / 4%) 50%, transparent 50.5%) 0 0 / 28px 28px,
+    linear-gradient(135deg, transparent 49.5%, rgb(98 215 244 / 4%) 50%, transparent 50.5%) 0 0 /
+      28px 28px,
     radial-gradient(circle at 86% 8%, rgb(98 215 244 / 11%), transparent 15rem);
   mask-image: linear-gradient(145deg, #000 0%, transparent 76%);
   content: "";
@@ -35,12 +34,12 @@
   z-index: 1;
 }
 
-/* The collection heading becomes the Assets production masthead rather than a
- * generic inset form heading. */
+/* Production masthead */
 .studio-assets-workspace > .ui-surface--inset.studio-template-fixture-heading {
   position: relative;
-  min-height: 8.5rem;
-  padding: clamp(var(--studio-space-20, 1.25rem), 2vw, var(--studio-space-32));
+  min-height: 9.25rem;
+  padding: clamp(1.25rem, 2vw, var(--studio-space-32));
+  padding-right: min(42rem, 46vw);
   overflow: hidden;
   border-color: var(--assets-edge);
   border-left-color: var(--assets-brass-edge);
@@ -52,7 +51,14 @@
     inset 0 1px 0 rgb(176 231 255 / 8%),
     inset 0 -1px 0 rgb(0 0 0 / 44%),
     0 18px 44px rgb(0 0 0 / 22%);
-  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  clip-path: polygon(
+    0 0,
+    calc(100% - 16px) 0,
+    100% 16px,
+    100% 100%,
+    16px 100%,
+    0 calc(100% - 16px)
+  );
 }
 
 .studio-assets-workspace > .ui-surface--inset.studio-template-fixture-heading::before {
@@ -61,17 +67,22 @@
   left: 0;
   width: min(28rem, 45%);
   height: 2px;
-  background: linear-gradient(90deg, var(--studio-accent-primary), rgb(103 224 247 / 55%), transparent);
+  background: linear-gradient(
+    90deg,
+    var(--studio-accent-primary),
+    rgb(103 224 247 / 55%),
+    transparent
+  );
   box-shadow: 0 0 16px rgb(98 215 244 / 18%);
   content: "";
 }
 
 .studio-assets-workspace > .ui-surface--inset.studio-template-fixture-heading::after {
   position: absolute;
-  right: 2.5rem;
-  bottom: -3.5rem;
-  width: 12rem;
-  height: 12rem;
+  right: 3.5rem;
+  bottom: -4.5rem;
+  width: 13rem;
+  height: 13rem;
   border: 1px solid rgb(103 224 247 / 10%);
   transform: rotate(45deg);
   box-shadow:
@@ -86,36 +97,47 @@
   align-items: end;
 }
 
-.studio-assets-workspace > .studio-template-fixture-heading h2 {
+.studio-assets-workspace > .studio-template-fixture-heading .ui-section-heading h3 {
   margin-bottom: var(--studio-space-8);
   color: #fff5df;
   font-family: var(--studio-font-serif);
-  font-size: clamp(1.65rem, 3vw, 2.45rem);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
   letter-spacing: 0.01em;
   text-shadow: 0 1px 0 #000, 0 0 20px rgb(226 190 120 / 8%);
 }
 
-.studio-assets-workspace > .studio-template-fixture-heading p {
-  max-width: 48rem;
+.studio-assets-workspace > .studio-template-fixture-heading .ui-section-heading p {
+  max-width: 44rem;
   color: color-mix(in srgb, var(--studio-text-secondary) 90%, white);
+  font-size: var(--studio-font-size-label);
 }
 
-/* Collection action rail. It should read as instrumentation, not a second giant panel. */
+/* On wide layouts the action rail belongs to the masthead rather than becoming a
+ * second full-width admin band. */
 .studio-assets-workspace > .studio-template__toolbar {
-  min-height: 3.75rem;
+  z-index: 3;
+  justify-self: end;
+  width: min(40rem, 43vw);
+  min-height: 4rem;
+  margin-top: -7.15rem;
+  margin-right: var(--studio-space-16);
+  margin-bottom: 2.35rem;
   padding: var(--studio-space-8) var(--studio-space-12);
-  border-color: color-mix(in srgb, var(--studio-color-cyan-300) 22%, var(--studio-border-subtle));
+  border-color: color-mix(in srgb, var(--studio-color-cyan-300) 24%, var(--studio-border-subtle));
   border-left: 2px solid color-mix(in srgb, var(--studio-accent-primary) 72%, transparent);
   background:
-    linear-gradient(90deg, rgb(226 190 120 / 4%), transparent 16%),
-    var(--studio-material-toolbar);
+    linear-gradient(90deg, rgb(226 190 120 / 4%), transparent 20%),
+    linear-gradient(180deg, rgb(21 46 68 / 94%), rgb(12 29 45 / 97%));
   box-shadow:
-    inset 0 1px 0 rgb(157 226 255 / 6%),
-    0 8px 24px rgb(0 0 0 / 14%);
+    inset 0 1px 0 rgb(157 226 255 / 7%),
+    0 12px 28px rgb(0 0 0 / 22%);
 }
 
 .studio-assets-workspace > .studio-template__toolbar .ui-toolbar {
   width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .studio-assets-workspace > .studio-template__toolbar .ui-action-group {
@@ -150,12 +172,11 @@
   gap: var(--studio-space-16);
 }
 
-/* Provider connection is intentionally a compact utility strip. */
+/* Compact source provider rail */
 .studio-assets-drive-status {
   position: relative;
   display: grid;
   gap: var(--studio-space-8);
-  justify-self: stretch;
   min-height: 4.25rem;
   padding: var(--studio-space-12) var(--studio-space-16);
   overflow: hidden;
@@ -221,7 +242,7 @@
   text-transform: uppercase;
 }
 
-/* The zero-asset state is a production library landing surface, not a generic alert. */
+/* Zero-asset library landing surface */
 .studio-assets-workspace .studio-assets-drive-status + .ui-state-message {
   position: relative;
   display: grid;
@@ -271,7 +292,13 @@
   left: 50%;
   width: min(32rem, 70%);
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--studio-accent-primary), rgb(103 224 247 / 55%), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--studio-accent-primary),
+    rgb(103 224 247 / 55%),
+    transparent
+  );
   transform: translateX(-50%);
   content: "";
 }
@@ -281,26 +308,23 @@
   z-index: 1;
 }
 
-.studio-assets-workspace .studio-assets-drive-status + .ui-state-message strong,
-.studio-assets-workspace .studio-assets-drive-status + .ui-state-message h3,
-.studio-assets-workspace .studio-assets-drive-status + .ui-state-message h4 {
+.studio-assets-workspace .studio-assets-drive-status + .ui-state-message > strong {
   color: #fff4df;
   font-family: var(--studio-font-serif);
   font-size: clamp(1.35rem, 2.5vw, 1.85rem);
 }
 
-.studio-assets-workspace .studio-assets-drive-status + .ui-state-message p {
+.studio-assets-workspace .studio-assets-drive-status + .ui-state-message > span {
   max-width: 34rem;
   color: var(--studio-text-secondary);
 }
 
 .studio-assets-workspace .studio-assets-drive-status + .ui-state-message .ui-button--primary {
-  margin-top: var(--studio-space-8);
   min-width: 11rem;
+  margin-top: var(--studio-space-8);
 }
 
-/* Populated collection: asset choice becomes a board of production tiles rather
- * than a row of generic pill buttons. */
+/* Populated collection tiles */
 .studio-assets-selector {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
@@ -331,6 +355,7 @@
   color: var(--studio-text-primary);
   font-family: var(--studio-font-serif);
   font-size: 0.98rem;
+  line-height: 1.2;
   text-align: left;
   box-shadow:
     inset 0 1px 0 rgb(157 226 255 / 6%),
@@ -386,7 +411,7 @@
   transform: translateY(-1px);
 }
 
-/* Selected Asset Board gets the same focal-board hierarchy as Layer 3C. */
+/* Layer 3C focal Asset Board */
 .studio-assets-workspace .studio-template--asset-board {
   position: relative;
   gap: var(--studio-space-12);
@@ -407,7 +432,12 @@
   left: var(--studio-space-16);
   width: min(22rem, 40%);
   height: 1px;
-  background: linear-gradient(90deg, var(--studio-accent-primary), rgb(103 224 247 / 55%), transparent);
+  background: linear-gradient(
+    90deg,
+    var(--studio-accent-primary),
+    rgb(103 224 247 / 55%),
+    transparent
+  );
   content: "";
 }
 
@@ -446,12 +476,12 @@
     0 8px 20px rgb(0 0 0 / 17%);
 }
 
-/* Operational controls are subordinate to the selected visual board. */
+/* Operations stay subordinate to the visual board. */
 .studio-assets-operations-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
   gap: var(--studio-space-16);
   margin-top: 0;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
 }
 
 .studio-assets-operation,
@@ -464,8 +494,7 @@
 .studio-assets-operation {
   position: relative;
   border-color: color-mix(in srgb, var(--studio-color-cyan-300) 16%, var(--studio-border-subtle)) !important;
-  background:
-    linear-gradient(180deg, rgb(10 26 40 / 94%), rgb(7 20 31 / 98%)) !important;
+  background: linear-gradient(180deg, rgb(10 26 40 / 94%), rgb(7 20 31 / 98%)) !important;
 }
 
 .studio-assets-operation::before {
@@ -476,35 +505,6 @@
   height: 1px;
   background: linear-gradient(90deg, rgb(103 224 247 / 40%), transparent);
   content: "";
-}
-
-#add-asset-dialog {
-  width: min(720px, calc(100vw - 32px));
-}
-
-#add-asset-dialog .studio-assets-create-form {
-  padding-top: var(--studio-space-4);
-}
-
-#add-asset-dialog .studio-assets-form-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-#add-asset-dialog .studio-assets-file-input {
-  min-height: 5rem;
-  padding: var(--studio-space-16);
-  border-style: dashed;
-  border-color: color-mix(in srgb, var(--studio-color-cyan-300) 32%, var(--studio-border-control));
-  background:
-    linear-gradient(rgb(103 224 247 / 2.5%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(103 224 247 / 2.5%) 1px, transparent 1px),
-    var(--studio-material-inset);
-  background-size: 28px 28px, 28px 28px, auto;
-}
-
-#add-asset-dialog .studio-assets-operation__actions {
-  justify-content: flex-end;
-  padding-top: var(--studio-space-4);
 }
 
 .studio-assets-operation__heading {
@@ -536,8 +536,8 @@
 .studio-assets-form-grid,
 .studio-assets-source-choice {
   display: grid;
-  gap: var(--studio-space-12);
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--studio-space-12);
 }
 
 .studio-assets-file-input {
@@ -588,6 +588,49 @@
 
 .studio-assets-relation-action code {
   overflow-wrap: anywhere;
+}
+
+/* Compact Add Asset modal */
+#add-asset-dialog {
+  width: min(720px, calc(100vw - 32px));
+}
+
+#add-asset-dialog .studio-assets-create-form {
+  padding-top: var(--studio-space-4);
+}
+
+#add-asset-dialog .studio-assets-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#add-asset-dialog .studio-assets-file-input {
+  min-height: 5rem;
+  padding: var(--studio-space-16);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--studio-color-cyan-300) 32%, var(--studio-border-control));
+  background:
+    linear-gradient(rgb(103 224 247 / 2.5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(103 224 247 / 2.5%) 1px, transparent 1px),
+    var(--studio-material-inset);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+#add-asset-dialog .studio-assets-operation__actions {
+  justify-content: flex-end;
+  padding-top: var(--studio-space-4);
+}
+
+@media (max-width: 1100px) {
+  .studio-assets-workspace > .ui-surface--inset.studio-template-fixture-heading {
+    min-height: 8rem;
+    padding-right: var(--studio-space-24);
+  }
+
+  .studio-assets-workspace > .studio-template__toolbar {
+    justify-self: stretch;
+    width: auto;
+    margin: 0;
+  }
 }
 
 @media (max-width: 900px) {
