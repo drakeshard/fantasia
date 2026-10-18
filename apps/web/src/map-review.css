@@ -1,12 +1,12 @@
 .map-review {
   min-height: 100%;
   box-sizing: border-box;
-  padding: clamp(12px, 2vw, 28px);
-  color: #f4f0e7;
+  padding: clamp(10px, 1.5vw, 22px);
+  color: #f4efe5;
   background:
-    radial-gradient(circle at 72% 18%, rgb(149 119 63 / 12%), transparent 30%),
-    linear-gradient(160deg, #09131c, #050b11 68%);
-  font-family: Inter, system-ui, sans-serif;
+    radial-gradient(circle at 72% 16%, rgb(201 167 96 / 10%), transparent 32%),
+    linear-gradient(160deg, #0b1220, #070c14 72%);
+  font-family: "Source Sans 3", Inter, system-ui, sans-serif;
 }
 
 .map-review-header,
@@ -14,7 +14,7 @@
 .map-review-toolbar,
 .map-review-phases,
 .map-review-footer {
-  width: min(100%, 1600px);
+  width: min(100%, 1680px);
   margin-inline: auto;
 }
 
@@ -23,97 +23,187 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .map-review-header h1,
 .map-review-inspector h2,
 .map-review-phases h2 {
   margin: 0;
-  font-family: Georgia, serif;
+  font-family: "Source Serif 4", Georgia, serif;
   font-weight: 600;
 }
 
 .map-review-header h1 {
-  font-size: clamp(28px, 4vw, 50px);
+  color: #fff7e7;
+  font-size: clamp(27px, 3.3vw, 46px);
+  line-height: 1;
 }
 
 .map-review-kicker {
   margin: 0 0 5px;
-  color: #c8a867;
-  font-size: 12px;
+  color: #c9a760;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .map-review-warning {
-  margin: 8px 0 0;
-  color: #e8c87e;
+  margin: 7px 0 0;
+  color: #dcb76a;
+  font-size: 12px;
   font-weight: 800;
 }
 
 .map-review-status {
   display: grid;
-  min-width: 180px;
-  padding: 10px 14px;
-  border: 1px solid rgb(200 168 103 / 42%);
-  background: rgb(6 15 23 / 78%);
+  min-width: 210px;
+  padding: 9px 12px;
+  border: 1px solid rgb(201 167 96 / 36%);
+  border-radius: 2px;
+  background: rgb(11 18 32 / 88%);
   text-align: right;
 }
 
 .map-review-status strong {
+  color: #fff7e7;
   font:
-    600 24px Georgia,
+    600 22px "Source Serif 4",
+    Georgia,
     serif;
 }
 
 .map-review-status span {
-  color: #b9b2a4;
-  font-size: 12px;
+  color: #b8c5d1;
+  font-size: 11px;
 }
 
 .map-review-toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
-  margin-bottom: 12px;
-  padding: 9px 12px;
-  border-block: 1px solid rgb(200 168 103 / 20%);
-  background: rgb(5 13 20 / 54%);
+  align-items: center;
+  gap: 7px 18px;
+  margin-bottom: 9px;
+  padding: 7px 9px;
+  border: 1px solid rgb(201 167 96 / 18%);
+  border-radius: 2px;
+  background: rgb(17 29 43 / 82%);
+}
+
+.map-review-mode-switch {
+  position: relative;
+  display: inline-flex;
+  margin: 0;
+  padding: 2px;
+  border: 1px solid rgb(184 197 209 / 20%);
+  border-radius: 2px;
+  background: #0b1220;
+}
+
+.map-review-mode-legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.map-review-mode-switch button {
+  min-height: 38px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 1px;
+  background: transparent;
+  color: #b8c5d1;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.map-review-mode-switch button.is-active {
+  background: #f4efe5;
+  color: #0b1220;
+  box-shadow: inset 0 0 0 1px #c9a760;
+}
+
+.map-review-mode-switch button:focus-visible,
+.map-review-toolbar input:focus-visible {
+  outline: 2px solid #7aa7ff;
+  outline-offset: 2px;
 }
 
 .map-review-toolbar label {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
+  min-height: 38px;
   gap: 7px;
-  font-size: 13px;
+  color: #dce4ea;
+  font-size: 12px;
 }
 
 .map-review-toolbar input {
   width: 18px;
   height: 18px;
-  accent-color: #c8a867;
+  accent-color: #c9a760;
 }
 
 .map-review-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 290px);
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+  gap: 10px;
   align-items: stretch;
 }
 
 .map-review-board-panel,
 .map-review-inspector,
 .map-review-phases {
-  border: 1px solid rgb(200 168 103 / 24%);
-  background: rgb(8 17 25 / 82%);
+  border: 1px solid rgb(201 167 96 / 22%);
+  border-radius: 2px;
+  background: rgb(11 18 32 / 90%);
 }
 
 .map-review-board-panel {
   min-width: 0;
-  padding: 10px;
+  padding: 7px;
+}
+
+.map-review-battlefield-wrap {
+  position: relative;
+  min-height: clamp(420px, 64vh, 700px);
+  overflow: hidden;
+  border: 1px solid rgb(184 197 209 / 14%);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgb(99 119 80 / 19%), transparent 50%),
+    linear-gradient(180deg, #101c27, #0a1119 70%, #080d13);
+  box-shadow: inset 0 0 70px rgb(0 0 0 / 32%);
+}
+
+.map-review-battlefield {
+  position: absolute;
+  inset: 0;
+}
+
+.map-review-battlefield canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.map-review-camera-note {
+  position: absolute;
+  right: 8px;
+  bottom: 7px;
+  padding: 4px 7px;
+  border: 1px solid rgb(184 197 209 / 14%);
+  background: rgb(7 12 20 / 78%);
+  color: #9daab5;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
 }
 
 .map-review-board-scroll {
@@ -123,7 +213,7 @@
 }
 
 .map-review-board {
-  --map-cell: clamp(38px, 4.3vw, 67px);
+  --map-cell: clamp(38px, 4.1vw, 64px);
   display: grid;
   grid-template-columns: 28px repeat(18, var(--map-cell));
   grid-auto-rows: var(--map-cell);
@@ -135,7 +225,7 @@
 .map-review-axis {
   display: grid;
   place-items: center;
-  color: #8f9a9d;
+  color: #8e9daa;
   font:
     700 10px ui-monospace,
     SFMono-Regular,
@@ -178,7 +268,7 @@
 }
 
 .map-review-cell.is-cart-clearance {
-  box-shadow: inset 0 0 0 3px rgb(113 161 176 / 42%);
+  box-shadow: inset 0 0 0 3px rgb(139 199 232 / 42%);
 }
 
 .map-review-cell.is-cart-anchor::after {
@@ -190,19 +280,19 @@
 }
 
 .map-review-cell.is-exit {
-  outline: 2px solid rgb(120 191 138 / 78%);
+  outline: 2px solid rgb(117 200 168 / 82%);
   outline-offset: -3px;
 }
 
 .map-review-cell.is-selected {
   z-index: 2;
-  outline: 3px solid #f4d382;
+  outline: 3px solid #e0c27a;
   outline-offset: -3px;
 }
 
 .map-review-cell:focus-visible {
   z-index: 3;
-  outline: 3px solid #a8d7ff;
+  outline: 3px solid #7aa7ff;
   outline-offset: -3px;
 }
 
@@ -239,17 +329,18 @@
   background: rgb(8 14 17 / 82%);
   box-shadow: 0 2px 8px rgb(0 0 0 / 34%);
   font:
-    800 clamp(10px, 1.2vw, 15px) Georgia,
+    800 clamp(10px, 1.2vw, 15px) "Source Serif 4",
+    Georgia,
     serif;
 }
 
 .map-review-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px 15px;
-  padding-top: 10px;
-  color: #c8c3b5;
-  font-size: 11px;
+  gap: 6px 14px;
+  padding: 7px 3px 1px;
+  color: #b8c5d1;
+  font-size: 10px;
 }
 
 .map-review-legend span {
@@ -259,85 +350,87 @@
 }
 
 .map-review-legend i {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   border: 1px solid rgb(255 255 255 / 25%);
 }
 
 .legend-road {
-  background: #665d43;
+  background: #766849;
 }
 
 .legend-blocked {
-  background: #242d27;
+  background: #29452d;
 }
 
 .legend-ridge {
-  background: #565d3d;
+  background: #66704c;
   box-shadow: inset 0 0 0 2px rgb(189 163 101 / 45%);
 }
 
 .legend-cart {
   background: #334231;
-  box-shadow: inset 0 0 0 2px rgb(113 161 176 / 55%);
+  box-shadow: inset 0 0 0 2px rgb(139 199 232 / 60%);
 }
 
 .legend-exit {
   background: #334231;
-  outline: 2px solid rgb(120 191 138 / 78%);
+  outline: 2px solid rgb(117 200 168 / 82%);
   outline-offset: -3px;
 }
 
 .map-review-inspector {
-  padding: 14px;
   min-width: 0;
+  padding: 12px;
 }
 
 .map-review-inspector h2 {
-  font-size: 28px;
+  color: #fff7e7;
+  font-size: 27px;
 }
 
 .map-review-selected-label {
-  margin: 5px 0 13px;
-  color: #ebd49a;
+  margin: 4px 0 12px;
+  color: #e0c27a;
   font-weight: 800;
 }
 
 .map-review-inspector ul {
-  margin: 0 0 12px;
-  padding-left: 20px;
-  color: #d7d3c8;
-  font-size: 13px;
-  line-height: 1.55;
+  margin: 0 0 11px;
+  padding-left: 19px;
+  color: #d6e0e7;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .map-review-inspector p:not(.map-review-kicker):not(.map-review-selected-label) {
-  color: #bbb9b2;
-  font-size: 12px;
+  color: #b8c5d1;
+  font-size: 11px;
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
 
 .map-review-phases {
-  margin-top: 14px;
-  padding: 12px;
+  margin-top: 9px;
+  padding: 10px;
 }
 
 .map-review-phases h2 {
-  margin-bottom: 9px;
-  font-size: 20px;
+  margin-bottom: 7px;
+  color: #fff7e7;
+  font-size: 18px;
 }
 
 .map-review-phases > div {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
+  gap: 7px;
 }
 
 .map-review-phases article {
   min-width: 0;
-  padding: 9px;
-  border-top: 2px solid rgb(200 168 103 / 40%);
+  padding: 8px;
+  border-top: 2px solid rgb(201 167 96 / 40%);
   background: rgb(255 255 255 / 2%);
 }
 
@@ -347,97 +440,123 @@
 }
 
 .map-review-phases p {
-  margin: 5px 0 0;
-  color: #bcb9ae;
-  font-size: 11px;
-  line-height: 1.4;
+  margin: 4px 0 0;
+  color: #b8c5d1;
+  font-size: 10px;
+  line-height: 1.35;
 }
 
 .map-review-footer {
-  padding: 10px 2px 0;
-  color: #aaa79e;
-  font-size: 11px;
+  padding: 7px 2px 0;
+  color: #9aa8b3;
+  font-size: 10px;
 }
 
 @media (max-width: 900px), (max-height: 500px) {
   .map-review {
-    padding: 8px;
+    padding: 6px;
   }
 
   .map-review-header {
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
 
   .map-review-header h1 {
-    font-size: 25px;
+    font-size: 23px;
+  }
+
+  .map-review-kicker {
+    margin-bottom: 2px;
+    font-size: 9px;
   }
 
   .map-review-warning {
-    margin-top: 3px;
-    font-size: 10px;
+    margin-top: 2px;
+    font-size: 9px;
   }
 
   .map-review-status {
-    min-width: 140px;
-    padding: 6px 9px;
+    min-width: 165px;
+    padding: 5px 7px;
   }
 
   .map-review-status strong {
-    font-size: 17px;
+    font-size: 16px;
+  }
+
+  .map-review-status span {
+    font-size: 8px;
   }
 
   .map-review-toolbar {
-    margin-bottom: 6px;
-    padding: 3px 8px;
+    margin-bottom: 5px;
+    padding: 3px 5px;
+    gap: 3px 9px;
   }
 
+  .map-review-mode-switch button,
   .map-review-toolbar label {
-    min-height: 28px;
-    font-size: 11px;
+    min-height: 32px;
+    font-size: 10px;
+  }
+
+  .map-review-mode-switch button {
+    padding-inline: 9px;
   }
 
   .map-review-layout {
-    grid-template-columns: minmax(0, 1fr) 205px;
-    gap: 7px;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 5px;
   }
 
   .map-review-board-panel,
   .map-review-inspector {
-    padding: 6px;
+    padding: 4px;
+  }
+
+  .map-review-battlefield-wrap {
+    min-height: 250px;
+    height: calc(100vh - 138px);
+  }
+
+  .map-review-camera-note {
+    font-size: 7px;
   }
 
   .map-review-board {
-    --map-cell: 34px;
+    --map-cell: 33px;
   }
 
   .map-review-legend {
-    gap: 3px 9px;
-    padding-top: 5px;
-    font-size: 9px;
+    gap: 2px 8px;
+    padding-top: 4px;
+    font-size: 8px;
   }
 
   .map-review-inspector h2 {
-    font-size: 21px;
+    font-size: 20px;
+  }
+
+  .map-review-selected-label {
+    margin-bottom: 6px;
+    font-size: 11px;
   }
 
   .map-review-inspector ul {
-    margin-bottom: 5px;
-    font-size: 10px;
-    line-height: 1.35;
+    margin-bottom: 4px;
+    font-size: 9px;
+    line-height: 1.3;
   }
 
   .map-review-inspector p:not(.map-review-kicker):not(.map-review-selected-label) {
-    margin-block: 5px;
-    font-size: 9px;
+    margin-block: 4px;
+    font-size: 8px;
   }
 
-  .map-review-phases {
-    display: none;
-  }
-
+  .map-review-phases,
   .map-review-footer {
-    font-size: 9px;
+    display: none;
   }
 }
 
@@ -452,5 +571,10 @@
 
   .map-review-layout {
     grid-template-columns: 1fr;
+  }
+
+  .map-review-battlefield-wrap {
+    min-height: 330px;
+    height: 58vh;
   }
 }

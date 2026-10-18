@@ -1,9 +1,15 @@
-import { useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import layout from "../../../content/encounters/candidates/ch01-b01.layout-candidate.json";
+import {
+  type MapReviewCell,
+  MapReviewRenderer,
+  type MapReviewRendererOptions,
+} from "./map-review-renderer";
 
-type Cell = { readonly x: number; readonly y: number };
+type Cell = MapReviewCell;
 type Deployment = (typeof layout.deployment.initial)[number];
 type Reinforcement = (typeof layout.deployment.reinforcements)[number];
+type ReviewMode = "battlefield" | "blueprint";
 
 function cellKey(cell: Cell): string {
   return `${cell.x},${cell.y}`;
@@ -40,8 +46,8 @@ function markerFor(cell: Cell): string | undefined {
     if (initial.id.startsWith("forager")) return "f";
   }
   const reinforcement = reinforcementAt(cell);
-  if (reinforcement?.id === "hangaku") return "H";
-  if (reinforcement?.id === "la-hire") return "L";
+  if (reinforcement?.id === "hangaku") return "?";
+  if (reinforcement?.id === "la-hire") return "?";
   if (reinforcement?.id.startsWith("forager-reinforcement")) return "r";
   return undefined;
 }
@@ -60,11 +66,166 @@ function labelFor(cell: Cell): string {
   return "Empty cell";
 }
 
+function BattlefieldReview({
+  selected,
+  showGrid,
+  showCoordinates,
+  showRoute,
+  showUnits,
+  onSelect,
+}: {
+  readonly selected: Cell;
+  readonly showGrid: boolean;
+  readonly showCoordinates: boolean;
+  readonly showRoute: boolean;
+  readonly showUnits: boolean;
+  readonly onSelect: (cell: Cell) => void;
+}) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const rendererRef = useRef<MapReviewRenderer | undefined>(undefined);
+  const options = useMemo<MapReviewRendererOptions>(
+    () => ({
+      selected,
+      showGrid,
+      showCoordinates,
+      showRoute,
+      showUnits,
+    }),
+    [selected, showGrid, showCoordinates, showRoute, showUnits],
+  );
+  const initialOptionsRef = useRef(options);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    let disposed = false;
+    const renderer = new MapReviewRenderer(host, initialOptionsRef.current, onSelect);
+    rendererRef.current = renderer;
+    void renderer.init().then(() => {
+      if (disposed) renderer.destroy();
+    });
+    return () => {
+      disposed = true;
+      if (rendererRef.current === renderer) rendererRef.current = undefined;
+      renderer.destroy();
+    };
+  }, [onSelect]);
+
+  useEffect(() => {
+    rendererRef.current?.update(options);
+  }, [options]);
+
+  return (
+    <div class="map-review-battlefield-wrap">
+      <div class="map-review-battlefield" ref={hostRef} data-testid="b01-map-2p5d-host" />
+      <div class="map-review-camera-note" aria-hidden="true">
+        Fixed oblique review · same square geometry · camera is non-authoritative
+      </div>
+    </div>
+  );
+}
+
+function BlueprintReview({
+  selected,
+  showRoute,
+  showUnits,
+  showCoordinates,
+  blocked,
+  elevations,
+  route,
+  routeFootprint,
+  exit,
+  road,
+  onSelect,
+}: {
+  readonly selected: Cell;
+  readonly showRoute: boolean;
+  readonly showUnits: boolean;
+  readonly showCoordinates: boolean;
+  readonly blocked: ReadonlySet<string>;
+  readonly elevations: ReadonlyMap<string, number>;
+  readonly route: ReadonlySet<string>;
+  readonly routeFootprint: ReadonlySet<string>;
+  readonly exit: ReadonlySet<string>;
+  readonly road: ReadonlySet<string>;
+  readonly onSelect: (cell: Cell) => void;
+}) {
+  const columns = Array.from(
+    { length: layout.bounds.maxX - layout.bounds.minX + 1 },
+    (_, index) => layout.bounds.minX + index,
+  );
+  const rows = Array.from(
+    { length: layout.bounds.maxY - layout.bounds.minY + 1 },
+    (_, index) => layout.bounds.minY + index,
+  );
+  const selectedKey = cellKey(selected);
+
+  return (
+    <div class="map-review-board-scroll">
+      <div class="map-review-board" data-testid="b01-map-grid">
+        <div class="map-review-axis map-review-axis-corner" aria-hidden="true" />
+        {columns.map((x) => (
+          <div class="map-review-axis map-review-axis-x" aria-hidden="true" key={`x-${x}`}>
+            {String(x).padStart(2, "0")}
+          </div>
+        ))}
+        {rows.map((y) => (
+          <>
+            <div class="map-review-axis map-review-axis-y" aria-hidden="true" key={`y-${y}`}>
+              {String(y).padStart(2, "0")}
+            </div>
+            {columns.map((x) => {
+              const cell = { x, y };
+              const key = cellKey(cell);
+              const elevation = elevations.get(key) ?? 0;
+              const marker = showUnits ? markerFor(cell) : undefined;
+              const classes = [
+                "map-review-cell",
+                blocked.has(key) ? "is-blocked" : "is-passable",
+                elevation > 0 ? "is-elevated" : "",
+                road.has(key) ? "is-road" : "",
+                showRoute && routeFootprint.has(key) ? "is-cart-clearance" : "",
+                showRoute && route.has(key) ? "is-cart-anchor" : "",
+                showRoute && exit.has(key) ? "is-exit" : "",
+                key === selectedKey ? "is-selected" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
+              const title = `(${x},${y}) ${labelFor(cell)}${elevation ? ` elevation +${elevation}` : ""}`;
+              return (
+                <button
+                  type="button"
+                  class={classes}
+                  data-testid={`map-cell-${x}-${y}`}
+                  aria-label={title}
+                  title={title}
+                  onClick={() => onSelect(cell)}
+                  key={key}
+                >
+                  {showCoordinates ? (
+                    <span class="map-review-coordinate">
+                      {x},{y}
+                    </span>
+                  ) : null}
+                  {elevation > 0 ? <span class="map-review-elevation">+{elevation}</span> : null}
+                  {marker ? <strong class="map-review-marker">{marker}</strong> : null}
+                </button>
+              );
+            })}
+          </>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function MapReviewApp() {
   const [selected, setSelected] = useState<Cell>(layout.cart.startAnchor);
+  const [mode, setMode] = useState<ReviewMode>("battlefield");
   const [showRoute, setShowRoute] = useState(true);
   const [showUnits, setShowUnits] = useState(true);
-  const [showCoordinates, setShowCoordinates] = useState(true);
+  const [showCoordinates, setShowCoordinates] = useState(false);
+  const [showGrid, setShowGrid] = useState(false);
 
   const blocked = useMemo(
     () => new Set(layout.terrain.blockedCells.map((cell) => cellKey(cell))),
@@ -108,15 +269,6 @@ export function MapReviewApp() {
     exit.has(selectedKey) ? "East exit zone" : undefined,
   ].filter((fact): fact is string => Boolean(fact));
 
-  const columns = Array.from(
-    { length: layout.bounds.maxX - layout.bounds.minX + 1 },
-    (_, index) => layout.bounds.minX + index,
-  );
-  const rows = Array.from(
-    { length: layout.bounds.maxY - layout.bounds.minY + 1 },
-    (_, index) => layout.bounds.minY + index,
-  );
-
   return (
     <main class="map-review" aria-label="CH01-B01 candidate map review">
       <header class="map-review-header">
@@ -129,11 +281,40 @@ export function MapReviewApp() {
         </div>
         <div class="map-review-status">
           <strong>18 × 12</strong>
-          <span>2D authoritative geometry review</span>
+          <span>2D geometry · fixed 2.5D review projection</span>
         </div>
       </header>
 
-      <section class="map-review-toolbar" aria-label="Map layers">
+      <section class="map-review-toolbar" aria-label="Map review controls">
+        <fieldset class="map-review-mode-switch">
+          <legend class="map-review-mode-legend">Review mode</legend>
+          <button
+            type="button"
+            class={mode === "battlefield" ? "is-active" : ""}
+            aria-pressed={mode === "battlefield"}
+            onClick={() => setMode("battlefield")}
+          >
+            Battlefield
+          </button>
+          <button
+            type="button"
+            class={mode === "blueprint" ? "is-active" : ""}
+            aria-pressed={mode === "blueprint"}
+            onClick={() => setMode("blueprint")}
+          >
+            Blueprint
+          </button>
+        </fieldset>
+        {mode === "battlefield" ? (
+          <label>
+            <input
+              type="checkbox"
+              checked={showGrid}
+              onChange={(event) => setShowGrid(event.currentTarget.checked)}
+            />
+            Grid
+          </label>
+        ) : null}
         <label>
           <input
             type="checkbox"
@@ -162,70 +343,37 @@ export function MapReviewApp() {
 
       <div class="map-review-layout">
         <section class="map-review-board-panel" aria-label="Candidate battlefield">
-          <div class="map-review-board-scroll">
-            <div class="map-review-board" data-testid="b01-map-grid">
-              <div class="map-review-axis map-review-axis-corner" aria-hidden="true" />
-              {columns.map((x) => (
-                <div class="map-review-axis map-review-axis-x" aria-hidden="true" key={`x-${x}`}>
-                  {String(x).padStart(2, "0")}
-                </div>
-              ))}
-              {rows.map((y) => (
-                <>
-                  <div class="map-review-axis map-review-axis-y" aria-hidden="true" key={`y-${y}`}>
-                    {String(y).padStart(2, "0")}
-                  </div>
-                  {columns.map((x) => {
-                    const cell = { x, y };
-                    const key = cellKey(cell);
-                    const elevation = elevations.get(key) ?? 0;
-                    const marker = showUnits ? markerFor(cell) : undefined;
-                    const classes = [
-                      "map-review-cell",
-                      blocked.has(key) ? "is-blocked" : "is-passable",
-                      elevation > 0 ? "is-elevated" : "",
-                      road.has(key) ? "is-road" : "",
-                      showRoute && routeFootprint.has(key) ? "is-cart-clearance" : "",
-                      showRoute && route.has(key) ? "is-cart-anchor" : "",
-                      showRoute && exit.has(key) ? "is-exit" : "",
-                      key === selectedKey ? "is-selected" : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ");
-                    const title = `(${x},${y}) ${labelFor(cell)}${elevation ? ` elevation +${elevation}` : ""}`;
-                    return (
-                      <button
-                        type="button"
-                        class={classes}
-                        data-testid={`map-cell-${x}-${y}`}
-                        aria-label={title}
-                        title={title}
-                        onClick={() => setSelected(cell)}
-                        key={key}
-                      >
-                        {showCoordinates ? (
-                          <span class="map-review-coordinate">
-                            {x},{y}
-                          </span>
-                        ) : null}
-                        {elevation > 0 ? (
-                          <span class="map-review-elevation">+{elevation}</span>
-                        ) : null}
-                        {marker ? <strong class="map-review-marker">{marker}</strong> : null}
-                      </button>
-                    );
-                  })}
-                </>
-              ))}
-            </div>
-          </div>
+          {mode === "battlefield" ? (
+            <BattlefieldReview
+              selected={selected}
+              showGrid={showGrid}
+              showCoordinates={showCoordinates}
+              showRoute={showRoute}
+              showUnits={showUnits}
+              onSelect={setSelected}
+            />
+          ) : (
+            <BlueprintReview
+              selected={selected}
+              showRoute={showRoute}
+              showUnits={showUnits}
+              showCoordinates={showCoordinates}
+              blocked={blocked}
+              elevations={elevations}
+              route={route}
+              routeFootprint={routeFootprint}
+              exit={exit}
+              road={road}
+              onSelect={setSelected}
+            />
+          )}
 
           <div class="map-review-legend">
             <span>
               <i class="legend-road" /> road/approach
             </span>
             <span>
-              <i class="legend-blocked" /> blocked
+              <i class="legend-blocked" /> woodland / blocked
             </span>
             <span>
               <i class="legend-ridge" /> +1 ridge
@@ -236,10 +384,7 @@ export function MapReviewApp() {
             <span>
               <i class="legend-exit" /> exit
             </span>
-            <span>
-              <b>M</b> MC · <b>J</b> Julie · <b>H</b> Hangaku · <b>L</b> La Hire · <b>f/r</b>{" "}
-              enemies
-            </span>
+            <span>Allies · protected civilians · enemies · outlined entry markers</span>
           </div>
         </section>
 
@@ -296,8 +441,9 @@ export function MapReviewApp() {
       </section>
 
       <footer class="map-review-footer">
-        <strong>Review purpose:</strong> approve, correct, or reject geometry only. Cart/civilian
-        mechanics, phase triggers, victory/failure, AI and balance remain unresolved.
+        <strong>Review purpose:</strong> approve, correct, or reject geometry only. The 2.5D view is
+        a deterministic projection of the same candidate data; cart/civilian mechanics, phase
+        triggers, victory/failure, AI and balance remain unresolved.
       </footer>
     </main>
   );
