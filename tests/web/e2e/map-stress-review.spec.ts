@@ -26,7 +26,7 @@ async function openDetails(page: Page) {
 }
 
 test("GAME-MAP05 renders all 600 stress cells with the review shell overlaid", async ({ page }) => {
-  const { host } = await openStressReview(page);
+  const { review, host } = await openStressReview(page);
 
   await expect(page.getByRole("heading", { name: "Elevation Extremes" })).toBeVisible();
   await expect(page.getByText(/EXPERIMENTAL · NON-CANONICAL/)).toBeVisible();
@@ -43,9 +43,16 @@ test("GAME-MAP05 renders all 600 stress cells with the review shell overlaid", a
   await expect
     .poll(() => topbar.evaluate((element) => getComputedStyle(element).position))
     .toBe("absolute");
-  await expect
-    .poll(() => modeSwitch.evaluate((element) => getComputedStyle(element).display))
-    .toBe("inline-flex");
+
+  const reviewBox = await review.boundingBox();
+  const topbarBox = await topbar.boundingBox();
+  const modeSwitchBox = await modeSwitch.boundingBox();
+  if (!reviewBox || !topbarBox || !modeSwitchBox) {
+    throw new Error("Stress review overlay controls do not have measurable layout boxes");
+  }
+  expect(topbarBox.y - reviewBox.y).toBeLessThanOrEqual(20);
+  expect(topbarBox.height).toBeLessThan(reviewBox.height / 2);
+  expect(modeSwitchBox.width).toBeLessThan(reviewBox.width * 0.6);
 });
 
 test("GAME-MAP05 Blueprint exposes exact 600-cell geometry and signed elevation sentinels", async ({
@@ -63,7 +70,10 @@ test("GAME-MAP05 Blueprint exposes exact 600-cell geometry and signed elevation 
   await expect(page.getByTestId("stress-selected-coordinate")).toHaveText("(5, 15)");
   await expect(page.getByTestId("stress-selected-elevation")).toHaveText("Elevation -7");
 
+  await page.getByRole("button", { name: "Hide details" }).click();
+  await expect(page.getByRole("complementary", { name: "Stress map review details" })).toHaveCount(0);
   await page.getByTestId("stress-map-cell-25-4").click();
+  await openDetails(page);
   await expect(page.getByTestId("stress-selected-coordinate")).toHaveText("(25, 4)");
   await expect(page.getByTestId("stress-selected-elevation")).toHaveText("Elevation +7");
 });
