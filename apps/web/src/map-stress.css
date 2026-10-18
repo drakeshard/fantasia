@@ -1,0 +1,65 @@
+.map-stress-review .map-review-stage {
+  background:
+    radial-gradient(ellipse at 42% 28%, rgb(116 126 86 / 18%), transparent 45%),
+    radial-gradient(ellipse at 76% 72%, rgb(44 72 82 / 18%), transparent 38%),
+    linear-gradient(180deg, #101c27, #09121a 72%, #070c14);
+}
+
+.map-stress-board-scroll {
+  padding: 30px;
+}
+
+.map-stress-board {
+  --map-cell: 34px;
+  grid-template-columns: 28px repeat(32, var(--map-cell));
+  min-width: max-content;
+  justify-content: start;
+  margin-inline: auto;
+}
+
+.map-stress-cell {
+  background: #425947;
+}
+
+.map-stress-cell.is-stress-positive {
+  background: #586447;
+  box-shadow: inset 0 0 0 2px rgb(201 167 96 / 18%);
+}
+
+.map-stress-cell.is-stress-negative {
+  background: #30464c;
+  box-shadow: inset 0 0 0 2px rgb(139 199 232 / 14%);
+}
+
+.map-stress-cell.is-selected {
+  box-shadow: none;
+}
+
+.map-stress-elevation {
+  top: 50%;
+  right: 50%;
+  translate: 50% -50%;
+  color: #fff7e7;
+  font-size: 10px;
+}
+
+.map-stress-summary {
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+}
+
+.map-stress-summary strong {
+  color: #fff7e7;
+  font-size: 12px;
+  text-align: right;
+}
+
+@media (max-width: 1000px), (max-height: 520px) {
+  .map-stress-board-scroll {
+    padding: 16px;
+  }
+
+  .map-stress-board {
+    --map-cell: 30px;
+  }
+}
