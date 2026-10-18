@@ -1,32 +1,36 @@
-/* GAME-UI24B — Fantasia player-facing Global Tokens v1.
+/* GAME-UI25 — Fantasia player-facing UI Design System v2 tokens.
  * Title-local presentation contract for apps/web only.
- * Screen-specific composition remains outside this file.
+ * The game world may be stylized/pixel-compatible; the interface remains smooth/high-resolution.
  */
 
 :root {
-  /* Foundation palette. Components should prefer semantic roles below. */
-  --fantasia-midnight-950: #071019;
-  --fantasia-midnight-900: #101923;
-  --fantasia-midnight-800: #192736;
-  --fantasia-midnight-700: #243749;
-  --fantasia-ivory-100: #f4f0e7;
-  --fantasia-ivory-50: #fff4dc;
-  --fantasia-slate-300: #bbc6d2;
-  --fantasia-slate-400: #aebbc8;
-  --fantasia-brass-400: #e2be78;
-  --fantasia-brass-300: #efd08b;
-  --fantasia-ink-900: #18202a;
-  --fantasia-positive-300: #82cfbd;
-  --fantasia-danger-300: #f59c9c;
-  --fantasia-warning-300: #e8c36f;
-  --fantasia-info-300: #9acbff;
+  color-scheme: dark;
+
+  /* Midnight Lacquer / Ivory / restrained Brass. */
+  --fantasia-midnight-1000: #070c14;
+  --fantasia-midnight-950: #0b1220;
+  --fantasia-midnight-900: #111d2b;
+  --fantasia-midnight-800: #19293a;
+  --fantasia-midnight-700: #22354a;
+  --fantasia-ivory-100: #f4efe5;
+  --fantasia-ivory-50: #fff7e7;
+  --fantasia-slate-300: #b8c5d1;
+  --fantasia-slate-400: #9aa9b7;
+  --fantasia-brass-400: #c9a760;
+  --fantasia-brass-300: #e0c27a;
+  --fantasia-ink-900: #101824;
+  --fantasia-positive-300: #75c8a8;
+  --fantasia-danger-300: #e98686;
+  --fantasia-warning-300: #dcb76a;
+  --fantasia-info-300: #8bc7e8;
+  --fantasia-skill-300: #b7a0e5;
   --fantasia-focus-300: #7aa7ff;
 
-  /* Semantic color roles. */
-  --ui-canvas: var(--fantasia-midnight-900);
-  --ui-canvas-deep: var(--fantasia-midnight-950);
-  --ui-surface: var(--fantasia-midnight-800);
-  --ui-surface-raised: var(--fantasia-midnight-700);
+  --ui-canvas-deep: var(--fantasia-midnight-1000);
+  --ui-canvas: var(--fantasia-midnight-950);
+  --ui-surface: var(--fantasia-midnight-900);
+  --ui-surface-raised: var(--fantasia-midnight-800);
+  --ui-surface-strong: var(--fantasia-midnight-700);
   --ui-text: var(--fantasia-ivory-100);
   --ui-text-heading: var(--fantasia-ivory-50);
   --ui-text-muted: var(--fantasia-slate-300);
@@ -38,37 +42,38 @@
   --ui-danger: var(--fantasia-danger-300);
   --ui-warning: var(--fantasia-warning-300);
   --ui-info: var(--fantasia-info-300);
+  --ui-skill: var(--fantasia-skill-300);
   --ui-focus: var(--fantasia-focus-300);
 
-  /* Alpha roles preserve the restrained brass/ivory hierarchy. */
-  --ui-text-secondary: rgb(244 240 231 / 74%);
-  --ui-text-tertiary: rgb(187 198 210 / 64%);
-  --ui-border-subtle: rgb(226 190 120 / 18%);
-  --ui-border: rgb(226 190 120 / 30%);
-  --ui-border-strong: rgb(226 190 120 / 66%);
-  --ui-divider: rgb(226 190 120 / 20%);
-  --ui-overlay-scrim: rgb(3 8 13 / 66%);
-  --ui-disabled-text: rgb(187 198 210 / 42%);
-  --ui-disabled-border: rgb(113 131 148 / 18%);
+  --ui-text-secondary: rgb(244 239 229 / 78%);
+  --ui-text-tertiary: rgb(184 197 209 / 62%);
+  --ui-border-cool: rgb(139 199 232 / 17%);
+  --ui-border-subtle: rgb(184 197 209 / 14%);
+  --ui-border: rgb(184 197 209 / 26%);
+  --ui-border-strong: rgb(201 167 96 / 66%);
+  --ui-divider: rgb(184 197 209 / 16%);
+  --ui-overlay-scrim: rgb(3 7 13 / 76%);
+  --ui-disabled-text: rgb(184 197 209 / 42%);
+  --ui-disabled-border: rgb(154 169 183 / 15%);
 
-  /* Typography roles. */
-  --ui-font-body:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --ui-font-display: Georgia, "Times New Roman", serif;
-  --ui-font-size-xs: 0.64rem;
-  --ui-font-size-sm: 0.72rem;
-  --ui-font-size-md: 0.78rem;
+  /* Preferred production faces. The stack remains network-independent until font binaries are curated. */
+  --ui-font-body: "Source Sans 3", "Segoe UI", Inter, ui-sans-serif, system-ui, sans-serif;
+  --ui-font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --ui-font-size-xs: 0.75rem;
+  --ui-font-size-sm: 0.8125rem;
+  --ui-font-size-md: 0.875rem;
   --ui-font-size-body: 1rem;
-  --ui-font-size-title: clamp(1.35rem, 2vw, 1.85rem);
+  --ui-font-size-section: clamp(1.125rem, 1.45vw, 1.25rem);
+  --ui-font-size-title: clamp(1.75rem, 2.35vw, 2.125rem);
+  --ui-font-size-hero: clamp(2.25rem, 4.2vw, 2.75rem);
   --ui-font-weight-regular: 500;
-  --ui-font-weight-semibold: 750;
-  --ui-font-weight-bold: 800;
-  --ui-line-tight: 1.05;
-  --ui-line-body: 1.5;
-  --ui-tracking-label: 0.12em;
-  --ui-tracking-control: 0.025em;
+  --ui-font-weight-semibold: 650;
+  --ui-font-weight-bold: 750;
+  --ui-line-tight: 1.08;
+  --ui-line-body: 1.48;
+  --ui-tracking-label: 0.11em;
+  --ui-tracking-control: 0.02em;
 
-  /* Spacing rhythm. */
   --ui-space-1: 4px;
   --ui-space-2: 8px;
   --ui-space-3: 12px;
@@ -77,45 +82,39 @@
   --ui-space-6: 32px;
   --ui-space-7: 48px;
 
-  /* Control sizing. */
   --ui-target-min: 44px;
   --ui-control-height: 46px;
   --ui-control-height-primary: 52px;
   --ui-icon-sm: 20px;
-  --ui-icon-md: 22px;
-  --ui-icon-lg: 34px;
+  --ui-icon-md: 24px;
+  --ui-icon-lg: 32px;
 
-  /* Shape / edge grammar. */
   --ui-radius-field: 2px;
   --ui-radius-control: 3px;
   --ui-radius-panel: 4px;
-  --ui-corner-cut-sm: 8px;
-  --ui-corner-cut-md: 10px;
+  --ui-corner-cut-sm: 6px;
+  --ui-corner-cut-md: 8px;
   --ui-border-width: 1px;
   --ui-border-width-emphasis: 2px;
 
-  /* Elevation and material treatment. */
-  --ui-shadow-control: 0 9px 20px rgb(0 0 0 / 26%);
-  --ui-shadow-control-hover: 0 10px 24px rgb(0 0 0 / 30%);
-  --ui-shadow-panel: 0 30px 80px rgb(0 0 0 / 48%);
-  --ui-shadow-header: 0 8px 26px rgb(0 0 0 / 24%);
+  --ui-shadow-control: 0 6px 14px rgb(0 0 0 / 24%);
+  --ui-shadow-control-hover: 0 8px 18px rgb(0 0 0 / 28%);
+  --ui-shadow-panel: 0 18px 44px rgb(0 0 0 / 38%);
+  --ui-shadow-header: 0 8px 24px rgb(0 0 0 / 30%);
   --ui-highlight-inset: inset 0 1px rgb(255 255 255 / 5%);
   --ui-opacity-disabled: 0.48;
   --ui-opacity-disabled-soft: 0.58;
 
-  /* Motion. */
-  --ui-motion-feedback: 120ms;
-  --ui-motion-panel: 180ms;
+  --ui-motion-feedback: 110ms;
+  --ui-motion-panel: 170ms;
   --ui-motion-camera: 240ms;
-  --ui-ease-standard: ease;
-  --ui-ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ui-ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ui-ease-emphasized: cubic-bezier(0.16, 0.84, 0.28, 1);
 
-  /* Focus is intentionally distinct from accent, selection and status colors. */
   --ui-focus-width: 2px;
   --ui-focus-width-strong: 3px;
-  --ui-focus-offset: 2px;
+  --ui-focus-offset: 3px;
 
-  /* Layering contract. */
   --ui-z-content: 0;
   --ui-z-raised: 10;
   --ui-z-hud: 30;
@@ -123,8 +122,6 @@
   --ui-z-dialog: 100;
   --ui-z-toast: 120;
 
-  /* Global responsive references. CSS media queries retain literal thresholds
-   * because custom properties cannot be used in media-query conditions. */
   --ui-breakpoint-compact-width: 900px;
   --ui-breakpoint-short-height: 499px;
   --ui-reference-wide-width: 1600px;
@@ -132,8 +129,7 @@
   --ui-reference-compact-width: 844px;
   --ui-reference-compact-height: 390px;
 
-  /* Compatibility aliases for existing player CSS. New work should use the
-   * semantic names above rather than adding more short-form aliases. */
+  /* Compatibility aliases retained while behavior markup stays stable. */
   --ui-bg: var(--ui-canvas);
   --ui-raised: var(--ui-surface-raised);
   --ui-accent-text: var(--ui-on-accent);
@@ -147,8 +143,6 @@
   --ui-s7: var(--ui-space-7);
   --ui-radius: var(--ui-radius-panel);
   --ui-min-target: var(--ui-target-min);
-
-  /* Temporary screen aliases map historical local names to one identity. */
   --auth-gold: var(--ui-accent);
   --auth-ivory: var(--ui-text);
   --auth-muted: var(--ui-text-subdued);

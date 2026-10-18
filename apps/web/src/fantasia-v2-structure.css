@@ -1,0 +1,122 @@
+/* GAME-UI25 — structural shell rules that must remain independent of screen art direction. */
+
+.campaign-rooted-shell .campaign-header > .nav-button,
+.campaign-rooted-shell .campaign-header-actions,
+.campaign-rooted-shell .sandbox-launch {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.orientation-gate {
+  width: 100%;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--ui-text);
+  background:
+    radial-gradient(circle at 50% 34%, rgb(122 167 255 / 9%), transparent 32%),
+    var(--ui-canvas-deep);
+}
+
+.orientation-gate-card {
+  width: min(520px, 100%);
+  padding: 32px;
+  border: 1px solid var(--ui-border-subtle);
+  border-radius: var(--ui-radius-panel);
+  background: linear-gradient(180deg, rgb(17 29 43 / 96%), rgb(7 12 20 / 98%));
+  box-shadow: var(--ui-highlight-inset), var(--ui-shadow-panel);
+  text-align: center;
+}
+
+.orientation-device {
+  width: 74px;
+  height: 46px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ui-accent);
+  border-radius: 5px;
+  transform: rotate(-8deg);
+}
+
+.orientation-device span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ui-accent);
+}
+
+.orientation-gate-card > p:first-of-type {
+  margin-bottom: 5px;
+  color: var(--ui-accent);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: var(--ui-tracking-label);
+  text-transform: uppercase;
+}
+
+.orientation-gate-card h1 {
+  margin: 0;
+  color: var(--ui-text-heading);
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-font-size-title);
+  font-weight: var(--ui-font-weight-regular);
+}
+
+.orientation-gate-detail {
+  margin: 10px 0 0;
+  color: var(--ui-text-secondary);
+}
+
+.settings-dialog {
+  position: relative;
+}
+
+/* Compact landscape must retain authoritative facts and primary commitments. */
+@media (max-width: 900px), (max-height: 499px) {
+  .game-control:not(.has-compact-label) .game-control-label {
+    display: inline;
+  }
+
+  .characters-screen .character-card {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+  }
+
+  .characters-screen .character-card-state {
+    display: inline-flex;
+    min-height: 22px;
+    padding-inline: 6px;
+    font-size: 0.62rem;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading,
+  .campaign-rooted-shell .map-toolbar,
+  .campaign-rooted-shell .map-toolbar .game-control,
+  .campaign-rooted-shell .campaign-enter {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .campaign-rooted-shell .campaign-map-heading,
+  .campaign-rooted-shell .map-toolbar {
+    display: flex;
+  }
+
+  .campaign-rooted-shell .campaign-inspector {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .campaign-rooted-shell .campaign-enter {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .battle-screen .command-preview p:not(.hud-eyebrow) {
+    display: block;
+  }
+}
