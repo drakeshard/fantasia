@@ -7,8 +7,12 @@ import "./ui/semantic.css";
 import "./ui/workspace.css";
 import "./styles/material-fidelity.css";
 import "./styles/studio-auth.css";
+import "./styles/production-dashboard.css";
+import type { StudioReadModelsResponse } from "./dashboard-model";
+import { ProductionDashboard } from "./production-dashboard";
 import {
   fetchStudioAuthorization,
+  fetchStudioReadModels,
   restoreStudioSession,
   type StoredStudioAuthSession,
   type StudioSessionState,
@@ -21,6 +25,7 @@ import {
   DashboardTemplate,
   type StudioModuleId,
   StudioShell,
+  studioModules,
   TemplateFixtureHeading,
 } from "./ui/workspace";
 
@@ -117,6 +122,33 @@ function Unauthorized({
   );
 }
 
+function moduleFromUrl(): StudioModuleId {
+  const requested = new URLSearchParams(window.location.search).get("module");
+  return studioModules.some((module) => module.id === requested)
+    ? (requested as StudioModuleId)
+    : "dashboard";
+}
+
+function semanticIdFromUrl(): string | null {
+  return new URLSearchParams(window.location.search).get("semanticId");
+}
+
+function replaceWorkspaceUrl(module: StudioModuleId, semanticId: string | null): void {
+  const params = new URLSearchParams(window.location.search);
+  params.delete("lab");
+  if (module === "dashboard" && !semanticId) params.delete("module");
+  else params.set("module", module);
+  if (semanticId) params.set("semanticId", semanticId);
+  else params.delete("semanticId");
+  const query = params.toString();
+  window.history.pushState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
+}
+
+type DashboardLoadState =
+  | { readonly status: "loading" }
+  | { readonly status: "ready"; readonly response: StudioReadModelsResponse }
+  | { readonly status: "error"; readonly message: string };
+
 function AuthorizedStudio({
   state,
   onSignedOut,
@@ -124,8 +156,10 @@ function AuthorizedStudio({
   state: Extract<StudioSessionState, { status: "authorized" }>;
   onSignedOut: () => void;
 }) {
-  const [activeModule, setActiveModule] = useState<StudioModuleId>("dashboard");
+  const [activeModule, setActiveModule] = useState<StudioModuleId>(moduleFromUrl);
+  const [activeSemanticId, setActiveSemanticId] = useState<string | null>(semanticIdFromUrl);
   const [collapsed, setCollapsed] = useState(false);
+  const [dashboard, setDashboard] = useState<DashboardLoadState>({ status: "loading" });
   const { authorization, auth } = state;
   const isReadOnly = !authorization.capabilities.includes("registry.metadata.edit");
 
@@ -133,7 +167,100 @@ function AuthorizedStudio({
     document
       .querySelector<HTMLElement>(".studio-production-root .studio-shell__fixture-note")
       ?.remove();
-  }, []);
+    let active = true;
+    void fetchStudioReadModels(auth)
+      .then((response) => {
+        if (active) setDashboard({ status: "ready", response });
+      })
+      .catch((error) => {
+        if (active) {
+          setDashboard({
+            status: "error",
+            message: error instanceof Error ? error.message : "Dashboard read failed.",
+          });
+        }
+      });
+    const popState = () => {
+      setActiveModule(moduleFromUrl());
+      setActiveSemanticId(semanticIdFromUrl());
+    };
+    window.addEventListener("popstate", popState);
+    return () => {
+      active = false;
+      window.removeEventListener("popstate", popState);
+    };
+  }, [auth]);
+
+  const navigate = (module: StudioModuleId, semanticId: string | null = null) => {
+    setActiveModule(module);
+    setActiveSemanticId(semanticId);
+    replaceWorkspaceUrl(module, semanticId);
+  };
+
+  const workspace =
+    activeModule === "dashboard" ? (
+      dashboard.status === "loading" ? (
+        <DashboardTemplate
+          header={
+            <TemplateFixtureHeading
+              title="Production Dashboard"
+              description="Loading normalized operational read models."
+            />
+          }
+        >
+          <div class="studio-template-state" data-state="loading" data-testid="dashboard-loading">
+            <Spinner label="Loading production Dashboard" />
+            <div>
+              <strong>Loading operational truth</strong>
+              <span>Canonical, registry and runtime facts are being composed.</span>
+            </div>
+          </div>
+          {isReadOnly ? (
+            <StateMessage title="Read-only access" tone="unavailable">
+              Viewer access can inspect Dashboard data; mutation actions remain unavailable.
+            </StateMessage>
+          ) : null}
+        </DashboardTemplate>
+      ) : dashboard.status === "error" ? (
+        <DashboardTemplate
+          header={
+            <TemplateFixtureHeading
+              title="Production Dashboard"
+              description="Operational read model failed to load."
+            />
+          }
+        >
+          <StateMessage title="Dashboard read failed" tone="error">
+            {dashboard.message} Authoritative source data was not changed.
+          </StateMessage>
+          {isReadOnly ? (
+            <StateMessage title="Read-only access" tone="unavailable">
+              Viewer permissions remain read-only even while the read source is unavailable.
+            </StateMessage>
+          ) : null}
+        </DashboardTemplate>
+      ) : (
+        <ProductionDashboard
+          response={dashboard.response}
+          readOnly={isReadOnly}
+          onNavigate={navigate}
+        />
+      )
+    ) : (
+      <DashboardTemplate
+        header={
+          <TemplateFixtureHeading
+            title="Module not implemented yet"
+            description="The Dashboard deep link preserved this stable context; the focused production workspace is delivered by its own issue."
+          />
+        }
+      >
+        <StateMessage title="Context preserved" tone="unavailable">
+          {activeSemanticId ? `Semantic ID: ${activeSemanticId}. ` : ""}
+          {activeModule} production authoring is intentionally unavailable in STUDIO05.
+        </StateMessage>
+      </DashboardTemplate>
+    );
 
   return (
     <main class="studio-production-root" data-testid="studio-authorized">
@@ -141,13 +268,13 @@ function AuthorizedStudio({
         activeModule={activeModule}
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
-        onModuleSelect={setActiveModule}
+        onModuleSelect={(module) => navigate(module)}
         searchSlot={
           <TextField
             id="production-studio-search"
             label="Global search"
             type="search"
-            placeholder="Search becomes available with STUDIO03"
+            placeholder="Focused workspace search arrives with production modules"
             disabled
           />
         }
@@ -162,30 +289,7 @@ function AuthorizedStudio({
           </Surface>
         }
       >
-        <DashboardTemplate
-          header={
-            <TemplateFixtureHeading
-              title={activeModule === "dashboard" ? "Dashboard" : "Module not implemented yet"}
-              description={
-                activeModule === "dashboard"
-                  ? "Authenticated production shell. Real operational read models arrive in STUDIO03/STUDIO05."
-                  : "The shared authenticated shell is live; this production workspace remains intentionally unavailable until its focused issue."
-              }
-            />
-          }
-        >
-          {isReadOnly ? (
-            <StateMessage title="Read-only access" tone="unavailable">
-              Your Viewer membership can inspect authorized Studio data. Privileged mutation actions
-              are not exposed.
-            </StateMessage>
-          ) : (
-            <StateMessage title="Workspace data not connected yet">
-              Authentication and trusted operations are active. Production read models arrive in
-              STUDIO03 and focused module issues.
-            </StateMessage>
-          )}
-        </DashboardTemplate>
+        {workspace}
       </StudioShell>
     </main>
   );

@@ -121,6 +121,43 @@ function asRegistrySnapshot(value: unknown): RegistrySnapshot {
   return value as RegistrySnapshot;
 }
 
+async function readDashboardCanonicalProposals(
+  userId: string,
+  supabaseUrl: string,
+  secretKey: string,
+): Promise<unknown> {
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/rpc/get_studio_dashboard_canonical_proposals`,
+    {
+      method: "POST",
+      headers: {
+        apikey: secretKey,
+        authorization: `Bearer ${secretKey}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ p_user_id: userId }),
+    },
+  );
+  if (!response.ok) {
+    return {
+      state: "unavailable",
+      observedAt: null,
+      items: [],
+      message: "Canonical proposal summary source is unavailable.",
+    };
+  }
+  const result = await parseJsonResponse(response);
+  if (!result || typeof result !== "object") {
+    return {
+      state: "unavailable",
+      observedAt: null,
+      items: [],
+      message: "Canonical proposal summary source returned an invalid response.",
+    };
+  }
+  return result;
+}
+
 async function readModels(
   userId: string,
   supabaseUrl: string,
@@ -136,7 +173,10 @@ async function readModels(
   if (!session.authorized || !session.role || !session.capabilities.includes("studio.read")) {
     throw new StudioOperationContractError("Studio membership required.", 403);
   }
-  const registry = asRegistrySnapshot(registryValue);
+  const [registry, canonicalProposals] = await Promise.all([
+    Promise.resolve(asRegistrySnapshot(registryValue)),
+    readDashboardCanonicalProposals(userId, supabaseUrl, secretKey),
+  ]);
   const permissions = permissionPresentation(session.role, session.capabilities);
   const canonicalModels = repositorySnapshot.canonicalModels;
   const runtimeManifest = repositorySnapshot.runtimeManifest;
@@ -172,6 +212,7 @@ async function readModels(
     },
     search,
     models: pageModels,
+    canonicalProposals,
   };
 }
 
