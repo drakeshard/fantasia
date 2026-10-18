@@ -13,7 +13,11 @@
     var(--studio-border-subtle)
   );
   background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--studio-color-cyan-300) 8%, transparent), transparent 24rem),
+    radial-gradient(
+      circle at 100% 0%,
+      color-mix(in srgb, var(--studio-color-cyan-300) 8%, transparent),
+      transparent 24rem
+    ),
     var(--studio-material-panel);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--studio-color-cyan-300) 8%, transparent),
@@ -22,14 +26,18 @@
 
 #add-asset-dialog .ui-dialog__header {
   position: relative;
-  padding: var(--studio-space-24) var(--studio-space-24) var(--studio-space-20);
+  padding: var(--studio-space-24) var(--studio-space-24) var(--studio-space-16);
   border-bottom: 1px solid color-mix(
     in srgb,
     var(--studio-color-cyan-300) 20%,
     var(--studio-border-subtle)
   );
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--studio-accent-primary) 8%, transparent), transparent 35%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--studio-accent-primary) 8%, transparent),
+      transparent 35%
+    ),
     var(--studio-material-raised);
 }
 
@@ -61,10 +69,17 @@
 }
 
 #add-asset-dialog .ui-dialog__body {
-  padding: var(--studio-space-20) var(--studio-space-24) var(--studio-space-24);
+  padding: var(--studio-space-16) var(--studio-space-24) var(--studio-space-24);
   background:
-    linear-gradient(color-mix(in srgb, var(--studio-color-cyan-300) 2.5%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--studio-color-cyan-300) 2.5%, transparent) 1px, transparent 1px),
+    linear-gradient(
+        color-mix(in srgb, var(--studio-color-cyan-300) 2.5%, transparent) 1px,
+        transparent 1px
+      ),
+    linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--studio-color-cyan-300) 2.5%, transparent) 1px,
+        transparent 1px
+      ),
     var(--studio-material-panel);
   background-size: 32px 32px, 32px 32px, auto;
 }
@@ -123,7 +138,11 @@
     var(--studio-border-subtle)
   );
   border-radius: 50%;
-  background: color-mix(in srgb, var(--studio-accent-primary) 9%, var(--studio-material-raised));
+  background: color-mix(
+    in srgb,
+    var(--studio-accent-primary) 9%,
+    var(--studio-surface-raised)
+  );
   color: var(--studio-accent-primary);
   font-family: var(--studio-font-serif);
   font-size: var(--studio-font-size-meta);
@@ -159,7 +178,7 @@
 }
 
 #add-asset-dialog .ui-field {
-  gap: var(--studio-space-6);
+  gap: var(--studio-space-4);
 }
 
 #add-asset-dialog .ui-field__label {
@@ -173,7 +192,7 @@
 #add-asset-dialog .ui-control {
   min-height: var(--studio-target-min);
   border-color: var(--studio-border-control);
-  background: color-mix(in srgb, var(--studio-material-inset) 92%, transparent);
+  background: var(--studio-material-inset);
   color: var(--studio-text-primary);
   box-shadow:
     inset 0 1px 6px rgb(0 0 0 / 24%),
@@ -232,7 +251,7 @@
   align-items: center;
   gap: var(--studio-space-16);
   min-height: 7.5rem;
-  padding: var(--studio-space-16) var(--studio-space-20);
+  padding: var(--studio-space-16) var(--studio-space-24);
   overflow: hidden;
   cursor: pointer;
   border: 1px dashed color-mix(
@@ -242,8 +261,12 @@
   );
   border-radius: var(--studio-radius-panel);
   background:
-    radial-gradient(circle at 12% 50%, color-mix(in srgb, var(--studio-color-cyan-300) 9%, transparent), transparent 10rem),
-    color-mix(in srgb, var(--studio-material-inset) 94%, transparent);
+    radial-gradient(
+      circle at 12% 50%,
+      color-mix(in srgb, var(--studio-color-cyan-300) 9%, transparent),
+      transparent 10rem
+    ),
+    var(--studio-material-inset);
   box-shadow:
     inset 0 1px 10px rgb(0 0 0 / 26%),
     inset 0 1px 0 color-mix(in srgb, var(--studio-color-cyan-300) 5%, transparent);
@@ -274,8 +297,12 @@
     var(--studio-accent-primary)
   );
   background:
-    radial-gradient(circle at 12% 50%, color-mix(in srgb, var(--studio-color-cyan-300) 13%, transparent), transparent 11rem),
-    color-mix(in srgb, var(--studio-material-raised) 80%, var(--studio-material-inset));
+    radial-gradient(
+      circle at 12% 50%,
+      color-mix(in srgb, var(--studio-color-cyan-300) 13%, transparent),
+      transparent 11rem
+    ),
+    var(--studio-material-raised);
   transform: translateY(-1px);
 }
 
@@ -309,7 +336,11 @@
     var(--studio-border-subtle)
   );
   border-radius: 50%;
-  background: color-mix(in srgb, var(--studio-color-cyan-300) 6%, var(--studio-material-raised));
+  background: color-mix(
+    in srgb,
+    var(--studio-color-cyan-300) 6%,
+    var(--studio-surface-raised)
+  );
   color: color-mix(in srgb, var(--studio-color-cyan-300) 84%, var(--studio-text-primary));
   font-size: 1.25rem;
   box-shadow: 0 0 18px color-mix(in srgb, var(--studio-color-cyan-300) 8%, transparent);
@@ -359,7 +390,7 @@
   justify-content: space-between;
   gap: var(--studio-space-12);
   min-width: 0;
-  padding: var(--studio-space-10) var(--studio-space-12);
+  padding: var(--studio-space-8) var(--studio-space-12);
   border: 1px solid color-mix(
     in srgb,
     var(--studio-color-cyan-300) 16%,
@@ -377,7 +408,7 @@
 .studio-assets-file-summary__identity {
   display: flex;
   align-items: center;
-  gap: var(--studio-space-10);
+  gap: var(--studio-space-8);
   min-width: 0;
 }
 
@@ -425,7 +456,11 @@
   );
   border-radius: var(--studio-radius-control);
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--studio-accent-primary) 6%, transparent), transparent 45%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--studio-accent-primary) 6%, transparent),
+      transparent 45%
+    ),
     var(--studio-material-raised);
 }
 
@@ -470,7 +505,7 @@
     var(--studio-color-cyan-300) 16%,
     var(--studio-border-subtle)
   );
-  background: color-mix(in srgb, var(--studio-material-raised) 78%, transparent);
+  background: var(--studio-material-raised);
 }
 
 .studio-assets-create-footer > div {
