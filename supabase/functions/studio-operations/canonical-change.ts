@@ -65,7 +65,10 @@ function validateScriptEvent(event: unknown, label: string, scriptIds: Set<strin
 export function validateCanonicalStory(value: unknown): readonly string[] {
   assert(isObject(value), "Story root must be an object.");
   assert(value.schemaVersion === 1, "story.schemaVersion must be 1.");
-  assert(isObject(value.project) && value.project.id === "fantasia", "story.project.id must be fantasia.");
+  assert(
+    isObject(value.project) && value.project.id === "fantasia",
+    "story.project.id must be fantasia.",
+  );
   assert(Array.isArray(value.sagas) && value.sagas.length > 0, "story.sagas must be non-empty.");
 
   const stableIds: string[] = [];
@@ -78,7 +81,10 @@ export function validateCanonicalStory(value: unknown): readonly string[] {
     assert(Array.isArray(sagaValue.chapters), `${sagaValue.id}.chapters must be an array.`);
 
     for (const [chapterIndex, chapterValue] of sagaValue.chapters.entries()) {
-      assert(isObject(chapterValue), `${sagaValue.id}.chapters[${chapterIndex}] must be an object.`);
+      assert(
+        isObject(chapterValue),
+        `${sagaValue.id}.chapters[${chapterIndex}] must be an object.`,
+      );
       assert(nonEmptyText(chapterValue.id), `Every chapter needs an id.`);
       assert(Array.isArray(chapterValue.nodes), `${chapterValue.id}.nodes must be an array.`);
       const chapterNodeIds = new Set(
@@ -89,11 +95,17 @@ export function validateCanonicalStory(value: unknown): readonly string[] {
       );
 
       if (chapterValue.routeClusters !== undefined) {
-        assert(Array.isArray(chapterValue.routeClusters), `${chapterValue.id}.routeClusters must be an array.`);
+        assert(
+          Array.isArray(chapterValue.routeClusters),
+          `${chapterValue.id}.routeClusters must be an array.`,
+        );
         for (const clusterValue of chapterValue.routeClusters) {
           assert(isObject(clusterValue), `${chapterValue.id} route cluster must be an object.`);
           assert(nonEmptyText(clusterValue.id), `${chapterValue.id} route cluster needs an id.`);
-          assert(clusterValue.mode === "complete-any", `${clusterValue.id}.mode must be complete-any.`);
+          assert(
+            clusterValue.mode === "complete-any",
+            `${clusterValue.id}.mode must be complete-any.`,
+          );
           assert(
             Array.isArray(clusterValue.nodeIds) && clusterValue.nodeIds.length > 0,
             `${clusterValue.id}.nodeIds must be non-empty.`,
@@ -104,7 +116,10 @@ export function validateCanonicalStory(value: unknown): readonly string[] {
               (clusterValue.requiredCount as number) <= clusterValue.nodeIds.length,
             `${clusterValue.id}.requiredCount is invalid.`,
           );
-          assert(nonEmptyText(clusterValue.reconvergesAt), `${clusterValue.id}.reconvergesAt is required.`);
+          assert(
+            nonEmptyText(clusterValue.reconvergesAt),
+            `${clusterValue.id}.reconvergesAt is required.`,
+          );
           for (const routeNodeId of clusterValue.nodeIds) {
             assert(
               typeof routeNodeId === "string" && chapterNodeIds.has(routeNodeId),
@@ -159,7 +174,10 @@ export function validateCanonicalStory(value: unknown): readonly string[] {
           }
 
           if (beatValue.script !== undefined) {
-            assert(Array.isArray(beatValue.script) && beatValue.script.length > 0, `${beatValue.id}.script must be non-empty.`);
+            assert(
+              Array.isArray(beatValue.script) && beatValue.script.length > 0,
+              `${beatValue.id}.script must be non-empty.`,
+            );
             assert(
               ["draft", "proposed", "approved", "production-ready"].includes(
                 String(beatValue.scriptStatus),
@@ -214,13 +232,17 @@ export function applyStoryNodeSummaryChange(
       if (!isObject(chapter) || !Array.isArray(chapter.nodes)) continue;
       for (const node of chapter.nodes) {
         if (isObject(node) && node.id === request.semanticId) {
-          if (match) throw new CanonicalChangeValidationError(`Semantic ID ${request.semanticId} is ambiguous.`);
+          if (match)
+            throw new CanonicalChangeValidationError(
+              `Semantic ID ${request.semanticId} is ambiguous.`,
+            );
           match = node;
         }
       }
     }
   }
-  if (!match) throw new CanonicalChangeValidationError(`Story node ${request.semanticId} was not found.`);
+  if (!match)
+    throw new CanonicalChangeValidationError(`Story node ${request.semanticId} was not found.`);
 
   const previousSummary = typeof match.summary === "string" ? match.summary : null;
   match.summary = summary;
@@ -238,8 +260,14 @@ export function applyStoryNodeSummaryChange(
 }
 
 export function canonicalProposalBranchName(semanticId: string, changeRequestId: string): string {
-  const safeSemanticId = semanticId.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
-  const safeRequestId = changeRequestId.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
+  const safeSemanticId = semanticId
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const safeRequestId = changeRequestId
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
   if (!safeSemanticId || !safeRequestId) {
     throw new CanonicalChangeValidationError("Proposal branch identity is invalid.");
   }

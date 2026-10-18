@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   applyStoryNodeSummaryChange,
-  canonicalProposalBranchName,
   CANONICAL_STORY_NODE_CONTENT_TYPE,
   CANONICAL_STORY_NODE_OPERATION,
   CANONICAL_STORY_PATH,
+  canonicalProposalBranchName,
   validateCanonicalStory,
 } from "../../supabase/functions/studio-operations/canonical-change";
 import {

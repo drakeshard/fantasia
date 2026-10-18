@@ -4,12 +4,12 @@ import {
   STUDIO_CANONICAL_CHANGE_PROPOSE,
   STUDIO_CANONICAL_CHANGE_STATUS_GET,
 } from "../studio-operations/canonical-change-contract.ts";
+import { StudioOperationContractError } from "../studio-operations/contract.ts";
 import {
   createCanonicalGitProposal,
   GitHubProposalError,
   refreshCanonicalGitProposalStatus,
 } from "../studio-operations/github-proposals.ts";
-import { StudioOperationContractError } from "../studio-operations/contract.ts";
 
 const corsHeaders = {
   "access-control-allow-origin": "*",
@@ -179,7 +179,10 @@ async function createProposal(input: {
   readonly supabaseUrl: string;
   readonly secretKey: string;
   readonly githubToken: string;
-  readonly request: Extract<ReturnType<typeof parseCanonicalChangeRequest>, { type: typeof STUDIO_CANONICAL_CHANGE_PROPOSE }>;
+  readonly request: Extract<
+    ReturnType<typeof parseCanonicalChangeRequest>,
+    { type: typeof STUDIO_CANONICAL_CHANGE_PROPOSE }
+  >;
 }): Promise<Record<string, unknown>> {
   const payload = input.request.payload;
   const preparedValue = await callRpc(
@@ -311,7 +314,10 @@ Deno.serve(async (request: Request) => {
     const secretKey = environmentKey("SUPABASE_SECRET_KEY", "SUPABASE_SECRET_KEYS");
     const githubToken = Deno.env.get("STUDIO_GITHUB_TOKEN")?.trim();
     if (!githubToken) {
-      throw new StudioOperationContractError("Canonical Git proposal service is not configured.", 503);
+      throw new StudioOperationContractError(
+        "Canonical Git proposal service is not configured.",
+        503,
+      );
     }
     const actorUserId = await authenticateUser(request, supabaseUrl, publishableKey);
     const raw = await request.json();

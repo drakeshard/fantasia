@@ -1,9 +1,9 @@
 import {
   applyStoryNodeSummaryChange,
-  canonicalProposalBranchName,
   CANONICAL_STORY_PATH,
   CanonicalChangeValidationError,
   type CanonicalStoryNodeChangeRequest,
+  canonicalProposalBranchName,
 } from "./canonical-change.ts";
 
 const GITHUB_API = "https://api.github.com";
@@ -99,7 +99,10 @@ async function githubRequest<T>(
   }
   if (!acceptedStatuses.includes(response.status)) {
     const error = body as GitHubResponseError | null;
-    const message = typeof error?.message === "string" ? error.message : `GitHub request failed (${response.status}).`;
+    const message =
+      typeof error?.message === "string"
+        ? error.message
+        : `GitHub request failed (${response.status}).`;
     throw new GitHubProposalError("provider", message, { status: response.status, path });
   }
   return { status: response.status, body };
@@ -138,10 +141,7 @@ function repoPath(suffix: string): string {
 }
 
 async function currentMainRevision(token: string): Promise<string> {
-  const result = await githubRequest<GitHubRef>(
-    token,
-    repoPath(`/git/ref/heads/${BASE_BRANCH}`),
-  );
+  const result = await githubRequest<GitHubRef>(token, repoPath(`/git/ref/heads/${BASE_BRANCH}`));
   return requiredString(result.body?.object?.sha, "main revision");
 }
 
@@ -200,7 +200,10 @@ async function writeCanonicalFile(
   changeRequestId: string,
 ): Promise<string> {
   if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH) {
-    throw new GitHubProposalError("validation", "Direct writes to the accepted branch are forbidden.");
+    throw new GitHubProposalError(
+      "validation",
+      "Direct writes to the accepted branch are forbidden.",
+    );
   }
   const message = `studio(story): propose ${request.semanticId} summary update`;
   const result = await githubRequest<GitHubContentWrite>(
@@ -274,11 +277,10 @@ async function createOrUpdatePullRequest(
   const existing = list.body?.[0];
   if (existing) {
     const number = requiredNumber(existing.number, "pull request number");
-    const updated = await githubRequest<GitHubPullRequest>(
-      token,
-      repoPath(`/pulls/${number}`),
-      { method: "PATCH", body: JSON.stringify({ title, body }) },
-    );
+    const updated = await githubRequest<GitHubPullRequest>(token, repoPath(`/pulls/${number}`), {
+      method: "PATCH",
+      body: JSON.stringify({ title, body }),
+    });
     return {
       number,
       url: requiredString(updated.body?.html_url, "pull request URL"),
@@ -303,10 +305,7 @@ async function pullRequestStatus(
   token: string,
   pullRequestNumber: number,
 ): Promise<GitHubProposalStatus> {
-  const pr = await githubRequest<GitHubPullRequest>(
-    token,
-    repoPath(`/pulls/${pullRequestNumber}`),
-  );
+  const pr = await githubRequest<GitHubPullRequest>(token, repoPath(`/pulls/${pullRequestNumber}`));
   if (pr.body?.merged_at) return "MERGED";
   if (pr.body?.state === "closed") return "CLOSED";
   const headSha = requiredString(pr.body?.head?.sha, "pull request head SHA");
@@ -347,7 +346,7 @@ export async function createCanonicalGitProposal(input: {
   }
 
   const canonical = await fetchCanonicalFile(input.token, input.request.baseRevision);
-  let validated;
+  let validated: ReturnType<typeof applyStoryNodeSummaryChange>;
   try {
     validated = applyStoryNodeSummaryChange(canonical.parsed, input.request);
   } catch (error) {

@@ -52,11 +52,11 @@ assert(
   "STUDIO04 must reject stale canonical bases before mutation.",
 );
 assert(
-  github.includes('branch: branchName') && !github.includes('branch: "main"'),
+  github.includes("branch: branchName") && !github.includes('branch: "main"'),
   "STUDIO04 must never write canonical content directly to main.",
 );
 assert(
-  github.includes('base: BASE_BRANCH') && !github.includes("/merges"),
+  github.includes("base: BASE_BRANCH") && !github.includes("/merges"),
   "STUDIO04 must stop at pull-request proposal and never auto-merge.",
 );
 assert(
@@ -76,8 +76,7 @@ assert(
   "STUDIO04 proposal audit schema/capability is missing.",
 );
 assert(
-  migration.includes("from public, anon, authenticated") &&
-    migration.includes("to service_role"),
+  migration.includes("from public, anon, authenticated") && migration.includes("to service_role"),
   "STUDIO04 proposal RPCs must remain service-role-only.",
 );
 assert(
