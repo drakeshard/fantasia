@@ -125,7 +125,7 @@ async function signIn(page: Page) {
   await page.getByRole("button", { name: "Sign in" }).click();
 }
 
-test("empty Assets keeps creation compact until Add Asset is requested", async ({ page }) => {
+test("empty Assets opens a deliberate controlled Add Asset workflow", async ({ page }) => {
   await signIn(page);
 
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
@@ -142,12 +142,43 @@ test("empty Assets keeps creation compact until Add Asset is requested", async (
 
   const dialog = page.getByRole("dialog", { name: "Add Asset" });
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByLabel("Upload file")).toBeVisible();
-  await expect(dialog.getByLabel("Asset type")).toHaveValue("brand-crest");
-  await expect(dialog.getByLabel("Owner")).toHaveValue("identity.brand.fantasia");
-  await expect(dialog.getByLabel("Variant · optional")).toBeVisible();
+  await expect(dialog.getByText("Define asset identity", { exact: true })).toBeVisible();
+  await expect(dialog.getByText("Choose a source/master", { exact: true })).toBeVisible();
+  await expect(dialog.getByText("Browse...", { exact: false })).toHaveCount(0);
+  await expect(dialog.getByText("No file selected.", { exact: true })).toHaveCount(0);
+
+  const assetType = dialog.getByLabel("Asset type");
+  const ownerSelect = dialog.getByLabel("Owner");
+  const addAsset = dialog.getByRole("button", { name: "Add Asset" });
+  await expect(assetType).toHaveValue("");
+  await expect(ownerSelect).toHaveValue("");
+  await expect(ownerSelect).toBeDisabled();
+  await expect(dialog.getByLabel("Variant · optional")).toHaveValue("");
+  await expect(addAsset).toBeDisabled();
   await expect(dialog.getByLabel("Semantic asset ID")).toHaveCount(0);
-  await expect(dialog.getByText(/Semantic ID:/)).toHaveCount(0);
+
+  await assetType.selectOption("brand-crest");
+  await expect(ownerSelect).toBeEnabled();
+  await expect(ownerSelect).toHaveValue("");
+  await ownerSelect.selectOption("identity.brand.fantasia");
+  await expect(dialog.getByText("Fantasia · Brand Crest · base", { exact: true })).toBeVisible();
+  await expect(
+    dialog.getByText("asset.identity.brand.fantasia.brand-crest.base", { exact: true }),
+  ).toBeVisible();
+  await expect(addAsset).toBeDisabled();
+
+  await dialog.getByLabel("Upload file").setInputFiles({
+    name: "fantasia-crest.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from("<svg></svg>"),
+  });
+  await expect(dialog.getByText("fantasia-crest.svg", { exact: true })).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Remove" })).toBeVisible();
+  await expect(addAsset).toBeEnabled();
+
+  await dialog.getByRole("button", { name: "Remove" }).click();
+  await expect(dialog.getByText("fantasia-crest.svg", { exact: true })).toHaveCount(0);
+  await expect(addAsset).toBeDisabled();
 });
 
 test("Add Asset dialog derives controlled identity and uses the trusted multipart upload", async ({
@@ -157,6 +188,8 @@ test("Add Asset dialog derives controlled identity and uses the trusted multipar
   await page.getByRole("button", { name: "+ Add Asset" }).click();
 
   const dialog = page.getByRole("dialog", { name: "Add Asset" });
+  await dialog.getByLabel("Asset type").selectOption("brand-crest");
+  await dialog.getByLabel("Owner").selectOption("identity.brand.fantasia");
   await dialog.getByLabel("Upload file").setInputFiles({
     name: "fantasia-crest.svg",
     mimeType: "image/svg+xml",
