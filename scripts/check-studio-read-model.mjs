@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,6 +15,15 @@ const adapters = await readFile(
 );
 const repositorySnapshot = await readFile(
   path.join(root, "supabase/functions/studio-operations/repository-snapshot.ts"),
+  "utf8",
+);
+const generatedSnapshotText = await readFile(
+  path.join(root, "supabase/functions/studio-operations/canonical-snapshot.generated.json"),
+  "utf8",
+);
+const generatedSnapshot = JSON.parse(generatedSnapshotText);
+const generator = await readFile(
+  path.join(root, "scripts/generate-studio-canonical-snapshot.mjs"),
   "utf8",
 );
 const migration = await readFile(
@@ -90,22 +100,45 @@ requireText(
   "AssetSourceProviderAdapter",
   "Provider-neutral asset source adapter is required.",
 );
-for (const sourcePath of [
-  "../../../content/narrative/story.json",
-  "../../../content/narrative/story-production.json",
-  "../../../content/encounters/candidates/ch01-b01.layout-candidate.json",
-  "../../../config/runtime-assets.json",
-])
-  requireText(
-    repositorySnapshot,
-    sourcePath,
-    `Canonical deployment snapshot must import Git-owned source ${sourcePath}.`,
-  );
 requireText(
   repositorySnapshot,
-  "CANONICAL_GIT_REVISION",
-  "Canonical deployment snapshot must record Git revision context.",
+  "canonical-snapshot.generated.json",
+  "Trusted runtime must consume the generated canonical read projection.",
 );
+requireText(
+  repositorySnapshot,
+  "RepositoryReadSnapshot",
+  "Canonical deployment snapshot must have a typed boundary.",
+);
+for (const sourcePath of [
+  "content/narrative/story.json",
+  "content/narrative/story-production.json",
+  "content/encounters/candidates/ch01-b01.layout-candidate.json",
+  "config/runtime-assets.json",
+])
+  requireText(generator, sourcePath, `Snapshot generator must read Git-owned source ${sourcePath}.`);
+
+if (
+  !generatedSnapshot ||
+  typeof generatedSnapshot.revision !== "string" ||
+  !Array.isArray(generatedSnapshot.canonicalModels) ||
+  !generatedSnapshot.runtimeManifest
+) {
+  throw new Error("Generated Studio canonical deployment snapshot is malformed.");
+}
+const snapshotCheck = spawnSync(
+  process.execPath,
+  [path.join(root, "scripts/generate-studio-canonical-snapshot.mjs"), "--check"],
+  {
+    cwd: root,
+    env: { ...process.env, CANONICAL_GIT_REVISION: generatedSnapshot.revision },
+    encoding: "utf8",
+  },
+);
+if (snapshotCheck.status !== 0) {
+  throw new Error(snapshotCheck.stderr || snapshotCheck.stdout || "Generated snapshot check failed.");
+}
+
 requireText(
   migration,
   "studio_registry.has_capability(p_user_id, 'studio.read')",
@@ -117,14 +150,14 @@ forbid(
   "STUDIO03 registry snapshot must remain read-only.",
 );
 forbid(
-  `${adapters}\n${repositorySnapshot}`,
+  `${adapters}\n${repositorySnapshot}\n${generator}`,
   /GITHUB_TOKEN|GOOGLE_(API|DRIVE).*KEY|SUPABASE_(SECRET|SERVICE_ROLE)/i,
   "Provider/Git adapters must not hard-code privileged credentials.",
 );
 forbid(
   repositorySnapshot,
   /raw\.githubusercontent\.com|api\.github\.com/i,
-  "Canonical deployment snapshot must not depend on unauthenticated private-repository fetches.",
+  "Canonical deployment snapshot must not depend on private-repository network fetches.",
 );
 requireText(
   docs,
