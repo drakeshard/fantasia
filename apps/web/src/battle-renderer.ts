@@ -63,7 +63,7 @@ function productionBattleFrame(view: ProductionBattleView): {
 
   return {
     frame: {
-      id: `production:${view.encounterId ?? "battle"}`,
+      id: `production:${view.title}`,
       bounds: view.bounds,
       cells,
       units,
