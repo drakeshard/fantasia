@@ -34,11 +34,23 @@ export type StudioSessionResult =
     };
 
 export const STUDIO_SESSION_GET = "session.get" as const;
+export const STUDIO_READ_MODELS_GET = "studio.read_models.get" as const;
 export const STUDIO_ENTITY_NOTE_SET = "registry.entity_note.set" as const;
 export const STUDIO_MEMBERSHIP_SET = "studio.membership.set" as const;
 
+export interface StudioReadQueryPayload {
+  readonly text?: string;
+  readonly semanticId?: string;
+  readonly entityType?: string;
+  readonly lifecycle?: string;
+  readonly readiness?: "ready" | "warning" | "blocked" | "unknown";
+  readonly offset?: number;
+  readonly limit?: number;
+}
+
 export type StudioOperationRequest =
   | { readonly type: typeof STUDIO_SESSION_GET }
+  | { readonly type: typeof STUDIO_READ_MODELS_GET; readonly payload: StudioReadQueryPayload }
   | {
       readonly type: typeof STUDIO_ENTITY_NOTE_SET;
       readonly idempotencyKey: string;
@@ -76,6 +88,42 @@ function requireExactKeys(record: Record<string, unknown>, expected: readonly st
   }
 }
 
+function parseOptionalText(value: unknown, label: string, max: number): string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== "string") throw new StudioOperationContractError(`${label} must be a string.`);
+  const normalized = value.trim();
+  if (!normalized || normalized.length > max) throw new StudioOperationContractError(`${label} is invalid.`);
+  return normalized;
+}
+
+function parseOptionalInteger(value: unknown, label: string, min: number, max: number): number | undefined {
+  if (value === undefined) return undefined;
+  if (!Number.isInteger(value) || (value as number) < min || (value as number) > max) {
+    throw new StudioOperationContractError(`${label} must be an integer from ${min} to ${max}.`);
+  }
+  return value as number;
+}
+
+function parseReadQuery(value: unknown): StudioReadQueryPayload {
+  if (!isRecord(value)) throw new StudioOperationContractError("Read-model payload is required.");
+  const allowed = ["text", "semanticId", "entityType", "lifecycle", "readiness", "offset", "limit"];
+  const unsupported = Object.keys(value).filter((key) => !allowed.includes(key));
+  if (unsupported.length > 0) throw new StudioOperationContractError("Read-model payload contains unsupported fields.");
+  const readiness = value.readiness;
+  if (readiness !== undefined && !["ready", "warning", "blocked", "unknown"].includes(String(readiness))) {
+    throw new StudioOperationContractError("Readiness filter is invalid.");
+  }
+  return {
+    text: parseOptionalText(value.text, "Search text", 200),
+    semanticId: parseOptionalText(value.semanticId, "Semantic ID", 240),
+    entityType: parseOptionalText(value.entityType, "Entity type", 80),
+    lifecycle: parseOptionalText(value.lifecycle, "Lifecycle", 80),
+    readiness: readiness as StudioReadQueryPayload["readiness"],
+    offset: parseOptionalInteger(value.offset, "Offset", 0, 100000),
+    limit: parseOptionalInteger(value.limit, "Limit", 1, 100),
+  };
+}
+
 function parseIdempotencyKey(value: unknown): string {
   const key = typeof value === "string" ? value.trim() : "";
   if (key.length < 8 || key.length > 128) {
@@ -86,9 +134,7 @@ function parseIdempotencyKey(value: unknown): string {
 
 function parseUuid(value: unknown, label: string): string {
   const candidate = typeof value === "string" ? value.trim() : "";
-  if (
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)
-  ) {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)) {
     throw new StudioOperationContractError(`${label} must be a UUID.`);
   }
   return candidate;
@@ -104,21 +150,21 @@ export function parseStudioOperationRequest(value: unknown): StudioOperationRequ
     return { type: STUDIO_SESSION_GET };
   }
 
+  if (value.type === STUDIO_READ_MODELS_GET) {
+    requireExactKeys(value, ["type", "payload"]);
+    return { type: STUDIO_READ_MODELS_GET, payload: parseReadQuery(value.payload) };
+  }
+
   if (value.type === STUDIO_ENTITY_NOTE_SET) {
     requireExactKeys(value, ["type", "idempotencyKey", "payload"]);
-    if (!isRecord(value.payload)) {
-      throw new StudioOperationContractError("Entity-note payload is required.");
-    }
+    if (!isRecord(value.payload)) throw new StudioOperationContractError("Entity-note payload is required.");
     requireExactKeys(value.payload, ["semanticId", "note"]);
-    const semanticId =
-      typeof value.payload.semanticId === "string" ? value.payload.semanticId.trim() : "";
+    const semanticId = typeof value.payload.semanticId === "string" ? value.payload.semanticId.trim() : "";
     if (semanticId.length < 1 || semanticId.length > 200 || /\s/.test(semanticId)) {
       throw new StudioOperationContractError("Semantic ID is invalid.");
     }
     const note = value.payload.note;
-    if (note !== null && typeof note !== "string") {
-      throw new StudioOperationContractError("Operator note must be a string or null.");
-    }
+    if (note !== null && typeof note !== "string") throw new StudioOperationContractError("Operator note must be a string or null.");
     const normalizedNote = typeof note === "string" ? note.trim() : null;
     if (normalizedNote !== null && normalizedNote.length > 1000) {
       throw new StudioOperationContractError("Operator note must be at most 1000 characters.");
@@ -132,16 +178,10 @@ export function parseStudioOperationRequest(value: unknown): StudioOperationRequ
 
   if (value.type === STUDIO_MEMBERSHIP_SET) {
     requireExactKeys(value, ["type", "idempotencyKey", "payload"]);
-    if (!isRecord(value.payload)) {
-      throw new StudioOperationContractError("Membership payload is required.");
-    }
+    if (!isRecord(value.payload)) throw new StudioOperationContractError("Membership payload is required.");
     requireExactKeys(value.payload, ["userId", "role", "active"]);
-    if (!isStudioRole(value.payload.role)) {
-      throw new StudioOperationContractError("Studio role is invalid.");
-    }
-    if (typeof value.payload.active !== "boolean") {
-      throw new StudioOperationContractError("Membership active flag is required.");
-    }
+    if (!isStudioRole(value.payload.role)) throw new StudioOperationContractError("Studio role is invalid.");
+    if (typeof value.payload.active !== "boolean") throw new StudioOperationContractError("Membership active flag is required.");
     return {
       type: STUDIO_MEMBERSHIP_SET,
       idempotencyKey: parseIdempotencyKey(value.idempotencyKey),
