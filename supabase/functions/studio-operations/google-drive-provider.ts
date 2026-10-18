@@ -233,6 +233,40 @@ export async function readGoogleDriveAccount(accessToken: string): Promise<Googl
   };
 }
 
+function escapeDriveQueryValue(value: string): string {
+  return value.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+}
+
+async function findManagedDriveFolder(
+  name: string,
+  accessToken: string,
+  parentId?: string,
+): Promise<string | null> {
+  const escapedName = escapeDriveQueryValue(name);
+  const parent = parentId ? `'${escapeDriveQueryValue(parentId)}'` : "'root'";
+  const query = [
+    `${parent} in parents`,
+    `name = '${escapedName}'`,
+    "mimeType = 'application/vnd.google-apps.folder'",
+    "trashed = false",
+    "appProperties has { key='fantasiaContentStudio' and value='source-master' }",
+  ].join(" and ");
+  const body = await driveJson(
+    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id)&pageSize=2&spaces=drive`,
+    accessToken,
+  );
+  if (!Array.isArray(body.files) || body.files.length === 0) return null;
+  if (body.files.length > 1) {
+    throw new GoogleDriveProviderError(
+      `Google Drive contains duplicate Studio-managed ${name} folders. Resolve the duplicates before reconnecting.`,
+      409,
+    );
+  }
+  const folder = body.files[0] as Record<string, unknown>;
+  if (typeof folder.id !== "string") throw new GoogleDriveProviderError("Google Drive folder lookup returned no file ID.");
+  return folder.id;
+}
+
 async function createDriveFolder(
   name: string,
   accessToken: string,
@@ -256,10 +290,19 @@ async function createDriveFolder(
   return body.id;
 }
 
+async function ensureManagedDriveFolder(
+  name: string,
+  accessToken: string,
+  parentId?: string,
+): Promise<string> {
+  return await findManagedDriveFolder(name, accessToken, parentId) ??
+    await createDriveFolder(name, accessToken, parentId);
+}
+
 export async function createGoogleDriveSourceFolders(accessToken: string): Promise<GoogleDriveSourceFolders> {
-  const rootFolderId = await createDriveFolder("Fantasia", accessToken);
-  const productionAssetsFolderId = await createDriveFolder("Production Assets", accessToken, rootFolderId);
-  const sourceMastersFolderId = await createDriveFolder("Source Masters", accessToken, productionAssetsFolderId);
+  const rootFolderId = await ensureManagedDriveFolder("Fantasia", accessToken);
+  const productionAssetsFolderId = await ensureManagedDriveFolder("Production Assets", accessToken, rootFolderId);
+  const sourceMastersFolderId = await ensureManagedDriveFolder("Source Masters", accessToken, productionAssetsFolderId);
   return { rootFolderId, productionAssetsFolderId, sourceMastersFolderId };
 }
 
@@ -319,10 +362,6 @@ async function sourceMetadata(
     checksum: await sha256Hex(bytes),
     observedAt: metadata.modifiedTime,
   };
-}
-
-function escapeDriveQueryValue(value: string): string {
-  return value.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
 }
 
 async function findDriveUploadByTag(
