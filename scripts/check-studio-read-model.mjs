@@ -80,7 +80,11 @@ requireText(
   "exposeProviderReference: false",
   "Provider references must be redacted by default.",
 );
-requireText(adapters, "content/narrative/story.json", "Story canonical authority must remain story.json.");
+requireText(
+  adapters,
+  "content/narrative/story.json",
+  "Story canonical authority must remain story.json.",
+);
 requireText(
   adapters,
   "content/narrative/story-production.json",
@@ -112,7 +116,11 @@ for (const sourcePath of [
   "content/encounters/candidates/ch01-b01.layout-candidate.json",
   "config/runtime-assets.json",
 ])
-  requireText(generator, sourcePath, `Snapshot generator must read Git-owned source ${sourcePath}.`);
+  requireText(
+    generator,
+    sourcePath,
+    `Snapshot generator must read Git-owned source ${sourcePath}.`,
+  );
 
 if (
   !generatedSnapshot ||
@@ -133,7 +141,9 @@ const snapshotCheck = spawnSync(
   },
 );
 if (snapshotCheck.status !== 0) {
-  throw new Error(snapshotCheck.stderr || snapshotCheck.stdout || "Generated snapshot check failed.");
+  throw new Error(
+    snapshotCheck.stderr || snapshotCheck.stdout || "Generated snapshot check failed.",
+  );
 }
 
 requireText(
