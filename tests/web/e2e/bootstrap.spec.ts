@@ -1,11 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
 
-interface FrameSample {
-  readonly medianMs: number;
-  readonly p95Ms: number;
-  readonly maxMs: number;
-}
-
 function projectedCellPoint(width: number, height: number, x: number, y: number) {
   const tileWidth = 84;
   const tileHeight = 42;
@@ -144,26 +138,6 @@ test("standardized Fantasia Battle HUD remains reachable through development que
   const viewportWidth = page.viewportSize()?.width ?? 0;
   const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
   expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 1);
-
-  const sample = await page.evaluate<FrameSample>(
-    () =>
-      new Promise((resolve) => {
-        const stamps: number[] = [];
-        const collect = (time: number) => {
-          stamps.push(time);
-          if (stamps.length < 31) return requestAnimationFrame(collect);
-          const intervals = stamps.slice(1).map((stamp, index) => stamp - (stamps[index] ?? stamp));
-          const sorted = [...intervals].sort((left, right) => left - right);
-          resolve({
-            medianMs: sorted[Math.floor(sorted.length / 2)] ?? 0,
-            p95Ms: sorted[Math.floor(sorted.length * 0.95)] ?? 0,
-            maxMs: Math.max(...intervals),
-          });
-        };
-        requestAnimationFrame(collect);
-      }),
-  );
-  expect(sample.maxMs).toBeLessThan(500);
 });
 
 test("home, campaign, story and battle primary actions remain reachable at 200 percent interface text", async ({

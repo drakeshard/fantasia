@@ -10,7 +10,7 @@ Foundation is consumed as exact public `@drakeshard/foundation@0.1.2` infrastruc
 
 - `packages/game` owns authoritative Fantasia domain state, commands, validation, deterministic simulation, title policy, combat/action semantics, jobs/skills/statuses, objectives, AI, encounter rules, and RPG↔Tactical composition.
 - `packages/runtime` owns application/session orchestration around Foundation fixed-step time, deterministic RNG, normalized input handoff, aggregate save services, and provider-neutral validation/resolution of Git-owned runtime asset manifests. It is not a renderer, browser owner, or binary asset authority.
-- `apps/web` owns browser presentation, HTML/CSS/Preact UI, browser input adapters, IndexedDB storage adapters, runtime asset delivery-origin configuration, future renderer adapters, camera/animation/effects/audio, and input mapping to game intentions.
+- `apps/web` owns browser presentation, HTML/CSS/Preact UI, browser input adapters, IndexedDB storage adapters, runtime asset delivery-origin configuration, the title-local Pixi battlefield presentation engine, camera/animation/effects/audio, and input mapping to game intentions.
 - Drakeshard RPG and Tactical remain sibling dependencies. Fantasia may consume selected package subpaths, but neither library may depend on the other because Fantasia uses both.
 
 ## Content Studio registry boundary
@@ -25,7 +25,7 @@ The exact frozen lifecycle is `WORKING → CANDIDATE → IN REVIEW → APPROVED 
 
 Fantasia imports Foundation only through supported package subpaths. Package-root imports and repository/source imports are forbidden.
 
-The application or future renderer supplies elapsed frame time to `FixedStepDriver`; Foundation does not own the browser frame loop. `DeterministicRng` state is part of runtime state and can be snapshotted for later aggregate persistence. Physical browser input is normalized by Foundation browser adapters and enters authoritative processing only through `TickInputHandoff.consumeTick()` at a simulation tick.
+The application or renderer supplies elapsed frame time to `FixedStepDriver`; Foundation does not own the browser frame loop. `DeterministicRng` state is part of runtime state and can be snapshotted for later aggregate persistence. Physical browser input is normalized by Foundation browser adapters and enters authoritative processing only through `TickInputHandoff.consumeTick()` at a simulation tick.
 
 Foundation validates save envelopes and save-format migration mechanics. Fantasia owns aggregate payload structure, game/content/schema versions, payload validation, and when a migrated payload is saved again. IndexedDB and wall-clock save timestamps remain browser/application concerns.
 
@@ -37,9 +37,13 @@ Git owns semantic runtime asset meaning through `config/runtime-assets.json`: st
 
 Supabase Storage owns published runtime binary objects only. The public bucket is appropriate for shipped non-secret game media, but browser upload/update/delete/list authority is intentionally absent. Publishing is a trusted deployment/admin action using server-only credentials. Versioned object paths are treated as immutable once published.
 
-## Renderer boundary
+## Battlefield renderer boundary
 
-No production renderer is selected yet. The GDD still permits either 2D or true 2.5D presentation. Renderer coordinates, physics, frame timing, DOM state, and animation state cannot become authoritative simulation inputs.
+Fantasia uses one title-local Pixi battlefield presentation engine in `apps/web`. `battlefield-engine.ts` owns the renderer-facing frame contract, deterministic scene compilation, coordinate/unit indexes, validation and render ordering. `battlefield-renderer.ts` owns Pixi drawing and presentation-only camera behavior. Production battle views and authored/developer scenes are adapters into the same `BattlefieldRenderFrame`; they are not separate renderer implementations.
+
+The renderer-facing frame is intentionally explicit presentation state: bounds, render cells and render units. DOM selectors, ARIA labels, developer-viewer controls, timing probes and test metadata belong to the host layer and cannot enter authored battlefield scene contracts or upstream game/runtime contracts. `packages/game` and `packages/runtime` remain renderer neutral; renderer coordinates, browser frame timing, camera state, DOM state and Pixi objects cannot become authoritative simulation inputs.
+
+The developer route is `?dev=battlefield` and defaults to a small representative reference fixture suitable for interaction and E2E coverage. The 64×64 Ghost Sea and Avalon scenes are explicit stress fixtures only. They verify large-scene compilation/render smoke behavior and must not define the normal battlefield API, default viewer state, or browser interaction contract. Performance correctness is tested deterministically through scene compilation/indexing invariants rather than pass/fail wall-clock or requestAnimationFrame thresholds in E2E.
 
 ## Determinism
 
