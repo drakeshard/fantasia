@@ -174,7 +174,7 @@ async function signIn(page: Page, role: "Viewer" | "Editor") {
 test("Viewer sees production Assets with retained history and no mutation access", async ({ page }) => {
   await signIn(page, "Viewer");
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
-  await expect(page.getByText(asset.semanticId, { exact: true })).toBeVisible();
+  await expect(page.getByText(asset.semanticId, { exact: true }).first()).toBeVisible();
   await expect(page.getByText("v2").first()).toBeVisible();
   await expect(page.getByText("v1").first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Create new source version" })).toBeDisabled();
