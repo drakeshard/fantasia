@@ -23,6 +23,40 @@ async function openDetails(page: Page) {
   return details;
 }
 
+async function dragReviewCanvas(
+  page: Page,
+  startX: number,
+  startY: number,
+  hasTouch: boolean,
+): Promise<void> {
+  if (hasTouch) {
+    const session = await page.context().newCDPSession(page);
+    try {
+      await session.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [{ x: startX, y: startY }],
+      });
+      await session.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: startX + 45, y: startY + 18 }],
+      });
+      await session.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: startX + 90, y: startY + 35 }],
+      });
+      await session.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    } finally {
+      await session.detach();
+    }
+    return;
+  }
+
+  await page.mouse.move(startX, startY);
+  await page.mouse.down();
+  await page.mouse.move(startX + 90, startY + 35, { steps: 3 });
+  await page.mouse.up();
+}
+
 test("CH01-B01 review defaults to a full-screen Battlefield with camera controls", async ({
   page,
 }) => {
@@ -56,38 +90,36 @@ test("CH01-B01 review defaults to a full-screen Battlefield with camera controls
   await expect(host).toHaveAttribute("data-camera-pan", "0,0");
 });
 
-test("CH01-B01 review supports drag-pan and collapsible details without changing selection", async ({
-  page,
-}) => {
-  const { host, canvas } = await openMapReview(page);
-  await openDetails(page);
-  const selectedBeforeDrag = await page.getByTestId("selected-coordinate").textContent();
+test(
+  "CH01-B01 review supports drag-pan and collapsible details without changing selection",
+  async ({ page }, testInfo) => {
+    const { host, canvas } = await openMapReview(page);
+    await openDetails(page);
+    const selectedBeforeDrag = await page.getByTestId("selected-coordinate").textContent();
 
-  await expect
-    .poll(async () => {
-      const box = await canvas.boundingBox();
-      return Boolean(box && box.width > 0 && box.height > 0);
-    })
-    .toBe(true);
+    await expect
+      .poll(async () => {
+        const box = await canvas.boundingBox();
+        return Boolean(box && box.width > 0 && box.height > 0);
+      })
+      .toBe(true);
 
-  const canvasBox = await canvas.boundingBox();
-  if (!canvasBox) throw new Error("B01 map canvas has no bounding box after readiness check");
-  const startX = canvasBox.x + canvasBox.width * 0.42;
-  const startY = canvasBox.y + canvasBox.height * 0.62;
-  await page.mouse.move(startX, startY);
-  await page.mouse.down();
-  await page.mouse.move(startX + 90, startY + 35, { steps: 3 });
-  await page.mouse.up();
-  await expect(host).not.toHaveAttribute("data-camera-pan", "0,0");
-  await expect(page.getByTestId("selected-coordinate")).toHaveText(selectedBeforeDrag ?? "");
+    const canvasBox = await canvas.boundingBox();
+    if (!canvasBox) throw new Error("B01 map canvas has no bounding box after readiness check");
+    const startX = canvasBox.x + canvasBox.width * 0.42;
+    const startY = canvasBox.y + canvasBox.height * 0.62;
+    await dragReviewCanvas(page, startX, startY, testInfo.project.use.hasTouch === true);
+    await expect(host).not.toHaveAttribute("data-camera-pan", "0,0");
+    await expect(page.getByTestId("selected-coordinate")).toHaveText(selectedBeforeDrag ?? "");
 
-  await page.getByRole("button", { name: "Hide details" }).click();
-  await expect(page.getByRole("complementary", { name: "Map review details" })).toHaveCount(0);
-  await page.getByRole("button", { name: "Details" }).click();
-  await expect(page.getByRole("complementary", { name: "Map review details" })).toBeVisible();
-  await page.getByRole("button", { name: "Hide details" }).click();
-  await expect(page.getByRole("complementary", { name: "Map review details" })).toHaveCount(0);
-});
+    await page.getByRole("button", { name: "Hide details" }).click();
+    await expect(page.getByRole("complementary", { name: "Map review details" })).toHaveCount(0);
+    await page.getByRole("button", { name: "Details" }).click();
+    await expect(page.getByRole("complementary", { name: "Map review details" })).toBeVisible();
+    await page.getByRole("button", { name: "Hide details" }).click();
+    await expect(page.getByRole("complementary", { name: "Map review details" })).toHaveCount(0);
+  },
+);
 
 test("CH01-B01 Blueprint preserves exact candidate geometry and review facts", async ({ page }) => {
   await openMapReview(page);
