@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { restoreStudioSession, signOutStudio, type StudioSessionState } from "../studio-session";
+import { restoreStudioSession, type StudioSessionState, signOutStudio } from "../studio-session";
 import { AuthorizedStudio } from "./AuthorizedStudio";
 import {
   SignedOutStudio,
