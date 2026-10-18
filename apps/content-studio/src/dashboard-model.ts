@@ -18,10 +18,14 @@ export interface DashboardEntityReadModel {
     readonly dimension: string;
     readonly outcome: string;
     readonly blocking: boolean;
+    readonly checkedAt?: string;
   }[];
   readonly provenance: readonly {
     readonly authority: string;
+    readonly source?: string;
+    readonly revision?: string;
     readonly observedAt?: string;
+    readonly canonical?: boolean;
   }[];
   readonly issues: readonly {
     readonly code: string;
@@ -32,13 +36,41 @@ export interface DashboardEntityReadModel {
     readonly semanticId: string;
     readonly role: string;
     readonly variant: string | null;
+    readonly lifecycle: string | null;
     readonly derivativeRequired: boolean;
     readonly currentVersion: {
+      readonly semanticAssetId?: string;
+      readonly versionId: string | null;
+      readonly versionNumber: number | null;
+      readonly providerKind: string | null;
       readonly sourceAvailable: boolean;
-      readonly provenance: { readonly observedAt?: string };
+      readonly mediaType: string | null;
+      readonly byteSize: number | null;
+      readonly dimensions: { readonly width: number; readonly height: number } | null;
+      readonly checksum: { readonly algorithm: string; readonly value: string } | null;
+      readonly providerReference: {
+        readonly visibility: "redacted" | "opaque" | "unavailable";
+        readonly token?: string;
+      };
+      readonly operations?: readonly ("metadata" | "preview" | "download")[];
+      readonly provenance: {
+        readonly authority?: string;
+        readonly source?: string;
+        readonly observedAt?: string;
+      };
     } | null;
-    readonly runtimeDerivatives: readonly unknown[];
+    readonly runtimeDerivatives: readonly {
+      readonly semanticId: string;
+      readonly assetId?: string;
+      readonly mediaType: string;
+      readonly outputFormat: string;
+      readonly runtimePath: string | null;
+      readonly technicalState: string;
+      readonly manifestMapped: boolean;
+      readonly acceptedRuntimePath: string | null;
+    }[];
     readonly issues: readonly {
+      readonly code?: string;
       readonly severity: string;
       readonly message: string;
     }[];
