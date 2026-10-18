@@ -20,6 +20,8 @@ jobs:
           node-version-file: .node-version
       - name: Enable Corepack
         run: corepack enable
+      - name: Prepare pinned shared-library artifacts
+        run: node scripts/prepare-shared-packages.mjs
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Format UI25 files
