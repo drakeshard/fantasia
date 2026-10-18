@@ -1,46 +1,50 @@
 import { Application, Container, Graphics, Text } from "pixi.js";
-import layout from "../../../content/encounters/candidates/ch01-b01.layout-candidate.json";
+import type {
+  BattlefieldElevationCell,
+  BattlefieldRenderScene,
+  BattlefieldTerrainRegion,
+  BattlefieldUnitMarker,
+} from "./battlefield-scene.js";
+import { battlefieldUnitVisualId } from "./battlefield-scene.js";
+import {
+  FANTASIA_BATTLEFIELD_RENDER_PROFILE,
+  FANTASIA_BATTLEFIELD_VISUAL_CATALOG,
+  type BattlefieldCellCoord,
+  type BattlefieldProjectedCell,
+  type BattlefieldScreenPoint,
+  type BattlefieldTerrainVisualId,
+  projectSquareCell,
+  squareTilePoints,
+  terrainVisualForCell,
+  visibleSquareNeighbors,
+} from "./battlefield-presentation.js";
+import { B01_MAP_REVIEW_SCENE } from "./map-review-b01-scene.js";
 
-export interface MapReviewCell {
-  readonly x: number;
-  readonly y: number;
-}
-
-export interface MapReviewElevationCell extends MapReviewCell {
-  readonly level: number;
-}
-
+export type MapReviewCell = BattlefieldCellCoord;
+export type MapReviewElevationCell = BattlefieldElevationCell;
 export type MapReviewTerrainKind = "road" | "ridge" | "track" | "basin" | "plateau";
 
-export interface MapReviewTerrainRegion {
+export interface LegacyMapReviewTerrainRegion {
   readonly kind: MapReviewTerrainKind;
   readonly cells: readonly MapReviewCell[];
 }
 
-export interface MapReviewUnitMarker {
+export interface LegacyMapReviewUnitMarker {
   readonly cell: MapReviewCell;
   readonly side: string;
   readonly label: string;
   readonly reinforcement: boolean;
 }
 
-export interface MapReviewRendererScene {
-  readonly bounds: {
-    readonly minX: number;
-    readonly maxX: number;
-    readonly minY: number;
-    readonly maxY: number;
-  };
-  readonly blockedCells: readonly MapReviewCell[];
-  readonly elevationCells: readonly MapReviewElevationCell[];
+export type MapReviewTerrainRegion = BattlefieldTerrainRegion | LegacyMapReviewTerrainRegion;
+export type MapReviewUnitMarker = BattlefieldUnitMarker | LegacyMapReviewUnitMarker;
+
+export interface MapReviewRendererScene
+  extends Omit<BattlefieldRenderScene, "id" | "terrainRegions" | "blockedPropVisualId" | "units"> {
+  readonly id?: string;
   readonly terrainRegions: readonly MapReviewTerrainRegion[];
-  readonly routeAnchors: readonly MapReviewCell[];
-  readonly routeClearanceCells: readonly MapReviewCell[];
-  readonly exitZone: readonly MapReviewCell[];
+  readonly blockedPropVisualId?: BattlefieldRenderScene["blockedPropVisualId"];
   readonly units: readonly MapReviewUnitMarker[];
-  readonly cartStart?: MapReviewCell;
-  readonly testIdPrefix: string;
-  readonly ariaLabel: string;
 }
 
 export interface MapReviewRendererOptions {
@@ -51,194 +55,43 @@ export interface MapReviewRendererOptions {
   readonly selected: MapReviewCell;
 }
 
-interface ScreenPoint {
-  readonly x: number;
-  readonly y: number;
-}
-
-interface DisplayCell extends ScreenPoint {
-  readonly depth: number;
-}
-
-interface VisibleNeighbors {
-  readonly left: MapReviewCell;
-  readonly right: MapReviewCell;
-}
-
-const TILE_WIDTH = 84;
-const TILE_HEIGHT = 42;
-const ELEVATION_STEP = 24;
-const PADDING = 76;
-const MIN_ZOOM = 0.6;
-const MAX_ZOOM = 2.4;
-const ZOOM_STEP = 1.16;
-const DRAG_THRESHOLD = 5;
+const PROFILE = FANTASIA_BATTLEFIELD_RENDER_PROFILE;
+const CATALOG = FANTASIA_BATTLEFIELD_VISUAL_CATALOG;
 
 function key(cell: MapReviewCell): string {
   return `${cell.x},${cell.y}`;
 }
 
-function markerLabel(entry: (typeof layout.deployment.initial)[number]): string {
-  if (entry.id === "mc") return "MC";
-  if (entry.id === "julie") return "J";
-  if (entry.id.startsWith("civilian")) return "C";
-  if (entry.id.startsWith("local-escort")) return "E";
-  if (entry.id.startsWith("forager")) return "F";
-  return "•";
+function terrainVisualId(region: MapReviewTerrainRegion): BattlefieldTerrainVisualId {
+  if ("visualId" in region) return region.visualId;
+  return `terrain.${region.kind}` as BattlefieldTerrainVisualId;
 }
 
-function reinforcementLabel(entry: (typeof layout.deployment.reinforcements)[number]): string {
-  if (entry.id === "hangaku" || entry.id === "la-hire") return "?";
-  if (entry.id.startsWith("forager-reinforcement")) return "R";
-  return "+";
-}
-
-function cartClearanceFor(routeAnchors: readonly MapReviewCell[]): MapReviewCell[] {
-  return routeAnchors.flatMap((anchor) => [anchor, { x: anchor.x + 1, y: anchor.y }]);
-}
-
-const b01RoadCells = layout.environmentIntent.functionalRegions
-  .filter((region) => ["west-approach", "central-road", "east-bend"].includes(region.id))
-  .flatMap((region) => region.cells);
-const b01RidgeCells = layout.environmentIntent.functionalRegions
-  .filter((region) => region.id === "north-ridge")
-  .flatMap((region) => region.cells);
-const b01TrackCells = layout.environmentIntent.functionalRegions
-  .filter((region) => region.id === "south-track")
-  .flatMap((region) => region.cells);
-
-const B01_SCENE: MapReviewRendererScene = {
-  bounds: layout.bounds,
-  blockedCells: layout.terrain.blockedCells,
-  elevationCells: layout.terrain.elevationCells,
-  terrainRegions: [
-    { kind: "road", cells: b01RoadCells },
-    { kind: "ridge", cells: b01RidgeCells },
-    { kind: "track", cells: b01TrackCells },
-  ],
-  routeAnchors: layout.cart.routeAnchors,
-  routeClearanceCells: cartClearanceFor(layout.cart.routeAnchors),
-  exitZone: layout.cart.exitZone,
-  units: [
-    ...layout.deployment.initial.map((entry) => ({
-      cell: entry.cell,
-      side: entry.side,
-      label: markerLabel(entry),
-      reinforcement: false,
-    })),
-    ...layout.deployment.reinforcements.map((entry) => ({
-      cell: entry.entryCell,
-      side: entry.id.startsWith("forager") ? "enemy" : "allied",
-      label: reinforcementLabel(entry),
-      reinforcement: true,
-    })),
-  ],
-  cartStart: layout.cart.startAnchor,
-  testIdPrefix: "b01-map-2p5d",
-  ariaLabel: "CH01-B01 interactive 2.5D candidate battlefield review",
-};
-
-function rotatedCell(
-  cell: MapReviewCell,
-  rotation: number,
-  bounds: MapReviewRendererScene["bounds"],
-): MapReviewCell {
-  const x = cell.x - bounds.minX;
-  const y = cell.y - bounds.minY;
-  const width = bounds.maxX - bounds.minX;
-  const height = bounds.maxY - bounds.minY;
-  switch (rotation) {
-    case 1:
-      return { x: y, y: width - x };
-    case 2:
-      return { x: width - x, y: height - y };
-    case 3:
-      return { x: height - y, y: x };
-    default:
-      return { x, y };
-  }
-}
-
-function projection(
-  cell: MapReviewCell,
-  elevation: number,
-  rotation: number,
-  bounds: MapReviewRendererScene["bounds"],
-): DisplayCell {
-  const display = rotatedCell(cell, rotation, bounds);
-  return {
-    x: (display.x - display.y) * (TILE_WIDTH / 2),
-    y: (display.x + display.y) * (TILE_HEIGHT / 2) - elevation * ELEVATION_STEP,
-    depth: display.x + display.y,
-  };
-}
-
-function visibleNeighbors(cell: MapReviewCell, rotation: number): VisibleNeighbors {
-  switch (rotation) {
-    case 1:
-      return {
-        left: { x: cell.x - 1, y: cell.y },
-        right: { x: cell.x, y: cell.y + 1 },
-      };
-    case 2:
-      return {
-        left: { x: cell.x, y: cell.y - 1 },
-        right: { x: cell.x - 1, y: cell.y },
-      };
-    case 3:
-      return {
-        left: { x: cell.x + 1, y: cell.y },
-        right: { x: cell.x, y: cell.y - 1 },
-      };
-    default:
-      return {
-        left: { x: cell.x, y: cell.y + 1 },
-        right: { x: cell.x + 1, y: cell.y },
-      };
-  }
-}
-
-function tilePoints(point: ScreenPoint): number[] {
-  return [
-    point.x,
-    point.y - TILE_HEIGHT / 2,
-    point.x + TILE_WIDTH / 2,
-    point.y,
-    point.x,
-    point.y + TILE_HEIGHT / 2,
-    point.x - TILE_WIDTH / 2,
-    point.y,
-  ];
-}
-
-function terrainFill(kind: MapReviewTerrainKind | undefined, cell: MapReviewCell): number {
-  if (kind === "road") return 0x766849;
-  if (kind === "ridge") return 0x66704c;
-  if (kind === "track") return 0x5f6747;
-  if (kind === "basin") return 0x3d5147;
-  if (kind === "plateau") return 0x756845;
-  return (cell.x + cell.y) % 2 === 0 ? 0x4f633f : 0x566a44;
+function unitVisualId(unit: MapReviewUnitMarker) {
+  return "visualId" in unit
+    ? unit.visualId
+    : battlefieldUnitVisualId(unit.side, unit.reinforcement);
 }
 
 function drawElevationWalls(
   world: Container,
-  point: ScreenPoint,
+  point: BattlefieldScreenPoint,
   leftDrop: number,
   rightDrop: number,
 ): number {
   let faces = 0;
   if (leftDrop > 0) {
-    const baseY = point.y + leftDrop * ELEVATION_STEP;
+    const baseY = point.y + leftDrop * PROFILE.elevationStep;
     world.addChild(
       new Graphics()
         .poly([
-          point.x - TILE_WIDTH / 2,
+          point.x - PROFILE.tileWidth / 2,
           point.y,
           point.x,
-          point.y + TILE_HEIGHT / 2,
+          point.y + PROFILE.tileHeight / 2,
           point.x,
-          baseY + TILE_HEIGHT / 2,
-          point.x - TILE_WIDTH / 2,
+          baseY + PROFILE.tileHeight / 2,
+          point.x - PROFILE.tileWidth / 2,
           baseY,
         ])
         .fill(0x3f412d)
@@ -247,17 +100,17 @@ function drawElevationWalls(
     faces += 1;
   }
   if (rightDrop > 0) {
-    const baseY = point.y + rightDrop * ELEVATION_STEP;
+    const baseY = point.y + rightDrop * PROFILE.elevationStep;
     world.addChild(
       new Graphics()
         .poly([
-          point.x + TILE_WIDTH / 2,
+          point.x + PROFILE.tileWidth / 2,
           point.y,
           point.x,
-          point.y + TILE_HEIGHT / 2,
+          point.y + PROFILE.tileHeight / 2,
           point.x,
-          baseY + TILE_HEIGHT / 2,
-          point.x + TILE_WIDTH / 2,
+          baseY + PROFILE.tileHeight / 2,
+          point.x + PROFILE.tileWidth / 2,
           baseY,
         ])
         .fill(0x343829)
@@ -268,7 +121,7 @@ function drawElevationWalls(
   return faces;
 }
 
-function drawTree(world: Container, point: ScreenPoint, seed: number): void {
+function drawTree(world: Container, point: BattlefieldScreenPoint, seed: number): void {
   const trunkX = point.x + ((seed % 3) - 1) * 5;
   const trunkY = point.y - 12 - (seed % 2) * 4;
   world.addChild(
@@ -283,7 +136,49 @@ function drawTree(world: Container, point: ScreenPoint, seed: number): void {
   );
 }
 
-function drawRoadDetail(world: Container, point: ScreenPoint): void {
+function drawRubble(world: Container, point: BattlefieldScreenPoint): void {
+  world.addChild(
+    new Graphics()
+      .poly([
+        point.x - 18,
+        point.y + 5,
+        point.x - 9,
+        point.y - 8,
+        point.x + 2,
+        point.y - 5,
+        point.x + 7,
+        point.y + 7,
+      ])
+      .fill(0x3c3b33)
+      .stroke({ color: 0x766d58, width: 1 }),
+    new Graphics()
+      .poly([
+        point.x + 3,
+        point.y + 8,
+        point.x + 12,
+        point.y - 5,
+        point.x + 22,
+        point.y + 4,
+        point.x + 14,
+        point.y + 11,
+      ])
+      .fill(0x514c3f)
+      .stroke({ color: 0x776d59, width: 1 }),
+  );
+}
+
+function drawBlockedProp(
+  world: Container,
+  point: BattlefieldScreenPoint,
+  seed: number,
+  visualId: BattlefieldRenderScene["blockedPropVisualId"],
+): void {
+  const prop = CATALOG.props[visualId];
+  if (prop.fallback === "rubble") drawRubble(world, point);
+  else drawTree(world, point, seed);
+}
+
+function drawRoadDetail(world: Container, point: BattlefieldScreenPoint): void {
   world.addChild(
     new Graphics()
       .moveTo(point.x - 22, point.y + 5)
@@ -294,7 +189,7 @@ function drawRoadDetail(world: Container, point: ScreenPoint): void {
   );
 }
 
-function drawFieldDetail(world: Container, point: ScreenPoint, seed: number): void {
+function drawFieldDetail(world: Container, point: BattlefieldScreenPoint, seed: number): void {
   const detail = new Graphics();
   for (let index = 0; index < 3; index += 1) {
     const offset = -16 + index * 12 + (seed % 3);
@@ -304,21 +199,15 @@ function drawFieldDetail(world: Container, point: ScreenPoint, seed: number): vo
   world.addChild(detail);
 }
 
-function drawUnitMarker(
-  world: Container,
-  point: ScreenPoint,
-  side: string,
-  label: string,
-  reinforcement: boolean,
-): void {
-  const fill = side === "enemy" ? 0x743f39 : side === "protected" ? 0x776a45 : 0x355b61;
+function drawUnitMarker(world: Container, point: BattlefieldScreenPoint, unit: MapReviewUnitMarker): void {
+  const visual = CATALOG.units[unitVisualId(unit)];
   const body = new Graphics()
     .poly([-12, -12, 0, -21, 12, -12, 10, 12, 0, 17, -10, 12])
-    .fill({ color: fill, alpha: reinforcement ? 0.58 : 0.94 })
-    .stroke({ color: reinforcement ? 0xd6b86f : 0xf1e3bb, width: reinforcement ? 2 : 1.5 });
+    .fill({ color: visual.fill, alpha: visual.alpha })
+    .stroke({ color: visual.stroke, width: visual.alpha < 0.8 ? 2 : 1.5 });
   body.position.set(point.x, point.y - 22);
   const text = new Text({
-    text: label,
+    text: unit.label,
     style: {
       fill: 0xfff7e7,
       fontFamily: "sans-serif",
@@ -336,7 +225,7 @@ function drawUnitMarker(
   );
 }
 
-function drawCart(world: Container, point: ScreenPoint): void {
+function drawCart(world: Container, point: BattlefieldScreenPoint): void {
   world.addChild(
     new Graphics().ellipse(point.x + 19, point.y + 1, 36, 8).fill({ color: 0x080b08, alpha: 0.35 }),
     new Graphics()
@@ -352,10 +241,7 @@ function drawCart(world: Container, point: ScreenPoint): void {
       ])
       .fill(0x755237)
       .stroke({ color: 0xc29d65, width: 1.5 }),
-    new Graphics()
-      .rect(point.x - 1, point.y - 31, 26, 14)
-      .fill(0x8f734c)
-      .stroke({ color: 0xd0b27a, width: 1 }),
+    new Graphics().rect(point.x - 1, point.y - 31, 26, 14).fill(0x8f734c).stroke({ color: 0xd0b27a, width: 1 }),
     new Graphics()
       .circle(point.x - 7, point.y - 2, 6)
       .circle(point.x + 31, point.y + 4, 6)
@@ -377,7 +263,7 @@ export class MapReviewRenderer {
   readonly #routeAnchors: ReadonlySet<string>;
   readonly #routeClearance: ReadonlySet<string>;
   readonly #exitZone: ReadonlySet<string>;
-  readonly #terrainKinds: ReadonlyMap<string, MapReviewTerrainKind>;
+  readonly #terrainVisuals: ReadonlyMap<string, BattlefieldTerrainVisualId>;
   readonly #app = new Application();
   #ready = false;
   #options: MapReviewRendererOptions;
@@ -407,7 +293,7 @@ export class MapReviewRenderer {
     host: HTMLElement,
     options: MapReviewRendererOptions,
     onSelect: (cell: MapReviewCell) => void,
-    scene: MapReviewRendererScene = B01_SCENE,
+    scene: MapReviewRendererScene = B01_MAP_REVIEW_SCENE,
   ) {
     this.#host = host;
     this.#options = options;
@@ -418,11 +304,12 @@ export class MapReviewRenderer {
     this.#routeAnchors = new Set(scene.routeAnchors.map(key));
     this.#routeClearance = new Set(scene.routeClearanceCells.map(key));
     this.#exitZone = new Set(scene.exitZone.map(key));
-    const terrainKinds = new Map<string, MapReviewTerrainKind>();
+    const terrainVisuals = new Map<string, BattlefieldTerrainVisualId>();
     for (const region of scene.terrainRegions) {
-      for (const cell of region.cells) terrainKinds.set(key(cell), region.kind);
+      const visualId = terrainVisualId(region);
+      for (const cell of region.cells) terrainVisuals.set(key(cell), visualId);
     }
-    this.#terrainKinds = terrainKinds;
+    this.#terrainVisuals = terrainVisuals;
   }
 
   async init(): Promise<void> {
@@ -457,11 +344,11 @@ export class MapReviewRenderer {
   }
 
   zoomIn(): void {
-    this.#setZoom(this.#zoom * ZOOM_STEP);
+    this.#setZoom(this.#zoom * PROFILE.zoomStep);
   }
 
   zoomOut(): void {
-    this.#setZoom(this.#zoom / ZOOM_STEP);
+    this.#setZoom(this.#zoom / PROFILE.zoomStep);
   }
 
   rotateLeft(): void {
@@ -502,13 +389,11 @@ export class MapReviewRenderer {
     this.#ready = false;
   }
 
-  readonly #handleResize = (): void => {
-    this.#resize();
-  };
+  readonly #handleResize = (): void => this.#resize();
 
   readonly #handleWheel = (event: WheelEvent): void => {
     event.preventDefault();
-    this.#setZoom(this.#zoom * (event.deltaY < 0 ? ZOOM_STEP : 1 / ZOOM_STEP));
+    this.#setZoom(this.#zoom * (event.deltaY < 0 ? PROFILE.zoomStep : 1 / PROFILE.zoomStep));
   };
 
   readonly #handlePointerDown = (event: PointerEvent): void => {
@@ -559,7 +444,7 @@ export class MapReviewRenderer {
 
   #continueDrag(clientX: number, clientY: number): void {
     const fromStart = Math.hypot(clientX - this.#pointerStartX, clientY - this.#pointerStartY);
-    if (!this.#dragged && fromStart < DRAG_THRESHOLD) return;
+    if (!this.#dragged && fromStart < PROFILE.dragThreshold) return;
     this.#dragged = true;
     this.#suppressTap = true;
     this.#panX += clientX - this.#lastPointerX;
@@ -580,7 +465,7 @@ export class MapReviewRenderer {
   }
 
   #setZoom(next: number): void {
-    this.#zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, next));
+    this.#zoom = Math.min(PROFILE.maxZoom, Math.max(PROFILE.minZoom, next));
     this.#applyCamera();
   }
 
@@ -592,11 +477,11 @@ export class MapReviewRenderer {
     world.scale.set(scale);
     world.x =
       (this.#app.screen.width - this.#contentWidth * scale) / 2 +
-      (PADDING - this.#minX) * scale +
+      (PROFILE.padding - this.#minX) * scale +
       this.#panX;
     world.y =
       (this.#app.screen.height - this.#contentHeight * scale) / 2 +
-      (PADDING - this.#minY) * scale +
+      (PROFILE.padding - this.#minY) * scale +
       this.#panY;
   }
 
@@ -635,13 +520,12 @@ export class MapReviewRenderer {
   #draw(): void {
     if (!this.#ready) return;
     this.#updateCameraDataset();
-    this.#app.stage.removeChildren().forEach((child) => {
-      child.destroy({ children: true });
-    });
+    this.#app.stage.removeChildren().forEach((child) => child.destroy({ children: true }));
+
     const cells: Array<{
       cell: MapReviewCell;
       elevation: number;
-      point: DisplayCell;
+      point: BattlefieldProjectedCell;
     }> = [];
     for (let y = this.#scene.bounds.minY; y <= this.#scene.bounds.maxY; y += 1) {
       for (let x = this.#scene.bounds.minX; x <= this.#scene.bounds.maxX; x += 1) {
@@ -650,19 +534,22 @@ export class MapReviewRenderer {
         cells.push({
           cell,
           elevation,
-          point: projection(cell, elevation, this.#rotation, this.#scene.bounds),
+          point: projectSquareCell(cell, elevation, this.#rotation, this.#scene.bounds),
         });
       }
     }
 
-    const xs = cells.flatMap(({ point }) => [point.x - TILE_WIDTH / 2, point.x + TILE_WIDTH / 2]);
-    const ys = cells.flatMap(({ point }) => [point.y - 90, point.y + TILE_HEIGHT / 2 + 12]);
+    const xs = cells.flatMap(({ point }) => [
+      point.x - PROFILE.tileWidth / 2,
+      point.x + PROFILE.tileWidth / 2,
+    ]);
+    const ys = cells.flatMap(({ point }) => [point.y - 90, point.y + PROFILE.tileHeight / 2 + 12]);
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
     const minY = Math.min(...ys);
     const maxY = Math.max(...ys);
-    this.#contentWidth = maxX - minX + PADDING * 2;
-    this.#contentHeight = maxY - minY + PADDING * 2;
+    this.#contentWidth = maxX - minX + PROFILE.padding * 2;
+    this.#contentHeight = maxY - minY + PROFILE.padding * 2;
     this.#minX = minX;
     this.#minY = minY;
     this.#fitScale = Math.min(
@@ -688,15 +575,18 @@ export class MapReviewRenderer {
     let elevationFaceCount = 0;
     for (const { cell, elevation, point } of sorted) {
       const cellKey = key(cell);
-      const neighbors = visibleNeighbors(cell, this.#rotation);
+      const neighbors = visibleSquareNeighbors(cell, this.#rotation);
       const leftDrop = Math.max(0, elevation - this.#elevationAt(neighbors.left));
       const rightDrop = Math.max(0, elevation - this.#elevationAt(neighbors.right));
       elevationFaceCount += drawElevationWalls(world, point, leftDrop, rightDrop);
+
+      const materialId = this.#terrainVisuals.get(cellKey) ?? "terrain.grass";
+      const material = terrainVisualForCell(materialId, cell);
       const tile = new Graphics()
-        .poly(tilePoints(point))
-        .fill({ color: terrainFill(this.#terrainKinds.get(cellKey), cell), alpha: 1 })
+        .poly(squareTilePoints(point))
+        .fill({ color: material.resolvedFill, alpha: 1 })
         .stroke({
-          color: this.#options.showGrid ? 0x9c9a79 : 0x48583e,
+          color: this.#options.showGrid ? 0x9c9a79 : material.border,
           width: this.#options.showGrid ? 0.9 : 0.35,
           alpha: this.#options.showGrid ? 0.46 : 0.25,
         });
@@ -706,14 +596,16 @@ export class MapReviewRenderer {
         if (!this.#suppressTap) this.#onSelect(cell);
       });
       world.addChild(tile);
-      if (this.#terrainKinds.get(cellKey) === "road") drawRoadDetail(world, point);
-      else if (!this.#blocked.has(cellKey))
+
+      if (material.detail === "road") drawRoadDetail(world, point);
+      else if (material.detail === "field" && !this.#blocked.has(cellKey)) {
         drawFieldDetail(world, point, cell.x * 31 + cell.y * 17);
+      }
 
       if (this.#options.showRoute && this.#routeClearance.has(cellKey)) {
         world.addChild(
           new Graphics()
-            .poly(tilePoints(point))
+            .poly(squareTilePoints(point))
             .fill({ color: 0x82bfd0, alpha: this.#routeAnchors.has(cellKey) ? 0.16 : 0.08 })
             .stroke({
               color: 0x9cd9e8,
@@ -725,7 +617,7 @@ export class MapReviewRenderer {
       if (this.#options.showRoute && this.#exitZone.has(cellKey)) {
         world.addChild(
           new Graphics()
-            .poly(tilePoints(point))
+            .poly(squareTilePoints(point))
             .fill({ color: 0x75c8a8, alpha: 0.13 })
             .stroke({ color: 0x8fddbd, width: 2, alpha: 0.88 }),
         );
@@ -733,7 +625,7 @@ export class MapReviewRenderer {
       if (cellKey === key(this.#options.selected)) {
         world.addChild(
           new Graphics()
-            .poly(tilePoints(point))
+            .poly(squareTilePoints(point))
             .fill({ color: 0xe0c27a, alpha: 0.08 })
             .stroke({ color: 0xf1d795, width: 2.4, alpha: 0.96 }),
         );
@@ -755,8 +647,11 @@ export class MapReviewRenderer {
       }
     }
 
+    const blockedPropVisualId = this.#scene.blockedPropVisualId ?? "prop.woodland";
     for (const { cell, point } of sorted) {
-      if (this.#blocked.has(key(cell))) drawTree(world, point, cell.x * 13 + cell.y * 29);
+      if (this.#blocked.has(key(cell))) {
+        drawBlockedProp(world, point, cell.x * 13 + cell.y * 29, blockedPropVisualId);
+      }
     }
 
     const elevationValues = cells.map(({ elevation }) => elevation);
@@ -768,7 +663,7 @@ export class MapReviewRenderer {
     if (this.#scene.cartStart) {
       drawCart(
         world,
-        projection(
+        projectSquareCell(
           this.#scene.cartStart,
           this.#elevationAt(this.#scene.cartStart),
           this.#rotation,
@@ -780,10 +675,8 @@ export class MapReviewRenderer {
     for (const unit of this.#scene.units) {
       drawUnitMarker(
         world,
-        projection(unit.cell, this.#elevationAt(unit.cell), this.#rotation, this.#scene.bounds),
-        unit.side,
-        unit.label,
-        unit.reinforcement,
+        projectSquareCell(unit.cell, this.#elevationAt(unit.cell), this.#rotation, this.#scene.bounds),
+        unit,
       );
     }
   }
