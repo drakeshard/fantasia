@@ -9,8 +9,8 @@ import {
 import { battlefieldUnitVisualId } from "../../apps/web/src/battlefield-scene.js";
 import {
   CANYON_BLIZZARD_FRONTIER,
-  terrainVisualIdAt,
   TWIN_ISLES_SHORE,
+  terrainVisualIdAt,
   weatherVisualIdAt,
 } from "../../apps/web/src/environment-scenes-data.js";
 
@@ -78,13 +78,9 @@ describe("Fantasia battlefield presentation metadata", () => {
       maxY: 19,
     });
     expect(terrainVisualIdAt(CANYON_BLIZZARD_FRONTIER, { x: 2, y: 10 })).toBe("terrain.sand");
-    expect(terrainVisualIdAt(CANYON_BLIZZARD_FRONTIER, { x: 17, y: 10 })).toBe(
-      "terrain.canyon",
-    );
+    expect(terrainVisualIdAt(CANYON_BLIZZARD_FRONTIER, { x: 17, y: 10 })).toBe("terrain.canyon");
     expect(terrainVisualIdAt(CANYON_BLIZZARD_FRONTIER, { x: 24, y: 10 })).toBe("terrain.snow");
-    expect(weatherVisualIdAt(CANYON_BLIZZARD_FRONTIER, { x: 24, y: 10 })).toBe(
-      "weather.blizzard",
-    );
+    expect(weatherVisualIdAt(CANYON_BLIZZARD_FRONTIER, { x: 24, y: 10 })).toBe("weather.blizzard");
     expect(CANYON_BLIZZARD_FRONTIER.weatherRegions[0]?.cells).toHaveLength(180);
   });
 });
