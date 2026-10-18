@@ -48,9 +48,9 @@ describe("Fantasia battlefield presentation metadata", () => {
     });
     expect(FANTASIA_BATTLEFIELD_VISUAL_CATALOG.terrain["terrain.deck"]).toBeDefined();
     expect(FANTASIA_BATTLEFIELD_VISUAL_CATALOG.terrain["terrain.stone.sacred"]).toBeDefined();
-    expect(FANTASIA_BATTLEFIELD_VISUAL_CATALOG.terrain["terrain.water.enchanted"].textureAssetId).toBe(
-      undefined,
-    );
+    expect(
+      FANTASIA_BATTLEFIELD_VISUAL_CATALOG.terrain["terrain.water.enchanted"].textureAssetId,
+    ).toBe(undefined);
     expect(FANTASIA_BATTLEFIELD_VISUAL_CATALOG.props["prop.woodland"].spriteAssetId).toBe(
       undefined,
     );
