@@ -205,6 +205,7 @@ test("Assets browser keeps search, primary filters and recovery with the collect
   await signIn(page);
 
   const browser = page.getByRole("complementary", { name: "Asset browser" });
+  const results = browser.locator(".studio-assets-selector--rail");
   await expect(browser).toBeVisible();
   await expect(browser.getByText("2 / 2", { exact: true })).toBeVisible();
   await expect(browser.getByLabel("Search assets")).toBeVisible();
@@ -215,7 +216,7 @@ test("Assets browser keeps search, primary filters and recovery with the collect
   await browser.getByLabel("Search assets").fill("Arbiter");
   await expect(browser.getByText("1 / 2", { exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Arbiter" })).toBeVisible();
-  await expect(browser.getByText("MC", { exact: true })).toHaveCount(0);
+  await expect(results.getByText("MC", { exact: true })).toHaveCount(0);
 
   await browser.getByRole("button", { name: "More filters" }).click();
   await expect(browser.getByLabel("Lifecycle")).toBeVisible();
@@ -225,8 +226,8 @@ test("Assets browser keeps search, primary filters and recovery with the collect
   await expect(browser.getByText("No matching assets", { exact: true })).toBeVisible();
   await browser.getByRole("button", { name: "Clear filters" }).click();
   await expect(browser.getByText("2 / 2", { exact: true })).toBeVisible();
-  await expect(browser.getByText("MC", { exact: true })).toBeVisible();
-  await expect(browser.getByText("Arbiter", { exact: true })).toBeVisible();
+  await expect(results.getByText("MC", { exact: true })).toBeVisible();
+  await expect(results.getByText("Arbiter", { exact: true })).toBeVisible();
 });
 
 test("Assets browser primary filtering changes the visible selection and stays overflow-safe", async ({
