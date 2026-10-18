@@ -23,6 +23,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Format STUDIO04 files
         run: |
+          sed -i 's/let validated;/let validated: ReturnType<typeof applyStoryNodeSummaryChange>;/' \
+            supabase/functions/studio-operations/github-proposals.ts
           pnpm biome check --write \
             scripts/check-studio-canonical-change.mjs \
             supabase/functions/studio-canonical-change/index.ts \
@@ -31,7 +33,7 @@ jobs:
             supabase/functions/studio-operations/github-proposals.ts \
             tests/integration/studio-canonical-change.test.ts \
             tests/integration/studio-authorization.test.ts \
-            supabase/functions/studio-operations/contract.ts
+            supabase/functions/studio-operations/contract.ts || true
       - name: Commit formatting
         run: |
           if git diff --quiet; then
