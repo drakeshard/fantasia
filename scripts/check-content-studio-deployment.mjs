@@ -2,10 +2,12 @@ import { readFile } from "node:fs/promises";
 
 const wranglerPath = "wrangler.content-studio.jsonc";
 const workflowPath = ".github/workflows/deploy-content-studio.yml";
+const bootstrapPath = ".github/actions/setup-fantasia/action.yml";
 
-const [wranglerRaw, workflow] = await Promise.all([
+const [wranglerRaw, workflow, bootstrap] = await Promise.all([
   readFile(wranglerPath, "utf8"),
   readFile(workflowPath, "utf8"),
+  readFile(bootstrapPath, "utf8"),
 ]);
 
 const wrangler = JSON.parse(wranglerRaw);
@@ -41,13 +43,21 @@ requireCondition(
   "Content Studio deployment must use independent concurrency.",
 );
 requireCondition(
-  workflow.includes("pnpm install --frozen-lockfile"),
-  "Content Studio deployment must use the committed frozen lockfile.",
+  workflow.includes("uses: ./.github/actions/setup-fantasia"),
+  "Content Studio deployment must use the standardized Fantasia bootstrap action.",
 );
 requireCondition(
-  workflow.includes("node scripts/prepare-shared-packages.mjs") &&
-    workflow.includes("node scripts/verify-shared-packages.mjs"),
-  "Content Studio deployment must preserve shared-package preparation and provenance verification.",
+  bootstrap.includes("pnpm install --frozen-lockfile"),
+  "Fantasia bootstrap must use the committed frozen lockfile.",
+);
+requireCondition(
+  bootstrap.includes("node scripts/prepare-shared-packages.mjs") &&
+    bootstrap.includes("node scripts/verify-shared-packages.mjs"),
+  "Fantasia bootstrap must preserve shared-package preparation and provenance verification.",
+);
+requireCondition(
+  bootstrap.includes("test -f pnpm-lock.yaml"),
+  "Fantasia bootstrap must require the committed workspace lockfile.",
 );
 requireCondition(
   workflow.includes("pnpm --filter @fantasia/content-studio build"),
