@@ -90,13 +90,20 @@ function requireExactKeys(record: Record<string, unknown>, expected: readonly st
 
 function parseOptionalText(value: unknown, label: string, max: number): string | undefined {
   if (value === undefined) return undefined;
-  if (typeof value !== "string") throw new StudioOperationContractError(`${label} must be a string.`);
+  if (typeof value !== "string")
+    throw new StudioOperationContractError(`${label} must be a string.`);
   const normalized = value.trim();
-  if (!normalized || normalized.length > max) throw new StudioOperationContractError(`${label} is invalid.`);
+  if (!normalized || normalized.length > max)
+    throw new StudioOperationContractError(`${label} is invalid.`);
   return normalized;
 }
 
-function parseOptionalInteger(value: unknown, label: string, min: number, max: number): number | undefined {
+function parseOptionalInteger(
+  value: unknown,
+  label: string,
+  min: number,
+  max: number,
+): number | undefined {
   if (value === undefined) return undefined;
   if (!Number.isInteger(value) || (value as number) < min || (value as number) > max) {
     throw new StudioOperationContractError(`${label} must be an integer from ${min} to ${max}.`);
@@ -108,9 +115,13 @@ function parseReadQuery(value: unknown): StudioReadQueryPayload {
   if (!isRecord(value)) throw new StudioOperationContractError("Read-model payload is required.");
   const allowed = ["text", "semanticId", "entityType", "lifecycle", "readiness", "offset", "limit"];
   const unsupported = Object.keys(value).filter((key) => !allowed.includes(key));
-  if (unsupported.length > 0) throw new StudioOperationContractError("Read-model payload contains unsupported fields.");
+  if (unsupported.length > 0)
+    throw new StudioOperationContractError("Read-model payload contains unsupported fields.");
   const readiness = value.readiness;
-  if (readiness !== undefined && !["ready", "warning", "blocked", "unknown"].includes(String(readiness))) {
+  if (
+    readiness !== undefined &&
+    !["ready", "warning", "blocked", "unknown"].includes(String(readiness))
+  ) {
     throw new StudioOperationContractError("Readiness filter is invalid.");
   }
   return {
@@ -134,7 +145,9 @@ function parseIdempotencyKey(value: unknown): string {
 
 function parseUuid(value: unknown, label: string): string {
   const candidate = typeof value === "string" ? value.trim() : "";
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)) {
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)
+  ) {
     throw new StudioOperationContractError(`${label} must be a UUID.`);
   }
   return candidate;
@@ -157,14 +170,17 @@ export function parseStudioOperationRequest(value: unknown): StudioOperationRequ
 
   if (value.type === STUDIO_ENTITY_NOTE_SET) {
     requireExactKeys(value, ["type", "idempotencyKey", "payload"]);
-    if (!isRecord(value.payload)) throw new StudioOperationContractError("Entity-note payload is required.");
+    if (!isRecord(value.payload))
+      throw new StudioOperationContractError("Entity-note payload is required.");
     requireExactKeys(value.payload, ["semanticId", "note"]);
-    const semanticId = typeof value.payload.semanticId === "string" ? value.payload.semanticId.trim() : "";
+    const semanticId =
+      typeof value.payload.semanticId === "string" ? value.payload.semanticId.trim() : "";
     if (semanticId.length < 1 || semanticId.length > 200 || /\s/.test(semanticId)) {
       throw new StudioOperationContractError("Semantic ID is invalid.");
     }
     const note = value.payload.note;
-    if (note !== null && typeof note !== "string") throw new StudioOperationContractError("Operator note must be a string or null.");
+    if (note !== null && typeof note !== "string")
+      throw new StudioOperationContractError("Operator note must be a string or null.");
     const normalizedNote = typeof note === "string" ? note.trim() : null;
     if (normalizedNote !== null && normalizedNote.length > 1000) {
       throw new StudioOperationContractError("Operator note must be at most 1000 characters.");
@@ -178,10 +194,13 @@ export function parseStudioOperationRequest(value: unknown): StudioOperationRequ
 
   if (value.type === STUDIO_MEMBERSHIP_SET) {
     requireExactKeys(value, ["type", "idempotencyKey", "payload"]);
-    if (!isRecord(value.payload)) throw new StudioOperationContractError("Membership payload is required.");
+    if (!isRecord(value.payload))
+      throw new StudioOperationContractError("Membership payload is required.");
     requireExactKeys(value.payload, ["userId", "role", "active"]);
-    if (!isStudioRole(value.payload.role)) throw new StudioOperationContractError("Studio role is invalid.");
-    if (typeof value.payload.active !== "boolean") throw new StudioOperationContractError("Membership active flag is required.");
+    if (!isStudioRole(value.payload.role))
+      throw new StudioOperationContractError("Studio role is invalid.");
+    if (typeof value.payload.active !== "boolean")
+      throw new StudioOperationContractError("Membership active flag is required.");
     return {
       type: STUDIO_MEMBERSHIP_SET,
       idempotencyKey: parseIdempotencyKey(value.idempotencyKey),

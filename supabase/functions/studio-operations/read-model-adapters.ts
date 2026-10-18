@@ -22,7 +22,10 @@ export interface AssetSourceProviderAdapter {
 export class RegistryBackedAssetSourceAdapter implements AssetSourceProviderAdapter {
   constructor(readonly kind: string) {}
 
-  describe(version: RegistryAssetVersionRecord, exposeReference: boolean): StudioAssetSourceSummary {
+  describe(
+    version: RegistryAssetVersionRecord,
+    exposeReference: boolean,
+  ): StudioAssetSourceSummary {
     return {
       semanticAssetId: version.asset_id,
       versionId: version.id,
@@ -95,14 +98,21 @@ function requireString(value: unknown, label: string): string {
 }
 
 function semanticPart(value: string): string {
-  return value.toLocaleLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return value
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 async function fetchJsonAtRevision(path: string, revision: string): Promise<unknown> {
-  const response = await fetch(`https://raw.githubusercontent.com/${REPOSITORY}/${revision}/${path}`, {
-    headers: { accept: "application/json", "user-agent": "fantasia-content-studio" },
-  });
-  if (!response.ok) throw new Error(`Canonical Git source unavailable: ${path} (${response.status}).`);
+  const response = await fetch(
+    `https://raw.githubusercontent.com/${REPOSITORY}/${revision}/${path}`,
+    {
+      headers: { accept: "application/json", "user-agent": "fantasia-content-studio" },
+    },
+  );
+  if (!response.ok)
+    throw new Error(`Canonical Git source unavailable: ${path} (${response.status}).`);
   try {
     return await response.json();
   } catch {
@@ -111,10 +121,14 @@ async function fetchJsonAtRevision(path: string, revision: string): Promise<unkn
 }
 
 export async function loadGitSnapshot(ref = DEFAULT_REF): Promise<GitSnapshot> {
-  const branchResponse = await fetch(`https://api.github.com/repos/${REPOSITORY}/commits/${encodeURIComponent(ref)}`, {
-    headers: { accept: "application/vnd.github+json", "user-agent": "fantasia-content-studio" },
-  });
-  if (!branchResponse.ok) throw new Error(`Unable to resolve canonical Git revision (${branchResponse.status}).`);
+  const branchResponse = await fetch(
+    `https://api.github.com/repos/${REPOSITORY}/commits/${encodeURIComponent(ref)}`,
+    {
+      headers: { accept: "application/vnd.github+json", "user-agent": "fantasia-content-studio" },
+    },
+  );
+  if (!branchResponse.ok)
+    throw new Error(`Unable to resolve canonical Git revision (${branchResponse.status}).`);
   const branch = requireRecord(await branchResponse.json(), "Git revision response");
   const revision = requireString(branch.sha, "Git revision");
   const [story, storyProduction, encounter, runtimeManifest] = await Promise.all([
@@ -130,7 +144,11 @@ function gitProvenance(path: string, revision: string, canonical: boolean): Stud
   return { authority: "git", source: path, revision, canonical };
 }
 
-function productionPreviewFor(beatIds: readonly string[], production: Record<string, unknown>, revision: string): StudioCanonicalSummary["preview"] | undefined {
+function productionPreviewFor(
+  beatIds: readonly string[],
+  production: Record<string, unknown>,
+  revision: string,
+): StudioCanonicalSummary["preview"] | undefined {
   const beats = isRecord(production.beats) ? production.beats : {};
   const selected: Record<string, unknown> = {};
   for (const beatId of beatIds) {
@@ -146,17 +164,20 @@ function productionPreviewFor(beatIds: readonly string[], production: Record<str
 export function normalizeCanonicalModels(snapshot: GitSnapshot): readonly StudioCanonicalSummary[] {
   const story = requireRecord(snapshot.story, "Story source");
   const production = requireRecord(snapshot.storyProduction, "Story production preview");
-  if (!Array.isArray(story.sagas)) throw new Error("Story source is malformed: sagas are required.");
+  if (!Array.isArray(story.sagas))
+    throw new Error("Story source is malformed: sagas are required.");
   const models: StudioCanonicalSummary[] = [];
 
   for (const sagaValue of story.sagas) {
     const saga = requireRecord(sagaValue, "Story saga") as StorySaga;
     const sagaId = requireString(saga.id, "Story saga id");
-    if (!Array.isArray(saga.chapters)) throw new Error(`Story saga ${sagaId} chapters are malformed.`);
+    if (!Array.isArray(saga.chapters))
+      throw new Error(`Story saga ${sagaId} chapters are malformed.`);
     for (const chapterValue of saga.chapters) {
       const chapter = requireRecord(chapterValue, "Story chapter") as StoryChapter;
       const chapterId = requireString(chapter.id, "Story chapter id");
-      if (!Array.isArray(chapter.nodes)) throw new Error(`Story chapter ${chapterId} nodes are malformed.`);
+      if (!Array.isArray(chapter.nodes))
+        throw new Error(`Story chapter ${chapterId} nodes are malformed.`);
       for (const nodeValue of chapter.nodes) {
         const node = requireRecord(nodeValue, "Story node") as StoryNode;
         const nodeId = requireString(node.id, "Story node id");
@@ -245,6 +266,9 @@ export function normalizeRuntimeManifest(snapshot: GitSnapshot): RuntimeManifest
 export function redactRegistryProviderReferences(snapshot: RegistrySnapshot): RegistrySnapshot {
   return {
     ...snapshot,
-    assetVersions: snapshot.assetVersions.map((version) => ({ ...version, provider_ref: version.provider_ref ? "[registered]" : "" })),
+    assetVersions: snapshot.assetVersions.map((version) => ({
+      ...version,
+      provider_ref: version.provider_ref ? "[registered]" : "",
+    })),
   };
 }

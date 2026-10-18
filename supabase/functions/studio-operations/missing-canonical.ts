@@ -1,7 +1,7 @@
 import {
-  STUDIO_READ_MODEL_VERSION,
   type RegistrySnapshot,
   type RuntimeManifestSnapshot,
+  STUDIO_READ_MODEL_VERSION,
   type StudioEntityReadModel,
   type StudioPermissionPresentation,
 } from "../../../packages/studio-read-model/src/index.ts";

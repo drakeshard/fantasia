@@ -262,7 +262,10 @@ export interface ComposeStudioEntityInput {
   readonly exposeProviderReference?: boolean;
 }
 
-export function permissionPresentation(role: string, capabilities: readonly string[]): StudioPermissionPresentation {
+export function permissionPresentation(
+  role: string,
+  capabilities: readonly string[],
+): StudioPermissionPresentation {
   return {
     role,
     capabilities: [...capabilities],
@@ -287,28 +290,65 @@ function latestValidation(records: readonly RegistryValidationRecord[]): StudioV
   }));
 }
 
-function readinessFor(validations: readonly StudioValidationSummary[], issues: readonly StudioReadIssue[]): StudioCollectionRow["readiness"] {
-  if (issues.some((issue) => issue.severity === "blocking") || validations.some((item) => item.blocking && item.outcome !== "PASSED")) return "blocked";
-  if (issues.some((issue) => issue.severity === "warning") || validations.some((item) => item.outcome === "WARNING")) return "warning";
-  if (validations.length > 0 && validations.every((item) => item.outcome === "PASSED")) return "ready";
+function readinessFor(
+  validations: readonly StudioValidationSummary[],
+  issues: readonly StudioReadIssue[],
+): StudioCollectionRow["readiness"] {
+  if (
+    issues.some((issue) => issue.severity === "blocking") ||
+    validations.some((item) => item.blocking && item.outcome !== "PASSED")
+  )
+    return "blocked";
+  if (
+    issues.some((issue) => issue.severity === "warning") ||
+    validations.some((item) => item.outcome === "WARNING")
+  )
+    return "warning";
+  if (validations.length > 0 && validations.every((item) => item.outcome === "PASSED"))
+    return "ready";
   return "unknown";
 }
 
 export function composeStudioEntity(input: ComposeStudioEntityInput): StudioEntityReadModel {
   const { canonical, registry, runtimeManifest, permissions } = input;
-  const entity = registry.contentEntities.find((item) => item.semantic_id === canonical.semanticId) ?? null;
+  const entity =
+    registry.contentEntities.find((item) => item.semantic_id === canonical.semanticId) ?? null;
   const issues: StudioReadIssue[] = [];
 
   if (!entity) {
-    issues.push({ code: "registry-missing", severity: "warning", message: "Canonical entity has no registry metadata.", source: "registry" });
+    issues.push({
+      code: "registry-missing",
+      severity: "warning",
+      message: "Canonical entity has no registry metadata.",
+      source: "registry",
+    });
   } else if (entity.canonical_git_path && entity.canonical_git_path !== canonical.canonicalPath) {
-    issues.push({ code: "canonical-path-mismatch", severity: "blocking", message: `Registry canonical path ${entity.canonical_git_path} does not match Git source ${canonical.canonicalPath}.`, source: "registry" });
+    issues.push({
+      code: "canonical-path-mismatch",
+      severity: "blocking",
+      message: `Registry canonical path ${entity.canonical_git_path} does not match Git source ${canonical.canonicalPath}.`,
+      source: "registry",
+    });
   }
 
-  const entityValidations = latestValidation(registry.validationResults.filter((item) => item.entity_id === canonical.semanticId));
+  const entityValidations = latestValidation(
+    registry.validationResults.filter((item) => item.entity_id === canonical.semanticId),
+  );
   for (const validation of entityValidations) {
-    if (validation.blocking && validation.outcome !== "PASSED") issues.push({ code: "validation-blocking", severity: "blocking", message: `${validation.dimension} is ${validation.outcome}.`, source: "registry" });
-    else if (validation.outcome === "WARNING") issues.push({ code: "validation-warning", severity: "warning", message: `${validation.dimension} has a warning.`, source: "registry" });
+    if (validation.blocking && validation.outcome !== "PASSED")
+      issues.push({
+        code: "validation-blocking",
+        severity: "blocking",
+        message: `${validation.dimension} is ${validation.outcome}.`,
+        source: "registry",
+      });
+    else if (validation.outcome === "WARNING")
+      issues.push({
+        code: "validation-warning",
+        severity: "warning",
+        message: `${validation.dimension} has a warning.`,
+        source: "registry",
+      });
   }
 
   const knownCanonicalIds = new Set(registry.contentEntities.map((item) => item.semantic_id));
@@ -317,7 +357,13 @@ export function composeStudioEntity(input: ComposeStudioEntityInput): StudioEnti
     .filter((item) => item.source_entity_id === canonical.semanticId)
     .map((item) => {
       const valid = knownCanonicalIds.has(item.target_entity_id);
-      if (!valid) issues.push({ code: "invalid-relation", severity: "blocking", message: `Relation ${item.relation_type} points to missing ${item.target_entity_id}.`, source: "registry" });
+      if (!valid)
+        issues.push({
+          code: "invalid-relation",
+          severity: "blocking",
+          message: `Relation ${item.relation_type} points to missing ${item.target_entity_id}.`,
+          source: "registry",
+        });
       return { type: item.relation_type, targetSemanticId: item.target_entity_id, valid };
     });
 
@@ -327,9 +373,17 @@ export function composeStudioEntity(input: ComposeStudioEntityInput): StudioEnti
     .map<StudioAssetSummary>((asset) => {
       const assetIssues: StudioReadIssue[] = [];
       const currentVersion = asset.current_version_id
-        ? registry.assetVersions.find((item) => item.id === asset.current_version_id && item.asset_id === asset.semantic_id) ?? null
+        ? (registry.assetVersions.find(
+            (item) => item.id === asset.current_version_id && item.asset_id === asset.semantic_id,
+          ) ?? null)
         : null;
-      if (!currentVersion) assetIssues.push({ code: "current-version-missing", severity: asset.derivative_required ? "blocking" : "warning", message: "Semantic asset has no valid current version.", source: "registry" });
+      if (!currentVersion)
+        assetIssues.push({
+          code: "current-version-missing",
+          severity: asset.derivative_required ? "blocking" : "warning",
+          message: "Semantic asset has no valid current version.",
+          source: "registry",
+        });
 
       const source: StudioAssetSourceSummary | null = currentVersion
         ? {
@@ -340,22 +394,47 @@ export function composeStudioEntity(input: ComposeStudioEntityInput): StudioEnti
             sourceAvailable: true,
             mediaType: currentVersion.media_type,
             byteSize: currentVersion.byte_size,
-            dimensions: currentVersion.width_px && currentVersion.height_px ? { width: currentVersion.width_px, height: currentVersion.height_px } : null,
-            checksum: { algorithm: currentVersion.checksum_algorithm, value: currentVersion.checksum },
+            dimensions:
+              currentVersion.width_px && currentVersion.height_px
+                ? { width: currentVersion.width_px, height: currentVersion.height_px }
+                : null,
+            checksum: {
+              algorithm: currentVersion.checksum_algorithm,
+              value: currentVersion.checksum,
+            },
             providerReference: input.exposeProviderReference
               ? { visibility: "opaque", token: currentVersion.provider_ref }
               : { visibility: "redacted" },
             operations: ["metadata"],
-            provenance: { authority: "provider", source: currentVersion.provider_kind, observedAt: currentVersion.updated_at, canonical: true },
+            provenance: {
+              authority: "provider",
+              source: currentVersion.provider_kind,
+              observedAt: currentVersion.updated_at,
+              canonical: true,
+            },
           }
         : null;
 
       const derivatives = registry.runtimeDerivatives
         .filter((item) => item.asset_id === asset.semantic_id)
         .map<StudioRuntimeDerivativeSummary>((item) => {
-          const accepted = manifestById.get(asset.semantic_id) ?? manifestById.get(item.semantic_id) ?? null;
-          if (!accepted && ["RUNTIME READY", "PUBLISHED"].includes(currentVersion?.lifecycle ?? "")) assetIssues.push({ code: "runtime-mapping-missing", severity: "blocking", message: "Registry state indicates runtime readiness but Git manifest has no accepted mapping.", source: "runtime-manifest" });
-          if (accepted && item.runtime_path && accepted.path !== item.runtime_path) assetIssues.push({ code: "runtime-derivative-mismatch", severity: "warning", message: `Registry runtime path ${item.runtime_path} differs from accepted manifest path ${accepted.path}.`, source: "runtime-manifest" });
+          const accepted =
+            manifestById.get(asset.semantic_id) ?? manifestById.get(item.semantic_id) ?? null;
+          if (!accepted && ["RUNTIME READY", "PUBLISHED"].includes(currentVersion?.lifecycle ?? ""))
+            assetIssues.push({
+              code: "runtime-mapping-missing",
+              severity: "blocking",
+              message:
+                "Registry state indicates runtime readiness but Git manifest has no accepted mapping.",
+              source: "runtime-manifest",
+            });
+          if (accepted && item.runtime_path && accepted.path !== item.runtime_path)
+            assetIssues.push({
+              code: "runtime-derivative-mismatch",
+              severity: "warning",
+              message: `Registry runtime path ${item.runtime_path} differs from accepted manifest path ${accepted.path}.`,
+              source: "runtime-manifest",
+            });
           return {
             semanticId: item.semantic_id,
             assetId: item.asset_id,
@@ -381,14 +460,32 @@ export function composeStudioEntity(input: ComposeStudioEntityInput): StudioEnti
     });
 
   const history = registry.changeEvents
-    .filter((item) => item.entity_id === canonical.semanticId || (item.asset_id && assets.some((asset) => asset.semanticId === item.asset_id)))
+    .filter(
+      (item) =>
+        item.entity_id === canonical.semanticId ||
+        (item.asset_id && assets.some((asset) => asset.semanticId === item.asset_id)),
+    )
     .slice(0, 20)
-    .map<StudioHistorySummary>((item) => ({ eventType: item.event_type, occurredAt: item.occurred_at, sourceKind: item.source_kind }));
+    .map<StudioHistorySummary>((item) => ({
+      eventType: item.event_type,
+      occurredAt: item.occurred_at,
+      sourceKind: item.source_kind,
+    }));
 
   const provenance: StudioProvenance[] = [
     canonical.provenance,
-    { authority: "registry", source: "studio_registry", observedAt: registry.observedAt, canonical: false },
-    { authority: "runtime-manifest", source: runtimeManifest.path, revision: runtimeManifest.revision, canonical: true },
+    {
+      authority: "registry",
+      source: "studio_registry",
+      observedAt: registry.observedAt,
+      canonical: false,
+    },
+    {
+      authority: "runtime-manifest",
+      source: runtimeManifest.path,
+      revision: runtimeManifest.revision,
+      canonical: true,
+    },
   ];
   if (canonical.preview) provenance.push(canonical.preview.provenance);
 
@@ -422,16 +519,27 @@ export function toCollectionRow(model: StudioEntityReadModel): StudioCollectionR
   };
 }
 
-export function searchStudioEntities(models: readonly StudioEntityReadModel[], query: StudioSearchQuery): StudioSearchResult {
+export function searchStudioEntities(
+  models: readonly StudioEntityReadModel[],
+  query: StudioSearchQuery,
+): StudioSearchResult {
   const text = query.text?.trim().toLocaleLowerCase() ?? "";
   const offset = Math.max(0, query.offset ?? 0);
   const limit = Math.min(100, Math.max(1, query.limit ?? 50));
   const filtered = models
     .map(toCollectionRow)
-    .filter((row) => !text || row.semanticId.toLocaleLowerCase().includes(text) || row.displayName.toLocaleLowerCase().includes(text))
+    .filter(
+      (row) =>
+        !text ||
+        row.semanticId.toLocaleLowerCase().includes(text) ||
+        row.displayName.toLocaleLowerCase().includes(text),
+    )
     .filter((row) => !query.entityType || row.entityType === query.entityType)
     .filter((row) => !query.lifecycle || row.lifecycle === query.lifecycle)
     .filter((row) => !query.readiness || row.readiness === query.readiness)
-    .sort((a, b) => a.entityType.localeCompare(b.entityType) || a.semanticId.localeCompare(b.semanticId));
+    .sort(
+      (a, b) =>
+        a.entityType.localeCompare(b.entityType) || a.semanticId.localeCompare(b.semanticId),
+    );
   return { total: filtered.length, offset, limit, rows: filtered.slice(offset, offset + limit) };
 }

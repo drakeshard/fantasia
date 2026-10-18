@@ -1,17 +1,11 @@
 import {
   composeStudioEntity,
   permissionPresentation,
-  searchStudioEntities,
   type RegistrySnapshot,
   type StudioEntityReadModel,
   type StudioSearchQuery,
+  searchStudioEntities,
 } from "../../../packages/studio-read-model/src/index.ts";
-import {
-  normalizeCanonicalModels,
-  normalizeRuntimeManifest,
-  loadGitSnapshot,
-} from "./read-model-adapters.ts";
-import { registryOnlyReadModels } from "./missing-canonical.ts";
 import {
   parseStudioOperationRequest,
   STUDIO_ENTITY_NOTE_SET,
@@ -20,6 +14,12 @@ import {
   STUDIO_SESSION_GET,
   StudioOperationContractError,
 } from "./contract.ts";
+import { registryOnlyReadModels } from "./missing-canonical.ts";
+import {
+  loadGitSnapshot,
+  normalizeCanonicalModels,
+  normalizeRuntimeManifest,
+} from "./read-model-adapters.ts";
 
 const corsHeaders = {
   "access-control-allow-origin": "*",
@@ -40,7 +40,9 @@ function environmentKey(directName: string, collectionName: string): string {
     const candidate = parsed.default;
     if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
   }
-  throw new Error(`Missing required Edge Function environment key: ${directName}/${collectionName}`);
+  throw new Error(
+    `Missing required Edge Function environment key: ${directName}/${collectionName}`,
+  );
 }
 
 async function parseJsonResponse(response: Response): Promise<unknown> {
@@ -100,7 +102,8 @@ function asSession(value: unknown): {
 }
 
 function asRegistrySnapshot(value: unknown): RegistrySnapshot {
-  if (!value || typeof value !== "object") throw new Error("Studio registry snapshot is malformed.");
+  if (!value || typeof value !== "object")
+    throw new Error("Studio registry snapshot is malformed.");
   const snapshot = value as Record<string, unknown>;
   const requiredArrays = [
     "contentEntities",
@@ -187,10 +190,7 @@ Deno.serve(async (request: Request) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")?.replace(/\/$/, "");
     if (!supabaseUrl) throw new Error("Missing SUPABASE_URL.");
-    const publishableKey = environmentKey(
-      "SUPABASE_PUBLISHABLE_KEY",
-      "SUPABASE_PUBLISHABLE_KEYS",
-    );
+    const publishableKey = environmentKey("SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEYS");
     const secretKey = environmentKey("SUPABASE_SECRET_KEY", "SUPABASE_SECRET_KEYS");
 
     const userResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
@@ -198,7 +198,8 @@ Deno.serve(async (request: Request) => {
     });
     if (!userResponse.ok) return jsonResponse({ message: "Authentication required." }, 401);
     const user = (await userResponse.json()) as { id?: unknown };
-    if (typeof user.id !== "string") return jsonResponse({ message: "Authentication required." }, 401);
+    if (typeof user.id !== "string")
+      return jsonResponse({ message: "Authentication required." }, 401);
 
     const operation = parseStudioOperationRequest(await request.json());
     if (operation.type === STUDIO_READ_MODELS_GET) {

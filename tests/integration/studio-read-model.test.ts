@@ -2,17 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   composeStudioEntity,
   permissionPresentation,
-  searchStudioEntities,
   type RegistrySnapshot,
   type RuntimeManifestSnapshot,
   type StudioCanonicalSummary,
+  searchStudioEntities,
 } from "../../packages/studio-read-model/src/index.ts";
+import { registryOnlyReadModels } from "../../supabase/functions/studio-operations/missing-canonical.ts";
 import {
   normalizeCanonicalModels,
   normalizeRuntimeManifest,
   RegistryBackedAssetSourceAdapter,
 } from "../../supabase/functions/studio-operations/read-model-adapters.ts";
-import { registryOnlyReadModels } from "../../supabase/functions/studio-operations/missing-canonical.ts";
 
 const permissions = permissionPresentation("Viewer", ["studio.read"]);
 const runtimeManifest: RuntimeManifestSnapshot = {
@@ -131,7 +131,10 @@ describe("Studio read-model composition", () => {
       checksum: "deadbeef",
     } as const;
     const first = adapter.describe({ ...base, provider_ref: "drive-file-A" }, false);
-    const migrated = adapter.describe({ ...base, provider_kind: "future-provider", provider_ref: "object-B" }, false);
+    const migrated = adapter.describe(
+      { ...base, provider_kind: "future-provider", provider_ref: "object-B" },
+      false,
+    );
 
     expect(first.semanticAssetId).toBe("asset.hero");
     expect(migrated.semanticAssetId).toBe("asset.hero");
@@ -216,14 +219,26 @@ describe("Studio read-model composition", () => {
       encounter: {},
       runtimeManifest: {
         schemaVersion: 1,
-        assets: [{ id: "ui.icon.home", path: "ui/home.svg", mediaType: "image/svg+xml", version: 1 }],
+        assets: [
+          { id: "ui.icon.home", path: "ui/home.svg", mediaType: "image/svg+xml", version: 1 },
+        ],
       },
     });
     expect(manifest.path).toBe("config/runtime-assets.json");
     expect(manifest.assets[0]?.id).toBe("ui.icon.home");
 
-    const a = composeStudioEntity({ canonical: { ...canonical, semanticId: "story.z", displayName: "Zulu" }, registry: registry(), runtimeManifest, permissions });
-    const b = composeStudioEntity({ canonical: { ...canonical, semanticId: "story.a", displayName: "Alpha" }, registry: registry(), runtimeManifest, permissions });
+    const a = composeStudioEntity({
+      canonical: { ...canonical, semanticId: "story.z", displayName: "Zulu" },
+      registry: registry(),
+      runtimeManifest,
+      permissions,
+    });
+    const b = composeStudioEntity({
+      canonical: { ...canonical, semanticId: "story.a", displayName: "Alpha" },
+      registry: registry(),
+      runtimeManifest,
+      permissions,
+    });
     const result = searchStudioEntities([a, b], { text: "", limit: 50 });
     expect(result.rows.map((row) => row.semanticId)).toEqual(["story.a", "story.z"]);
   });
