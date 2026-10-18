@@ -32,7 +32,6 @@ const projectedStory = {
         scriptStatus: node.scriptStatus,
         location: node.location,
         time: node.time,
-        summary: node.summary,
         beats: (node.beats ?? []).map((beat) => {
           beatIds.add(beat.id);
           return { id: beat.id };
@@ -43,7 +42,9 @@ const projectedStory = {
 };
 
 const productionBeats = Object.fromEntries(
-  Object.entries(storyProduction.beats ?? {}).filter(([beatId]) => beatIds.has(beatId)),
+  [...beatIds]
+    .filter((beatId) => Object.hasOwn(storyProduction.beats ?? {}, beatId))
+    .map((beatId) => [beatId, { available: true }]),
 );
 
 const projectedEncounter = {
@@ -54,10 +55,7 @@ const projectedEncounter = {
   gameD222Compliance: encounter.gameD222Compliance,
   bounds: encounter.bounds,
   environmentIntent: encounter.environmentIntent,
-  terrain: encounter.terrain,
-  cart: encounter.cart,
   deployment: encounter.deployment,
-  phaseAnnotations: encounter.phaseAnnotations,
 };
 
 const revision = process.env.CANONICAL_GIT_REVISION?.trim();
