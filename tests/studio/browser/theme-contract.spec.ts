@@ -65,3 +65,23 @@ test("shared primitives consume the theme while base CSS owns application paint"
   expect(styles.controlBorderColor).not.toBe("");
   expect(styles.panelBackgroundImage).not.toBe("none");
 });
+
+test("reduced-motion preference removes primitive animation and transition behavior", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+
+  const reducedMotion = await page.evaluate(() => {
+    const spinner = getComputedStyle(document.querySelector(".ui-spinner__mark")!);
+    const button = getComputedStyle(document.querySelector(".ui-button")!);
+    const control = getComputedStyle(document.querySelector(".ui-control")!);
+
+    return {
+      spinnerAnimationName: spinner.animationName,
+      buttonTransitionDuration: button.transitionDuration,
+      controlTransitionDuration: control.transitionDuration,
+    };
+  });
+
+  expect(reducedMotion.spinnerAnimationName).toBe("none");
+  expect(reducedMotion.buttonTransitionDuration).toBe("0s");
+  expect(reducedMotion.controlTransitionDuration).toBe("0s");
+});
