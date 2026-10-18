@@ -11,14 +11,26 @@ const foundationMigrationNames = allMigrationNames.filter((name) =>
 const studioMigrationNames = allMigrationNames
   .filter((name) => name.includes("_game_studio01_") && name.endsWith(".sql"))
   .sort();
+const assetOperationMigrationNames = allMigrationNames.filter((name) =>
+  name.endsWith("_game_studio10_asset_source_operations.sql"),
+);
 
 if (foundationMigrationNames.length !== 1) {
   throw new Error(
     `Expected exactly one GAME-STUDIO01 registry foundation migration, found ${foundationMigrationNames.length}.`,
   );
 }
+if (assetOperationMigrationNames.length !== 1) {
+  throw new Error(
+    `Expected exactly one GAME-STUDIO10 asset operation migration, found ${assetOperationMigrationNames.length}.`,
+  );
+}
 
 const foundationSql = await readFile(path.join(migrationsDir, foundationMigrationNames[0]), "utf8");
+const assetOperationSql = await readFile(
+  path.join(migrationsDir, assetOperationMigrationNames[0]),
+  "utf8",
+);
 const sql = (
   await Promise.all(
     studioMigrationNames.map((name) => readFile(path.join(migrationsDir, name), "utf8")),
@@ -31,8 +43,8 @@ function requireText(fragment, message, source = sql) {
   }
 }
 
-function forbid(pattern, message) {
-  if (pattern.test(sql)) {
+function forbid(pattern, message, source = sql) {
+  if (pattern.test(source)) {
     throw new Error(message);
   }
 }
@@ -192,4 +204,96 @@ forbid(
   "Registry readiness must derive from validation evidence, not a ready boolean.",
 );
 
-console.log(`Studio registry contract check passed (${studioMigrationNames.join(", ")}).`);
+requireText(
+  "create trigger asset_versions_source_immutable",
+  "GAME-STUDIO10 must make registered source/version provenance immutable.",
+  assetOperationSql,
+);
+for (const protectedColumn of [
+  "new.asset_id is distinct from old.asset_id",
+  "new.version_number is distinct from old.version_number",
+  "new.provider_kind is distinct from old.provider_kind",
+  "new.provider_ref is distinct from old.provider_ref",
+  "new.media_type is distinct from old.media_type",
+  "new.checksum is distinct from old.checksum",
+]) {
+  requireText(
+    protectedColumn,
+    `GAME-STUDIO10 source immutability is missing ${protectedColumn}.`,
+    assetOperationSql,
+  );
+}
+requireText(
+  "create or replace function public.execute_studio_asset_source_register_command",
+  "GAME-STUDIO10 must expose the trusted asset source registration operation.",
+  assetOperationSql,
+);
+requireText(
+  "if v_provider_kind <> 'google-drive' then",
+  "GAME-STUDIO10 must preserve Google Drive as current source/master authority.",
+  assetOperationSql,
+);
+requireText(
+  "insert into studio_registry.asset_versions",
+  "Asset replacement must create a retained asset_version row.",
+  assetOperationSql,
+);
+requireText(
+  "set current_version_id = v_new_version_id",
+  "Asset replacement must move the current pointer only after the new version exists.",
+  assetOperationSql,
+);
+requireText(
+  "'Source Valid'",
+  "Source registration must record Source Valid evidence.",
+  assetOperationSql,
+);
+requireText(
+  "'Metadata Complete'",
+  "Source registration must record Metadata Complete evidence.",
+  assetOperationSql,
+);
+requireText(
+  "where version.id = p_version_id\n    and version.asset_id = v_asset_semantic_id",
+  "Retained-version selection must prove the selected version belongs to the semantic asset.",
+  assetOperationSql,
+);
+requireText(
+  "'reason', 'retained-version-selection'",
+  "Retained-version selection must be explicitly auditable.",
+  assetOperationSql,
+);
+requireText(
+  "create or replace function public.execute_studio_asset_relation_set_command",
+  "GAME-STUDIO10 must use semantic asset relations through the trusted registry operation.",
+  assetOperationSql,
+);
+requireText(
+  "from public, anon, authenticated;",
+  "GAME-STUDIO10 trusted RPCs must be revoked from browser database roles.",
+  assetOperationSql,
+);
+forbid(
+  /grant\s+execute\s+on\s+function[\s\S]*?\s+to\s+(anon|authenticated)\b/i,
+  "GAME-STUDIO10 must not grant trusted asset RPC execution directly to browser roles.",
+  assetOperationSql,
+);
+forbid(
+  /insert\s+into\s+studio_registry\.runtime_derivatives/i,
+  "GAME-STUDIO10 must not create runtime derivatives.",
+  assetOperationSql,
+);
+forbid(
+  /\b('APPROVED'|'FROZEN'|'RUNTIME READY'|'PUBLISHED')\b/i,
+  "GAME-STUDIO10 source operations must not grant approval, freeze, runtime-ready, or published lifecycle states.",
+  assetOperationSql,
+);
+forbid(
+  /config\/runtime-assets\.json/i,
+  "GAME-STUDIO10 must not mutate or embed the Git-owned runtime manifest.",
+  assetOperationSql,
+);
+
+console.log(
+  `Studio registry contract check passed (${studioMigrationNames.join(", ")}; ${assetOperationMigrationNames[0]}).`,
+);
