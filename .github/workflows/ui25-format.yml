@@ -1,0 +1,47 @@
+name: UI25 Format Assist
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Format UI25 files
+        run: pnpm exec biome format --write apps/web/src/fantasia-v2.css apps/web/src/fantasia-v2-structure.css apps/web/src/styles.css apps/web/src/ui/tokens.css apps/web/src/ui/primitives.css apps/web/src/ui24e1-auth-home.css apps/web/src/ui24e2-saga-chapter.css apps/web/src/ui24e3-story-characters-talent.css apps/web/src/ui24e3-talent-compact-fit.css apps/web/src/ui24e4-settings.css apps/web/src/ui24e5-battle-hud.css apps/web/src/ui24e5-battle-hud-fixes.css
+      - name: Collect formatted files
+        run: |
+          mkdir -p ui25-formatted/apps/web/src/ui
+          cp apps/web/src/fantasia-v2.css ui25-formatted/apps/web/src/
+          cp apps/web/src/fantasia-v2-structure.css ui25-formatted/apps/web/src/
+          cp apps/web/src/styles.css ui25-formatted/apps/web/src/
+          cp apps/web/src/ui/tokens.css ui25-formatted/apps/web/src/ui/
+          cp apps/web/src/ui/primitives.css ui25-formatted/apps/web/src/ui/
+          cp apps/web/src/ui24e1-auth-home.css ui25-formatted/apps/web/src/
+          cp apps/web/src/ui24e2-saga-chapter.css ui25-formatted/apps/web/src/
+          cp apps/web/src/ui24e3-story-characters-talent.css ui25-formatted/apps/web/src/
+          cp apps/web/src/ui24e3-talent-compact-fit.css ui25-formatted/apps/web/src/
+          cp apps/web/src/ui24e4-settings.css ui25-formatted/apps/web/src/
+          cp apps/web/src/ui24e5-battle-hud.css ui25-formatted/apps/web/src/
+          cp apps/web/src/ui24e5-battle-hud-fixes.css ui25-formatted/apps/web/src/
+      - name: Upload formatted UI25 files
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ui25-formatted
+          path: ui25-formatted/
+          retention-days: 1
