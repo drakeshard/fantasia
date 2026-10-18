@@ -47,7 +47,13 @@
       "foreground": "--studio-text-muted",
       "background": "--studio-surface-raised",
       "minimum": 4.5,
-      "purpose": "muted normal text on the lightest shared content surface"
+      "purpose": "muted normal text on shared raised content surfaces"
+    },
+    {
+      "foreground": "--studio-text-muted",
+      "background": "--studio-surface-overlay",
+      "minimum": 4.5,
+      "purpose": "muted normal text in overlay and dialog contexts"
     },
     {
       "foreground": "--studio-text-on-accent",
