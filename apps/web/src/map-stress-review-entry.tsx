@@ -6,11 +6,12 @@ import "./map-review-stability.css";
 
 const root = document.getElementById("app");
 if (!root) throw new Error("Fantasia root element was not found.");
+const appRoot: HTMLElement = root;
 
 function lockReviewViewport(): void {
   const width = window.innerWidth;
   const height = window.innerHeight;
-  for (const element of [document.documentElement, document.body, root]) {
+  for (const element of [document.documentElement, document.body, appRoot]) {
     element.style.position = "fixed";
     element.style.inset = "0";
     element.style.width = `${width}px`;
@@ -20,7 +21,7 @@ function lockReviewViewport(): void {
     element.style.margin = "0";
     element.style.overflow = "hidden";
   }
-  const review = root.querySelector<HTMLElement>(".map-review");
+  const review = appRoot.querySelector<HTMLElement>(".map-review");
   if (!review) return;
   review.style.position = "fixed";
   review.style.inset = "0";
@@ -33,6 +34,6 @@ function lockReviewViewport(): void {
   review.style.overflow = "hidden";
 }
 
-render(<MapStressReviewApp />, root);
+render(<MapStressReviewApp />, appRoot);
 lockReviewViewport();
 window.addEventListener("resize", lockReviewViewport);
