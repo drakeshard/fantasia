@@ -1,0 +1,36 @@
+name: UI25 Compact Label Fix
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.event.pull_request.head.ref == 'game-ui25/full-v2-migration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Correct compact label contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('apps/web/src/fantasia-v2.css')
+          text = p.read_text()
+          old = '''  .game-control-label {\n    display: none;\n  }\n  .game-control-compact-label {\n    display: inline;\n  }'''
+          new = '''  .game-control.has-compact-label .game-control-label {\n    display: none;\n  }\n  .game-control.has-compact-label .game-control-compact-label {\n    display: inline;\n  }'''
+          if old not in text:
+              raise SystemExit('Expected compact-label block not found')
+          p.write_text(text.replace(old, new, 1))
+          PY
+      - name: Commit correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/src/fantasia-v2.css
+          git commit -m "fix: preserve labels without compact alternatives"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
