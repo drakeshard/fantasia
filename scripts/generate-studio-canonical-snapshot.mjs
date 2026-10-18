@@ -76,7 +76,7 @@ const output = path.join(
   root,
   "supabase/functions/studio-operations/canonical-snapshot.generated.json",
 );
-const serialized = `${JSON.stringify(snapshot, null, 2)}\n`;
+const serialized = `${JSON.stringify(snapshot)}\n`;
 
 if (process.argv.includes("--check")) {
   const existing = await readFile(output, "utf8").catch(() => "");
