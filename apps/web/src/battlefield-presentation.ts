@@ -44,7 +44,13 @@ export type BattlefieldTerrainVisualId =
   | "terrain.sand"
   | "terrain.canyon"
   | "terrain.tundra"
-  | "terrain.snow";
+  | "terrain.snow"
+  | "terrain.water.ghost"
+  | "terrain.water.abyss"
+  | "terrain.deck"
+  | "terrain.meadow.mist"
+  | "terrain.water.enchanted"
+  | "terrain.stone.sacred";
 
 export type BattlefieldPropVisualId = "prop.woodland" | "prop.rubble";
 
@@ -191,6 +197,48 @@ export const FANTASIA_BATTLEFIELD_VISUAL_CATALOG: BattlefieldVisualCatalog = Obj
       fill: 0xc8d9dc,
       alternateFill: 0xd5e3e5,
       border: 0x9eb7bd,
+      detail: "none",
+    }),
+    "terrain.water.ghost": Object.freeze({
+      id: "terrain.water.ghost",
+      fill: 0x123f46,
+      alternateFill: 0x174d52,
+      border: 0x2b6667,
+      detail: "none",
+    }),
+    "terrain.water.abyss": Object.freeze({
+      id: "terrain.water.abyss",
+      fill: 0x091b26,
+      alternateFill: 0x0c2630,
+      border: 0x183942,
+      detail: "none",
+    }),
+    "terrain.deck": Object.freeze({
+      id: "terrain.deck",
+      fill: 0x624a38,
+      alternateFill: 0x6f5540,
+      border: 0x9b805d,
+      detail: "none",
+    }),
+    "terrain.meadow.mist": Object.freeze({
+      id: "terrain.meadow.mist",
+      fill: 0x536d5a,
+      alternateFill: 0x5e7863,
+      border: 0x718576,
+      detail: "none",
+    }),
+    "terrain.water.enchanted": Object.freeze({
+      id: "terrain.water.enchanted",
+      fill: 0x2b6871,
+      alternateFill: 0x347780,
+      border: 0x76a6a2,
+      detail: "none",
+    }),
+    "terrain.stone.sacred": Object.freeze({
+      id: "terrain.stone.sacred",
+      fill: 0x828a86,
+      alternateFill: 0x919a95,
+      border: 0xc2c7b3,
       detail: "none",
     }),
   }),
