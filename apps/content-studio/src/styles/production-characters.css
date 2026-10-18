@@ -1,0 +1,16 @@
+.studio-character-list,.studio-character-stack{display:grid;gap:var(--studio-space-3)}
+.studio-character-row{display:flex;align-items:center;justify-content:space-between;gap:var(--studio-space-4);width:100%;padding:var(--studio-space-4);border:1px solid var(--studio-border-subtle);border-radius:var(--studio-radius-md);background:var(--studio-surface-raised);color:inherit;text-align:left;cursor:pointer}
+.studio-character-row:hover,.studio-character-row:focus-visible,.studio-character-row[aria-current="true"]{border-color:var(--studio-border-active);box-shadow:inset 3px 0 0 var(--studio-accent-primary)}
+.studio-character-row>span:first-child{display:grid;gap:var(--studio-space-1)}
+.studio-character-row code{color:var(--studio-text-muted);font-size:var(--studio-font-size-xs)}
+.studio-character-row__status{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:var(--studio-space-2)}
+.studio-character-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--studio-space-4)}
+.studio-character-grid>.studio-character-editor{grid-column:1/-1}
+.studio-character-grid h4,.studio-character-stack h4{margin-top:0;color:var(--studio-text-strong)}
+.studio-character-fact{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--studio-space-4);padding:var(--studio-space-2) 0;border-bottom:1px solid var(--studio-border-subtle)}
+.studio-character-fact:last-child{border-bottom:0}
+.studio-character-fact span{color:var(--studio-text-muted)}
+.studio-character-fact strong{max-width:65%;overflow-wrap:anywhere;text-align:right}
+.studio-character-editor{display:grid;gap:var(--studio-space-3)}
+.studio-character-stack>article,.studio-character-stack>section,.studio-character-stack>.studio-surface{display:grid;gap:var(--studio-space-1)}
+@media(max-width:800px){.studio-character-grid{grid-template-columns:1fr}.studio-character-row{align-items:flex-start;flex-direction:column}.studio-character-row__status{justify-content:flex-start}.studio-character-fact{flex-direction:column}.studio-character-fact strong{max-width:100%;text-align:left}}
