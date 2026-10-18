@@ -27,7 +27,9 @@ function environmentKey(directName: string, collectionName: string): string {
     if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
   }
 
-  throw new Error(`Missing required Edge Function environment key: ${directName}/${collectionName}`);
+  throw new Error(
+    `Missing required Edge Function environment key: ${directName}/${collectionName}`,
+  );
 }
 
 async function parseJsonResponse(response: Response): Promise<unknown> {
@@ -117,7 +119,10 @@ Deno.serve(async (request: Request) => {
     if (error instanceof StudioOperationContractError) {
       return jsonResponse({ message: error.message }, error.status);
     }
-    console.error("studio-operations failed", error instanceof Error ? error.message : "unknown error");
+    console.error(
+      "studio-operations failed",
+      error instanceof Error ? error.message : "unknown error",
+    );
     return jsonResponse({ message: "Studio operation service failed." }, 500);
   }
 });
