@@ -2309,10 +2309,10 @@
 
 /* ---------- Compact landscape ---------- */
 @media (max-width: 900px), (max-height: 499px) {
-  .game-control-label {
+  .game-control.has-compact-label .game-control-label {
     display: none;
   }
-  .game-control-compact-label {
+  .game-control.has-compact-label .game-control-compact-label {
     display: inline;
   }
   .game-control {
