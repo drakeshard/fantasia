@@ -1,11 +1,5 @@
 import { Application, Container, Graphics, Text } from "pixi.js";
-import type {
-  BattlefieldElevationCell,
-  BattlefieldRenderScene,
-  BattlefieldTerrainRegion,
-  BattlefieldUnitMarker,
-} from "./battlefield-scene.js";
-import { battlefieldUnitVisualId } from "./battlefield-scene.js";
+import type { BattlefieldRenderScene, BattlefieldUnitMarker } from "./battlefield-scene.js";
 import {
   FANTASIA_BATTLEFIELD_RENDER_PROFILE,
   FANTASIA_BATTLEFIELD_VISUAL_CATALOG,
@@ -18,34 +12,9 @@ import {
   terrainVisualForCell,
   visibleSquareNeighbors,
 } from "./battlefield-presentation.js";
-import { B01_MAP_REVIEW_SCENE } from "./map-review-b01-scene.js";
 
 export type MapReviewCell = BattlefieldCellCoord;
-export type MapReviewElevationCell = BattlefieldElevationCell;
-export type MapReviewTerrainKind = "road" | "ridge" | "track" | "basin" | "plateau";
-
-export interface LegacyMapReviewTerrainRegion {
-  readonly kind: MapReviewTerrainKind;
-  readonly cells: readonly MapReviewCell[];
-}
-
-export interface LegacyMapReviewUnitMarker {
-  readonly cell: MapReviewCell;
-  readonly side: string;
-  readonly label: string;
-  readonly reinforcement: boolean;
-}
-
-export type MapReviewTerrainRegion = BattlefieldTerrainRegion | LegacyMapReviewTerrainRegion;
-export type MapReviewUnitMarker = BattlefieldUnitMarker | LegacyMapReviewUnitMarker;
-
-export interface MapReviewRendererScene
-  extends Omit<BattlefieldRenderScene, "id" | "terrainRegions" | "blockedPropVisualId" | "units"> {
-  readonly id?: string;
-  readonly terrainRegions: readonly MapReviewTerrainRegion[];
-  readonly blockedPropVisualId?: BattlefieldRenderScene["blockedPropVisualId"];
-  readonly units: readonly MapReviewUnitMarker[];
-}
+export type MapReviewRendererScene = BattlefieldRenderScene;
 
 export interface MapReviewRendererOptions {
   readonly showGrid: boolean;
@@ -60,17 +29,6 @@ const CATALOG = FANTASIA_BATTLEFIELD_VISUAL_CATALOG;
 
 function key(cell: MapReviewCell): string {
   return `${cell.x},${cell.y}`;
-}
-
-function terrainVisualId(region: MapReviewTerrainRegion): BattlefieldTerrainVisualId {
-  if ("visualId" in region) return region.visualId;
-  return `terrain.${region.kind}` as BattlefieldTerrainVisualId;
-}
-
-function unitVisualId(unit: MapReviewUnitMarker) {
-  return "visualId" in unit
-    ? unit.visualId
-    : battlefieldUnitVisualId(unit.side, unit.reinforcement);
 }
 
 function drawElevationWalls(
@@ -173,8 +131,7 @@ function drawBlockedProp(
   seed: number,
   visualId: BattlefieldRenderScene["blockedPropVisualId"],
 ): void {
-  const prop = CATALOG.props[visualId];
-  if (prop.fallback === "rubble") drawRubble(world, point);
+  if (CATALOG.props[visualId].fallback === "rubble") drawRubble(world, point);
   else drawTree(world, point, seed);
 }
 
@@ -199,8 +156,12 @@ function drawFieldDetail(world: Container, point: BattlefieldScreenPoint, seed: 
   world.addChild(detail);
 }
 
-function drawUnitMarker(world: Container, point: BattlefieldScreenPoint, unit: MapReviewUnitMarker): void {
-  const visual = CATALOG.units[unitVisualId(unit)];
+function drawUnitMarker(
+  world: Container,
+  point: BattlefieldScreenPoint,
+  unit: BattlefieldUnitMarker,
+): void {
+  const visual = CATALOG.units[unit.visualId];
   const body = new Graphics()
     .poly([-12, -12, 0, -21, 12, -12, 10, 12, 0, 17, -10, 12])
     .fill({ color: visual.fill, alpha: visual.alpha })
@@ -241,12 +202,6 @@ function drawCart(world: Container, point: BattlefieldScreenPoint): void {
       ])
       .fill(0x755237)
       .stroke({ color: 0xc29d65, width: 1.5 }),
-    new Graphics().rect(point.x - 1, point.y - 31, 26, 14).fill(0x8f734c).stroke({ color: 0xd0b27a, width: 1 }),
-    new Graphics()
-      .circle(point.x - 7, point.y - 2, 6)
-      .circle(point.x + 31, point.y + 4, 6)
-      .fill(0x31281f)
-      .stroke({ color: 0x9f8055, width: 2 }),
   );
 }
 
@@ -293,7 +248,7 @@ export class MapReviewRenderer {
     host: HTMLElement,
     options: MapReviewRendererOptions,
     onSelect: (cell: MapReviewCell) => void,
-    scene: MapReviewRendererScene = B01_MAP_REVIEW_SCENE,
+    scene: MapReviewRendererScene,
   ) {
     this.#host = host;
     this.#options = options;
@@ -306,8 +261,7 @@ export class MapReviewRenderer {
     this.#exitZone = new Set(scene.exitZone.map(key));
     const terrainVisuals = new Map<string, BattlefieldTerrainVisualId>();
     for (const region of scene.terrainRegions) {
-      const visualId = terrainVisualId(region);
-      for (const cell of region.cells) terrainVisuals.set(key(cell), visualId);
+      for (const cell of region.cells) terrainVisuals.set(key(cell), region.visualId);
     }
     this.#terrainVisuals = terrainVisuals;
   }
@@ -333,8 +287,8 @@ export class MapReviewRenderer {
     canvas.addEventListener("mousedown", this.#handleMouseDown);
     window.addEventListener("mousemove", this.#handleMouseMove);
     window.addEventListener("mouseup", this.#handleMouseUp);
-    this.#ready = true;
     window.addEventListener("resize", this.#handleResize);
+    this.#ready = true;
     this.#resize();
   }
 
@@ -544,14 +498,10 @@ export class MapReviewRenderer {
       point.x + PROFILE.tileWidth / 2,
     ]);
     const ys = cells.flatMap(({ point }) => [point.y - 90, point.y + PROFILE.tileHeight / 2 + 12]);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
-    this.#contentWidth = maxX - minX + PROFILE.padding * 2;
-    this.#contentHeight = maxY - minY + PROFILE.padding * 2;
-    this.#minX = minX;
-    this.#minY = minY;
+    this.#minX = Math.min(...xs);
+    this.#minY = Math.min(...ys);
+    this.#contentWidth = Math.max(...xs) - this.#minX + PROFILE.padding * 2;
+    this.#contentHeight = Math.max(...ys) - this.#minY + PROFILE.padding * 2;
     this.#fitScale = Math.min(
       1.3,
       Math.max(
@@ -562,6 +512,7 @@ export class MapReviewRenderer {
         ),
       ),
     );
+
     const world = new Container();
     this.#world = world;
     this.#app.stage.addChild(world);
@@ -580,15 +531,17 @@ export class MapReviewRenderer {
       const rightDrop = Math.max(0, elevation - this.#elevationAt(neighbors.right));
       elevationFaceCount += drawElevationWalls(world, point, leftDrop, rightDrop);
 
-      const materialId = this.#terrainVisuals.get(cellKey) ?? "terrain.grass";
-      const material = terrainVisualForCell(materialId, cell);
+      const material = terrainVisualForCell(
+        this.#terrainVisuals.get(cellKey) ?? "terrain.grass",
+        cell,
+      );
       const tile = new Graphics()
         .poly(squareTilePoints(point))
         .fill({ color: material.resolvedFill, alpha: 1 })
         .stroke({
           color: this.#options.showGrid ? 0x9c9a79 : material.border,
           width: this.#options.showGrid ? 0.9 : 0.35,
-          alpha: this.#options.showGrid ? 0.46 : 0.25,
+          alpha: this.#options.showGrid ? 0.46 : 0.35,
         });
       tile.eventMode = "static";
       tile.cursor = "pointer";
@@ -607,11 +560,7 @@ export class MapReviewRenderer {
           new Graphics()
             .poly(squareTilePoints(point))
             .fill({ color: 0x82bfd0, alpha: this.#routeAnchors.has(cellKey) ? 0.16 : 0.08 })
-            .stroke({
-              color: 0x9cd9e8,
-              width: this.#routeAnchors.has(cellKey) ? 1.6 : 0.8,
-              alpha: 0.62,
-            }),
+            .stroke({ color: 0x9cd9e8, width: 1.2, alpha: 0.62 }),
         );
       }
       if (this.#options.showRoute && this.#exitZone.has(cellKey)) {
@@ -647,10 +596,14 @@ export class MapReviewRenderer {
       }
     }
 
-    const blockedPropVisualId = this.#scene.blockedPropVisualId ?? "prop.woodland";
     for (const { cell, point } of sorted) {
       if (this.#blocked.has(key(cell))) {
-        drawBlockedProp(world, point, cell.x * 13 + cell.y * 29, blockedPropVisualId);
+        drawBlockedProp(
+          world,
+          point,
+          cell.x * 13 + cell.y * 29,
+          this.#scene.blockedPropVisualId,
+        );
       }
     }
 
