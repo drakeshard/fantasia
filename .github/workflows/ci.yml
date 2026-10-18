@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: quality-v3-${{ github.workflow }}-${{ github.ref }}
+  group: quality-v5-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -19,10 +19,20 @@ jobs:
     timeout-minutes: 5
     outputs:
       verify: ${{ steps.filter.outputs.verify }}
+      core: ${{ steps.filter.outputs.core }}
+      audit: ${{ steps.filter.outputs.audit }}
+      game_unit: ${{ steps.filter.outputs.game_unit }}
+      runtime_unit: ${{ steps.filter.outputs.runtime_unit }}
+      web_unit: ${{ steps.filter.outputs.web_unit }}
+      content_unit: ${{ steps.filter.outputs.content_unit }}
       web: ${{ steps.filter.outputs.web }}
       game: ${{ steps.filter.outputs.game }}
-      studio: ${{ steps.filter.outputs.studio }}
       visual: ${{ steps.filter.outputs.visual }}
+      studio: ${{ steps.filter.outputs.studio }}
+      studio_static: ${{ steps.filter.outputs.studio_static }}
+      studio_unit: ${{ steps.filter.outputs.studio_unit }}
+      studio_browser: ${{ steps.filter.outputs.studio_browser }}
+      studio_audit: ${{ steps.filter.outputs.studio_audit }}
       story: ${{ steps.filter.outputs.story }}
     steps:
       - name: Checkout
@@ -35,83 +45,304 @@ jobs:
         shell: bash
         env:
           EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BASE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
 
-          # main is the final integration gate: always execute the complete suite.
-          if [[ "$EVENT_NAME" == "push" ]]; then
-            {
-              echo "verify=true"
-              echo "web=true"
-              echo "game=true"
-              echo "studio=true"
-              echo "visual=true"
-              echo "story=true"
-            } >> "$GITHUB_OUTPUT"
-            echo "main push: full Quality suite selected"
-            exit 0
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            BASE_SHA="$PR_BASE_SHA"
+          else
+            BASE_SHA="$PUSH_BASE_SHA"
           fi
 
-          mapfile -t changed < <(git diff --name-only --diff-filter=ACMRTD "$BASE_SHA" "$HEAD_SHA")
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            mapfile -t changed < <(git ls-tree -r --name-only "$HEAD_SHA")
+          else
+            mapfile -t changed < <(git diff --name-only --diff-filter=ACMRTD "$BASE_SHA" "$HEAD_SHA")
+          fi
+
           printf 'Changed files:\n'
           printf '  %s\n' "${changed[@]}"
 
-          verify=false
+          core=false
+          audit=false
+          game_unit=false
+          runtime_unit=false
+          web_unit=false
+          content_unit=false
           game=false
-          studio=false
           visual=false
+          studio_static=false
+          studio_unit=false
+          studio_browser=false
+          studio_audit=false
           story=false
           full=false
+          lockfile_changed=false
+          dependency_scope=false
 
           for path in "${changed[@]}"; do
-            # Documentation-only changes intentionally avoid dependency installation and tests.
             case "$path" in
               *.md|docs/*|.github/ISSUE_TEMPLATE/*)
                 continue
                 ;;
             esac
 
-            verify=true
-
-            # Changes to CI/toolchain/shared package plumbing are intentionally conservative.
             case "$path" in
-              .github/workflows/ci.yml|.github/actions/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.node-version|biome.json|tsconfig*.json|scripts/*|patches/*|config/*|packages/*)
+              .github/workflows/ci.yml)
                 full=true
                 ;;
             esac
 
             case "$path" in
-              apps/web/*|tests/e2e/*|playwright.config.ts|content/*|art/*|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
+              .github/actions/*|pnpm-workspace.yaml|tsconfig*.json|vitest.config.ts)
+                core=true
+                game_unit=true
+                runtime_unit=true
+                web_unit=true
+                content_unit=true
                 game=true
+                visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
                 ;;
             esac
 
             case "$path" in
-              apps/content-studio/*|tests/content-studio/*|playwright.content-studio.config.ts|content/*|.github/workflows/deploy-content-studio.yml|wrangler.content-studio.jsonc)
-                studio=true
+              package.json)
+                core=true
+                audit=true
+                game_unit=true
+                runtime_unit=true
+                web_unit=true
+                content_unit=true
+                game=true
+                visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
+                dependency_scope=true
+                ;;
+              pnpm-lock.yaml)
+                lockfile_changed=true
+                ;;
+              biome.json)
+                core=true
+                web_unit=true
+                studio_unit=true
+                ;;
+              .node-version)
+                core=true
+                game_unit=true
+                runtime_unit=true
+                web_unit=true
+                content_unit=true
+                game=true
+                visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
+                story=true
                 ;;
             esac
 
             case "$path" in
-              apps/web/*|tests/visual/*|playwright.visual.config.ts|content/*|art/*|.github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
+              patches/*)
+                game=true
                 visual=true
                 ;;
             esac
 
             case "$path" in
-              apps/story-studio/*|content/*|.github/workflows/deploy-story-studio.yml|wrangler.story-studio.jsonc)
+              packages/game/*)
+                core=true
+                game_unit=true
+                runtime_unit=true
+                game=true
+                ;;
+              packages/runtime/*)
+                core=true
+                runtime_unit=true
+                game=true
+                ;;
+            esac
+            case "$path" in
+              packages/game/package.json|packages/runtime/package.json)
+                audit=true
+                dependency_scope=true
+                ;;
+            esac
+
+            # Owner-root Node tests never fan out to downstream consumers.
+            case "$path" in
+              tests/game/*)
+                game_unit=true
+                ;;
+              tests/runtime/*)
+                runtime_unit=true
+                ;;
+              tests/web/*.test.ts)
+                web_unit=true
+                ;;
+              tests/content/*)
+                content_unit=true
+                ;;
+            esac
+
+            case "$path" in
+              apps/web/*)
+                web_unit=true
+                game=true
+                visual=true
+                ;;
+              tests/web/e2e/*|playwright.config.ts)
+                game=true
+                ;;
+              tests/web/visual/*|playwright.visual.config.ts|art/*)
+                visual=true
+                ;;
+              .github/workflows/deploy-cloudflare.yml|wrangler.jsonc)
+                game=true
+                visual=true
+                ;;
+            esac
+            case "$path" in
+              apps/web/package.json)
+                audit=true
+                dependency_scope=true
+                ;;
+            esac
+
+            case "$path" in
+              packages/studio-read-model/*)
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
+                ;;
+              apps/content-studio/*)
+                studio_static=true
+                studio_browser=true
+                ;;
+              tests/studio/*.test.ts)
+                studio_unit=true
+                ;;
+              tests/studio/browser/*|playwright.content-studio.config.ts)
+                studio_browser=true
+                ;;
+              supabase/functions/studio-*/*)
+                studio_static=true
+                studio_unit=true
+                ;;
+              scripts/check-content-studio-deployment.mjs|scripts/check-studio-registry.mjs|scripts/check-studio-auth.mjs|scripts/check-studio-read-model.mjs|scripts/check-studio-canonical-change.mjs|scripts/generate-studio-canonical-snapshot.mjs)
+                studio_static=true
+                ;;
+              .github/workflows/deploy-content-studio.yml|wrangler.content-studio.jsonc)
+                studio_static=true
+                studio_browser=true
+                ;;
+            esac
+            case "$path" in
+              apps/content-studio/package.json)
+                studio_audit=true
+                dependency_scope=true
+                ;;
+            esac
+
+            case "$path" in
+              supabase/functions/trusted-command/*)
+                web_unit=true
+                ;;
+              supabase/migrations/*)
+                web_unit=true
+                studio_static=true
+                studio_unit=true
+                ;;
+            esac
+
+            case "$path" in
+              apps/story-studio/*|.github/workflows/deploy-story-studio.yml|wrangler.story-studio.jsonc)
                 story=true
+                ;;
+            esac
+
+            case "$path" in
+              content/*)
+                content_unit=true
+                runtime_unit=true
+                game=true
+                visual=true
+                studio_static=true
+                studio_unit=true
+                studio_browser=true
+                story=true
+                ;;
+            esac
+
+            case "$path" in
+              config/runtime-assets.json)
+                core=true
+                runtime_unit=true
+                game=true
+                studio_static=true
+                studio_unit=true
+                ;;
+            esac
+
+            case "$path" in
+              config/shared-library-pins.json|config/shared-library-provenance.json|scripts/prepare-shared-packages.mjs|scripts/verify-shared-packages.mjs|scripts/check-shared-consumer.mjs)
+                core=true
+                game_unit=true
+                runtime_unit=true
+                game=true
+                ;;
+            esac
+
+            case "$path" in
+              scripts/check-content-studio-deployment.mjs|scripts/check-studio-registry.mjs|scripts/check-studio-auth.mjs|scripts/check-studio-read-model.mjs|scripts/check-studio-canonical-change.mjs|scripts/generate-studio-canonical-snapshot.mjs)
+                ;;
+              scripts/*|config/*)
+                core=true
                 ;;
             esac
           done
 
-          if [[ "$full" == "true" ]]; then
+          if [[ "$lockfile_changed" == "true" && "$dependency_scope" != "true" ]]; then
+            core=true
+            audit=true
+            game_unit=true
+            runtime_unit=true
+            web_unit=true
+            content_unit=true
             game=true
-            studio=true
             visual=true
+            studio_static=true
+            studio_unit=true
+            studio_browser=true
+            studio_audit=true
+          fi
+
+          if [[ "$full" == "true" ]]; then
+            core=true
+            audit=true
+            game_unit=true
+            runtime_unit=true
+            web_unit=true
+            content_unit=true
+            game=true
+            visual=true
+            studio_static=true
+            studio_unit=true
+            studio_browser=true
+            studio_audit=true
             story=true
+          fi
+
+          verify=false
+          if [[ "$core" == "true" || "$audit" == "true" || "$game_unit" == "true" || "$runtime_unit" == "true" || "$web_unit" == "true" || "$content_unit" == "true" ]]; then
+            verify=true
           fi
 
           web=false
@@ -119,19 +350,34 @@ jobs:
             web=true
           fi
 
+          studio=false
+          if [[ "$studio_static" == "true" || "$studio_unit" == "true" || "$studio_browser" == "true" || "$studio_audit" == "true" ]]; then
+            studio=true
+          fi
+
           {
             echo "verify=$verify"
+            echo "core=$core"
+            echo "audit=$audit"
+            echo "game_unit=$game_unit"
+            echo "runtime_unit=$runtime_unit"
+            echo "web_unit=$web_unit"
+            echo "content_unit=$content_unit"
             echo "web=$web"
             echo "game=$game"
-            echo "studio=$studio"
             echo "visual=$visual"
+            echo "studio=$studio"
+            echo "studio_static=$studio_static"
+            echo "studio_unit=$studio_unit"
+            echo "studio_browser=$studio_browser"
+            echo "studio_audit=$studio_audit"
             echo "story=$story"
           } >> "$GITHUB_OUTPUT"
 
-          echo "Selected: verify=$verify web=$web game=$game studio=$studio visual=$visual story=$story full=$full"
+          echo "Selected: verify=$verify core=$core audit=$audit game_unit=$game_unit runtime_unit=$runtime_unit web_unit=$web_unit content_unit=$content_unit web=$web game=$game visual=$visual studio=$studio studio_static=$studio_static studio_unit=$studio_unit studio_browser=$studio_browser studio_audit=$studio_audit story=$story full=$full"
 
   verify:
-    name: Fast verification
+    name: Core and Node validation
     needs: classify
     if: needs.classify.outputs.verify == 'true'
     runs-on: ubuntu-latest
@@ -144,29 +390,48 @@ jobs:
         uses: ./.github/actions/setup-fantasia
 
       - name: Dependency audit
+        if: needs.classify.outputs.audit == 'true'
         run: pnpm run audit
 
       - name: Foundation package consumer
+        if: needs.classify.outputs.core == 'true'
         run: pnpm foundation:consumer
 
       - name: Combined RPG/Tactical package consumer
+        if: needs.classify.outputs.core == 'true'
         run: pnpm shared:consumer
 
-      - name: Formatting, lint, architecture, and determinism
-        run: pnpm check
+      - name: Core formatting, architecture, determinism, assets, and backend self-test
+        if: needs.classify.outputs.core == 'true'
+        run: pnpm check:core
 
-      - name: Typecheck
-        run: pnpm typecheck
+      - name: Typecheck core packages
+        if: needs.classify.outputs.core == 'true'
+        run: pnpm --filter @fantasia/runtime... typecheck
 
-      - name: Unit and integration tests
-        run: pnpm test
+      - name: Game domain tests
+        if: needs.classify.outputs.game_unit == 'true'
+        run: pnpm test:game
+
+      - name: Runtime tests
+        if: needs.classify.outputs.runtime_unit == 'true'
+        run: pnpm test:runtime
+
+      - name: Web unit formatting
+        if: needs.classify.outputs.web_unit == 'true'
+        run: pnpm check:web:unit:format
+
+      - name: Web unit tests
+        if: needs.classify.outputs.web_unit == 'true'
+        run: pnpm test:web:unit
+
+      - name: Content contract tests
+        if: needs.classify.outputs.content_unit == 'true'
+        run: pnpm test:content
 
       - name: Build core packages
+        if: needs.classify.outputs.core == 'true'
         run: pnpm --filter @fantasia/runtime... build
-
-      - name: Build legacy Story Studio
-        if: needs.classify.outputs.story == 'true'
-        run: pnpm story:build
 
   web-validation:
     name: Web validation
@@ -181,6 +446,9 @@ jobs:
       - name: Setup Fantasia
         uses: ./.github/actions/setup-fantasia
 
+      - name: Typecheck web surface
+        run: pnpm --filter @fantasia/web typecheck
+
       - name: Build web surface
         run: pnpm --filter @fantasia/web build
 
@@ -191,13 +459,13 @@ jobs:
         id: game
         if: needs.classify.outputs.game == 'true'
         continue-on-error: true
-        run: pnpm test:e2e
+        run: pnpm test:web:e2e
 
       - name: Pre-deploy visual capture
         id: visual
         if: needs.classify.outputs.visual == 'true'
         continue-on-error: true
-        run: pnpm test:visual
+        run: pnpm test:web:visual
 
       - name: Upload visual review evidence
         if: always() && needs.classify.outputs.visual == 'true'
@@ -221,26 +489,21 @@ jobs:
           VISUAL_OUTCOME: ${{ steps.visual.outcome }}
         run: |
           set -euo pipefail
-
           require_suite() {
             local selected="$1"
             local outcome="$2"
             local name="$3"
-
             if [[ "$selected" == "true" && "$outcome" != "success" ]]; then
               echo "$name was selected but finished with: $outcome"
               exit 1
             fi
-
             if [[ "$selected" != "true" && "$outcome" != "skipped" ]]; then
               echo "$name was not selected but unexpectedly finished with: $outcome"
               exit 1
             fi
           }
-
           require_suite "$GAME_SELECTED" "$GAME_OUTCOME" "Browser smoke"
           require_suite "$VISUAL_SELECTED" "$VISUAL_OUTCOME" "Visual review"
-
           echo "All selected web suites passed."
 
   content-studio-validation:
@@ -253,17 +516,54 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Setup Fantasia
+      - name: Setup Content Studio
         uses: ./.github/actions/setup-fantasia
+        with:
+          prepare-shared: "false"
+
+      - name: Content Studio dependency audit
+        if: needs.classify.outputs.studio_audit == 'true'
+        run: pnpm run audit
+
+      - name: Content Studio static and contract checks
+        if: needs.classify.outputs.studio_static == 'true'
+        run: pnpm check:studio
+
+      - name: Content Studio unit formatting
+        if: needs.classify.outputs.studio_unit == 'true'
+        run: pnpm check:studio:unit:format
+
+      - name: Content Studio unit tests
+        if: needs.classify.outputs.studio_unit == 'true'
+        run: pnpm test:studio:unit
+
+      - name: Typecheck Content Studio surface
+        if: needs.classify.outputs.studio_browser == 'true'
+        run: pnpm --filter @fantasia/content-studio typecheck
 
       - name: Build Content Studio surface
+        if: needs.classify.outputs.studio_browser == 'true'
         run: pnpm --filter @fantasia/content-studio build
 
       - name: Install Chromium
+        if: needs.classify.outputs.studio_browser == 'true'
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Content Studio primitive coverage
-        run: pnpm test:content-studio
+      - name: Content Studio browser coverage
+        if: needs.classify.outputs.studio_browser == 'true'
+        run: pnpm test:studio:browser
+
+  story-validation:
+    name: Story Studio validation
+    needs: classify
+    if: needs.classify.outputs.story == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build and validate Story Studio
+        run: node apps/story-studio/build.mjs
 
   quality-gate:
     name: Quality gate
@@ -273,6 +573,7 @@ jobs:
       - verify
       - web-validation
       - content-studio-validation
+      - story-validation
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -286,32 +587,29 @@ jobs:
           WEB_RESULT: ${{ needs.web-validation.result }}
           STUDIO_SELECTED: ${{ needs.classify.outputs.studio }}
           STUDIO_RESULT: ${{ needs.content-studio-validation.result }}
+          STORY_SELECTED: ${{ needs.classify.outputs.story }}
+          STORY_RESULT: ${{ needs.story-validation.result }}
         run: |
           set -euo pipefail
-
           if [[ "$CLASSIFY_RESULT" != "success" ]]; then
             echo "Change classification failed: $CLASSIFY_RESULT"
             exit 1
           fi
-
-          require_selected() {
+          require_job() {
             local selected="$1"
             local result="$2"
             local name="$3"
-
             if [[ "$selected" == "true" && "$result" != "success" ]]; then
               echo "$name was selected but finished with: $result"
               exit 1
             fi
-
             if [[ "$selected" != "true" && "$result" != "skipped" ]]; then
               echo "$name was not selected but unexpectedly finished with: $result"
               exit 1
             fi
           }
-
-          require_selected "$VERIFY_SELECTED" "$VERIFY_RESULT" "Fast verification"
-          require_selected "$WEB_SELECTED" "$WEB_RESULT" "Web validation"
-          require_selected "$STUDIO_SELECTED" "$STUDIO_RESULT" "Content Studio validation"
-
-          echo "All selected Quality checks passed."
+          require_job "$VERIFY_SELECTED" "$VERIFY_RESULT" "Core and Node validation"
+          require_job "$WEB_SELECTED" "$WEB_RESULT" "Web validation"
+          require_job "$STUDIO_SELECTED" "$STUDIO_RESULT" "Content Studio validation"
+          require_job "$STORY_SELECTED" "$STORY_RESULT" "Story Studio validation"
+          echo "All selected Quality jobs passed."
