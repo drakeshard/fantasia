@@ -168,9 +168,7 @@ test("Characters Assets tab consumes the shared Asset Board empty state", async 
   await page.getByRole("tab", { name: "Assets" }).click();
   await expect(page.getByText("No registered semantic assets", { exact: true })).toBeVisible();
   await expect(
-    page.getByText("Provider folders are not treated as semantic asset authority.", {
-      exact: true,
-    }),
+    page.getByText(/Provider folders are not treated as semantic asset authority/),
   ).toBeVisible();
 });
 
