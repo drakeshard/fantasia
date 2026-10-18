@@ -761,7 +761,9 @@ function ValidationSummary({ asset }: { asset: ProductionAsset }) {
             <strong>{validation.dimension}</strong>
             <small>{validation.checkedAt ?? "Check time unavailable"}</small>
           </div>
-          <span class={`studio-assets-state-pill${validation.blocking ? " studio-assets-state-pill--blocked" : ""}`}>
+          <span
+            class={`studio-assets-state-pill${validation.blocking ? " studio-assets-state-pill--blocked" : ""}`}
+          >
             {validation.outcome}
           </span>
         </div>
@@ -825,11 +827,11 @@ function SelectedAssetWorkspace({
     <article class="studio-assets-focus" aria-label={`Selected asset ${asset.semanticId}`}>
       <header class="studio-assets-focus__header">
         <div class="studio-assets-focus__identity">
-          <span class="studio-assets-focus__eyebrow">{asset.ownerDisplayName}</span>
-          <h3>
+          <span class="studio-assets-focus__eyebrow">
             {identityUiRoleLabel(asset.role)}
             {asset.variant ? ` · ${asset.variant}` : ""}
-          </h3>
+          </span>
+          <h3>{asset.ownerDisplayName}</h3>
           <code>{asset.semanticId}</code>
         </div>
         <div class="studio-assets-focus__status">
@@ -841,17 +843,17 @@ function SelectedAssetWorkspace({
       </header>
 
       <div class="studio-assets-focus__hero">
-        <TrustedAssetPreview key={`preview:${asset.semanticId}:${currentVersionId ?? "none"}`} asset={asset} auth={auth} />
+        <TrustedAssetPreview
+          key={`preview:${asset.semanticId}:${currentVersionId ?? "none"}`}
+          asset={asset}
+          auth={auth}
+        />
         <aside class="studio-assets-summary">
           <div class="studio-assets-summary__title">
             <span>Current source/master</span>
             <strong>{versionLabel(asset)}</strong>
           </div>
           <dl class="studio-assets-summary__facts">
-            <div>
-              <dt>Provider</dt>
-              <dd>{version?.providerKind ?? "Not registered"}</dd>
-            </div>
             <div>
               <dt>Source</dt>
               <dd>{version?.sourceAvailable ? "Available" : "Unavailable"}</dd>
@@ -877,20 +879,19 @@ function SelectedAssetWorkspace({
               <dd>{asset.versionRecords.length}</dd>
             </div>
             <div>
-              <dt>Runtime derivatives</dt>
+              <dt>Runtime</dt>
               <dd>{asset.runtimeDerivatives.length}</dd>
             </div>
-            <div>
-              <dt>Relations</dt>
-              <dd>{asset.relations?.length ?? 0}</dd>
-            </div>
           </dl>
-          {version?.checksum ? (
-            <div>
-              <span class="studio-assets-focus__eyebrow">Checksum</span>
-              <code>{`${version.checksum.algorithm}:${version.checksum.value}`}</code>
-            </div>
-          ) : null}
+          <div class="studio-assets-summary__technical">
+            <span>Provider</span>
+            <strong>{version?.providerKind ?? "Not registered"}</strong>
+            {version?.checksum ? (
+              <code title={`${version.checksum.algorithm}:${version.checksum.value}`}>
+                {version.checksum.algorithm}:{version.checksum.value}
+              </code>
+            ) : null}
+          </div>
           <div class="studio-assets-summary__actions">
             {version?.operations?.includes("preview") ? (
               <Button variant="secondary" onClick={() => void sourceAccess("preview")}>
@@ -1020,21 +1021,37 @@ export function ProductionAssets({
   const [lifecycle, setLifecycle] = useState("all");
   const [readiness, setReadiness] = useState("all");
   const [source, setSource] = useState("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(semanticId);
   const [creating, setCreating] = useState(false);
 
   const owners = unique(allAssets.map((asset) => asset.ownerSemanticId));
   const roles = unique(allAssets.map((asset) => asset.role));
   const variants = unique(allAssets.map((asset) => asset.variant));
+  const ownerLabels = new Map(
+    allAssets.map((asset) => [asset.ownerSemanticId, asset.ownerDisplayName] as const),
+  );
+  const hasActiveFilters = Boolean(
+    text.trim() ||
+      owner !== "all" ||
+      role !== "all" ||
+      variant !== "all" ||
+      lifecycle !== "all" ||
+      readiness !== "all" ||
+      source !== "all",
+  );
 
   const filtered = useMemo(() => {
     const query = text.trim().toLocaleLowerCase();
     return allAssets.filter((asset) => {
+      const typeLabel = identityUiRoleLabel(asset.role).toLocaleLowerCase();
       if (
         query &&
         !asset.semanticId.toLocaleLowerCase().includes(query) &&
         !asset.ownerDisplayName.toLocaleLowerCase().includes(query) &&
-        !asset.role.toLocaleLowerCase().includes(query)
+        !asset.role.toLocaleLowerCase().includes(query) &&
+        !typeLabel.includes(query) &&
+        !asset.variant?.toLocaleLowerCase().includes(query)
       )
         return false;
       if (owner !== "all" && asset.ownerSemanticId !== owner) return false;
@@ -1048,7 +1065,17 @@ export function ProductionAssets({
     });
   }, [allAssets, lifecycle, owner, readiness, role, source, text, variant]);
 
-  const selected = allAssets.find((asset) => asset.semanticId === selectedId) ?? filtered[0] ?? null;
+  const selected = filtered.find((asset) => asset.semanticId === selectedId) ?? filtered[0] ?? null;
+
+  function clearFilters() {
+    setText("");
+    setOwner("all");
+    setRole("all");
+    setVariant("all");
+    setLifecycle("all");
+    setReadiness("all");
+    setSource("all");
+  }
 
   return (
     <CollectionTemplate
@@ -1056,7 +1083,7 @@ export function ProductionAssets({
       header={
         <TemplateFixtureHeading
           title="Assets"
-          description="Source/master assets, retained versions, relations and runtime evidence."
+          description="Browse source/master assets, retained versions, relations and runtime evidence."
         />
       }
       toolbar={
@@ -1071,84 +1098,6 @@ export function ProductionAssets({
           ) : null}
           <span>{readOnly ? "Viewer · read-only" : "Trusted source operations enabled"}</span>
         </TemplateToolbar>
-      }
-      filterSlot={
-        allAssets.length > 0 ? (
-          <>
-            <TextField
-              id="assets-search"
-              label="Search assets"
-              type="search"
-              value={text}
-              onInput={(event) => setText(event.currentTarget.value)}
-              placeholder="Semantic ID, owner, role"
-            />
-            <SelectField
-              id="assets-owner-filter"
-              label="Owner"
-              value={owner}
-              onChange={(event) => setOwner(event.currentTarget.value)}
-              options={[
-                { value: "all", label: "All owners" },
-                ...owners.map((value) => ({ value, label: value })),
-              ]}
-            />
-            <SelectField
-              id="assets-role-filter"
-              label="Role"
-              value={role}
-              onChange={(event) => setRole(event.currentTarget.value)}
-              options={[
-                { value: "all", label: "All roles" },
-                ...roles.map((value) => ({ value, label: identityUiRoleLabel(value) })),
-              ]}
-            />
-            <SelectField
-              id="assets-variant-filter"
-              label="Variant"
-              value={variant}
-              onChange={(event) => setVariant(event.currentTarget.value)}
-              options={[
-                { value: "all", label: "All variants" },
-                ...variants.map((value) => ({ value, label: value })),
-              ]}
-            />
-            <SelectField
-              id="assets-lifecycle-filter"
-              label="Lifecycle"
-              value={lifecycle}
-              onChange={(event) => setLifecycle(event.currentTarget.value)}
-              options={[
-                { value: "all", label: "All lifecycle states" },
-                ...lifecycleOptions.map((value) => ({ value, label: value })),
-              ]}
-            />
-            <SelectField
-              id="assets-readiness-filter"
-              label="Readiness"
-              value={readiness}
-              onChange={(event) => setReadiness(event.currentTarget.value)}
-              options={[
-                { value: "all", label: "All readiness" },
-                { value: "ready", label: "Ready" },
-                { value: "warning", label: "Warning" },
-                { value: "blocked", label: "Blocked" },
-                { value: "unknown", label: "Unknown" },
-              ]}
-            />
-            <SelectField
-              id="assets-source-filter"
-              label="Source/master"
-              value={source}
-              onChange={(event) => setSource(event.currentTarget.value)}
-              options={[
-                { value: "all", label: "All source states" },
-                { value: "available", label: "Source available" },
-                { value: "missing", label: "Source missing" },
-              ]}
-            />
-          </>
-        ) : null
       }
     >
       <GoogleDriveConnection auth={auth} canManage={canManageDrive} />
@@ -1166,44 +1115,173 @@ export function ProductionAssets({
         >
           Upload the first source/master when you are ready.
         </StateMessage>
-      ) : filtered.length === 0 ? (
-        <StateMessage title="No assets match these filters">
-          Clear or adjust the collection filters. Registry data was not changed.
-        </StateMessage>
-      ) : selected ? (
+      ) : (
         <div class="studio-assets-populated">
-          <aside class="studio-assets-library" aria-label="Filtered semantic assets">
+          <aside class="studio-assets-library" aria-label="Asset browser">
             <div class="studio-assets-library__heading">
-              <span>Asset library</span>
-              <strong>{filtered.length}</strong>
-            </div>
-            <div class="studio-assets-selector studio-assets-selector--rail">
-              {filtered.map((asset) => (
-                <Button
-                  key={asset.semanticId}
-                  variant={selected.semanticId === asset.semanticId ? "secondary" : "quiet"}
-                  aria-pressed={selected.semanticId === asset.semanticId}
-                  onClick={() => setSelectedId(asset.semanticId)}
-                >
-                  <span class="studio-assets-library-item__owner">{asset.ownerDisplayName}</span>
-                  <span class="studio-assets-library-item__role">
-                    {identityUiRoleLabel(asset.role)}{asset.variant ? ` · ${asset.variant}` : ""}
-                  </span>
+              <div>
+                <span>Asset library</span>
+                <strong>
+                  {filtered.length} / {allAssets.length}
+                </strong>
+              </div>
+              {hasActiveFilters ? (
+                <Button variant="quiet" onClick={clearFilters}>
+                  Clear
                 </Button>
-              ))}
+              ) : null}
             </div>
+
+            <div class="studio-assets-browser-controls">
+              <TextField
+                id="assets-search"
+                label="Search assets"
+                type="search"
+                value={text}
+                onInput={(event) => setText(event.currentTarget.value)}
+                placeholder="Owner, type, variant or semantic ID"
+              />
+              <div class="studio-assets-browser-controls__primary">
+                <SelectField
+                  id="assets-role-filter"
+                  label="Asset type"
+                  value={role}
+                  onChange={(event) => setRole(event.currentTarget.value)}
+                  options={[
+                    { value: "all", label: "All asset types" },
+                    ...roles.map((value) => ({ value, label: identityUiRoleLabel(value) })),
+                  ]}
+                />
+                <SelectField
+                  id="assets-owner-filter"
+                  label="Owner"
+                  value={owner}
+                  onChange={(event) => setOwner(event.currentTarget.value)}
+                  options={[
+                    { value: "all", label: "All owners" },
+                    ...owners.map((value) => ({ value, label: ownerLabels.get(value) ?? value })),
+                  ]}
+                />
+              </div>
+              <div class="studio-assets-browser-controls__actions">
+                <Button
+                  variant="quiet"
+                  aria-expanded={filtersOpen}
+                  onClick={() => setFiltersOpen((open) => !open)}
+                >
+                  {filtersOpen ? "Hide filters" : "More filters"}
+                </Button>
+                {hasActiveFilters ? (
+                  <span class="studio-assets-browser-controls__active">Filters active</span>
+                ) : (
+                  <span>Showing all assets</span>
+                )}
+              </div>
+              {filtersOpen ? (
+                <div class="studio-assets-browser-controls__secondary">
+                  <SelectField
+                    id="assets-variant-filter"
+                    label="Variant"
+                    value={variant}
+                    onChange={(event) => setVariant(event.currentTarget.value)}
+                    options={[
+                      { value: "all", label: "All variants" },
+                      ...variants.map((value) => ({ value, label: value })),
+                    ]}
+                  />
+                  <SelectField
+                    id="assets-lifecycle-filter"
+                    label="Lifecycle"
+                    value={lifecycle}
+                    onChange={(event) => setLifecycle(event.currentTarget.value)}
+                    options={[
+                      { value: "all", label: "All lifecycle states" },
+                      ...lifecycleOptions.map((value) => ({ value, label: value })),
+                    ]}
+                  />
+                  <SelectField
+                    id="assets-readiness-filter"
+                    label="Readiness"
+                    value={readiness}
+                    onChange={(event) => setReadiness(event.currentTarget.value)}
+                    options={[
+                      { value: "all", label: "All readiness" },
+                      { value: "ready", label: "Ready" },
+                      { value: "warning", label: "Warning" },
+                      { value: "blocked", label: "Blocked" },
+                      { value: "unknown", label: "Unknown" },
+                    ]}
+                  />
+                  <SelectField
+                    id="assets-source-filter"
+                    label="Source/master"
+                    value={source}
+                    onChange={(event) => setSource(event.currentTarget.value)}
+                    options={[
+                      { value: "all", label: "All source states" },
+                      { value: "available", label: "Source available" },
+                      { value: "missing", label: "Source missing" },
+                    ]}
+                  />
+                </div>
+              ) : null}
+            </div>
+
+            {filtered.length === 0 ? (
+              <div class="studio-assets-browser-empty">
+                <strong>No matching assets</strong>
+                <span>Adjust the browser filters or return to the full library.</span>
+                <Button variant="secondary" onClick={clearFilters}>
+                  Clear filters
+                </Button>
+              </div>
+            ) : (
+              <div class="studio-assets-selector studio-assets-selector--rail">
+                {filtered.map((asset) => {
+                  const sourceAvailable = asset.currentVersion?.sourceAvailable ?? false;
+                  return (
+                    <Button
+                      key={asset.semanticId}
+                      variant={selected?.semanticId === asset.semanticId ? "secondary" : "quiet"}
+                      aria-pressed={selected?.semanticId === asset.semanticId}
+                      onClick={() => setSelectedId(asset.semanticId)}
+                    >
+                      <span class="studio-assets-library-item__topline">
+                        <span class="studio-assets-library-item__owner">{asset.ownerDisplayName}</span>
+                        <span class="studio-assets-library-item__version">{versionLabel(asset)}</span>
+                      </span>
+                      <span class="studio-assets-library-item__role">
+                        {identityUiRoleLabel(asset.role)}
+                        {asset.variant ? ` · ${asset.variant}` : ""}
+                      </span>
+                      <span class="studio-assets-library-item__meta">
+                        <span>{asset.readiness}</span>
+                        <span>{sourceAvailable ? "Source ready" : "Source missing"}</span>
+                      </span>
+                    </Button>
+                  );
+                })}
+              </div>
+            )}
           </aside>
-          <SelectedAssetWorkspace
-            key={selected.semanticId}
-            asset={selected}
-            allAssets={allAssets}
-            auth={auth}
-            response={response}
-            readOnly={readOnly}
-            onCompleted={onRefresh}
-          />
+
+          {selected ? (
+            <SelectedAssetWorkspace
+              key={selected.semanticId}
+              asset={selected}
+              allAssets={allAssets}
+              auth={auth}
+              response={response}
+              readOnly={readOnly}
+              onCompleted={onRefresh}
+            />
+          ) : (
+            <StateMessage title="No asset selected">
+              Clear or adjust the browser filters to inspect an asset.
+            </StateMessage>
+          )}
         </div>
-      ) : null}
+      )}
 
       {creating ? (
         <Dialog
