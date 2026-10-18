@@ -147,13 +147,13 @@ test("empty Assets opens a deliberate controlled Add Asset workflow", async ({ p
   await expect(dialog.getByText("Browse...", { exact: false })).toHaveCount(0);
   await expect(dialog.getByText("No file selected.", { exact: true })).toHaveCount(0);
 
-  const assetType = dialog.getByLabel("Asset type", { exact: true });
-  const ownerSelect = dialog.getByLabel("Owner", { exact: true });
+  const assetType = dialog.locator("#asset-role");
+  const ownerSelect = dialog.locator("#asset-owner");
   const addAsset = dialog.getByRole("button", { name: "Add Asset" });
   await expect(assetType).toHaveValue("");
   await expect(ownerSelect).toHaveValue("");
   await expect(ownerSelect).toBeDisabled();
-  await expect(dialog.getByLabel("Variant · optional", { exact: true })).toHaveValue("");
+  await expect(dialog.locator("#asset-variant")).toHaveValue("");
   await expect(addAsset).toBeDisabled();
   await expect(dialog.getByLabel("Semantic asset ID")).toHaveCount(0);
 
@@ -167,7 +167,7 @@ test("empty Assets opens a deliberate controlled Add Asset workflow", async ({ p
   ).toBeVisible();
   await expect(addAsset).toBeDisabled();
 
-  await dialog.getByLabel("Upload file", { exact: true }).setInputFiles({
+  await dialog.locator("#asset-source-file").setInputFiles({
     name: "fantasia-crest.svg",
     mimeType: "image/svg+xml",
     buffer: Buffer.from("<svg></svg>"),
@@ -188,9 +188,9 @@ test("Add Asset dialog derives controlled identity and uses the trusted multipar
   await page.getByRole("button", { name: "+ Add Asset" }).click();
 
   const dialog = page.getByRole("dialog", { name: "Add Asset" });
-  await dialog.getByLabel("Asset type", { exact: true }).selectOption("brand-crest");
-  await dialog.getByLabel("Owner", { exact: true }).selectOption("identity.brand.fantasia");
-  await dialog.getByLabel("Upload file", { exact: true }).setInputFiles({
+  await dialog.locator("#asset-role").selectOption("brand-crest");
+  await dialog.locator("#asset-owner").selectOption("identity.brand.fantasia");
+  await dialog.locator("#asset-source-file").setInputFiles({
     name: "fantasia-crest.svg",
     mimeType: "image/svg+xml",
     buffer: Buffer.from("<svg></svg>"),
