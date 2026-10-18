@@ -390,6 +390,7 @@ export class MapReviewRenderer {
   #pointerStartY = 0;
   #lastPointerX = 0;
   #lastPointerY = 0;
+  #mouseDragging = false;
   #dragged = false;
   #suppressTap = false;
   #tapTimer: number | undefined;
@@ -442,6 +443,9 @@ export class MapReviewRenderer {
     canvas.addEventListener("pointermove", this.#handlePointerMove);
     canvas.addEventListener("pointerup", this.#handlePointerUp);
     canvas.addEventListener("pointercancel", this.#handlePointerUp);
+    canvas.addEventListener("mousedown", this.#handleMouseDown);
+    window.addEventListener("mousemove", this.#handleMouseMove);
+    window.addEventListener("mouseup", this.#handleMouseUp);
     this.#ready = true;
     window.addEventListener("resize", this.#handleResize);
     this.#resize();
@@ -483,6 +487,8 @@ export class MapReviewRenderer {
 
   destroy(): void {
     window.removeEventListener("resize", this.#handleResize);
+    window.removeEventListener("mousemove", this.#handleMouseMove);
+    window.removeEventListener("mouseup", this.#handleMouseUp);
     if (this.#tapTimer !== undefined) window.clearTimeout(this.#tapTimer);
     if (!this.#ready) return;
     const canvas = this.#app.canvas;
@@ -491,6 +497,7 @@ export class MapReviewRenderer {
     canvas.removeEventListener("pointermove", this.#handlePointerMove);
     canvas.removeEventListener("pointerup", this.#handlePointerUp);
     canvas.removeEventListener("pointercancel", this.#handlePointerUp);
+    canvas.removeEventListener("mousedown", this.#handleMouseDown);
     this.#app.destroy(true, { children: true });
     this.#ready = false;
   }
@@ -517,18 +524,7 @@ export class MapReviewRenderer {
 
   readonly #handlePointerMove = (event: PointerEvent): void => {
     if (event.pointerId !== this.#pointerId) return;
-    const fromStart = Math.hypot(
-      event.clientX - this.#pointerStartX,
-      event.clientY - this.#pointerStartY,
-    );
-    if (!this.#dragged && fromStart < DRAG_THRESHOLD) return;
-    this.#dragged = true;
-    this.#suppressTap = true;
-    this.#panX += event.clientX - this.#lastPointerX;
-    this.#panY += event.clientY - this.#lastPointerY;
-    this.#lastPointerX = event.clientX;
-    this.#lastPointerY = event.clientY;
-    this.#applyCamera();
+    this.#continueDrag(event.clientX, event.clientY);
   };
 
   readonly #handlePointerUp = (event: PointerEvent): void => {
@@ -537,6 +533,43 @@ export class MapReviewRenderer {
       this.#app.canvas.releasePointerCapture(event.pointerId);
     }
     this.#pointerId = undefined;
+    this.#finishDrag();
+  };
+
+  readonly #handleMouseDown = (event: MouseEvent): void => {
+    if (event.button !== 0 || this.#pointerId !== undefined) return;
+    this.#mouseDragging = true;
+    this.#pointerStartX = event.clientX;
+    this.#pointerStartY = event.clientY;
+    this.#lastPointerX = event.clientX;
+    this.#lastPointerY = event.clientY;
+    this.#dragged = false;
+  };
+
+  readonly #handleMouseMove = (event: MouseEvent): void => {
+    if (!this.#mouseDragging) return;
+    this.#continueDrag(event.clientX, event.clientY);
+  };
+
+  readonly #handleMouseUp = (): void => {
+    if (!this.#mouseDragging) return;
+    this.#mouseDragging = false;
+    this.#finishDrag();
+  };
+
+  #continueDrag(clientX: number, clientY: number): void {
+    const fromStart = Math.hypot(clientX - this.#pointerStartX, clientY - this.#pointerStartY);
+    if (!this.#dragged && fromStart < DRAG_THRESHOLD) return;
+    this.#dragged = true;
+    this.#suppressTap = true;
+    this.#panX += clientX - this.#lastPointerX;
+    this.#panY += clientY - this.#lastPointerY;
+    this.#lastPointerX = clientX;
+    this.#lastPointerY = clientY;
+    this.#applyCamera();
+  }
+
+  #finishDrag(): void {
     if (this.#dragged) {
       if (this.#tapTimer !== undefined) window.clearTimeout(this.#tapTimer);
       this.#tapTimer = window.setTimeout(() => {
@@ -544,7 +577,7 @@ export class MapReviewRenderer {
       }, 80);
     }
     this.#dragged = false;
-  };
+  }
 
   #setZoom(next: number): void {
     this.#zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, next));
