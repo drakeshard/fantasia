@@ -116,7 +116,16 @@ test("Dashboard shows normalized attention, freshness, and unavailable sources",
   await expect(page.getByText("Runtime ready · unpublished", { exact: true })).toBeVisible();
   await expect(page.getByText("Canonical Git proposals", { exact: true })).toBeVisible();
   await expect(page.getByText("Publish / verification failures", { exact: true })).toBeVisible();
-  await expect(page.getByText("Unavailable", { exact: true })).toHaveCount(2);
+  await expect(
+    page.getByText("Canonical proposal summary source is unavailable.", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Layer 5 publishing and verification records are not implemented yet. This is not a zero-failure claim.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await expect(page.getByTestId("dashboard-freshness")).toContainText("Unavailable sources2");
   await expect(page.getByText("Read-only access", { exact: true })).toBeVisible();
 });
 
