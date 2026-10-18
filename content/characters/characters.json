@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    {
+      "semanticId": "character.production.scout",
+      "actorId": "production:scout",
+      "tacticalEntityId": "production-tactical:scout",
+      "displayName": "Scout",
+      "side": "player",
+      "shortLabel": "SC",
+      "movementAllowance": 5,
+      "initialCoord": { "x": 0, "y": 5 },
+      "rpg": {
+        "classes": ["Archer"],
+        "initialClass": "Archer",
+        "attributes": {
+          "physicalPower": 10,
+          "magicalPower": 6,
+          "defense": 6,
+          "resistance": 7,
+          "speed": 12,
+          "stability": 7
+        },
+        "hp": { "current": 80, "capacity": 80 }
+      }
+    },
+    {
+      "semanticId": "character.production.hero",
+      "actorId": "production:hero",
+      "tacticalEntityId": "production-tactical:hero",
+      "displayName": "MC",
+      "side": "player",
+      "shortLabel": "MC",
+      "movementAllowance": 4,
+      "initialCoord": { "x": 1, "y": 4 },
+      "rpg": {
+        "classes": ["Infantry"],
+        "initialClass": "Infantry",
+        "attributes": {
+          "physicalPower": 12,
+          "magicalPower": 5,
+          "defense": 10,
+          "resistance": 7,
+          "speed": 8,
+          "stability": 10
+        },
+        "hp": { "current": 100, "capacity": 100 }
+      }
+    },
+    {
+      "semanticId": "character.production.lancer",
+      "actorId": "production:lancer",
+      "tacticalEntityId": "production-tactical:lancer",
+      "displayName": "Lancer",
+      "side": "enemy",
+      "shortLabel": "LN",
+      "movementAllowance": 4,
+      "initialCoord": { "x": 2, "y": 5 },
+      "rpg": {
+        "classes": ["Lancer"],
+        "initialClass": "Lancer",
+        "attributes": {
+          "physicalPower": 13,
+          "magicalPower": 4,
+          "defense": 11,
+          "resistance": 6,
+          "speed": 7,
+          "stability": 12
+        },
+        "hp": { "current": 110, "capacity": 110 }
+      }
+    }
+  ]
+}
