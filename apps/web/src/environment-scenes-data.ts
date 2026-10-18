@@ -112,11 +112,11 @@ const ghostSeaElevation = [
 export const GHOST_SEA_HUNT: EnvironmentSceneDefinition = {
   id: "ghost-sea-hunt",
   title: "Ghost Sea Hunt",
-  kicker: "Environment Stress Scene 01 · Seven Sea League",
+  kicker: "Stress Fixture 01 · Seven Sea League",
   description:
-    "A 64×64 haunted ocean staging ground: seven allied vessels form a battle line while the Flying Dutchman and a Kraken wait beyond a ghost-lit abyss.",
+    "A 64×64 haunted-ocean stress fixture used to exercise large-scene compilation and rendering. It is not the default battlefield contract.",
   scene: {
-    id: "environment.ghost-sea-hunt",
+    id: "stress.ghost-sea-hunt",
     bounds: LARGE_BOUNDS,
     blockedCells: [],
     elevationCells: ghostSeaElevation,
@@ -139,8 +139,6 @@ export const GHOST_SEA_HUNT: EnvironmentSceneDefinition = {
       { cell: dutchmanCenter, visualId: "unit.enemy", label: "Dutchman" },
       { cell: krakenCenter, visualId: "unit.enemy", label: "Kraken" },
     ],
-    testIdPrefix: "environment-ghost-sea",
-    ariaLabel: "Ghost Sea Hunt large environment battlefield review",
   },
   weatherRegions: [
     { visualId: "weather.ghost-mist", cells: LARGE_SCENE_CELLS, intensity: 0.8 },
@@ -187,11 +185,11 @@ const avalonElevation = sacredHill.map((cell) => {
 export const AVALON_ARTHURIA_CONFRONTATION: EnvironmentSceneDefinition = {
   id: "avalon-arthuria-confrontation",
   title: "Avalon — Arthuria Confrontation",
-  kicker: "Environment Stress Scene 02 · Avalon Approach",
+  kicker: "Stress Fixture 02 · Avalon Approach",
   description:
-    "A 64×64 mist-bound Avalon battlefield of enchanted water, meadow and a rising sacred causeway leading to Arthuria's central position.",
+    "A 64×64 mist-bound stress fixture used to exercise large-scene compilation and rendering. It is not the default battlefield contract.",
   scene: {
-    id: "environment.avalon-arthuria-confrontation",
+    id: "stress.avalon-arthuria-confrontation",
     bounds: LARGE_BOUNDS,
     blockedCells: [],
     elevationCells: avalonElevation,
@@ -211,8 +209,6 @@ export const AVALON_ARTHURIA_CONFRONTATION: EnvironmentSceneDefinition = {
       { cell: { x: 24, y: 27 }, visualId: "unit.reinforcement-allied", label: "Reserve" },
       { cell: avalonCenter, visualId: "unit.enemy", label: "Arthuria" },
     ],
-    testIdPrefix: "environment-avalon",
-    ariaLabel: "Avalon Arthuria confrontation large environment battlefield review",
   },
   weatherRegions: [
     { visualId: "weather.avalon-mist", cells: LARGE_SCENE_CELLS, intensity: 0.58 },
