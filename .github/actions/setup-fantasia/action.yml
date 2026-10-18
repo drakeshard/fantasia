@@ -34,6 +34,12 @@ runs:
       shell: bash
       run: test -f pnpm-lock.yaml
 
-    - name: Install dependencies
+    - name: Install complete workspace dependencies
+      if: inputs.prepare-shared == 'true'
       shell: bash
       run: pnpm install --frozen-lockfile
+
+    - name: Install Content Studio dependencies
+      if: inputs.prepare-shared != 'true'
+      shell: bash
+      run: pnpm install --filter @fantasia/workspace --filter @fantasia/content-studio --frozen-lockfile
