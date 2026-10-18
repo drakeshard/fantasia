@@ -33,8 +33,10 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "Missing CLOUDFLARE_API_TOKEN"; exit 1; }
 
-      - name: Setup Fantasia
+      - name: Setup Content Studio
         uses: ./.github/actions/setup-fantasia
+        with:
+          prepare-shared: "false"
 
       - name: Verify Content Studio deployment contract
         run: pnpm check:content-studio-deployment
