@@ -20,7 +20,9 @@ async function openStressDetails(page: Page) {
   return details;
 }
 
-test("GAME-MAP05 stress Battlefield renders the full elevation envelope and camera", async ({ page }) => {
+test("GAME-MAP05 stress Battlefield renders the full elevation envelope and camera", async ({
+  page,
+}) => {
   const { review, host, canvas } = await openStressMap(page);
 
   await expect(page.getByRole("heading", { name: "Extreme Elevation Stress Map" })).toBeVisible();
@@ -60,7 +62,9 @@ test("GAME-MAP05 stress Battlefield renders the full elevation envelope and came
   await expect(host).not.toHaveAttribute("data-camera-pan", "0,0");
 });
 
-test("GAME-MAP05 stress Blueprint exposes exactly 600 cells with -7 and +7 sentinels", async ({ page }) => {
+test("GAME-MAP05 stress Blueprint exposes exactly 600 cells with -7 and +7 sentinels", async ({
+  page,
+}) => {
   await openStressMap(page);
   await page.getByRole("button", { name: "Blueprint" }).click();
   await expect(page.getByTestId("stress-map-grid").locator("button")).toHaveCount(600);
