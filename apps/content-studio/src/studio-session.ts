@@ -13,6 +13,8 @@ export const studioPublishableKey =
   (import.meta.env.VITE_STUDIO_SUPABASE_PUBLISHABLE_KEY as string | undefined)?.trim() ||
   defaultPublishableKey;
 
+const studioOperationsFunctionUrl = `${studioSupabaseUrl}/functions/v1/studio-operations`;
+const studioCanonicalChangeFunctionUrl = `${studioSupabaseUrl}/functions/v1/studio-canonical-change`;
 const storageKey = "fantasia.content-studio.session.v1";
 
 export type StoredStudioAuthSession = {
@@ -84,10 +86,10 @@ async function parseResponseBody(response: Response): Promise<Record<string, unk
 
 async function edgeOperation(
   session: StoredStudioAuthSession,
-  functionName: string,
+  functionUrl: string,
   requestBody: Record<string, unknown>,
 ): Promise<Record<string, unknown>> {
-  const response = await fetch(`${studioSupabaseUrl}/functions/v1/${functionName}`, {
+  const response = await fetch(functionUrl, {
     method: "POST",
     headers: {
       apikey: studioPublishableKey,
@@ -110,7 +112,7 @@ async function studioOperation(
   session: StoredStudioAuthSession,
   requestBody: Record<string, unknown>,
 ): Promise<Record<string, unknown>> {
-  return edgeOperation(session, "studio-operations", requestBody);
+  return edgeOperation(session, studioOperationsFunctionUrl, requestBody);
 }
 
 export function loadStoredStudioAuthSession(): StoredStudioAuthSession | null {
@@ -247,7 +249,7 @@ export async function createCharacterDisplayNameProposal(
       0,
       128,
     );
-  const body = await edgeOperation(session, "studio-canonical-change", {
+  const body = await edgeOperation(session, studioCanonicalChangeFunctionUrl, {
     type: "canonical.change.proposal.create",
     idempotencyKey,
     payload: {
