@@ -22,7 +22,10 @@ const revision = process.env.CANONICAL_GIT_REVISION?.trim();
 if (!revision) throw new Error("CANONICAL_GIT_REVISION is required.");
 
 const semanticPart = (value) =>
-  value.toLocaleLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  value
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 const storyRows = [];
 for (const saga of story.sagas) {
@@ -73,7 +76,9 @@ const serialized = `${JSON.stringify(snapshot)}\n`;
 if (process.argv.includes("--check")) {
   const existing = await readFile(output, "utf8").catch(() => "");
   if (existing !== serialized) {
-    throw new Error("Studio canonical deployment snapshot is stale. Regenerate it from Git sources.");
+    throw new Error(
+      "Studio canonical deployment snapshot is stale. Regenerate it from Git sources.",
+    );
   }
   console.log("Studio canonical deployment snapshot is current.");
 } else {
