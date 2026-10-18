@@ -230,6 +230,9 @@ jobs:
       - name: Setup Fantasia
         uses: ./.github/actions/setup-fantasia
 
+      - name: Player surface formatting
+        run: pnpm check:web
+
       - name: Typecheck web surface
         run: pnpm --filter @fantasia/web typecheck
 
