@@ -48,10 +48,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function requireExactKeys(
-  record: Record<string, unknown>,
-  expected: readonly string[],
-): void {
+function requireExactKeys(record: Record<string, unknown>, expected: readonly string[]): void {
   const actual = Object.keys(record).sort();
   const wanted = [...expected].sort();
   if (JSON.stringify(actual) !== JSON.stringify(wanted))
