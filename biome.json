@@ -8,6 +8,7 @@
       "!!**/node_modules",
       "!!.cache",
       "!!.artifacts",
+      "!!config/identity-ui-assets.json",
       "!!supabase/functions/studio-operations/canonical-snapshot.generated.json"
     ]
   },
