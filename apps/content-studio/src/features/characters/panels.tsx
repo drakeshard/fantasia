@@ -8,7 +8,7 @@ import {
   ValidationEvidence,
 } from "../../ui/entity-evidence";
 import { Button, StateMessage, Surface, TextField } from "../../ui/primitives";
-import { characterDomainData, type CharacterReadModel } from "./model";
+import { type CharacterReadModel, characterDomainData } from "./model";
 import { useCharacterDisplayNameProposal } from "./use-display-name-proposal";
 
 export function CharacterOverviewPanel({
@@ -113,7 +113,9 @@ export function CharacterGameplayPanel({ model }: { model: CharacterReadModel })
 
 export function CharacterSkillsPanel() {
   return (
-    <EmptyEvidence>No character-to-skill relations are registered in the current read model.</EmptyEvidence>
+    <EmptyEvidence>
+      No character-to-skill relations are registered in the current read model.
+    </EmptyEvidence>
   );
 }
 
