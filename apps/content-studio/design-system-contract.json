@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "id": "fantasia-midnight",
+    "scope": "[data-studio-theme=\"fantasia-midnight\"]"
+  },
+  "requiredThemeTokens": [
+    "--studio-app-background",
+    "--studio-surface-canvas",
+    "--studio-surface-panel",
+    "--studio-surface-raised",
+    "--studio-surface-overlay",
+    "--studio-surface-sidebar",
+    "--studio-text-primary",
+    "--studio-text-secondary",
+    "--studio-text-muted",
+    "--studio-text-on-accent",
+    "--studio-border-subtle",
+    "--studio-border-control",
+    "--studio-border-active",
+    "--studio-accent-primary",
+    "--studio-accent-navigation",
+    "--studio-focus-ring",
+    "--studio-button-primary-bg",
+    "--studio-button-secondary-bg",
+    "--studio-control-bg",
+    "--studio-dialog-bg",
+    "--studio-validation-passed",
+    "--studio-validation-warning",
+    "--studio-validation-blocking",
+    "--studio-validation-unknown"
+  ],
+  "contrastPairs": [
+    {
+      "foreground": "--studio-text-primary",
+      "background": "--studio-surface-panel",
+      "minimum": 4.5,
+      "purpose": "primary normal text on standard panels"
+    },
+    {
+      "foreground": "--studio-text-secondary",
+      "background": "--studio-surface-panel",
+      "minimum": 4.5,
+      "purpose": "secondary normal text on standard panels"
+    },
+    {
+      "foreground": "--studio-text-muted",
+      "background": "--studio-surface-raised",
+      "minimum": 4.5,
+      "purpose": "muted normal text on the lightest shared content surface"
+    },
+    {
+      "foreground": "--studio-text-on-accent",
+      "background": "--studio-accent-primary",
+      "minimum": 4.5,
+      "purpose": "normal text on primary accent controls"
+    },
+    {
+      "foreground": "--studio-validation-passed",
+      "background": "--studio-surface-panel",
+      "minimum": 4.5,
+      "purpose": "validation status text"
+    },
+    {
+      "foreground": "--studio-validation-warning",
+      "background": "--studio-surface-panel",
+      "minimum": 4.5,
+      "purpose": "validation warning text"
+    },
+    {
+      "foreground": "--studio-validation-blocking",
+      "background": "--studio-surface-panel",
+      "minimum": 4.5,
+      "purpose": "blocking validation text"
+    },
+    {
+      "foreground": "--studio-focus-ring",
+      "background": "--studio-surface-raised",
+      "minimum": 3,
+      "purpose": "non-text focus indicator against shared raised surfaces"
+    }
+  ]
+}
