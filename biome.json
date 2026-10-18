@@ -7,7 +7,8 @@
       "!!**/coverage",
       "!!**/node_modules",
       "!!.cache",
-      "!!.artifacts"
+      "!!.artifacts",
+      "!!supabase/functions/studio-operations/canonical-snapshot.generated.json"
     ]
   },
   "formatter": {
