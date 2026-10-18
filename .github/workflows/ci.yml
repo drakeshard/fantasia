@@ -46,23 +46,30 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+
           tsx = Path('apps/web/src/map-review.tsx')
           text = tsx.read_text()
-          text = text.replace(
-              '<div class="map-review-camera-controls" aria-label="Review camera controls">',
-              '<div class="map-review-camera-controls" role="group" aria-label="Review camera controls">',
-          )
+          marker = '<div class="map-review-camera-controls" aria-label="Review camera controls">'
+          replacement = '<fieldset class="map-review-camera-controls"><legend class="map-review-mode-legend">Review camera controls</legend>'
+          text = text.replace(marker, replacement, 1)
+          start = text.index(replacement)
+          close = text.index('\n          </div>\n        ) : null}', start)
+          text = text[:close] + '\n          </fieldset>' + text[close + len('\n          </div>'):]
           tsx.write_text(text)
 
           css = Path('apps/web/src/map-review.css')
           text = css.read_text()
+          text = text.replace(
+              '.map-review-camera-controls {\n  display: inline-flex;\n  gap: 3px;\n  padding-left: 7px;\n  border-left: 1px solid rgb(184 197 209 / 16%);\n}',
+              '.map-review-camera-controls {\n  display: inline-flex;\n  gap: 3px;\n  min-inline-size: 0;\n  margin: 0;\n  padding: 0 0 0 7px;\n  border: 0;\n  border-left: 1px solid rgb(184 197 209 / 16%);\n}',
+          )
           text = text.replace(
               '\n@media (prefers-reduced-motion: reduce) {\n  .map-review * {\n    scroll-behavior: auto !important;\n  }\n}\n',
               '\n',
           )
           css.write_text(text)
           PY
-          pnpm exec biome check --write apps/web/src/map-review-renderer.ts apps/web/src/map-review.tsx apps/web/src/map-review.css
+          pnpm exec biome format --write apps/web/src/map-review-renderer.ts apps/web/src/map-review.tsx apps/web/src/map-review.css
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
