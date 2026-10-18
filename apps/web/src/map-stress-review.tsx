@@ -56,9 +56,7 @@ const BLOCKED_CELLS = ALL_CELLS.filter(
     (x >= 2 && x <= 4 && y >= 2 && y <= 5) ||
     (x >= 10 && x <= 11 && y >= 13 && y <= 17),
 );
-const ROAD_CELLS = ALL_CELLS.filter(
-  ({ x, y }) => y >= 8 && y <= 10 && x >= 1 && x <= 28,
-);
+const ROAD_CELLS = ALL_CELLS.filter(({ x, y }) => y >= 8 && y <= 10 && x >= 1 && x <= 28);
 const BASIN_CELLS = ELEVATION_CELLS.filter(({ level }) => level < 0).map(({ x, y }) => ({
   x,
   y,
@@ -140,7 +138,8 @@ function BattlefieldReview({
     <div class="map-review-battlefield-wrap">
       <div class="map-review-battlefield" ref={hostRef} data-testid="stress-map-2p5d-host" />
       <div class="map-review-camera-note" aria-hidden="true">
-        30×20 stress fixture · drag to pan · wheel or controls to zoom · rotation is presentation-only
+        30×20 stress fixture · drag to pan · wheel or controls to zoom · rotation is
+        presentation-only
       </div>
     </div>
   );
@@ -297,18 +296,10 @@ export function MapStressReviewApp() {
             >
               −
             </button>
-            <button
-              type="button"
-              aria-label="Zoom in"
-              onClick={() => cameraRef.current?.zoomIn()}
-            >
+            <button type="button" aria-label="Zoom in" onClick={() => cameraRef.current?.zoomIn()}>
               +
             </button>
-            <button
-              type="button"
-              aria-label="Fit map"
-              onClick={() => cameraRef.current?.fit()}
-            >
+            <button type="button" aria-label="Fit map" onClick={() => cameraRef.current?.fit()}>
               Fit
             </button>
           </fieldset>
