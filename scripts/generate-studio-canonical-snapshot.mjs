@@ -23,70 +23,43 @@ if (!revision) throw new Error("CANONICAL_GIT_REVISION is required.");
 
 const semanticPart = (value) =>
   value.toLocaleLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-const gitProvenance = (sourcePath, canonical) => ({
-  authority: "git",
-  source: sourcePath,
-  revision,
-  canonical,
-});
 
-const canonicalModels = [];
+const storyRows = [];
 for (const saga of story.sagas) {
   for (const chapter of saga.chapters) {
     for (const node of chapter.nodes) {
       const hasProductionPreview = (node.beats ?? []).some((beat) =>
         Object.hasOwn(storyProduction.beats ?? {}, beat.id),
       );
-      canonicalModels.push({
-        semanticId: `story.${semanticPart(saga.id)}.${semanticPart(chapter.id)}.${semanticPart(node.id)}`,
-        entityType: "story",
-        displayName: node.title,
-        canonicalPath: STORY_PATH,
-        canonicalData: {
-          sagaId: saga.id,
-          chapterId: chapter.id,
-          nodeId: node.id,
-          title: node.title,
-          type: node.type ?? null,
-          status: node.status ?? null,
-          scriptStatus: node.scriptStatus ?? null,
-        },
-        provenance: gitProvenance(STORY_PATH, true),
-        ...(hasProductionPreview
-          ? {
-              preview: {
-                data: { profile: storyProduction.profile ?? null, available: true },
-                provenance: gitProvenance(STORY_PRODUCTION_PATH, false),
-              },
-            }
-          : {}),
-      });
+      storyRows.push([
+        `story.${semanticPart(saga.id)}.${semanticPart(chapter.id)}.${semanticPart(node.id)}`,
+        node.title,
+        saga.id,
+        chapter.id,
+        node.id,
+        node.type ?? null,
+        node.status ?? null,
+        node.scriptStatus ?? null,
+        hasProductionPreview,
+      ]);
     }
   }
 }
 
-canonicalModels.push({
-  semanticId: `map.s01.ch01.${semanticPart(encounter.stageId.replace(/^CH01-/i, ""))}`,
-  entityType: "map-encounter",
-  displayName: encounter.title,
-  canonicalPath: ENCOUNTER_PATH,
-  canonicalData: {
-    id: encounter.id ?? null,
-    stageId: encounter.stageId,
-    title: encounter.title,
-    status: encounter.status ?? null,
-    gameD222Compliance: encounter.gameD222Compliance ?? null,
-  },
-  provenance: gitProvenance(ENCOUNTER_PATH, true),
-});
-
 const snapshot = {
   revision,
-  canonicalModels,
+  previewProfile: storyProduction.profile ?? null,
+  storyRows,
+  encounter: [
+    `map.s01.ch01.${semanticPart(encounter.stageId.replace(/^CH01-/i, ""))}`,
+    encounter.title,
+    encounter.id ?? null,
+    encounter.stageId,
+    encounter.status ?? null,
+    encounter.gameD222Compliance ?? null,
+  ],
   runtimeManifest: {
     schemaVersion: runtimeManifest.schemaVersion,
-    revision,
-    path: RUNTIME_MANIFEST_PATH,
     assets: runtimeManifest.assets,
   },
 };
