@@ -21,6 +21,7 @@ export function AuthorizedStudio({
   const { state: readModels, refresh: refreshReadModels } = useStudioReadModels(auth);
   const isReadOnly = !authorization.capabilities.includes("registry.metadata.edit");
   const canProposeCanonical = authorization.capabilities.includes("canonical.change.propose");
+  const canManageMembership = authorization.capabilities.includes("studio.membership.manage");
 
   useEffect(() => {
     document
@@ -75,6 +76,7 @@ export function AuthorizedStudio({
           auth={auth}
           isReadOnly={isReadOnly}
           canProposeCanonical={canProposeCanonical}
+          canManageMembership={canManageMembership}
           onRefreshReadModels={refreshReadModels}
           navigate={navigate}
         />
