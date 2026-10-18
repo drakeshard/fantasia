@@ -1,20 +1,3 @@
-/* GAME-UI24E3 visual-review correction: keep the authoritative two-node
- * Counter-Charge relationship fully visible at the 844×390 compact target.
- * Secondary rank-capacity copy is retained at larger viewports.
+/* GAME-UI25 migration tombstone.
+ * Compact Talent composition is now owned by fantasia-v2.css.
  */
-@media (max-height: 499px) {
-  .talent-graph-prerequisites {
-    min-height: 30px;
-    padding: 7px 2px 2px;
-  }
-
-  .talent-node {
-    min-height: 70px;
-    gap: 2px;
-    padding: 5px 6px;
-  }
-
-  .talent-node-ranks {
-    display: none;
-  }
-}
