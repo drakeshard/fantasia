@@ -1,8 +1,11 @@
 import {
+  CANONICAL_CHARACTER_CONTENT_TYPE,
+  CANONICAL_CHARACTER_OPERATION,
+  CANONICAL_CHARACTER_PATH,
   CANONICAL_STORY_NODE_CONTENT_TYPE,
   CANONICAL_STORY_NODE_OPERATION,
   CANONICAL_STORY_PATH,
-  type CanonicalStoryNodeChangeRequest,
+  type CanonicalChangeRequest,
 } from "./canonical-change.ts";
 import { StudioOperationContractError } from "./contract.ts";
 
@@ -29,7 +32,7 @@ export type StudioProposalState = (typeof STUDIO_PROPOSAL_STATES)[number];
 export type StudioCanonicalChangeProposalCreateRequest = {
   readonly type: typeof STUDIO_CANONICAL_CHANGE_PROPOSE;
   readonly idempotencyKey: string;
-  readonly payload: CanonicalStoryNodeChangeRequest;
+  readonly payload: CanonicalChangeRequest;
 };
 
 export type StudioCanonicalChangeProposalStatusRequest = {
@@ -48,16 +51,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function requireExactKeys(record: Record<string, unknown>, expected: readonly string[]): void {
   const actual = Object.keys(record).sort();
   const wanted = [...expected].sort();
-  if (JSON.stringify(actual) !== JSON.stringify(wanted)) {
+  if (JSON.stringify(actual) !== JSON.stringify(wanted))
     throw new StudioOperationContractError("Request contains unsupported fields.");
-  }
 }
 
 function requiredText(value: unknown, label: string, min: number, max: number): string {
   const normalized = typeof value === "string" ? value.trim() : "";
-  if (normalized.length < min || normalized.length > max) {
+  if (normalized.length < min || normalized.length > max)
     throw new StudioOperationContractError(`${label} is invalid.`);
-  }
   return normalized;
 }
 
@@ -65,21 +66,31 @@ function parseChangeRequestId(value: unknown): string {
   return requiredText(value, "Change request ID", 8, 128);
 }
 
+function parseBasePayload(payload: Record<string, unknown>) {
+  const baseRevision = requiredText(payload.baseRevision, "Base revision", 40, 40);
+  if (!/^[0-9a-f]{40}$/.test(baseRevision))
+    throw new StudioOperationContractError("Base revision must be a full Git SHA.");
+  const semanticId = requiredText(payload.semanticId, "Semantic ID", 1, 200);
+  if (/\s/.test(semanticId)) throw new StudioOperationContractError("Semantic ID is invalid.");
+  const changeSummary = requiredText(payload.changeSummary, "Change summary", 1, 500);
+  if (!isRecord(payload.operation))
+    throw new StudioOperationContractError("Canonical change operation is required.");
+  return { baseRevision, semanticId, changeSummary, operation: payload.operation };
+}
+
 export function isCanonicalChangeOperationType(value: unknown): boolean {
   return value === STUDIO_CANONICAL_CHANGE_PROPOSE || value === STUDIO_CANONICAL_CHANGE_STATUS_GET;
 }
 
 export function parseCanonicalChangeRequest(value: unknown): StudioCanonicalChangeRequest {
-  if (!isRecord(value) || typeof value.type !== "string") {
+  if (!isRecord(value) || typeof value.type !== "string")
     throw new StudioOperationContractError("Request body must contain an operation type.");
-  }
 
   if (value.type === STUDIO_CANONICAL_CHANGE_PROPOSE) {
     requireExactKeys(value, ["type", "idempotencyKey", "payload"]);
     const idempotencyKey = parseChangeRequestId(value.idempotencyKey);
-    if (!isRecord(value.payload)) {
+    if (!isRecord(value.payload))
       throw new StudioOperationContractError("Canonical change payload is required.");
-    }
     requireExactKeys(value.payload, [
       "semanticId",
       "canonicalPath",
@@ -88,49 +99,67 @@ export function parseCanonicalChangeRequest(value: unknown): StudioCanonicalChan
       "operation",
       "changeSummary",
     ]);
-    if (value.payload.canonicalPath !== CANONICAL_STORY_PATH) {
-      throw new StudioOperationContractError("Canonical path is not allowlisted.");
-    }
-    if (value.payload.contentType !== CANONICAL_STORY_NODE_CONTENT_TYPE) {
-      throw new StudioOperationContractError("Canonical content type is not allowlisted.");
-    }
-    const baseRevision = requiredText(value.payload.baseRevision, "Base revision", 40, 40);
-    if (!/^[0-9a-f]{40}$/.test(baseRevision)) {
-      throw new StudioOperationContractError("Base revision must be a full Git SHA.");
-    }
-    const semanticId = requiredText(value.payload.semanticId, "Semantic ID", 1, 200);
-    if (/\s/.test(semanticId)) {
-      throw new StudioOperationContractError("Semantic ID is invalid.");
-    }
-    const changeSummary = requiredText(value.payload.changeSummary, "Change summary", 1, 500);
-    if (!isRecord(value.payload.operation)) {
-      throw new StudioOperationContractError("Canonical change operation is required.");
-    }
-    requireExactKeys(value.payload.operation, ["kind", "summary"]);
-    if (value.payload.operation.kind !== CANONICAL_STORY_NODE_OPERATION) {
-      throw new StudioOperationContractError("Canonical change operation is not allowlisted.");
-    }
-    const summary = requiredText(value.payload.operation.summary, "Story node summary", 1, 4000);
+    const parsed = parseBasePayload(value.payload);
 
-    return {
-      type: STUDIO_CANONICAL_CHANGE_PROPOSE,
-      idempotencyKey,
-      payload: {
-        semanticId,
-        canonicalPath: CANONICAL_STORY_PATH,
-        contentType: CANONICAL_STORY_NODE_CONTENT_TYPE,
-        baseRevision,
-        operation: { kind: CANONICAL_STORY_NODE_OPERATION, summary },
-        changeSummary,
-      },
-    };
+    if (
+      value.payload.canonicalPath === CANONICAL_STORY_PATH &&
+      value.payload.contentType === CANONICAL_STORY_NODE_CONTENT_TYPE
+    ) {
+      requireExactKeys(parsed.operation, ["kind", "summary"]);
+      if (parsed.operation.kind !== CANONICAL_STORY_NODE_OPERATION)
+        throw new StudioOperationContractError("Canonical change operation is not allowlisted.");
+      return {
+        type: STUDIO_CANONICAL_CHANGE_PROPOSE,
+        idempotencyKey,
+        payload: {
+          semanticId: parsed.semanticId,
+          canonicalPath: CANONICAL_STORY_PATH,
+          contentType: CANONICAL_STORY_NODE_CONTENT_TYPE,
+          baseRevision: parsed.baseRevision,
+          operation: {
+            kind: CANONICAL_STORY_NODE_OPERATION,
+            summary: requiredText(parsed.operation.summary, "Story node summary", 1, 4000),
+          },
+          changeSummary: parsed.changeSummary,
+        },
+      };
+    }
+
+    if (
+      value.payload.canonicalPath === CANONICAL_CHARACTER_PATH &&
+      value.payload.contentType === CANONICAL_CHARACTER_CONTENT_TYPE
+    ) {
+      requireExactKeys(parsed.operation, ["kind", "displayName"]);
+      if (parsed.operation.kind !== CANONICAL_CHARACTER_OPERATION)
+        throw new StudioOperationContractError("Canonical change operation is not allowlisted.");
+      return {
+        type: STUDIO_CANONICAL_CHANGE_PROPOSE,
+        idempotencyKey,
+        payload: {
+          semanticId: parsed.semanticId,
+          canonicalPath: CANONICAL_CHARACTER_PATH,
+          contentType: CANONICAL_CHARACTER_CONTENT_TYPE,
+          baseRevision: parsed.baseRevision,
+          operation: {
+            kind: CANONICAL_CHARACTER_OPERATION,
+            displayName: requiredText(
+              parsed.operation.displayName,
+              "Character display name",
+              1,
+              120,
+            ),
+          },
+          changeSummary: parsed.changeSummary,
+        },
+      };
+    }
+    throw new StudioOperationContractError("Canonical path/content type is not allowlisted.");
   }
 
   if (value.type === STUDIO_CANONICAL_CHANGE_STATUS_GET) {
     requireExactKeys(value, ["type", "payload"]);
-    if (!isRecord(value.payload)) {
+    if (!isRecord(value.payload))
       throw new StudioOperationContractError("Proposal status payload is required.");
-    }
     requireExactKeys(value.payload, ["changeRequestId"]);
     return {
       type: STUDIO_CANONICAL_CHANGE_STATUS_GET,

@@ -56,7 +56,6 @@ test("Viewer receives real read-only role presentation", async ({ page }) => {
   await expect(page.getByTestId("studio-shell")).toBeVisible();
   await expect(page.getByText("Viewer", { exact: true })).toBeVisible();
   await expect(page.getByText("Read-only capabilities", { exact: true })).toBeVisible();
-  await expect(page.getByText("Read-only access", { exact: true })).toBeVisible();
   await expect(page.getByText("UI Lab fixture", { exact: false })).toHaveCount(0);
 });
 

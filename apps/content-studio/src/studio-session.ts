@@ -13,6 +13,8 @@ export const studioPublishableKey =
   (import.meta.env.VITE_STUDIO_SUPABASE_PUBLISHABLE_KEY as string | undefined)?.trim() ||
   defaultPublishableKey;
 
+const studioOperationsFunctionUrl = `${studioSupabaseUrl}/functions/v1/studio-operations`;
+const studioCanonicalChangeFunctionUrl = `${studioSupabaseUrl}/functions/v1/studio-canonical-change`;
 const storageKey = "fantasia.content-studio.session.v1";
 
 export type StoredStudioAuthSession = {
@@ -45,15 +47,27 @@ type SupabaseTokenResponse = {
   readonly user?: { readonly email?: unknown };
 };
 
+export interface StudioCanonicalProposalResponse {
+  readonly replayed?: boolean;
+  readonly proposal?: {
+    readonly changeRequestId?: string | null;
+    readonly semanticId?: string | null;
+    readonly status?: string | null;
+    readonly branchName?: string | null;
+    readonly commitSha?: string | null;
+    readonly pullRequestNumber?: number | null;
+    readonly pullRequestUrl?: string | null;
+    readonly validationMessage?: string | null;
+  };
+}
+
 function parseTokenResponse(value: SupabaseTokenResponse): StoredStudioAuthSession {
   if (
     typeof value.access_token !== "string" ||
     typeof value.refresh_token !== "string" ||
     typeof value.expires_in !== "number"
-  ) {
+  )
     throw new Error("Supabase returned an invalid session.");
-  }
-
   return {
     accessToken: value.access_token,
     refreshToken: value.refresh_token,
@@ -70,11 +84,12 @@ async function parseResponseBody(response: Response): Promise<Record<string, unk
   }
 }
 
-async function studioOperation(
+async function edgeOperation(
   session: StoredStudioAuthSession,
+  functionUrl: string,
   requestBody: Record<string, unknown>,
 ): Promise<Record<string, unknown>> {
-  const response = await fetch(`${studioSupabaseUrl}/functions/v1/studio-operations`, {
+  const response = await fetch(functionUrl, {
     method: "POST",
     headers: {
       apikey: studioPublishableKey,
@@ -88,10 +103,16 @@ async function studioOperation(
     clearStudioAuthSession();
     throw new Error("Studio session is no longer valid.");
   }
-  if (!response.ok) {
+  if (!response.ok)
     throw new Error(typeof body.message === "string" ? body.message : "Studio operation failed.");
-  }
   return body;
+}
+
+async function studioOperation(
+  session: StoredStudioAuthSession,
+  requestBody: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+  return edgeOperation(session, studioOperationsFunctionUrl, requestBody);
 }
 
 export function loadStoredStudioAuthSession(): StoredStudioAuthSession | null {
@@ -137,9 +158,8 @@ export async function signInStudio(
     body: JSON.stringify({ email: email.trim(), password }),
   });
   const body = await parseResponseBody(response);
-  if (!response.ok) {
+  if (!response.ok)
     throw new Error(typeof body.message === "string" ? body.message : "Sign in failed.");
-  }
   const session = parseTokenResponse(body as SupabaseTokenResponse);
   storeStudioAuthSession(session);
   return session;
@@ -165,21 +185,18 @@ async function refreshStudioAuthSession(
 export async function ensureFreshStudioAuthSession(
   session: StoredStudioAuthSession,
 ): Promise<StoredStudioAuthSession> {
-  if (session.expiresAt - Date.now() > 60_000) return session;
-  return refreshStudioAuthSession(session);
+  return session.expiresAt - Date.now() > 60_000 ? session : refreshStudioAuthSession(session);
 }
 
 export async function fetchStudioAuthorization(
   session: StoredStudioAuthSession,
 ): Promise<StudioSessionResult> {
   const body = await studioOperation(session, { type: "session.get" });
-  if (typeof body.authorized !== "boolean") {
+  if (typeof body.authorized !== "boolean")
     throw new Error("Studio authorization response was invalid.");
-  }
   if (!body.authorized) return { authorized: false, role: null, capabilities: [] };
-  if (typeof body.role !== "string" || !Array.isArray(body.capabilities)) {
+  if (typeof body.role !== "string" || !Array.isArray(body.capabilities))
     throw new Error("Studio authorization response was invalid.");
-  }
   return body as unknown as StudioSessionResult;
 }
 
@@ -198,10 +215,8 @@ export async function fetchStudioReadModels(
     !body.search ||
     typeof body.search !== "object" ||
     !Array.isArray(body.models)
-  ) {
+  )
     throw new Error("Studio read-model response was invalid.");
-  }
-
   const normalized = body as unknown as Omit<StudioReadModelsResponse, "canonicalProposals"> & {
     canonicalProposals?: StudioReadModelsResponse["canonicalProposals"];
   };
@@ -221,6 +236,34 @@ export async function fetchStudioReadModels(
   };
 }
 
+export async function createCharacterDisplayNameProposal(
+  session: StoredStudioAuthSession,
+  input: {
+    readonly semanticId: string;
+    readonly baseRevision: string;
+    readonly displayName: string;
+  },
+): Promise<StudioCanonicalProposalResponse> {
+  const idempotencyKey =
+    `character-${input.semanticId.replace(/[^a-z0-9]+/gi, "-")}-${Date.now().toString(36)}`.slice(
+      0,
+      128,
+    );
+  const body = await edgeOperation(session, studioCanonicalChangeFunctionUrl, {
+    type: "canonical.change.proposal.create",
+    idempotencyKey,
+    payload: {
+      semanticId: input.semanticId,
+      canonicalPath: "content/characters/characters.json",
+      contentType: "fantasia.character.v1",
+      baseRevision: input.baseRevision,
+      operation: { kind: "set-display-name", displayName: input.displayName },
+      changeSummary: `Update ${input.semanticId} display name to ${input.displayName}`,
+    },
+  });
+  return body as unknown as StudioCanonicalProposalResponse;
+}
+
 export async function restoreStudioSession(): Promise<StudioSessionState> {
   const stored = loadStoredStudioAuthSession();
   if (!stored) return { status: "signed-out" };
@@ -231,7 +274,10 @@ export async function restoreStudioSession(): Promise<StudioSessionState> {
     return {
       status: "authorized",
       auth,
-      authorization: { role: authorization.role, capabilities: authorization.capabilities },
+      authorization: {
+        role: authorization.role,
+        capabilities: authorization.capabilities,
+      },
     };
   } catch (error) {
     clearStudioAuthSession();
@@ -244,12 +290,14 @@ export async function restoreStudioSession(): Promise<StudioSessionState> {
 
 export async function signOutStudio(session: StoredStudioAuthSession | null): Promise<void> {
   try {
-    if (session) {
+    if (session)
       await fetch(`${studioSupabaseUrl}/auth/v1/logout`, {
         method: "POST",
-        headers: { apikey: studioPublishableKey, authorization: `Bearer ${session.accessToken}` },
+        headers: {
+          apikey: studioPublishableKey,
+          authorization: `Bearer ${session.accessToken}`,
+        },
       });
-    }
   } finally {
     clearStudioAuthSession();
   }

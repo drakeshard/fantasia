@@ -110,9 +110,15 @@ requireText(
   "RepositoryReadSnapshot",
   "Canonical deployment snapshot must have a typed boundary.",
 );
+requireText(
+  repositorySnapshot,
+  'entityType: "character"',
+  "STUDIO06 must compose canonical characters through the shared read model.",
+);
 for (const sourcePath of [
   "content/narrative/story.json",
   "content/narrative/story-production.json",
+  "content/characters/characters.json",
   "content/encounters/candidates/ch01-b01.layout-candidate.json",
   "config/runtime-assets.json",
 ])
@@ -126,6 +132,7 @@ if (
   !generatedSnapshot ||
   typeof generatedSnapshot.revision !== "string" ||
   !Array.isArray(generatedSnapshot.storyRows) ||
+  !Array.isArray(generatedSnapshot.characterRows) ||
   !Array.isArray(generatedSnapshot.encounter) ||
   !generatedSnapshot.runtimeManifest
 ) {

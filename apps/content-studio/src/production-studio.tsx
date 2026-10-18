@@ -8,7 +8,9 @@ import "./ui/workspace.css";
 import "./styles/material-fidelity.css";
 import "./styles/studio-auth.css";
 import "./styles/production-dashboard.css";
+import "./styles/production-characters.css";
 import type { StudioReadModelsResponse } from "./dashboard-model";
+import { ProductionCharacters } from "./production-characters";
 import { ProductionDashboard } from "./production-dashboard";
 import {
   fetchStudioAuthorization,
@@ -43,15 +45,13 @@ function SignedOut({ onAuthorized }: { onAuthorized: (state: StudioSessionState)
     try {
       const auth = await signInStudio(email, password);
       const authorization = await fetchStudioAuthorization(auth);
-      if (!authorization.authorized) {
-        onAuthorized({ status: "unauthorized", auth });
-      } else {
+      if (!authorization.authorized) onAuthorized({ status: "unauthorized", auth });
+      else
         onAuthorized({
           status: "authorized",
           auth,
           authorization: { role: authorization.role, capabilities: authorization.capabilities },
         });
-      }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Sign in failed.");
     } finally {
@@ -149,6 +149,41 @@ type DashboardLoadState =
   | { readonly status: "ready"; readonly response: StudioReadModelsResponse }
   | { readonly status: "error"; readonly message: string };
 
+function ReadModelLoading({ label }: { label: string }) {
+  return (
+    <DashboardTemplate
+      header={
+        <TemplateFixtureHeading
+          title={label}
+          description="Loading normalized production read models."
+        />
+      }
+    >
+      <div class="studio-template-state" data-state="loading">
+        <Spinner label={`Loading ${label}`} />
+        <div>
+          <strong>Loading authoritative state</strong>
+          <span>Git canonical facts and registry metadata are being composed.</span>
+        </div>
+      </div>
+    </DashboardTemplate>
+  );
+}
+
+function ReadModelError({ label, message }: { label: string; message: string }) {
+  return (
+    <DashboardTemplate
+      header={
+        <TemplateFixtureHeading title={label} description="Production read model failed to load." />
+      }
+    >
+      <StateMessage title={`${label} read failed`} tone="error">
+        {message} Authoritative source data was not changed.
+      </StateMessage>
+    </DashboardTemplate>
+  );
+}
+
 function AuthorizedStudio({
   state,
   onSignedOut,
@@ -162,6 +197,7 @@ function AuthorizedStudio({
   const [dashboard, setDashboard] = useState<DashboardLoadState>({ status: "loading" });
   const { authorization, auth } = state;
   const isReadOnly = !authorization.capabilities.includes("registry.metadata.edit");
+  const canProposeCanonical = authorization.capabilities.includes("canonical.change.propose");
 
   useEffect(() => {
     document
@@ -173,12 +209,11 @@ function AuthorizedStudio({
         if (active) setDashboard({ status: "ready", response });
       })
       .catch((error) => {
-        if (active) {
+        if (active)
           setDashboard({
             status: "error",
-            message: error instanceof Error ? error.message : "Dashboard read failed.",
+            message: error instanceof Error ? error.message : "Studio read failed.",
           });
-        }
       });
     const popState = () => {
       setActiveModule(moduleFromUrl());
@@ -197,70 +232,52 @@ function AuthorizedStudio({
     replaceWorkspaceUrl(module, semanticId);
   };
 
-  const workspace =
-    activeModule === "dashboard" ? (
+  let workspace: JSX.Element;
+  if (activeModule === "dashboard") {
+    workspace =
       dashboard.status === "loading" ? (
-        <DashboardTemplate
-          header={
-            <TemplateFixtureHeading
-              title="Production Dashboard"
-              description="Loading normalized operational read models."
-            />
-          }
-        >
-          <div class="studio-template-state" data-state="loading" data-testid="dashboard-loading">
-            <Spinner label="Loading production Dashboard" />
-            <div>
-              <strong>Loading operational truth</strong>
-              <span>Canonical, registry and runtime facts are being composed.</span>
-            </div>
-          </div>
-          {isReadOnly ? (
-            <StateMessage title="Read-only access" tone="unavailable">
-              Viewer access can inspect Dashboard data; mutation actions remain unavailable.
-            </StateMessage>
-          ) : null}
-        </DashboardTemplate>
+        <ReadModelLoading label="Production Dashboard" />
       ) : dashboard.status === "error" ? (
-        <DashboardTemplate
-          header={
-            <TemplateFixtureHeading
-              title="Production Dashboard"
-              description="Operational read model failed to load."
-            />
-          }
-        >
-          <StateMessage title="Dashboard read failed" tone="error">
-            {dashboard.message} Authoritative source data was not changed.
-          </StateMessage>
-          {isReadOnly ? (
-            <StateMessage title="Read-only access" tone="unavailable">
-              Viewer permissions remain read-only even while the read source is unavailable.
-            </StateMessage>
-          ) : null}
-        </DashboardTemplate>
+        <ReadModelError label="Production Dashboard" message={dashboard.message} />
       ) : (
         <ProductionDashboard
           response={dashboard.response}
           readOnly={isReadOnly}
           onNavigate={navigate}
         />
-      )
-    ) : (
+      );
+  } else if (activeModule === "characters") {
+    workspace =
+      dashboard.status === "loading" ? (
+        <ReadModelLoading label="Characters" />
+      ) : dashboard.status === "error" ? (
+        <ReadModelError label="Characters" message={dashboard.message} />
+      ) : (
+        <ProductionCharacters
+          response={dashboard.response}
+          auth={auth}
+          canPropose={canProposeCanonical}
+          semanticId={activeSemanticId}
+          onSemanticIdChange={(semanticId) => navigate("characters", semanticId)}
+        />
+      );
+  } else {
+    workspace = (
       <DashboardTemplate
         header={
           <TemplateFixtureHeading
             title="Module not implemented yet"
-            description="The Dashboard deep link preserved this stable context; the focused production workspace is delivered by its own issue."
+            description="The deep link preserved this stable context; the focused production workspace is delivered by its own issue."
           />
         }
       >
         <StateMessage title="Context preserved" tone="unavailable">
           {activeSemanticId ? `Semantic ID: ${activeSemanticId}. ` : ""}
-          {activeModule} production authoring is intentionally unavailable in STUDIO05.
+          {activeModule} production authoring is intentionally unavailable in STUDIO06.
         </StateMessage>
       </DashboardTemplate>
     );
+  }
 
   return (
     <main class="studio-production-root" data-testid="studio-authorized">
@@ -274,7 +291,7 @@ function AuthorizedStudio({
             id="production-studio-search"
             label="Global search"
             type="search"
-            placeholder="Focused workspace search arrives with production modules"
+            placeholder="Use the active module filter"
             disabled
           />
         }
@@ -315,18 +332,16 @@ function ProductionStudio() {
     setState({ status: "signed-out" });
   };
 
-  if (state.status === "loading") {
+  if (state.status === "loading")
     return (
       <main class="studio-auth-gate" data-testid="studio-session-loading">
         <Spinner label="Restoring Content Studio session" />
       </main>
     );
-  }
   if (state.status === "signed-out") return <SignedOut onAuthorized={setState} />;
-  if (state.status === "unauthorized") {
+  if (state.status === "unauthorized")
     return <Unauthorized auth={state.auth} onSignedOut={() => void signOut()} />;
-  }
-  if (state.status === "error") {
+  if (state.status === "error")
     return (
       <main class="studio-auth-gate" data-testid="studio-session-error">
         <Surface className="studio-auth-card">
@@ -337,7 +352,6 @@ function ProductionStudio() {
         </Surface>
       </main>
     );
-  }
   return <AuthorizedStudio state={state} onSignedOut={() => void signOut()} />;
 }
 

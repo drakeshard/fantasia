@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   applyStoryNodeSummaryChange,
+  CANONICAL_CHARACTER_CONTENT_TYPE,
+  CANONICAL_CHARACTER_OPERATION,
+  CANONICAL_CHARACTER_PATH,
   CANONICAL_STORY_NODE_CONTENT_TYPE,
   CANONICAL_STORY_NODE_OPERATION,
   CANONICAL_STORY_PATH,
@@ -58,16 +61,34 @@ const request = {
   changeSummary: "Clarify the opening node summary",
 } as const;
 
+const characterRequest = {
+  semanticId: "character.production.hero",
+  canonicalPath: CANONICAL_CHARACTER_PATH,
+  contentType: CANONICAL_CHARACTER_CONTENT_TYPE,
+  baseRevision: "a".repeat(40),
+  operation: { kind: CANONICAL_CHARACTER_OPERATION, displayName: "Main Character" },
+  changeSummary: "Clarify the production hero display name",
+} as const;
+
 describe("Studio canonical Git change proposal", () => {
-  it("keeps the first writable surface intentionally narrow", () => {
-    const parsed = parseCanonicalChangeRequest({
+  it("keeps each writable surface intentionally narrow", () => {
+    const parsedStory = parseCanonicalChangeRequest({
       type: STUDIO_CANONICAL_CHANGE_PROPOSE,
       idempotencyKey: "studio04-proof-001",
       payload: request,
     });
-    expect(parsed.payload.canonicalPath).toBe("content/narrative/story.json");
-    expect(parsed.payload.contentType).toBe("fantasia.story.node.v1");
-    expect(parsed.payload.operation.kind).toBe("set-node-summary");
+    expect(parsedStory.payload.canonicalPath).toBe("content/narrative/story.json");
+    expect(parsedStory.payload.contentType).toBe("fantasia.story.node.v1");
+    expect(parsedStory.payload.operation.kind).toBe("set-node-summary");
+
+    const parsedCharacter = parseCanonicalChangeRequest({
+      type: STUDIO_CANONICAL_CHANGE_PROPOSE,
+      idempotencyKey: "studio06-proof-001",
+      payload: characterRequest,
+    });
+    expect(parsedCharacter.payload.canonicalPath).toBe("content/characters/characters.json");
+    expect(parsedCharacter.payload.contentType).toBe("fantasia.character.v1");
+    expect(parsedCharacter.payload.operation.kind).toBe("set-display-name");
   });
 
   it("rejects arbitrary repository paths", () => {
@@ -85,7 +106,8 @@ describe("Studio canonical Git change proposal", () => {
     const beforeIds = validateCanonicalStory(before);
     const result = applyStoryNodeSummaryChange(before, request);
     const after = JSON.parse(result.content) as ReturnType<typeof storyFixture>;
-    expect(result.previousSummary).toBe("Old summary");
+    expect(result.previousValue).toBe("Old summary");
+    expect(result.nextValue).toBe("Updated summary");
     expect(after.sagas[0].chapters[0].nodes[0].summary).toBe("Updated summary");
     expect(result.stableIds).toEqual(beforeIds);
     expect(before.sagas[0].chapters[0].nodes[0].summary).toBe("Old summary");
@@ -105,10 +127,14 @@ describe("Studio canonical Git change proposal", () => {
     ).toThrow("was not found");
   });
 
-  it("creates deterministic proposal branches outside main", () => {
-    const branch = canonicalProposalBranchName("CH01-N01", "studio04-proof-003");
-    expect(branch).toBe("studio/story/ch01-n01/studio04-proof-003");
-    expect(branch).not.toBe("main");
+  it("creates deterministic proposal branches outside main for each allowlisted content type", () => {
+    const storyBranch = canonicalProposalBranchName(request, "studio04-proof-003");
+    expect(storyBranch).toBe("studio/story/ch01-n01/studio04-proof-003");
+    expect(storyBranch).not.toBe("main");
+
+    const characterBranch = canonicalProposalBranchName(characterRequest, "studio06-proof-003");
+    expect(characterBranch).toBe("studio/character/character.production.hero/studio06-proof-003");
+    expect(characterBranch).not.toBe("main");
   });
 
   it("exports reusable authoring/proposal states without redefining content lifecycle", () => {

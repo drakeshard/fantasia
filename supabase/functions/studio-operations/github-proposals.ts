@@ -1,8 +1,7 @@
 import {
-  applyStoryNodeSummaryChange,
-  CANONICAL_STORY_PATH,
+  applyCanonicalChange,
+  type CanonicalChangeRequest,
   CanonicalChangeValidationError,
-  type CanonicalStoryNodeChangeRequest,
   canonicalProposalBranchName,
 } from "./canonical-change.ts";
 
@@ -10,7 +9,7 @@ const GITHUB_API = "https://api.github.com";
 const REPOSITORY_OWNER = "drakeshard";
 const REPOSITORY_NAME = "fantasia";
 const BASE_BRANCH = "main";
-const STUDIO_BRANCH_PREFIX = "studio/story/";
+const STUDIO_BRANCH_PREFIX = "studio/";
 
 export type GitHubProposalStatus =
   | "PR_OPEN"
@@ -45,16 +44,13 @@ export class GitHubProposalError extends Error {
 }
 
 type GitHubResponseError = { readonly message?: unknown };
-
 type GitHubRef = { readonly object?: { readonly sha?: unknown } };
 type GitHubContent = {
   readonly sha?: unknown;
   readonly content?: unknown;
   readonly encoding?: unknown;
 };
-type GitHubContentWrite = {
-  readonly commit?: { readonly sha?: unknown };
-};
+type GitHubContentWrite = { readonly commit?: { readonly sha?: unknown } };
 type GitHubPullRequest = {
   readonly number?: unknown;
   readonly html_url?: unknown;
@@ -63,10 +59,7 @@ type GitHubPullRequest = {
   readonly head?: { readonly sha?: unknown };
 };
 type GitHubCheckRuns = {
-  readonly check_runs?: readonly {
-    readonly status?: unknown;
-    readonly conclusion?: unknown;
-  }[];
+  readonly check_runs?: readonly { readonly status?: unknown; readonly conclusion?: unknown }[];
 };
 
 function githubHeaders(token: string): HeadersInit {
@@ -109,32 +102,27 @@ async function githubRequest<T>(
 }
 
 function requiredString(value: unknown, label: string): string {
-  if (typeof value !== "string" || !value) {
+  if (typeof value !== "string" || !value)
     throw new GitHubProposalError("provider", `GitHub ${label} was missing.`);
-  }
   return value;
 }
 
 function requiredCommitSha(value: unknown, label: string): string {
   const sha = requiredString(value, label);
-  if (!/^[0-9a-f]{40}$/.test(sha)) {
+  if (!/^[0-9a-f]{40}$/.test(sha))
     throw new GitHubProposalError("provider", `GitHub ${label} was invalid.`);
-  }
   return sha;
 }
 
 function requiredNumber(value: unknown, label: string): number {
-  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1)
     throw new GitHubProposalError("provider", `GitHub ${label} was missing.`);
-  }
   return value;
 }
 
 function decodeBase64(value: string): string {
-  const compact = value.replace(/\s+/g, "");
-  const binary = atob(compact);
-  const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
+  const binary = atob(value.replace(/\s+/g, ""));
+  return new TextDecoder().decode(Uint8Array.from(binary, (character) => character.charCodeAt(0)));
 }
 
 function encodeBase64(value: string): string {
@@ -155,23 +143,23 @@ async function currentMainRevision(token: string): Promise<string> {
 
 async function fetchCanonicalFile(
   token: string,
+  canonicalPath: string,
   revision: string,
 ): Promise<{ readonly blobSha: string; readonly parsed: unknown }> {
   const result = await githubRequest<GitHubContent>(
     token,
-    repoPath(`/contents/${CANONICAL_STORY_PATH}?ref=${encodeURIComponent(revision)}`),
+    repoPath(`/contents/${canonicalPath}?ref=${encodeURIComponent(revision)}`),
   );
   const blobSha = requiredString(result.body?.sha, "content blob SHA");
   const encoded = requiredString(result.body?.content, "content body");
-  if (result.body?.encoding !== "base64") {
+  if (result.body?.encoding !== "base64")
     throw new GitHubProposalError("provider", "GitHub canonical content encoding was not base64.");
-  }
   try {
     return { blobSha, parsed: JSON.parse(decodeBase64(encoded)) as unknown };
   } catch (error) {
     throw new GitHubProposalError(
       "validation",
-      `Canonical story JSON could not be parsed: ${error instanceof Error ? error.message : "invalid JSON"}`,
+      `Canonical JSON could not be parsed: ${error instanceof Error ? error.message : "invalid JSON"}`,
     );
   }
 }
@@ -181,17 +169,15 @@ async function ensureProposalBranch(
   branchName: string,
   baseRevision: string,
 ): Promise<{ readonly existed: boolean; readonly headSha: string }> {
-  if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH) {
+  if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH)
     throw new GitHubProposalError("validation", "Proposal branch is outside the Studio namespace.");
-  }
   const refPath = repoPath(`/git/ref/heads/${encodeURIComponent(branchName)}`);
   const existing = await githubRequest<GitHubRef>(token, refPath, {}, [200, 404]);
-  if (existing.status === 200) {
+  if (existing.status === 200)
     return {
       existed: true,
       headSha: requiredCommitSha(existing.body?.object?.sha, "proposal branch revision"),
     };
-  }
   await githubRequest(
     token,
     repoPath("/git/refs"),
@@ -209,22 +195,20 @@ async function writeCanonicalFile(
   branchName: string,
   blobSha: string,
   content: string,
-  request: CanonicalStoryNodeChangeRequest,
+  request: CanonicalChangeRequest,
 ): Promise<string> {
-  if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH) {
+  if (!branchName.startsWith(STUDIO_BRANCH_PREFIX) || branchName === BASE_BRANCH)
     throw new GitHubProposalError(
       "validation",
       "Direct writes to the accepted branch are forbidden.",
     );
-  }
-  const message = `studio(story): propose ${request.semanticId} summary update`;
   const result = await githubRequest<GitHubContentWrite>(
     token,
-    repoPath(`/contents/${CANONICAL_STORY_PATH}`),
+    repoPath(`/contents/${request.canonicalPath}`),
     {
       method: "PUT",
       body: JSON.stringify({
-        message,
+        message: `studio(content): propose ${request.semanticId} ${request.operation.kind}`,
         content: encodeBase64(content),
         sha: blobSha,
         branch: branchName,
@@ -244,7 +228,7 @@ async function writeCanonicalFile(
 }
 
 function proposalBody(
-  request: CanonicalStoryNodeChangeRequest,
+  request: CanonicalChangeRequest,
   actorUserId: string,
   changeRequestId: string,
 ): string {
@@ -269,7 +253,7 @@ function proposalBody(
 async function createOrUpdatePullRequest(
   token: string,
   branchName: string,
-  request: CanonicalStoryNodeChangeRequest,
+  request: CanonicalChangeRequest,
   actorUserId: string,
   changeRequestId: string,
 ): Promise<{ readonly number: number; readonly url: string }> {
@@ -287,10 +271,7 @@ async function createOrUpdatePullRequest(
       method: "PATCH",
       body: JSON.stringify({ title, body }),
     });
-    return {
-      number,
-      url: requiredString(updated.body?.html_url, "pull request URL"),
-    };
+    return { number, url: requiredString(updated.body?.html_url, "pull request URL") };
   }
   const created = await githubRequest<GitHubPullRequest>(
     token,
@@ -320,9 +301,7 @@ async function pullRequestStatus(
     repoPath(`/commits/${headSha}/check-runs?per_page=100`),
   );
   const runs = checks.body?.check_runs ?? [];
-  if (runs.length === 0 || runs.some((run) => run.status !== "completed")) {
-    return "CHECKS_PENDING";
-  }
+  if (runs.length === 0 || runs.some((run) => run.status !== "completed")) return "CHECKS_PENDING";
   const failureConclusions = new Set([
     "failure",
     "cancelled",
@@ -331,9 +310,7 @@ async function pullRequestStatus(
     "startup_failure",
     "stale",
   ]);
-  if (runs.some((run) => failureConclusions.has(String(run.conclusion)))) {
-    return "CHECKS_FAILED";
-  }
+  if (runs.some((run) => failureConclusions.has(String(run.conclusion)))) return "CHECKS_FAILED";
   return "PR_OPEN";
 }
 
@@ -345,45 +322,46 @@ export async function createCanonicalGitProposal(input: {
   readonly token: string;
   readonly actorUserId: string;
   readonly changeRequestId: string;
-  readonly request: CanonicalStoryNodeChangeRequest;
+  readonly request: CanonicalChangeRequest;
 }): Promise<GitHubProposalResult> {
   const latestMain = await currentMainRevision(input.token);
-  if (latestMain !== input.request.baseRevision) {
+  if (latestMain !== input.request.baseRevision)
     throw new GitHubProposalError("stale", "Canonical base revision is stale.", {
       expectedBaseRevision: input.request.baseRevision,
       currentBaseRevision: latestMain,
     });
-  }
-
-  const canonical = await fetchCanonicalFile(input.token, input.request.baseRevision);
-  let validated: ReturnType<typeof applyStoryNodeSummaryChange>;
+  const canonical = await fetchCanonicalFile(
+    input.token,
+    input.request.canonicalPath,
+    input.request.baseRevision,
+  );
+  let validated: ReturnType<typeof applyCanonicalChange>;
   try {
-    validated = applyStoryNodeSummaryChange(canonical.parsed, input.request);
+    validated = applyCanonicalChange(canonical.parsed, input.request);
   } catch (error) {
-    if (error instanceof CanonicalChangeValidationError) {
+    if (error instanceof CanonicalChangeValidationError)
       throw new GitHubProposalError("validation", error.message);
-    }
     throw error;
   }
-
-  const desiredStory = JSON.parse(validated.content) as unknown;
-  const branchName = canonicalProposalBranchName(input.request.semanticId, input.changeRequestId);
+  const desired = JSON.parse(validated.content) as unknown;
+  const branchName = canonicalProposalBranchName(input.request, input.changeRequestId);
   const branch = await ensureProposalBranch(input.token, branchName, input.request.baseRevision);
-
   let commitSha: string;
   if (branch.existed) {
-    const branchCanonical = await fetchCanonicalFile(input.token, branchName);
-    if (jsonSemanticallyEqual(branchCanonical.parsed, desiredStory)) {
-      commitSha = branch.headSha;
-    } else {
-      commitSha = await writeCanonicalFile(
-        input.token,
-        branchName,
-        branchCanonical.blobSha,
-        validated.content,
-        input.request,
-      );
-    }
+    const branchCanonical = await fetchCanonicalFile(
+      input.token,
+      input.request.canonicalPath,
+      branchName,
+    );
+    commitSha = jsonSemanticallyEqual(branchCanonical.parsed, desired)
+      ? branch.headSha
+      : await writeCanonicalFile(
+          input.token,
+          branchName,
+          branchCanonical.blobSha,
+          validated.content,
+          input.request,
+        );
   } else {
     commitSha = await writeCanonicalFile(
       input.token,
@@ -393,7 +371,6 @@ export async function createCanonicalGitProposal(input: {
       input.request,
     );
   }
-
   const pullRequest = await createOrUpdatePullRequest(
     input.token,
     branchName,
@@ -408,7 +385,7 @@ export async function createCanonicalGitProposal(input: {
     pullRequestNumber: pullRequest.number,
     pullRequestUrl: pullRequest.url,
     status,
-    validationMessage: `Validated ${validated.stableIds.length} stable narrative IDs; changed summary only.`,
+    validationMessage: validated.validationMessage,
   };
 }
 
