@@ -11,6 +11,7 @@ import {
 } from "../../ui/primitives";
 import { CollectionTemplate, TemplateFixtureHeading, TemplateToolbar } from "../../ui/workspace";
 import "../../styles/production-assets-populated.css";
+import "../../styles/production-assets-dialog.css";
 import {
   beginGoogleDriveConnection,
   fetchAssetSourceBlob,
@@ -148,15 +149,11 @@ function SourceMutationForm({
   onCompleted: () => Promise<void>;
 }) {
   const canonicalOwners = assetOwnerOptions(response);
-  const initialRole = selected?.role ?? identityUiAssetRoles[0]?.id ?? "";
-  const initialOwners = selected
-    ? canonicalOwners.filter((owner) => owner.semanticId === selected.ownerSemanticId)
-    : identityUiOwnersForRole(initialRole, canonicalOwners);
+  const creating = selected === null;
+  const initialRole = selected?.role ?? "";
   const [role, setRole] = useState(initialRole);
-  const [ownerSemanticId, setOwnerSemanticId] = useState(
-    selected?.ownerSemanticId ?? initialOwners[0]?.semanticId ?? "",
-  );
-  const [variant, setVariant] = useState(selected?.variant ?? "base");
+  const [ownerSemanticId, setOwnerSemanticId] = useState(selected?.ownerSemanticId ?? "");
+  const [variant, setVariant] = useState(selected?.variant ?? "");
   const [file, setFile] = useState<File | null>(null);
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<{ kind: "success" | "error"; message: string } | null>(
@@ -165,20 +162,41 @@ function SourceMutationForm({
   const identityLocked = selected !== null;
   const owners = selected
     ? canonicalOwners.filter((owner) => owner.semanticId === selected.ownerSemanticId)
-    : identityUiOwnersForRole(role, canonicalOwners);
+    : role
+      ? identityUiOwnersForRole(role, canonicalOwners)
+      : [];
   const roleOptions = selected
     ? unique([selected.role, ...identityUiAssetRoles.map((item) => item.id)]).map((value) => ({
         value,
         label: identityUiRoleLabel(value),
       }))
-    : identityUiRoleOptions();
+    : [
+        { value: "", label: "Choose asset type", disabled: true },
+        ...identityUiRoleOptions(),
+      ];
+  const ownerOptions = selected
+    ? owners.map((owner) => ({ value: owner.semanticId, label: owner.displayName }))
+    : [
+        {
+          value: "",
+          label: role ? "Choose owner" : "Choose asset type first",
+          disabled: true,
+        },
+        ...owners.map((owner) => ({ value: owner.semanticId, label: owner.displayName })),
+      ];
+  const selectedOwner = canonicalOwners.find((owner) => owner.semanticId === ownerSemanticId) ?? null;
   const assetSemanticId = selected?.semanticId ?? semanticAssetId(ownerSemanticId, role, variant);
   const canSubmit = Boolean(ownerSemanticId && role.trim() && file && assetSemanticId);
 
   function chooseRole(nextRole: string) {
     setRole(nextRole);
-    const nextOwners = identityUiOwnersForRole(nextRole, canonicalOwners);
-    setOwnerSemanticId(nextOwners[0]?.semanticId ?? "");
+    setOwnerSemanticId("");
+    setResult(null);
+  }
+
+  function chooseFile(nextFile: File | null) {
+    setFile(nextFile);
+    setResult(null);
   }
 
   async function submit() {
@@ -212,7 +230,158 @@ function SourceMutationForm({
     }
   }
 
-  const content = (
+  const filePicker = (
+    <div class="studio-assets-file-picker-field">
+      <span class="ui-field__label">Source/master file</span>
+      <input
+        key={file ? `selected:${file.name}:${file.size}` : "empty"}
+        id="asset-source-file"
+        class="studio-assets-file-input--native"
+        type="file"
+        aria-label="Upload file"
+        disabled={readOnly}
+        onChange={(event) => chooseFile(event.currentTarget.files?.[0] ?? null)}
+      />
+      <label
+        class={`studio-assets-file-picker${file ? " studio-assets-file-picker--selected" : ""}`}
+        for="asset-source-file"
+        onDragOver={(event) => {
+          if (!readOnly) event.preventDefault();
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          if (readOnly) return;
+          chooseFile(event.dataTransfer?.files?.[0] ?? null);
+        }}
+      >
+        <span class="studio-assets-file-picker__mark" aria-hidden="true">⇧</span>
+        <span class="studio-assets-file-picker__copy">
+          <strong>{file ? "Source selected" : "Choose a source/master"}</strong>
+          <span>
+            {file
+              ? "Select again to replace this file before registration."
+              : "Drop a production source here, or select a file from your device."}
+          </span>
+        </span>
+        <span class="studio-assets-file-picker__action">{file ? "Replace" : "Select file"}</span>
+      </label>
+      {file ? (
+        <div class="studio-assets-file-summary" aria-live="polite">
+          <div class="studio-assets-file-summary__identity">
+            <span class="studio-assets-file-summary__icon" aria-hidden="true">◆</span>
+            <div>
+              <strong>{file.name}</strong>
+              <small>
+                {file.type || "File type unavailable"} · {formatBytes(file.size)}
+              </small>
+            </div>
+          </div>
+          <Button variant="quiet" disabled={readOnly} onClick={() => chooseFile(null)}>
+            Remove
+          </Button>
+        </div>
+      ) : null}
+    </div>
+  );
+
+  const content = creating ? (
+    <div class="studio-assets-create-flow">
+      <section class="studio-assets-create-section studio-assets-create-section--identity">
+        <header class="studio-assets-create-section__heading">
+          <span class="studio-assets-create-section__step">01</span>
+          <div>
+            <strong>Define asset identity</strong>
+            <small>Choose the controlled type first. Studio will then show only valid owners.</small>
+          </div>
+        </header>
+        {roleOptions.length === 1 ? (
+          <StateMessage title="No controlled asset types available" tone="unavailable">
+            Identity/UI asset registration requires a Git-controlled asset type catalog.
+          </StateMessage>
+        ) : (
+          <div class="studio-assets-create-identity-grid">
+            <SelectField
+              id="asset-role"
+              label="Asset type"
+              value={role}
+              disabled={readOnly}
+              data-autofocus
+              onChange={(event) => chooseRole(event.currentTarget.value)}
+              options={roleOptions}
+            />
+            <SelectField
+              id="asset-owner"
+              label="Owner"
+              value={ownerSemanticId}
+              disabled={readOnly || !role || owners.length === 0}
+              onChange={(event) => {
+                setOwnerSemanticId(event.currentTarget.value);
+                setResult(null);
+              }}
+              options={ownerOptions}
+            />
+            <TextField
+              id="asset-variant"
+              label="Variant · optional"
+              value={variant}
+              disabled={readOnly}
+              onInput={(event) => setVariant(event.currentTarget.value)}
+              placeholder="Leave blank for base"
+              hint="Use only when this is a meaningful alternate of the same asset role."
+            />
+          </div>
+        )}
+        {role && owners.length === 0 ? (
+          <StateMessage title="No canonical owners for this asset type" tone="unavailable">
+            This controlled asset type has no canonical owners in the deployed Studio snapshot.
+          </StateMessage>
+        ) : null}
+        {role && selectedOwner ? (
+          <div class="studio-assets-identity-confirmation">
+            <div>
+              <span>Will register as</span>
+              <strong>
+                {selectedOwner.displayName} · {identityUiRoleLabel(role)}
+                {variant.trim() ? ` · ${variant.trim()}` : " · base"}
+              </strong>
+            </div>
+            <code>{assetSemanticId}</code>
+          </div>
+        ) : null}
+      </section>
+
+      <section class="studio-assets-create-section studio-assets-create-section--source">
+        <header class="studio-assets-create-section__heading">
+          <span class="studio-assets-create-section__step">02</span>
+          <div>
+            <strong>Select source/master</strong>
+            <small>The trusted Studio backend uploads this file into the connected Google Drive.</small>
+          </div>
+        </header>
+        {filePicker}
+      </section>
+
+      <footer class="studio-assets-create-footer">
+        <div>
+          <span>Registration</span>
+          <strong>{canSubmit ? "Ready to add asset" : "Complete identity and source"}</strong>
+        </div>
+        <Button
+          variant="primary"
+          pending={pending}
+          disabled={readOnly || !canSubmit}
+          onClick={() => void submit()}
+        >
+          Add Asset
+        </Button>
+      </footer>
+      {result ? (
+        <StateMessage title="Upload failed" tone="error">
+          {result.message}
+        </StateMessage>
+      ) : null}
+    </div>
+  ) : (
     <>
       {!compact ? (
         <div class="studio-assets-operation__heading">
@@ -229,57 +398,17 @@ function SourceMutationForm({
           or mark the asset runtime-ready.
         </p>
       ) : null}
-      <label class="ui-field" for="asset-source-file">
-        <span class="ui-field__label">Upload file</span>
-        <input
-          id="asset-source-file"
-          class="ui-control studio-assets-file-input"
-          type="file"
-          disabled={readOnly}
-          onChange={(event) => setFile(event.currentTarget.files?.[0] ?? null)}
-        />
-      </label>
-      {roleOptions.length === 0 ? (
-        <StateMessage title="No controlled asset types available" tone="unavailable">
-          Identity/UI asset registration requires a Git-controlled asset type catalog.
-        </StateMessage>
-      ) : (
-        <div class="studio-assets-form-grid">
-          <SelectField
-            id="asset-role"
-            label="Asset type"
-            value={role}
-            disabled={readOnly || identityLocked}
-            onChange={(event) => chooseRole(event.currentTarget.value)}
-            options={roleOptions}
-          />
-          <SelectField
-            id="asset-owner"
-            label="Owner"
-            value={ownerSemanticId}
-            disabled={readOnly || identityLocked || owners.length === 0}
-            onChange={(event) => setOwnerSemanticId(event.currentTarget.value)}
-            options={owners.map((owner) => ({
-              value: owner.semanticId,
-              label: owner.displayName,
-            }))}
-          />
-          <TextField
-            id="asset-variant"
-            label="Variant · optional"
-            value={variant}
-            disabled={readOnly || identityLocked}
-            onInput={(event) => setVariant(event.currentTarget.value)}
-            placeholder="base"
-          />
+      {filePicker}
+      <div class="studio-assets-identity-confirmation studio-assets-identity-confirmation--locked">
+        <div>
+          <span>Replacing source for</span>
+          <strong>
+            {selectedOwner?.displayName ?? selected.ownerDisplayName} · {identityUiRoleLabel(role)}
+            {variant.trim() ? ` · ${variant.trim()}` : " · base"}
+          </strong>
         </div>
-      )}
-      {!identityLocked && owners.length === 0 ? (
-        <StateMessage title="No canonical owners for this asset type" tone="unavailable">
-          This asset type is controlled by the shared Identity/UI catalog and cannot be registered
-          until its canonical owner definitions are available in the deployed Studio snapshot.
-        </StateMessage>
-      ) : null}
+        <code>{assetSemanticId}</code>
+      </div>
       <div class="studio-assets-operation__actions">
         <Button
           variant="primary"
@@ -287,7 +416,7 @@ function SourceMutationForm({
           disabled={readOnly || !canSubmit}
           onClick={() => void submit()}
         >
-          {selected ? "Upload new version" : "Add Asset"}
+          Upload new version
         </Button>
       </div>
       {result ? (
@@ -1082,7 +1211,7 @@ export function ProductionAssets({
           open
           onOpenChange={setCreating}
           title="Add Asset"
-          description="Upload a source/master, choose its controlled asset type and owner, then add it. Studio handles the semantic identity and Google Drive location."
+          description="Define the controlled asset identity, then attach its source/master. Studio derives the semantic ID and trusted Google Drive destination."
         >
           <SourceMutationForm
             selected={null}
