@@ -8,6 +8,7 @@ const stylesRoot = path.join(studioRoot, "src", "styles");
 const uiRoot = path.join(studioRoot, "src", "ui");
 const tokenPath = "apps/content-studio/src/styles/tokens.css";
 const themePath = "apps/content-studio/src/styles/theme-fantasia-midnight.css";
+const basePath = "apps/content-studio/src/styles/base.css";
 const themeScope = '[data-studio-theme="fantasia-midnight"]';
 
 function read(relativePath) {
@@ -141,6 +142,14 @@ for (const token of requiredThemeTokens) {
   }
 }
 
+const sharedPaintFiles = [path.join(root, basePath), ...cssFilesUnder(uiRoot)];
+for (const file of sharedPaintFiles) {
+  const relative = path.relative(root, file);
+  if (hasRawPalette(fs.readFileSync(file, "utf8"))) {
+    fail(`${relative} contains a raw palette value; shared CSS must consume semantic/component theme tokens.`);
+  }
+}
+
 for (const file of [...cssFilesUnder(stylesRoot), ...cssFilesUnder(uiRoot)]) {
   const relative = path.relative(root, file);
   const source = fs.readFileSync(file, "utf8");
@@ -154,6 +163,9 @@ for (const file of [...cssFilesUnder(stylesRoot), ...cssFilesUnder(uiRoot)]) {
   for (const token of studioReferences(source)) {
     if (!contractOwners.has(token)) {
       fail(`${relative} references undefined Studio token ${token}.`);
+    }
+    if (relative !== themePath && token.startsWith("--studio-color-")) {
+      fail(`${relative} consumes palette token ${token}; shared/feature CSS must consume semantic or component tokens instead.`);
     }
   }
 }
