@@ -1,40 +1,23 @@
 import type { ProductionBattleCellView, ProductionBattleView } from "@fantasia/runtime";
 import { Application, Container, Graphics, Text } from "pixi.js";
+import {
+  FANTASIA_BATTLEFIELD_RENDER_PROFILE,
+  type BattlefieldScreenPoint,
+  projectSquareCell,
+  squareTilePoints,
+} from "./battlefield-presentation.js";
 
 export interface BattleRendererCallbacks {
   readonly onCellActivate: (cell: ProductionBattleCellView) => void;
   readonly onCellPreview: (cell: ProductionBattleCellView | undefined) => void;
 }
 
-interface ScreenPoint {
-  readonly x: number;
-  readonly y: number;
-}
-
-const TILE_WIDTH = 84;
-const TILE_HEIGHT = 42;
-const ELEVATION_STEP = 24;
+const PROFILE = FANTASIA_BATTLEFIELD_RENDER_PROFILE;
 const UNIT_RADIUS = 18;
 const PADDING = 44;
 
-function projection(cell: Pick<ProductionBattleCellView, "x" | "y" | "elevation">): ScreenPoint {
-  return {
-    x: (cell.x - cell.y) * (TILE_WIDTH / 2),
-    y: (cell.x + cell.y) * (TILE_HEIGHT / 2) - cell.elevation * ELEVATION_STEP,
-  };
-}
-
-function tilePoints(center: ScreenPoint): number[] {
-  return [
-    center.x,
-    center.y - TILE_HEIGHT / 2,
-    center.x + TILE_WIDTH / 2,
-    center.y,
-    center.x,
-    center.y + TILE_HEIGHT / 2,
-    center.x - TILE_WIDTH / 2,
-    center.y,
-  ];
+function projection(cell: Pick<ProductionBattleCellView, "x" | "y" | "elevation">) {
+  return projectSquareCell(cell, cell.elevation);
 }
 
 function terrainFill(cell: ProductionBattleCellView): number {
@@ -59,7 +42,7 @@ function actorColors(side: "player" | "enemy", selected: boolean, active: boolea
     : { fill: 0x6a3d35, stroke: 0xc58c78, cloth: 0xa95c4c };
 }
 
-function drawBlockedTerrain(world: Container, point: ScreenPoint): void {
+function drawBlockedTerrain(world: Container, point: BattlefieldScreenPoint): void {
   const rubble = new Graphics();
   rubble
     .poly([
@@ -92,20 +75,20 @@ function drawBlockedTerrain(world: Container, point: ScreenPoint): void {
 
 function drawUnitMarker(
   world: Container,
-  point: ScreenPoint,
+  point: BattlefieldScreenPoint,
   actor: ProductionBattleView["actors"][number],
 ): void {
   const colors = actorColors(actor.side, actor.selected, actor.active);
-  const anchorY = point.y - TILE_HEIGHT / 2 - UNIT_RADIUS + 5;
+  const anchorY = point.y - PROFILE.tileHeight / 2 - UNIT_RADIUS + 5;
 
   const shadow = new Graphics()
-    .ellipse(point.x, point.y - TILE_HEIGHT / 2 + 3, 19, 6)
+    .ellipse(point.x, point.y - PROFILE.tileHeight / 2 + 3, 19, 6)
     .fill({ color: 0x0b0b08, alpha: actor.defeated ? 0.18 : 0.38 });
   world.addChild(shadow);
 
   if (actor.selected) {
     const selection = new Graphics()
-      .ellipse(point.x, point.y - TILE_HEIGHT / 2 + 2, 25, 9)
+      .ellipse(point.x, point.y - PROFILE.tileHeight / 2 + 2, 25, 9)
       .stroke({ color: 0xe7bd63, width: 2, alpha: 0.92 });
     world.addChild(selection);
   }
@@ -206,12 +189,12 @@ export class ProductionBattleRenderer {
 
     const projected = view.cells.map((cell) => ({ cell, point: projection(cell) }));
     const xs = projected.flatMap(({ point }) => [
-      point.x - TILE_WIDTH / 2,
-      point.x + TILE_WIDTH / 2,
+      point.x - PROFILE.tileWidth / 2,
+      point.x + PROFILE.tileWidth / 2,
     ]);
     const ys = projected.flatMap(({ point }) => [
-      point.y - TILE_HEIGHT / 2,
-      point.y + TILE_HEIGHT / 2,
+      point.y - PROFILE.tileHeight / 2,
+      point.y + PROFILE.tileHeight / 2,
     ]);
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
@@ -240,30 +223,30 @@ export class ProductionBattleRenderer {
     });
 
     for (const { cell, point } of sortedCells) {
-      const baseY = point.y + cell.elevation * ELEVATION_STEP;
+      const baseY = point.y + cell.elevation * PROFILE.elevationStep;
       if (cell.elevation > 0) {
         const leftWall = new Graphics()
           .poly([
-            point.x - TILE_WIDTH / 2,
+            point.x - PROFILE.tileWidth / 2,
             point.y,
             point.x,
-            point.y + TILE_HEIGHT / 2,
+            point.y + PROFILE.tileHeight / 2,
             point.x,
-            baseY + TILE_HEIGHT / 2,
-            point.x - TILE_WIDTH / 2,
+            baseY + PROFILE.tileHeight / 2,
+            point.x - PROFILE.tileWidth / 2,
             baseY,
           ])
           .fill(cell.elevation >= 2 ? 0x3e3828 : 0x47402d)
           .stroke({ color: 0x5b513a, width: 1, alpha: 0.7 });
         const rightWall = new Graphics()
           .poly([
-            point.x + TILE_WIDTH / 2,
+            point.x + PROFILE.tileWidth / 2,
             point.y,
             point.x,
-            point.y + TILE_HEIGHT / 2,
+            point.y + PROFILE.tileHeight / 2,
             point.x,
-            baseY + TILE_HEIGHT / 2,
-            point.x + TILE_WIDTH / 2,
+            baseY + PROFILE.tileHeight / 2,
+            point.x + PROFILE.tileWidth / 2,
             baseY,
           ])
           .fill(cell.elevation >= 2 ? 0x332f24 : 0x3a3528)
@@ -272,7 +255,7 @@ export class ProductionBattleRenderer {
       }
 
       const tile = new Graphics()
-        .poly(tilePoints(point))
+        .poly(squareTilePoints(point))
         .fill({ color: terrainFill(cell), alpha: cell.blocked ? 0.94 : 1 })
         .stroke({
           color: terrainBorder(cell),
