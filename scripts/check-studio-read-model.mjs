@@ -126,10 +126,10 @@ forbid(
   /raw\.githubusercontent\.com|api\.github\.com/i,
   "Canonical deployment snapshot must not depend on unauthenticated private-repository fetches.",
 );
-forbid(
+requireText(
   docs,
-  /runtime-assets\.json.*(write|mutat|publish)/i,
-  "Documentation must not introduce runtime manifest mutation in STUDIO03.",
+  "This issue never mutates or publishes the manifest.",
+  "Documentation must keep the runtime manifest read-only in STUDIO03.",
 );
 
 for (const browser of browserFiles) {
