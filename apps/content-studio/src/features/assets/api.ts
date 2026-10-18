@@ -15,6 +15,14 @@ export type AssetSourceMutationInput = {
   readonly derivativeRequired: boolean;
 };
 
+export type GoogleDriveConnectionStatus = {
+  readonly connected: boolean;
+  readonly accountEmail?: string;
+  readonly accountDisplayName?: string | null;
+  readonly connectedAt?: string;
+  readonly updatedAt?: string;
+};
+
 function operationKey(prefix: string, semanticId: string): string {
   return `${prefix}-${semanticId.replace(/[^a-z0-9]+/gi, "-")}-${crypto.randomUUID()}`.slice(0, 128);
 }
@@ -24,7 +32,7 @@ async function parseError(response: Response): Promise<string> {
     const body = (await response.json()) as { message?: unknown };
     if (typeof body.message === "string") return body.message;
   } catch {
-    // The source-access endpoint can return binary responses.
+    // Source-access responses can be binary.
   }
   return "Studio asset operation failed.";
 }
@@ -48,6 +56,29 @@ async function jsonOperation(
   }
   if (!response.ok) throw new Error(await parseError(response));
   return (await response.json()) as Record<string, unknown>;
+}
+
+export async function getGoogleDriveConnectionStatus(
+  session: StoredStudioAuthSession,
+): Promise<GoogleDriveConnectionStatus> {
+  const result = await jsonOperation(session, { type: "provider.google_drive.status" });
+  return {
+    connected: result.connected === true,
+    accountEmail: typeof result.accountEmail === "string" ? result.accountEmail : undefined,
+    accountDisplayName: typeof result.accountDisplayName === "string" ? result.accountDisplayName : null,
+    connectedAt: typeof result.connectedAt === "string" ? result.connectedAt : undefined,
+    updatedAt: typeof result.updatedAt === "string" ? result.updatedAt : undefined,
+  };
+}
+
+export async function beginGoogleDriveConnection(
+  session: StoredStudioAuthSession,
+): Promise<{ readonly authorizationUrl: string; readonly callbackUrl: string }> {
+  const result = await jsonOperation(session, { type: "provider.google_drive.connect.begin" });
+  if (typeof result.authorizationUrl !== "string" || typeof result.callbackUrl !== "string") {
+    throw new Error("Google Drive connection response is malformed.");
+  }
+  return { authorizationUrl: result.authorizationUrl, callbackUrl: result.callbackUrl };
 }
 
 export async function registerDriveAssetSource(

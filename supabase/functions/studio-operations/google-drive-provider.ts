@@ -1,9 +1,3 @@
-type GoogleServiceAccount = {
-  readonly client_email: string;
-  readonly private_key: string;
-  readonly token_uri?: string;
-};
-
 export type GoogleDriveSourceMetadata = {
   readonly providerKind: "google-drive";
   readonly providerRef: string;
@@ -17,6 +11,22 @@ export type GoogleDriveSourceMetadata = {
   readonly observedAt: string;
 };
 
+export type GoogleDriveOAuthTokens = {
+  readonly accessToken: string;
+  readonly refreshToken: string;
+};
+
+export type GoogleDriveAccount = {
+  readonly email: string;
+  readonly displayName: string | null;
+};
+
+export type GoogleDriveSourceFolders = {
+  readonly rootFolderId: string;
+  readonly productionAssetsFolderId: string;
+  readonly sourceMastersFolderId: string;
+};
+
 export class GoogleDriveProviderError extends Error {
   readonly status: number;
 
@@ -27,99 +37,77 @@ export class GoogleDriveProviderError extends Error {
   }
 }
 
-function bytesToBase64Url(bytes: Uint8Array): string {
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/g, "");
-}
-
-function textToBase64Url(value: string): string {
-  return bytesToBase64Url(new TextEncoder().encode(value));
-}
-
-function pemToPkcs8(pem: string): ArrayBuffer {
-  const normalized = pem.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----|\s+/g, "");
-  let binary: string;
-  try {
-    binary = atob(normalized);
-  } catch {
-    throw new GoogleDriveProviderError("Google Drive service-account private key is invalid.", 503);
-  }
-  const bytes = new Uint8Array(binary.length);
-  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
-  return bytes.buffer;
-}
-
-function serviceAccount(): GoogleServiceAccount {
-  const raw = Deno.env.get("STUDIO_GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON")?.trim();
-  if (!raw) {
+function googleOAuthClient(): { clientId: string; clientSecret: string } {
+  const clientId = Deno.env.get("STUDIO_GOOGLE_OAUTH_CLIENT_ID")?.trim();
+  const clientSecret = Deno.env.get("STUDIO_GOOGLE_OAUTH_CLIENT_SECRET")?.trim();
+  if (!clientId || !clientSecret) {
     throw new GoogleDriveProviderError(
-      "Google Drive source provider is not configured on the Studio operation service.",
+      "Google Drive OAuth is not configured on the Studio operation service.",
       503,
     );
   }
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    throw new GoogleDriveProviderError("Google Drive service-account configuration is invalid.", 503);
-  }
-  if (!parsed || typeof parsed !== "object") {
-    throw new GoogleDriveProviderError("Google Drive service-account configuration is invalid.", 503);
-  }
-  const record = parsed as Record<string, unknown>;
-  if (typeof record.client_email !== "string" || typeof record.private_key !== "string") {
-    throw new GoogleDriveProviderError("Google Drive service-account configuration is incomplete.", 503);
-  }
-  return {
-    client_email: record.client_email,
-    private_key: record.private_key,
-    ...(typeof record.token_uri === "string" ? { token_uri: record.token_uri } : {}),
-  };
+  return { clientId, clientSecret };
 }
 
-async function googleAccessToken(): Promise<string> {
-  const account = serviceAccount();
-  const now = Math.floor(Date.now() / 1000);
-  const tokenUri = account.token_uri ?? "https://oauth2.googleapis.com/token";
-  const header = textToBase64Url(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-  const claims = textToBase64Url(
-    JSON.stringify({
-      iss: account.client_email,
-      scope: "https://www.googleapis.com/auth/drive",
-      aud: tokenUri,
-      iat: now,
-      exp: now + 3600,
-    }),
-  );
-  const signingInput = `${header}.${claims}`;
-  const key = await crypto.subtle.importKey(
-    "pkcs8",
-    pemToPkcs8(account.private_key),
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const signature = new Uint8Array(
-    await crypto.subtle.sign(
-      "RSASSA-PKCS1-v1_5",
-      key,
-      new TextEncoder().encode(signingInput),
-    ),
-  );
-  const assertion = `${signingInput}.${bytesToBase64Url(signature)}`;
-  const response = await fetch(tokenUri, {
+export function googleDriveOAuthAuthorizationUrl(state: string, redirectUri: string): string {
+  const { clientId } = googleOAuthClient();
+  const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  url.searchParams.set("client_id", clientId);
+  url.searchParams.set("redirect_uri", redirectUri);
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set("scope", "https://www.googleapis.com/auth/drive.file");
+  url.searchParams.set("access_type", "offline");
+  url.searchParams.set("include_granted_scopes", "true");
+  url.searchParams.set("prompt", "consent");
+  url.searchParams.set("state", state);
+  return url.toString();
+}
+
+async function tokenResponse(body: URLSearchParams): Promise<Record<string, unknown>> {
+  const response = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion,
-    }),
+    body,
   });
-  const payload = await response.json().catch(() => null) as { access_token?: unknown; error_description?: unknown } | null;
-  if (!response.ok || typeof payload?.access_token !== "string") {
+  const payload = await response.json().catch(() => null) as Record<string, unknown> | null;
+  if (!response.ok || !payload) {
     const detail = typeof payload?.error_description === "string" ? ` ${payload.error_description}` : "";
-    throw new GoogleDriveProviderError(`Google Drive provider authentication failed.${detail}`, 503);
+    throw new GoogleDriveProviderError(`Google Drive OAuth token exchange failed.${detail}`, 503);
+  }
+  return payload;
+}
+
+export async function exchangeGoogleDriveAuthorizationCode(
+  code: string,
+  redirectUri: string,
+): Promise<GoogleDriveOAuthTokens> {
+  const { clientId, clientSecret } = googleOAuthClient();
+  const payload = await tokenResponse(new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    code,
+    grant_type: "authorization_code",
+    redirect_uri: redirectUri,
+  }));
+  if (typeof payload.access_token !== "string" || typeof payload.refresh_token !== "string") {
+    throw new GoogleDriveProviderError(
+      "Google Drive did not return the required offline refresh token. Reconnect and grant consent again.",
+      409,
+    );
+  }
+  return { accessToken: payload.access_token, refreshToken: payload.refresh_token };
+}
+
+export async function refreshGoogleDriveAccessToken(refreshToken: string): Promise<string> {
+  const { clientId, clientSecret } = googleOAuthClient();
+  const payload = await tokenResponse(new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    refresh_token: refreshToken,
+    grant_type: "refresh_token",
+  }));
+  if (typeof payload.access_token !== "string") {
+    throw new GoogleDriveProviderError("Google Drive refresh-token exchange returned no access token.", 503);
   }
   return payload.access_token;
 }
@@ -209,19 +197,77 @@ type DriveFileMetadata = {
 
 const metadataFields = "id,name,mimeType,size,modifiedTime,trashed,imageMediaMetadata(width,height)";
 
-async function driveMetadata(fileId: string, accessToken: string): Promise<DriveFileMetadata> {
-  const response = await fetch(
-    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?fields=${encodeURIComponent(metadataFields)}&supportsAllDrives=true`,
-    { headers: { authorization: `Bearer ${accessToken}` } },
-  );
-  const body = await response.json().catch(() => null) as DriveFileMetadata | { error?: { message?: string } } | null;
-  if (!response.ok) {
-    const message = body && "error" in body && typeof body.error?.message === "string"
-      ? body.error.message
-      : "Google Drive file metadata could not be read.";
+async function driveJson(
+  url: string,
+  accessToken: string,
+  init?: RequestInit,
+): Promise<Record<string, unknown>> {
+  const response = await fetch(url, {
+    ...init,
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+      ...(init?.headers ?? {}),
+    },
+  });
+  const body = await response.json().catch(() => null) as Record<string, unknown> | null;
+  if (!response.ok || !body) {
+    const error = body?.error as { message?: unknown } | undefined;
+    const message = typeof error?.message === "string" ? error.message : "Google Drive request failed.";
     throw new GoogleDriveProviderError(message, response.status === 404 ? 404 : 502);
   }
-  return body as DriveFileMetadata;
+  return body;
+}
+
+export async function readGoogleDriveAccount(accessToken: string): Promise<GoogleDriveAccount> {
+  const body = await driveJson(
+    "https://www.googleapis.com/drive/v3/about?fields=user(emailAddress,displayName)",
+    accessToken,
+  );
+  const user = body.user as Record<string, unknown> | undefined;
+  if (typeof user?.emailAddress !== "string" || !user.emailAddress.trim()) {
+    throw new GoogleDriveProviderError("Connected Google Drive account did not expose an email address.", 502);
+  }
+  return {
+    email: user.emailAddress.trim(),
+    displayName: typeof user.displayName === "string" ? user.displayName : null,
+  };
+}
+
+async function createDriveFolder(
+  name: string,
+  accessToken: string,
+  parentId?: string,
+): Promise<string> {
+  const body = await driveJson(
+    "https://www.googleapis.com/drive/v3/files?fields=id&supportsAllDrives=true",
+    accessToken,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        name,
+        mimeType: "application/vnd.google-apps.folder",
+        ...(parentId ? { parents: [parentId] } : {}),
+        appProperties: { fantasiaContentStudio: "source-master" },
+      }),
+    },
+  );
+  if (typeof body.id !== "string") throw new GoogleDriveProviderError("Google Drive folder creation returned no file ID.");
+  return body.id;
+}
+
+export async function createGoogleDriveSourceFolders(accessToken: string): Promise<GoogleDriveSourceFolders> {
+  const rootFolderId = await createDriveFolder("Fantasia", accessToken);
+  const productionAssetsFolderId = await createDriveFolder("Production Assets", accessToken, rootFolderId);
+  const sourceMastersFolderId = await createDriveFolder("Source Masters", accessToken, productionAssetsFolderId);
+  return { rootFolderId, productionAssetsFolderId, sourceMastersFolderId };
+}
+
+async function driveMetadata(fileId: string, accessToken: string): Promise<DriveFileMetadata> {
+  return await driveJson(
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?fields=${encodeURIComponent(metadataFields)}&supportsAllDrives=true`,
+    accessToken,
+  ) as DriveFileMetadata;
 }
 
 async function driveBytes(fileId: string, accessToken: string): Promise<Uint8Array> {
@@ -287,51 +333,41 @@ async function findDriveUploadByTag(
   const escapedFolder = escapeDriveQueryValue(folderId);
   const escapedTag = escapeDriveQueryValue(tag);
   const query = `'${escapedFolder}' in parents and trashed = false and appProperties has { key='studioOperation' and value='${escapedTag}' }`;
-  const response = await fetch(
+  const body = await driveJson(
     `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=${encodeURIComponent(`files(${metadataFields})`)}&pageSize=2&supportsAllDrives=true&includeItemsFromAllDrives=true`,
-    { headers: { authorization: `Bearer ${accessToken}` } },
+    accessToken,
   );
-  const body = await response.json().catch(() => null) as { files?: unknown } | { error?: { message?: string } } | null;
-  if (!response.ok) {
-    const message = body && "error" in body && typeof body.error?.message === "string"
-      ? body.error.message
-      : "Google Drive idempotency lookup failed.";
-    throw new GoogleDriveProviderError(message);
-  }
-  if (!body || !("files" in body) || !Array.isArray(body.files) || body.files.length === 0) return null;
+  if (!Array.isArray(body.files) || body.files.length === 0) return null;
   if (body.files.length > 1) {
     throw new GoogleDriveProviderError("Google Drive contains duplicate files for one Studio upload operation.", 409);
   }
   return body.files[0] as DriveFileMetadata;
 }
 
-export async function inspectGoogleDriveFile(reference: string): Promise<GoogleDriveSourceMetadata> {
+export async function inspectGoogleDriveFile(
+  reference: string,
+  accessToken: string,
+): Promise<GoogleDriveSourceMetadata> {
   const fileId = parseGoogleDriveFileId(reference);
-  const token = await googleAccessToken();
-  const metadata = await driveMetadata(fileId, token);
-  const bytes = await driveBytes(fileId, token);
+  const metadata = await driveMetadata(fileId, accessToken);
+  const bytes = await driveBytes(fileId, accessToken);
   return sourceMetadata(fileId, metadata, bytes);
 }
 
 export async function uploadGoogleDriveFile(
   file: File,
   studioOperationKey: string,
+  folderId: string,
+  accessToken: string,
 ): Promise<GoogleDriveSourceMetadata> {
   if (file.size < 1) throw new GoogleDriveProviderError("Source file is empty.", 400);
-  const folderId = Deno.env.get("STUDIO_GOOGLE_DRIVE_SOURCE_FOLDER_ID")?.trim();
-  if (!folderId) {
-    throw new GoogleDriveProviderError(
-      "Google Drive source upload folder is not configured on the Studio operation service.",
-      503,
-    );
-  }
-  const token = await googleAccessToken();
+  if (!folderId.trim()) throw new GoogleDriveProviderError("Google Drive source folder is not configured.", 503);
   const bytes = new Uint8Array(await file.arrayBuffer());
   const incomingChecksum = await sha256Hex(bytes);
   const tag = await requestTag(studioOperationKey);
-  const existing = await findDriveUploadByTag(folderId, tag, token);
+  const existing = await findDriveUploadByTag(folderId, tag, accessToken);
   if (existing && typeof existing.id === "string") {
-    const existingBytes = await driveBytes(existing.id, token);
+    const existingBytes = await driveBytes(existing.id, accessToken);
     const existingSource = await sourceMetadata(existing.id, existing, existingBytes);
     if (
       existingSource.sourceName !== file.name ||
@@ -367,7 +403,7 @@ export async function uploadGoogleDriveFile(
     {
       method: "POST",
       headers: {
-        authorization: `Bearer ${token}`,
+        authorization: `Bearer ${accessToken}`,
         "content-type": `multipart/related; boundary=${boundary}`,
       },
       body,
@@ -390,9 +426,9 @@ export async function uploadGoogleDriveFile(
 
 export async function readGoogleDriveSource(
   providerRef: string,
+  accessToken: string,
 ): Promise<{ readonly metadata: DriveFileMetadata; readonly bytes: Uint8Array }> {
-  const token = await googleAccessToken();
-  const metadata = await driveMetadata(providerRef, token);
-  const bytes = await driveBytes(providerRef, token);
+  const metadata = await driveMetadata(providerRef, accessToken);
+  const bytes = await driveBytes(providerRef, accessToken);
   return { metadata, bytes };
 }

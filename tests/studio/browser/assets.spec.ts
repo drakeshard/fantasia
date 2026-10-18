@@ -155,6 +155,14 @@ async function mockStudio(page: Page, role: "Viewer" | "Editor") {
       });
       return;
     }
+    if (request.type === "provider.google_drive.status") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ connected: true, accountEmail: "owner@example.test" }),
+      });
+      return;
+    }
     await route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -174,35 +182,33 @@ async function signIn(page: Page, role: "Viewer" | "Editor") {
 test("Viewer sees production Assets with retained history and no mutation access", async ({ page }) => {
   await signIn(page, "Viewer");
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
+  await expect(page.getByText("Google Drive · Connected as owner@example.test", { exact: true })).toBeVisible();
   await expect(page.getByText(asset.semanticId, { exact: true }).first()).toBeVisible();
   await expect(page.getByText("v2").first()).toBeVisible();
   await expect(page.getByText("v1").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Create new source version" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Upload new version" })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Make current" })).toBeDisabled();
   await expect(page.getByText("Read-only Assets workspace", { exact: true })).toBeVisible();
 });
 
-test("Editor registers an existing Drive source without sending provider credentials", async ({ page }) => {
+test("Editor uploads a source/master without provider plumbing in the form", async ({ page }) => {
   await signIn(page, "Editor");
-  await page.getByLabel("Existing Google Drive file").fill("https://drive.google.com/file/d/abcdefghijklmnopqrstuvwxyz123456/view");
-  const operation = page.waitForRequest((request) => {
-    if (!request.url().includes("/functions/v1/studio-operations")) return false;
-    try {
-      return request.postDataJSON()?.type === "registry.asset_source.register";
-    } catch {
-      return false;
-    }
+  await expect(page.getByLabel("Existing Google Drive file")).toHaveCount(0);
+  await expect(page.getByLabel("Semantic asset ID")).toHaveCount(0);
+  await page.locator("#asset-source-file").setInputFiles({
+    name: "portrait.png",
+    mimeType: "image/png",
+    buffer: Buffer.from("source-master"),
   });
-  await page.getByRole("button", { name: "Create new source version" }).click();
+  const operation = page.waitForRequest((request) =>
+    request.url().includes("/functions/v1/studio-operations") &&
+    (request.headers()["content-type"] ?? "").includes("multipart/form-data"),
+  );
+  await page.getByRole("button", { name: "Upload new version" }).click();
   const request = await operation;
-  const body = request.postDataJSON() as {
-    payload: Record<string, unknown>;
-  };
-  expect(body.payload.ownerSemanticId).toBe(owner.semanticId);
-  expect(body.payload.assetSemanticId).toBe(asset.semanticId);
-  expect(body.payload.driveFileReference).toContain("drive.google.com/file/d/");
-  expect(JSON.stringify(body)).not.toContain("service_account");
-  expect(JSON.stringify(body)).not.toContain("private_key");
+  expect(request.postData()).toContain(asset.semanticId);
+  expect(request.postData()).not.toContain("service_account");
+  expect(request.postData()).not.toContain("private_key");
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
 });
 
