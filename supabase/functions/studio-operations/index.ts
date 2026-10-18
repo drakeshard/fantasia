@@ -16,10 +16,10 @@ import {
 } from "./contract.ts";
 import { registryOnlyReadModels } from "./missing-canonical.ts";
 import {
-  loadGitSnapshot,
   normalizeCanonicalModels,
   normalizeRuntimeManifest,
 } from "./read-model-adapters.ts";
+import { loadRepositorySnapshot } from "./repository-snapshot.ts";
 
 const corsHeaders = {
   "access-control-allow-origin": "*",
@@ -131,11 +131,11 @@ async function readModels(
   secretKey: string,
   query: StudioSearchQuery & { readonly semanticId?: string },
 ): Promise<unknown> {
-  const [sessionValue, registryValue, gitSnapshot] = await Promise.all([
+  const [sessionValue, registryValue] = await Promise.all([
     callRpc(supabaseUrl, secretKey, "get_studio_session", { p_user_id: userId }),
     callRpc(supabaseUrl, secretKey, "get_studio_registry_read_snapshot", { p_user_id: userId }),
-    loadGitSnapshot(),
   ]);
+  const gitSnapshot = loadRepositorySnapshot();
   const session = asSession(sessionValue);
   if (!session.authorized || !session.role || !session.capabilities.includes("studio.read")) {
     throw new StudioOperationContractError("Studio membership required.", 403);
@@ -170,6 +170,7 @@ async function readModels(
     revision: gitSnapshot.revision,
     freshness: {
       gitRevision: gitSnapshot.revision,
+      gitState: "deployment-snapshot",
       registryObservedAt: registry.observedAt,
       providerState: "registry-observed-no-live-provider-fetch",
     },
