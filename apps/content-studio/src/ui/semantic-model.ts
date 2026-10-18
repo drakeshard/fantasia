@@ -179,7 +179,9 @@ export function lifecycleIndex(state: LifecycleState) {
   return lifecycleOrder.indexOf(state);
 }
 
-export function lifecycleStateFromRegistry(value: string | null | undefined): LifecycleState | null {
+export function lifecycleStateFromRegistry(
+  value: string | null | undefined,
+): LifecycleState | null {
   if (!value) return null;
   const normalized = value.trim().toLowerCase().replaceAll("_", "-").replaceAll(" ", "-");
   return lifecycleOrder.includes(normalized as LifecycleState)
