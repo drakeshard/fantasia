@@ -5,20 +5,20 @@
 .studio-assets-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--studio-space-2);
-  margin-block: var(--studio-space-3);
+  gap: var(--studio-space-8);
+  margin-block: var(--studio-space-12);
 }
 
 .studio-assets-operations-grid {
   display: grid;
-  gap: var(--studio-space-4);
-  margin-top: var(--studio-space-4);
+  gap: var(--studio-space-16);
+  margin-top: var(--studio-space-16);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
 }
 
 .studio-assets-operation {
   display: grid;
-  gap: var(--studio-space-3);
+  gap: var(--studio-space-12);
   align-content: start;
 }
 
@@ -26,7 +26,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--studio-space-3);
+  gap: var(--studio-space-12);
 }
 
 .studio-assets-operation__heading > div {
@@ -37,7 +37,7 @@
 .studio-assets-operation__heading span,
 .studio-assets-operation__heading small {
   color: var(--studio-text-muted);
-  font-size: 0.78rem;
+  font-size: var(--studio-font-size-meta);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -49,24 +49,24 @@
 .studio-assets-form-grid,
 .studio-assets-source-choice {
   display: grid;
-  gap: var(--studio-space-3);
+  gap: var(--studio-space-12);
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .studio-assets-file-input {
-  min-height: 44px;
+  min-height: var(--studio-target-min);
   padding-block: 0.55rem;
 }
 
 .studio-assets-operation__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--studio-space-2);
+  gap: var(--studio-space-8);
 }
 
 .studio-assets-version-actions {
   display: grid;
-  gap: var(--studio-space-2);
+  gap: var(--studio-space-8);
 }
 
 .studio-assets-version-action,
@@ -74,12 +74,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--studio-space-3);
+  gap: var(--studio-space-12);
   min-width: 0;
-  padding: var(--studio-space-2);
+  padding: var(--studio-space-8);
   border: 1px solid var(--studio-border-subtle);
-  border-radius: var(--studio-radius-md);
-  background: var(--studio-surface-inset);
+  border-radius: var(--studio-radius-panel);
+  background: var(--studio-material-inset);
 }
 
 .studio-assets-version-action > div:first-child {
@@ -92,7 +92,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--studio-space-1);
+  gap: var(--studio-space-4);
 }
 
 .studio-assets-version-action small {
