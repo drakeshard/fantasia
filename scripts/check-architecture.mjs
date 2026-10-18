@@ -34,6 +34,11 @@ const rules = [
     forbidden: [/from\s+["'](?:phaser|playcanvas|pixi\.js)["']/],
     message: "runtime must not own a production renderer implementation",
   },
+  {
+    dir: join(root, "apps/content-studio/src/ui"),
+    forbidden: [/from\s+["'][^"']*features\//],
+    message: "shared Content Studio UI must not import production feature modules",
+  },
 ];
 
 let failed = false;

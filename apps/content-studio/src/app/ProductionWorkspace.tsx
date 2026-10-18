@@ -1,5 +1,6 @@
 import type { JSX } from "preact";
 import type { StudioReadModelsResponse } from "../dashboard-model";
+import { ProductionAssets } from "../features/assets";
 import { ProductionCharacters } from "../features/characters";
 import { ProductionDashboard } from "../production-dashboard";
 import type { StoredStudioAuthSession } from "../studio-session";
@@ -59,6 +60,7 @@ export function ProductionWorkspace({
   auth,
   isReadOnly,
   canProposeCanonical,
+  onRefreshReadModels,
   navigate,
 }: {
   activeModule: StudioModuleId;
@@ -67,6 +69,7 @@ export function ProductionWorkspace({
   auth: StoredStudioAuthSession;
   isReadOnly: boolean;
   canProposeCanonical: boolean;
+  onRefreshReadModels: () => Promise<void>;
   navigate: (module: StudioModuleId, semanticId?: string | null) => void;
 }) {
   if (activeModule === "dashboard") {
@@ -83,6 +86,18 @@ export function ProductionWorkspace({
         canPropose={canProposeCanonical}
         semanticId={activeSemanticId}
         onSemanticIdChange={(semanticId) => navigate("characters", semanticId)}
+      />
+    ));
+  }
+
+  if (activeModule === "assets") {
+    return withReadModel(readModels, "Assets", (response) => (
+      <ProductionAssets
+        response={response}
+        auth={auth}
+        readOnly={isReadOnly}
+        semanticId={activeSemanticId}
+        onRefresh={onRefreshReadModels}
       />
     ));
   }

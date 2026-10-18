@@ -4,10 +4,12 @@ import "./styles/base.css";
 import "./ui/primitives.css";
 import "./ui/semantic.css";
 import "./ui/workspace.css";
+import "./ui/entity-asset.css";
 import "./styles/material-fidelity.css";
 import "./styles/studio-auth.css";
 import "./styles/production-dashboard.css";
 import "./styles/production-characters.css";
+import "./styles/production-assets.css";
 import { ProductionStudio } from "./app/ProductionStudio";
 
 const labMode = new URLSearchParams(window.location.search).get("lab") === "1";

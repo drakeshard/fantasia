@@ -18,7 +18,7 @@ export function AuthorizedStudio({
   const [activeSemanticId, setActiveSemanticId] = useState<string | null>(initialRoute.semanticId);
   const [collapsed, setCollapsed] = useState(false);
   const { authorization, auth } = state;
-  const readModels = useStudioReadModels(auth);
+  const { state: readModels, refresh: refreshReadModels } = useStudioReadModels(auth);
   const isReadOnly = !authorization.capabilities.includes("registry.metadata.edit");
   const canProposeCanonical = authorization.capabilities.includes("canonical.change.propose");
 
@@ -75,6 +75,7 @@ export function AuthorizedStudio({
           auth={auth}
           isReadOnly={isReadOnly}
           canProposeCanonical={canProposeCanonical}
+          onRefreshReadModels={refreshReadModels}
           navigate={navigate}
         />
       </StudioShell>

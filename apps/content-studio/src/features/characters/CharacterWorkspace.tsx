@@ -1,7 +1,8 @@
 import { useState } from "preact/hooks";
 import type { StoredStudioAuthSession } from "../../studio-session";
-import { Button, Chip } from "../../ui/primitives";
-import { EntityWorkspaceTemplate, TemplateFixtureHeading } from "../../ui/workspace";
+import { EntityWorkspaceHeading } from "../../ui/entity-evidence";
+import { Button } from "../../ui/primitives";
+import { EntityWorkspaceTemplate } from "../../ui/workspace";
 import type { CharacterReadModel } from "./model";
 import {
   CharacterAssetsPanel,
@@ -63,10 +64,12 @@ export function CharacterWorkspace({
   return (
     <EntityWorkspaceTemplate
       header={
-        <TemplateFixtureHeading
+        <EntityWorkspaceHeading
           title={model.displayName}
-          description={`${model.semanticId} · Git canonical character definition`}
-          status={<Chip>{model.lifecycle ?? "registry unregistered"}</Chip>}
+          entityType="Character"
+          semanticId={model.semanticId}
+          canonicalPath={model.canonical.canonicalPath}
+          lifecycle={model.lifecycle}
         />
       }
       toolbar={

@@ -1,8 +1,10 @@
 import type { StoredStudioAuthSession } from "../../studio-session";
+import { AssetBoard } from "../../ui/asset-board";
 import {
-  AssetEvidence,
   EmptyEvidence,
+  EntityAuthoritySummary,
   EntityFact,
+  EntityFactGroup,
   HistoryEvidence,
   RelationEvidence,
   ValidationEvidence,
@@ -32,21 +34,20 @@ export function CharacterOverviewPanel({
 
   return (
     <div class="studio-character-grid">
-      <Surface kind="inset">
-        <h4>Canonical identity</h4>
+      <EntityFactGroup title="Canonical identity">
         <EntityFact label="Display name" value={data.displayName} />
         <EntityFact label="Actor ID" value={data.actorId} />
         <EntityFact label="Tactical entity" value={data.tacticalEntityId} />
         <EntityFact label="Side" value={data.side} />
         <EntityFact label="Short label" value={data.shortLabel} />
-      </Surface>
-      <Surface kind="inset">
-        <h4>Authority</h4>
-        <EntityFact label="Canonical path" value={model.canonical.canonicalPath} />
-        <EntityFact label="Git revision" value={model.canonical.provenance.revision ?? revision} />
-        <EntityFact label="Registry lifecycle" value={model.lifecycle ?? "Not registered"} />
-        <EntityFact label="Registry schema" value={model.schemaVersion ?? "Not registered"} />
-      </Surface>
+      </EntityFactGroup>
+      <EntityAuthoritySummary
+        canonicalPath={model.canonical.canonicalPath}
+        revision={model.canonical.provenance.revision ?? revision}
+        lifecycle={model.lifecycle}
+        schemaVersion={model.schemaVersion}
+        provenance={model.provenance}
+      />
       <Surface kind="inset" className="studio-character-editor">
         <h4>Supported canonical edit</h4>
         <p>
@@ -93,20 +94,18 @@ export function CharacterGameplayPanel({ model }: { model: CharacterReadModel })
   const { canonical: data, rpg, attributes, hp } = characterDomainData(model);
   return (
     <div class="studio-character-grid">
-      <Surface kind="inset">
-        <h4>Encounter definition</h4>
+      <EntityFactGroup title="Encounter definition">
         <EntityFact label="Movement allowance" value={data.movementAllowance} />
         <EntityFact label="Initial coordinate" value={data.initialCoord} />
         <EntityFact label="Classes" value={rpg.classes} />
         <EntityFact label="Initial class" value={rpg.initialClass} />
         <EntityFact label="HP" value={hp} />
-      </Surface>
-      <Surface kind="inset">
-        <h4>RPG attributes</h4>
+      </EntityFactGroup>
+      <EntityFactGroup title="RPG attributes">
         {Object.entries(attributes).map(([key, value]) => (
           <EntityFact label={key} value={value} key={key} />
         ))}
-      </Surface>
+      </EntityFactGroup>
     </div>
   );
 }
@@ -128,7 +127,7 @@ export function CharacterEquipmentPanel() {
 }
 
 export function CharacterAssetsPanel({ model }: { model: CharacterReadModel }) {
-  return <AssetEvidence assets={model.assets} />;
+  return <AssetBoard assets={model.assets} readOnly />;
 }
 
 export function CharacterStoryPanel() {
@@ -141,7 +140,7 @@ export function CharacterStoryPanel() {
 }
 
 export function CharacterRelationsPanel({ model }: { model: CharacterReadModel }) {
-  return <RelationEvidence relations={model.relations} />;
+  return <RelationEvidence sourceSemanticId={model.semanticId} relations={model.relations} />;
 }
 
 export function CharacterValidationPanel({ model }: { model: CharacterReadModel }) {

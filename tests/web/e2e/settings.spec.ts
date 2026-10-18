@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { UI_PREFERENCES_STORAGE_KEY } from "../../apps/web/src/preferences.ts";
+import { UI_PREFERENCES_STORAGE_KEY } from "../../../apps/web/src/preferences.ts";
 
 test("D08 settings persist UI preferences and restore modal focus", async ({ page }, testInfo) => {
   await page.goto("/");
