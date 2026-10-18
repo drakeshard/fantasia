@@ -51,13 +51,17 @@ requireCondition(
   "Content Studio deployment must use the standardized Fantasia bootstrap action.",
 );
 requireCondition(
-  bootstrap.includes("pnpm install --frozen-lockfile"),
-  "Fantasia bootstrap must use the committed frozen lockfile.",
+  workflow.includes('prepare-shared: "false"'),
+  "Content Studio deployment must explicitly skip RPG/Tactical artifact preparation.",
 );
 requireCondition(
-  bootstrap.includes("node scripts/prepare-shared-packages.mjs") &&
-    bootstrap.includes("node scripts/verify-shared-packages.mjs"),
-  "Fantasia bootstrap must preserve shared-package preparation and provenance verification.",
+  bootstrap.includes("prepare-shared:") &&
+    bootstrap.includes("if: inputs.prepare-shared == 'true'"),
+  "Fantasia bootstrap must make shared-package preparation opt-in by execution path.",
+);
+requireCondition(
+  bootstrap.includes("pnpm install --filter @fantasia/workspace --filter @fantasia/content-studio --frozen-lockfile"),
+  "Fantasia bootstrap must provide a frozen Content Studio-only install path.",
 );
 requireCondition(
   bootstrap.includes("test -f pnpm-lock.yaml"),
