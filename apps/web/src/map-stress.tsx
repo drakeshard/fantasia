@@ -10,10 +10,7 @@ import {
   STRESS_MAP_WIDTH,
   type StressMapCell,
 } from "./map-stress-data.js";
-import {
-  StressMapRenderer,
-  type StressMapRendererOptions,
-} from "./map-stress-renderer.js";
+import { StressMapRenderer, type StressMapRendererOptions } from "./map-stress-renderer.js";
 
 type ReviewMode = "battlefield" | "blueprint";
 
@@ -72,7 +69,8 @@ function BattlefieldStressReview({
     <div class="map-review-battlefield-wrap">
       <div class="map-review-battlefield" ref={hostRef} data-testid="stress-map-2p5d-host" />
       <div class="map-review-camera-note" aria-hidden="true">
-        600-cell renderer stress · drag to pan · wheel/controls to zoom · rotate to inspect occlusion
+        600-cell renderer stress · drag to pan · wheel/controls to zoom · rotate to inspect
+        occlusion
       </div>
     </div>
   );
@@ -211,13 +209,25 @@ export function MapStressApp() {
         {mode === "battlefield" ? (
           <fieldset class="map-review-camera-controls">
             <legend class="map-review-mode-legend">Stress map camera controls</legend>
-            <button type="button" aria-label="Rotate left" onClick={() => cameraRef.current?.rotateLeft()}>
+            <button
+              type="button"
+              aria-label="Rotate left"
+              onClick={() => cameraRef.current?.rotateLeft()}
+            >
               ↺
             </button>
-            <button type="button" aria-label="Rotate right" onClick={() => cameraRef.current?.rotateRight()}>
+            <button
+              type="button"
+              aria-label="Rotate right"
+              onClick={() => cameraRef.current?.rotateRight()}
+            >
               ↻
             </button>
-            <button type="button" aria-label="Zoom out" onClick={() => cameraRef.current?.zoomOut()}>
+            <button
+              type="button"
+              aria-label="Zoom out"
+              onClick={() => cameraRef.current?.zoomOut()}
+            >
               −
             </button>
             <button type="button" aria-label="Zoom in" onClick={() => cameraRef.current?.zoomIn()}>
@@ -248,12 +258,15 @@ export function MapStressApp() {
               ({selectedData.x}, {selectedData.y})
             </h2>
             <p class="map-review-selected-label" data-testid="stress-selected-elevation">
-              Elevation {selectedData.elevation >= 0 ? "+" : ""}{selectedData.elevation}
+              Elevation {selectedData.elevation >= 0 ? "+" : ""}
+              {selectedData.elevation}
             </p>
             <ul>
               <li>{selectedData.terrain}</li>
               <li>{selectedData.blocked ? "Blocked" : "Passable"}</li>
-              <li>Absolute vertical offset: {selectedData.elevation * 24}px at native projection scale</li>
+              <li>
+                Absolute vertical offset: {selectedData.elevation * 24}px at native projection scale
+              </li>
             </ul>
           </section>
 
@@ -282,7 +295,8 @@ export function MapStressApp() {
             <h2>Stress envelope</h2>
             <p>30×20 = {STRESS_MAP_CELLS.length} logical cells.</p>
             <p>
-              Elevation range {STRESS_MAP_MIN_ELEVATION}…+{STRESS_MAP_MAX_ELEVATION}; projected vertical span is 336px before tile geometry.
+              Elevation range {STRESS_MAP_MIN_ELEVATION}…+{STRESS_MAP_MAX_ELEVATION}; projected
+              vertical span is 336px before tile geometry.
             </p>
             <p data-testid="stress-min-sentinel">
               −7 sentinel: ({STRESS_MAP_MIN_SENTINEL.x}, {STRESS_MAP_MIN_SENTINEL.y})
@@ -293,7 +307,8 @@ export function MapStressApp() {
           </section>
 
           <footer class="map-review-footer">
-            Developer-only renderer/projection fixture. It is not encounter content, is not GAME-D222 compliant, and does not alter CH01-B01 or production routing.
+            Developer-only renderer/projection fixture. It is not encounter content, is not
+            GAME-D222 compliant, and does not alter CH01-B01 or production routing.
           </footer>
         </aside>
       ) : null}
