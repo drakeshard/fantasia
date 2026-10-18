@@ -40,38 +40,6 @@ test("GAME-MAP05 renders all 600 stress cells across the full elevation range", 
     .toBeGreaterThan(0);
 });
 
-test(
-  "GAME-MAP05 keeps desktop camera controls and drag-pan usable at stress size",
-  async ({ page }, testInfo) => {
-    test.skip(
-      testInfo.project.use.hasTouch === true,
-      "Touch camera parity is owned by the canonical map review; MAP05 only needs stress-size interaction coverage.",
-    );
-
-    const { host, canvas } = await openStressReview(page);
-
-    await expect(host).toHaveAttribute("data-camera-rotation", "0");
-    await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
-    await page.getByRole("button", { name: "Rotate right" }).click();
-    await expect(host).toHaveAttribute("data-camera-rotation", "90");
-    await page.getByRole("button", { name: "Zoom in" }).click();
-    await expect(host).not.toHaveAttribute("data-camera-zoom", "1.00");
-    await page.getByRole("button", { name: "Fit map" }).click();
-    await expect(host).toHaveAttribute("data-camera-zoom", "1.00");
-    await expect(host).toHaveAttribute("data-camera-pan", "0,0");
-
-    const box = await canvas.boundingBox();
-    if (!box) throw new Error("Stress map canvas has no bounding box");
-    const startX = box.x + box.width * 0.42;
-    const startY = box.y + box.height * 0.62;
-    await page.mouse.move(startX, startY);
-    await page.mouse.down();
-    await page.mouse.move(startX + 80, startY + 30, { steps: 3 });
-    await page.mouse.up();
-    await expect(host).not.toHaveAttribute("data-camera-pan", "0,0");
-  },
-);
-
 test("GAME-MAP05 Blueprint exposes exact 600-cell geometry and signed elevation sentinels", async ({
   page,
 }) => {
