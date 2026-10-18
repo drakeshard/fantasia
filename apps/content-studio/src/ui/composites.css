@@ -1,0 +1,82 @@
+/*
+ * Shared Content Studio composite presentation.
+ * Repeated shell/workspace compositions live here; feature styles may not reach
+ * into these classes.
+ */
+
+.studio-production-root .studio-shell__fixture-note { display: none; }
+
+.studio-shell,
+.studio-workspace-header,
+.studio-template__toolbar,
+.studio-template__inspector,
+.studio-template-state,
+.studio-template-fixture-heading {
+  border-color: var(--studio-border-luminous-subtle);
+  background: var(--studio-surface-panel-bg);
+  box-shadow: var(--studio-shadow-panel), var(--studio-highlight-inset);
+}
+
+.studio-shell__sidebar {
+  background: var(--studio-surface-inset-bg);
+}
+
+.studio-shell__topbar {
+  background: var(--studio-toolbar-bg);
+  box-shadow: var(--studio-highlight-inset);
+}
+
+.studio-shell__nav-item:focus-visible,
+.studio-template__inspector-toggle button:focus-visible {
+  outline: 2px solid var(--studio-focus-ring);
+  outline-offset: 2px;
+  box-shadow: var(--studio-shadow-focus);
+}
+
+.studio-shell__nav-item[aria-current="page"] {
+  border-color: color-mix(in srgb, var(--studio-accent-primary) 58%, var(--studio-border-subtle));
+  background: var(--studio-selected-bg);
+}
+
+.studio-workspace-header,
+.studio-template-fixture-heading {
+  position: relative;
+  overflow: hidden;
+}
+
+.studio-workspace-header::before,
+.studio-template-fixture-heading::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(22rem, 42%);
+  height: 1px;
+  background: linear-gradient(90deg, var(--studio-accent-primary), var(--studio-accent-navigation), transparent);
+  content: "";
+}
+
+.studio-workspace-header__identity h3,
+.studio-template-fixture-heading h3 {
+  color: var(--studio-text-primary);
+  font-family: var(--studio-font-serif);
+}
+
+.studio-template__toolbar {
+  background: var(--studio-toolbar-bg);
+}
+
+.studio-template__inspector,
+.studio-template-state {
+  background: var(--studio-surface-inset-bg);
+}
+
+.studio-collection__filters {
+  padding: var(--studio-space-12);
+  border: 1px solid var(--studio-border-luminous-subtle);
+  border-radius: var(--studio-radius-panel);
+  background: var(--studio-surface-inset-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-shell__nav-item { transition: none; }
+}
