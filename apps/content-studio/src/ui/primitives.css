@@ -44,10 +44,7 @@
   border-color: var(--studio-button-primary-border);
   background: var(--studio-button-primary-bg);
   color: var(--studio-text-on-accent);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    inset 0 -1px 0 rgb(78 50 13 / 36%),
-    0 0 18px color-mix(in srgb, var(--studio-accent-primary) 13%, transparent);
+  box-shadow: var(--studio-button-primary-shadow);
 }
 
 .ui-button--quiet {
@@ -113,9 +110,7 @@
   border-radius: var(--studio-radius-control);
   outline: none;
   background: var(--studio-control-bg);
-  box-shadow:
-    inset 0 2px 7px rgb(0 0 0 / 26%),
-    inset 0 1px 0 rgb(255 255 255 / 3%);
+  box-shadow: var(--studio-control-shadow);
   color: var(--studio-text-primary);
   font: inherit;
   transition:
@@ -138,7 +133,7 @@
 }
 
 .ui-control[aria-invalid="true"] {
-  border-color: var(--studio-color-red-300);
+  border-color: var(--studio-validation-blocking);
 }
 
 .ui-control--textarea {
@@ -157,7 +152,7 @@
 }
 
 .ui-field__message--error {
-  color: var(--studio-color-red-300);
+  color: var(--studio-validation-blocking);
 }
 
 .ui-checkbox {
@@ -279,7 +274,7 @@
 .ui-surface--inset {
   padding: var(--studio-space-16);
   background: var(--studio-surface-inset-bg);
-  box-shadow: inset 0 1px 6px rgb(0 0 0 / 25%);
+  box-shadow: var(--studio-surface-inset-shadow);
 }
 
 .ui-divider {
@@ -407,7 +402,7 @@
   border: 2px solid color-mix(in srgb, currentColor 28%, transparent);
   border-top-color: currentColor;
   border-radius: var(--studio-radius-round);
-  animation: studio-spin 700ms linear infinite;
+  animation: studio-spin var(--studio-motion-spinner) linear infinite;
 }
 
 .ui-spinner--small .ui-spinner__mark {
@@ -451,8 +446,8 @@
 
 .ui-state-message strong { color: var(--studio-text-primary); }
 .ui-state-message--unavailable { border-style: dashed; color: var(--studio-text-muted); }
-.ui-state-message--error { border-color: var(--studio-color-red-300); }
-.ui-state-message--error strong { color: var(--studio-color-red-300); }
+.ui-state-message--error { border-color: var(--studio-validation-blocking); }
+.ui-state-message--error strong { color: var(--studio-validation-blocking); }
 .ui-state-message__action { margin-top: var(--studio-space-4); }
 
 .ui-dialog {
@@ -468,7 +463,7 @@
 }
 
 .ui-dialog::backdrop {
-  background: color-mix(in srgb, var(--studio-color-midnight-950) 78%, transparent);
+  background: var(--studio-dialog-backdrop);
   backdrop-filter: blur(2px);
 }
 
@@ -540,7 +535,7 @@
   }
 
   .ui-button:not(:disabled):active { transform: none; }
-  .ui-spinner__mark { animation-duration: 1400ms; }
+  .ui-spinner__mark { animation: none; }
 }
 
 @media (max-width: 48rem) {
