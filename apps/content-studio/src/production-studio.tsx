@@ -136,6 +136,7 @@ function AuthorizedStudio({
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
         onModuleSelect={setActiveModule}
+        showFixtureNote={false}
         searchSlot={
           <TextField
             id="production-studio-search"
