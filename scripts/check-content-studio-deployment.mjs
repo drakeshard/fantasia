@@ -60,7 +60,9 @@ requireCondition(
   "Fantasia bootstrap must make shared-package preparation opt-in by execution path.",
 );
 requireCondition(
-  bootstrap.includes("pnpm install --filter @fantasia/workspace --filter @fantasia/content-studio --frozen-lockfile"),
+  bootstrap.includes(
+    "pnpm install --filter @fantasia/workspace --filter @fantasia/content-studio --frozen-lockfile",
+  ),
   "Fantasia bootstrap must provide a frozen Content Studio-only install path.",
 );
 requireCondition(
