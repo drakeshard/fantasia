@@ -49,9 +49,7 @@ function tilePoints(point: ScreenPoint): number[] {
 }
 
 const blocked = new Set(layout.terrain.blockedCells.map(key));
-const elevations = new Map(
-  layout.terrain.elevationCells.map((cell) => [key(cell), cell.level]),
-);
+const elevations = new Map(layout.terrain.elevationCells.map((cell) => [key(cell), cell.level]));
 const routeAnchors = new Set(layout.cart.routeAnchors.map(key));
 const exitZone = new Set(layout.cart.exitZone.map(key));
 const road = new Set(
@@ -124,9 +122,7 @@ function drawTree(world: Container, point: ScreenPoint, seed: number): void {
   const trunkX = point.x + ((seed % 3) - 1) * 5;
   const trunkY = point.y - 12 - (seed % 2) * 4;
   world.addChild(
-    new Graphics()
-      .ellipse(trunkX, point.y + 1, 17, 6)
-      .fill({ color: 0x0a100c, alpha: 0.3 }),
+    new Graphics().ellipse(trunkX, point.y + 1, 17, 6).fill({ color: 0x0a100c, alpha: 0.3 }),
     new Graphics().rect(trunkX - 3, trunkY - 2, 6, 18).fill(0x5a4530),
     new Graphics()
       .circle(trunkX - 5, trunkY - 10, 14)
@@ -202,9 +198,7 @@ function drawUnitMarker(
   text.anchor.set(0.5);
   text.position.set(point.x, point.y - 23);
   world.addChild(
-    new Graphics()
-      .ellipse(point.x, point.y - 2, 16, 5)
-      .fill({ color: 0x070b08, alpha: 0.42 }),
+    new Graphics().ellipse(point.x, point.y - 2, 16, 5).fill({ color: 0x070b08, alpha: 0.42 }),
     body,
     text,
   );
@@ -212,9 +206,7 @@ function drawUnitMarker(
 
 function drawCart(world: Container, point: ScreenPoint): void {
   world.addChild(
-    new Graphics()
-      .ellipse(point.x + 19, point.y + 1, 36, 8)
-      .fill({ color: 0x080b08, alpha: 0.35 }),
+    new Graphics().ellipse(point.x + 19, point.y + 1, 36, 8).fill({ color: 0x080b08, alpha: 0.35 }),
     new Graphics()
       .poly([
         point.x - 13,
@@ -267,10 +259,7 @@ export class MapReviewRenderer {
       resolution: Math.min(window.devicePixelRatio || 1, 2),
     });
     this.#app.canvas.dataset.testid = "b01-map-2p5d-canvas";
-    this.#app.canvas.setAttribute(
-      "aria-label",
-      "CH01-B01 fixed 2.5D candidate battlefield review",
-    );
+    this.#app.canvas.setAttribute("aria-label", "CH01-B01 fixed 2.5D candidate battlefield review");
     this.#host.replaceChildren(this.#app.canvas);
     this.#ready = true;
     this.#resizeObserver = new ResizeObserver(() => this.#resize());
@@ -301,7 +290,9 @@ export class MapReviewRenderer {
   }
 
   #draw(): void {
-    this.#app.stage.removeChildren().forEach((child) => child.destroy({ children: true }));
+    this.#app.stage.removeChildren().forEach((child) => {
+      child.destroy({ children: true });
+    });
     const cells: Array<{ cell: MapReviewCell; elevation: number; point: ScreenPoint }> = [];
     for (let y = layout.bounds.minY; y <= layout.bounds.maxY; y += 1) {
       for (let x = layout.bounds.minX; x <= layout.bounds.maxX; x += 1) {
@@ -311,10 +302,7 @@ export class MapReviewRenderer {
       }
     }
 
-    const xs = cells.flatMap(({ point }) => [
-      point.x - TILE_WIDTH / 2,
-      point.x + TILE_WIDTH / 2,
-    ]);
+    const xs = cells.flatMap(({ point }) => [point.x - TILE_WIDTH / 2, point.x + TILE_WIDTH / 2]);
     const ys = cells.flatMap(({ point }) => [point.y - 90, point.y + TILE_HEIGHT / 2 + 12]);
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
