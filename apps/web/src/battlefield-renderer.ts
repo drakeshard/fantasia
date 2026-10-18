@@ -15,11 +15,21 @@ import {
   terrainVisualForCell,
 } from "./battlefield-presentation.js";
 
+export interface BattlefieldRendererLayoutOptions {
+  readonly minWidth?: number;
+  readonly minHeight?: number;
+  readonly minFitScale?: number;
+  readonly maxFitScale?: number;
+  readonly topOverflow?: number;
+  readonly bottomOverflow?: number;
+}
+
 export interface BattlefieldRendererHostOptions {
   readonly testId: string;
   readonly ariaLabel: string;
   readonly interactiveCamera?: boolean;
   readonly antialias?: boolean;
+  readonly layout?: BattlefieldRendererLayoutOptions;
 }
 
 export interface BattlefieldRendererViewOptions {
@@ -36,26 +46,50 @@ export interface BattlefieldRendererCallbacks {
 
 const PROFILE = FANTASIA_BATTLEFIELD_RENDER_PROFILE;
 const CATALOG = FANTASIA_BATTLEFIELD_VISUAL_CATALOG;
+const DEFAULT_LAYOUT = {
+  minWidth: 320,
+  minHeight: 240,
+  minFitScale: 0.32,
+  maxFitScale: 1.35,
+  topOverflow: 69,
+  bottomOverflow: 12,
+} as const;
 
-function drawBlockedProp(world: Container, point: BattlefieldScreenPoint, cell: BattlefieldRenderCell) {
+function drawBlockedProp(
+  world: Container,
+  point: BattlefieldScreenPoint,
+  cell: BattlefieldRenderCell,
+): void {
   if (!cell.propVisualId) return;
   const fallback = CATALOG.props[cell.propVisualId].fallback;
   if (fallback === "rubble") {
-    world.addChild(
-      new Graphics()
-        .poly([
-          point.x - 18,
-          point.y + 5,
-          point.x - 9,
-          point.y - 8,
-          point.x + 2,
-          point.y - 5,
-          point.x + 7,
-          point.y + 7,
-        ])
-        .fill(0x3c3b33)
-        .stroke({ color: 0x766d58, width: 1 }),
-    );
+    const rubble = new Graphics()
+      .poly([
+        point.x - 18,
+        point.y + 5,
+        point.x - 9,
+        point.y - 8,
+        point.x + 2,
+        point.y - 5,
+        point.x + 7,
+        point.y + 7,
+      ])
+      .fill(0x3c3b33)
+      .stroke({ color: 0x766d58, width: 1 });
+    rubble
+      .poly([
+        point.x + 3,
+        point.y + 8,
+        point.x + 12,
+        point.y - 5,
+        point.x + 22,
+        point.y + 4,
+        point.x + 14,
+        point.y + 11,
+      ])
+      .fill(0x514c3f)
+      .stroke({ color: 0x776d59, width: 1 });
+    world.addChild(rubble);
     return;
   }
 
@@ -67,6 +101,39 @@ function drawBlockedProp(world: Container, point: BattlefieldScreenPoint, cell: 
       .circle(point.x, point.y - 42, 16)
       .fill(0x315037)
       .stroke({ color: 0x182d20, width: 2, alpha: 0.9 }),
+  );
+}
+
+function drawElevation(world: Container, point: BattlefieldScreenPoint, cell: BattlefieldRenderCell): void {
+  if (cell.elevation <= 0) return;
+  const baseY = point.y + cell.elevation * PROFILE.elevationStep;
+  world.addChild(
+    new Graphics()
+      .poly([
+        point.x - PROFILE.tileWidth / 2,
+        point.y,
+        point.x,
+        point.y + PROFILE.tileHeight / 2,
+        point.x,
+        baseY + PROFILE.tileHeight / 2,
+        point.x - PROFILE.tileWidth / 2,
+        baseY,
+      ])
+      .fill(cell.elevation >= 2 ? 0x3e3828 : 0x47402d)
+      .stroke({ color: 0x5b513a, width: 1, alpha: 0.7 }),
+    new Graphics()
+      .poly([
+        point.x + PROFILE.tileWidth / 2,
+        point.y,
+        point.x,
+        point.y + PROFILE.tileHeight / 2,
+        point.x,
+        baseY + PROFILE.tileHeight / 2,
+        point.x + PROFILE.tileWidth / 2,
+        baseY,
+      ])
+      .fill(cell.elevation >= 2 ? 0x332f24 : 0x3a3528)
+      .stroke({ color: 0x514a37, width: 1, alpha: 0.62 }),
   );
 }
 
@@ -165,26 +232,33 @@ export class BattlefieldRenderer {
     const canvas = this.#app.canvas;
     canvas.dataset.testid = this.#hostOptions.testId;
     canvas.setAttribute("aria-label", this.#hostOptions.ariaLabel);
-    canvas.style.touchAction = "none";
     this.#host.replaceChildren(canvas);
+
     if (this.#hostOptions.interactiveCamera) {
+      canvas.style.touchAction = "none";
       canvas.addEventListener("wheel", this.#handleWheel, { passive: false });
       canvas.addEventListener("pointerdown", this.#handlePointerDown);
       canvas.addEventListener("pointermove", this.#handlePointerMove);
       canvas.addEventListener("pointerup", this.#handlePointerUp);
       canvas.addEventListener("pointercancel", this.#handlePointerUp);
     }
+
     this.#resizeObserver = new ResizeObserver(() => this.#resize());
     this.#resizeObserver.observe(this.#host);
     this.#ready = true;
     this.#resize();
   }
 
-  update(frame: BattlefieldRenderFrame, options: BattlefieldRendererViewOptions = this.#viewOptions): void {
+  update(
+    frame: BattlefieldRenderFrame,
+    options: BattlefieldRendererViewOptions = this.#viewOptions,
+  ): void {
     const frameChanged = this.#frame !== frame;
     this.#frame = frame;
     this.#viewOptions = options;
-    if (frameChanged || !this.#compiled) this.#compiled = compileBattlefieldFrame(frame, this.#rotation);
+    if (frameChanged || !this.#compiled) {
+      this.#compiled = compileBattlefieldFrame(frame, this.#rotation);
+    }
     if (this.#ready) this.#draw();
   }
 
@@ -232,6 +306,10 @@ export class BattlefieldRenderer {
     this.#ready = false;
   }
 
+  #layout(): Required<BattlefieldRendererLayoutOptions> {
+    return { ...DEFAULT_LAYOUT, ...this.#hostOptions.layout };
+  }
+
   #recompileForCamera(): void {
     if (!this.#frame) return;
     this.#panX = 0;
@@ -258,7 +336,10 @@ export class BattlefieldRenderer {
 
   readonly #handlePointerMove = (event: PointerEvent): void => {
     if (event.pointerId !== this.#pointerId) return;
-    const distance = Math.hypot(event.clientX - this.#pointerStartX, event.clientY - this.#pointerStartY);
+    const distance = Math.hypot(
+      event.clientX - this.#pointerStartX,
+      event.clientY - this.#pointerStartY,
+    );
     if (!this.#dragged && distance < PROFILE.dragThreshold) return;
     this.#dragged = true;
     this.#panX += event.clientX - this.#lastPointerX;
@@ -283,8 +364,9 @@ export class BattlefieldRenderer {
 
   #resize(): void {
     if (!this.#ready) return;
-    const width = Math.max(320, Math.floor(this.#host.clientWidth));
-    const height = Math.max(240, Math.floor(this.#host.clientHeight));
+    const layout = this.#layout();
+    const width = Math.max(layout.minWidth, Math.floor(this.#host.clientWidth));
+    const height = Math.max(layout.minHeight, Math.floor(this.#host.clientHeight));
     this.#app.renderer.resize(width, height);
     this.#draw();
   }
@@ -312,11 +394,15 @@ export class BattlefieldRenderer {
     if (!compiled || !this.#ready) return;
     this.#app.stage.removeChildren().forEach((child) => child.destroy({ children: true }));
 
+    const layout = this.#layout();
     const xs = compiled.orderedCells.flatMap(({ point }) => [
       point.x - PROFILE.tileWidth / 2,
       point.x + PROFILE.tileWidth / 2,
     ]);
-    const ys = compiled.orderedCells.flatMap(({ point }) => [point.y - 90, point.y + PROFILE.tileHeight / 2 + 12]);
+    const ys = compiled.orderedCells.flatMap(({ point }) => [
+      point.y - PROFILE.tileHeight / 2 - layout.topOverflow,
+      point.y + PROFILE.tileHeight / 2 + layout.bottomOverflow,
+    ]);
     this.#minX = Math.min(...xs);
     const maxX = Math.max(...xs);
     this.#minY = Math.min(...ys);
@@ -324,10 +410,13 @@ export class BattlefieldRenderer {
     this.#contentWidth = maxX - this.#minX + PROFILE.padding * 2;
     this.#contentHeight = maxY - this.#minY + PROFILE.padding * 2;
     this.#fitScale = Math.min(
-      1.35,
+      layout.maxFitScale,
       Math.max(
-        0.32,
-        Math.min(this.#app.screen.width / this.#contentWidth, this.#app.screen.height / this.#contentHeight),
+        layout.minFitScale,
+        Math.min(
+          this.#app.screen.width / this.#contentWidth,
+          this.#app.screen.height / this.#contentHeight,
+        ),
       ),
     );
 
@@ -341,14 +430,15 @@ export class BattlefieldRenderer {
       : undefined;
 
     for (const { cell, point } of compiled.orderedCells) {
+      drawElevation(world, point, cell);
       const visual = terrainVisualForCell(cell.terrainVisualId, cell);
       const tile = new Graphics()
         .poly(squareTilePoints(point))
         .fill({ color: visual.resolvedFill, alpha: cell.blocked ? 0.94 : 1 })
         .stroke({
           color: cell.path ? 0xd3aa58 : cell.reachable ? 0x8da982 : visual.border,
-          width: cell.path ? 2.2 : cell.reachable ? 1.7 : this.#viewOptions.showGrid ? 1 : 0.55,
-          alpha: cell.path || cell.reachable || this.#viewOptions.showGrid ? 0.9 : 0.52,
+          width: cell.path ? 2.2 : cell.reachable ? 1.7 : this.#viewOptions.showGrid ? 1 : 0.8,
+          alpha: cell.path || cell.reachable || this.#viewOptions.showGrid ? 0.95 : 0.58,
         });
       tile.eventMode = cell.blocked ? "none" : "static";
       tile.cursor = cell.blocked ? "default" : "pointer";
@@ -371,7 +461,8 @@ export class BattlefieldRenderer {
         world.addChild(
           new Graphics()
             .ellipse(point.x, point.y + 1, 9, 4)
-            .fill({ color: cell.path ? 0xd6ad5d : 0x9bb58d, alpha: cell.path ? 0.55 : 0.28 }),
+            .fill({ color: cell.path ? 0xd6ad5d : 0x9bb58d, alpha: cell.path ? 0.55 : 0.28 })
+            .stroke({ color: cell.path ? 0xe5c477 : 0xb0c2a2, width: 1, alpha: 0.72 }),
         );
       }
 
@@ -385,7 +476,24 @@ export class BattlefieldRenderer {
         coordinate.anchor.set(0.5);
         coordinate.position.set(point.x, point.y + 1);
         world.addChild(coordinate);
-      } else if (cell.reachableCost !== undefined && !compiled.unitByCellKey.has(battlefieldCellKey(cell))) {
+      } else if (cell.elevation > 0) {
+        const elevation = new Text({
+          text: `+${cell.elevation}`,
+          style: {
+            fill: 0xd0c5a6,
+            fontSize: 8,
+            fontFamily: "sans-serif",
+            fontWeight: "700",
+            stroke: { color: 0x282219, width: 2 },
+          },
+        });
+        elevation.anchor.set(0.5);
+        elevation.position.set(point.x + 24, point.y - 1);
+        world.addChild(elevation);
+      } else if (
+        cell.reachableCost !== undefined &&
+        !compiled.unitByCellKey.has(battlefieldCellKey(cell))
+      ) {
         const cost = new Text({
           text: String(cell.reachableCost),
           style: {
