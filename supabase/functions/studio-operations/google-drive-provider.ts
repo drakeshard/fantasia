@@ -112,7 +112,7 @@ async function googleAccessToken(): Promise<string> {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      grant_type: "urn:ietf:params:oauth-grant-type:jwt-bearer",
       assertion,
     }),
   });
@@ -247,7 +247,11 @@ async function sourceMetadata(
   bytes: Uint8Array,
 ): Promise<GoogleDriveSourceMetadata> {
   if (metadata.trashed === true) throw new GoogleDriveProviderError("Google Drive source is trashed.", 409);
-  if (typeof metadata.name !== "string" || typeof metadata.mimeType !== "string") {
+  if (
+    typeof metadata.name !== "string" ||
+    typeof metadata.mimeType !== "string" ||
+    typeof metadata.modifiedTime !== "string"
+  ) {
     throw new GoogleDriveProviderError("Google Drive source metadata is incomplete.");
   }
   const declaredSize = metadataNumber(metadata.size);
@@ -267,7 +271,7 @@ async function sourceMetadata(
     heightPx: providerHeight ?? parsedDimensions?.heightPx ?? null,
     checksumAlgorithm: "sha256",
     checksum: await sha256Hex(bytes),
-    observedAt: new Date().toISOString(),
+    observedAt: metadata.modifiedTime,
   };
 }
 
