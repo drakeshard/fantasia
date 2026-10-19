@@ -13,6 +13,12 @@ import {
   StatusGroup,
 } from "./production-components";
 
+const selectableRecords = [
+  { id: "alpha", title: "Alpha record", status: "APPROVED" },
+  { id: "beta", title: "Beta record", status: "IN REVIEW" },
+  { id: "gamma", title: "Gamma record", status: "WORKING" },
+] as const;
+
 export function ProductionComponentInventory() {
   const [selected, setSelected] = useState("alpha");
   const [query, setQuery] = useState("");
@@ -57,11 +63,7 @@ export function ProductionComponentInventory() {
 
         <Section title="Selectable collection" description="Selection and keyboard focus are separate visible states.">
           <SelectableCollection label="Inventory selectable records">
-            {[
-              ["alpha", "Alpha record", "APPROVED"],
-              ["beta", "Beta record", "IN REVIEW"],
-              ["gamma", "Gamma record", "WORKING"],
-            ].map(([id, title, status]) => (
+            {selectableRecords.map(({ id, title, status }) => (
               <SelectableRow key={id} selected={selected === id} title={title} metadata={<code>{`entity.${id}`}</code>} status={<Chip>{status}</Chip>} onClick={() => setSelected(id)} />
             ))}
           </SelectableCollection>
