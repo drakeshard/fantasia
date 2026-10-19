@@ -16,3 +16,10 @@
 .ui-checkbox__description { color: var(--studio-text-muted); font-size: var(--studio-font-size-meta); }
 .ui-control:focus-visible, .ui-checkbox__input:focus-visible { outline: 2px solid var(--studio-focus-ring); outline-offset: 2px; box-shadow: var(--studio-shadow-focus); }
 @media (prefers-reduced-motion: reduce) { .ui-control { transition: none; } }
+@media (forced-colors: active) {
+  .ui-control { border-color: ButtonText; box-shadow: none; }
+  .ui-control:disabled { color: GrayText; opacity: 1; }
+  .ui-control[aria-invalid="true"] { border-width: 2px; border-style: double; }
+  .ui-control:focus-visible, .ui-checkbox__input:focus-visible { outline-color: Highlight; box-shadow: none; }
+  .ui-checkbox__input { forced-color-adjust: auto; }
+}
