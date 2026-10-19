@@ -1,0 +1,73 @@
+name: Content Studio visual evidence
+
+on:
+  pull_request:
+    paths:
+      - "apps/content-studio/**"
+      - "tests/studio/visual/**"
+      - "playwright.content-studio.visual.config.ts"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/content-studio-visual.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/content-studio/**"
+      - "tests/studio/visual/**"
+      - "playwright.content-studio.visual.config.ts"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/content-studio-visual.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  visual-regression:
+    name: Studio visual regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Content Studio
+        uses: ./.github/actions/setup-fantasia
+        with:
+          prepare-shared: "false"
+
+      - name: Build Content Studio
+        run: pnpm --filter @fantasia/content-studio build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Compare accepted visual baselines
+        id: visual
+        continue-on-error: true
+        run: pnpm test:studio:visual
+
+      - name: Upload visual report and diff evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fantasia-content-studio-visual-evidence-${{ github.sha }}
+          path: |
+            playwright-studio-visual-report/
+            test-results-studio-visual/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Require accepted baseline match
+        if: always()
+        shell: bash
+        env:
+          VISUAL_OUTCOME: ${{ steps.visual.outcome }}
+        run: |
+          set -euo pipefail
+          if [[ "$VISUAL_OUTCOME" != "success" ]]; then
+            echo "Content Studio visual regression failed: $VISUAL_OUTCOME"
+            exit 1
+          fi
+          echo "Content Studio visual regression passed."
