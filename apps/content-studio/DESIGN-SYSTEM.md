@@ -22,8 +22,7 @@ A lower layer never imports or targets a higher layer. Feature CSS never restyle
 | Workspace structure | `src/ui/workspace.tsx`, `src/ui/workspace.css` | shell, workspace templates, responsive structural composition | title feature details |
 | Shared composite presentation | `src/ui/composites.css`, `src/ui/entity-asset.*` | repeated shell/workspace/entity/asset-board presentation | one-off feature overrides |
 | Feature composition | `src/features/**`, `src/styles/production-*.css`, `src/styles/studio-auth.css` | feature-prefixed content arrangement and domain-specific visuals | raw interactive controls, `.ui-*`, `.studio-component-*`, shared workspace/semantic selectors, palette/material copies |
-| UI Lab only | `src/styles/foundation-preview.css`, `src/styles/material-fidelity.css`, `src/component-inventory.tsx` | reference/lab composition and component inventory | production shared component styling |
-| Visual regression | `tests/studio/visual/**`, `playwright.content-studio.visual.config.ts` | reviewed representative shared visual baselines and deterministic Chromium comparison | behavioral/accessibility assertions, automatic baseline acceptance |
+| UI Lab only | `src/styles/foundation-preview.css`, `src/styles/material-fidelity.css`, `src/component-inventory.tsx` | manual reference/review composition and component inventory | production authority or enduring CI behavior contracts |
 
 ## Production component inventory
 
@@ -38,55 +37,54 @@ The shared production layer exists to stop domain pages from recreating common S
 - `FilePicker`: the sole production owner of the hidden native file input, drop/select/remove interaction and selected-file summary.
 - Low-level primitives continue to own actual Buttons, fields, selects, checkboxes, Tabs, Dialog/Drawer, surfaces and feedback states.
 
-These components are intentionally explicit composition tools, not a schema-driven generic admin renderer.
+These components are explicit composition tools, not a schema-driven generic admin renderer. The UI Lab may demonstrate them for human review, but the lab is not a production workflow and is not an enduring automated-test target.
 
 ## Rules
 
 1. A feature needing a different Button, field, Dialog, Tab or Surface appearance changes the shared primitive or adds an explicit reusable primitive variant. It does not target `.ui-*` or pass `className` to repaint a shared root.
-2. A repeated production pattern such as filters, selectable results, fact grids, file selection or master/detail composition belongs in the reusable production layer. Assets and Characters are proof consumers; Equipment/Skills/Enemies must consume this layer rather than clone it.
+2. A repeated production pattern such as filters, selectable results, fact grids, file selection or master/detail composition belongs in the reusable production layer. Assets and Characters are current consumers; later workspaces must consume this layer rather than clone it.
 3. Production feature TSX must not declare raw `<button>`, `<input>`, `<select>`, `<textarea>` or `<dialog>` controls. The shared FilePicker is the documented exception because it encapsulates its hidden native file input.
-4. Feature CSS may style domain content placed *inside* shared components, but it may not target `.ui-*`, `.studio-component-*`, workspace or semantic roots. Use outer feature wrappers for layout.
+4. Feature CSS may style domain content placed inside shared components, but it may not target `.ui-*`, `.studio-component-*`, workspace or semantic roots. Use outer feature wrappers for layout.
 5. Raw palette values and `--studio-color-*` palette tokens belong only to the Fantasia theme or purpose-built visual-reference assets. Shared and production feature CSS consume semantic/component theme variables.
 6. The theme is a token-remapping scope. It must not target body/component/feature DOM. Base/shared CSS owns applying theme tokens to DOM anatomy.
-7. Public `--studio-*` declarations live only in `tokens.css` or the active title theme. References elsewhere must resolve to that controlled contract; dead compatibility aliases are not added merely to preserve obsolete vocabulary.
-8. `design-system-contract.json` is the single machine-readable source for title-theme identity, required public theme tokens and representative contrast requirements. Static and browser validation consume the same file.
+7. Public `--studio-*` declarations live only in `tokens.css` or the active title theme. References elsewhere must resolve to that controlled contract.
+8. `design-system-contract.json` is the single machine-readable source for title-theme identity, required public theme tokens and representative contrast requirements.
 9. Normal text contrast pairs use at least 4.5:1. Non-text focus/state indicators use at least 3:1. Fix the owning semantic/theme token rather than weakening a threshold.
 10. Keyboard focus is separate from selected/current state. Shared controls keep visible `:focus-visible` treatment, >=44px targets, disabled/pending behavior and reduced-motion handling.
 11. `!important` in production feature CSS is an ownership bug. Fix the owning component/layer instead.
-12. `scripts/check-content-studio-design-system.mjs` is a required Quality gate. It enforces token/theme ownership, feature/shared CSS boundaries, raw native-control prevention and shared-root className escape prevention.
-13. Accepted visual baselines are repository files under `tests/studio/visual/__snapshots__/{projectName}`. CI uses compare-only `pnpm test:studio:visual`; it never runs snapshot-update mode.
-14. `pnpm test:studio:visual:update` is an intentional maintenance command only. A baseline change is reviewed like source code and committed only when the visual change is accepted.
+12. `scripts/check-content-studio-design-system.mjs` is the machine-enforced ownership gate for token/theme ownership, feature/shared CSS boundaries, native-control prevention and shared-root escape prevention.
 
 ## State and interaction contract
 
-Content Studio standardizes observable semantic state and component policy without introducing a universal state runtime. Native/browser behavior remains authoritative where the platform already owns it; shared primitives add only the policy and accessibility wiring required by the Studio contract.
+Content Studio standardizes observable semantic state and component policy without introducing a universal state runtime. Native/browser behavior remains authoritative where the platform owns it; shared primitives add only policy and accessibility wiring required by production workflows.
 
-- **disabled** means the control is unavailable for interaction. Use native `disabled` semantics where the underlying control supports them.
-- **readonly** means content remains visible and normally focusable but is not modifiable where the underlying control supports readonly semantics. It is not interchangeable with disabled.
-- **pending / busy** means work associated with an operation is in progress. Busy is semantically distinct from disabled. The shared Content Studio `Button` deliberately combines `pending` with native disabled behavior to prevent duplicate command commitment; that is Button-specific Studio policy, not a global rule that busy always disables a control.
-- **invalid** means the field or value is invalid according to the owning validation contract. Invalid state is independent from whether an inline error message is currently rendered. An `error` string implies invalid state and owns its `aria-describedby` relationship; `invalid` may also be supplied without an error string when validation evidence is presented elsewhere.
+- **disabled** means the control is unavailable for interaction. Use native `disabled` semantics where supported.
+- **readonly** means content remains visible and normally focusable but is not modifiable. It is not interchangeable with disabled.
+- **pending / busy** means work is in progress. The shared Studio `Button` deliberately combines `pending` with native disabled behavior to prevent duplicate command commitment; this is Button-specific policy.
+- **invalid** means the field/value is invalid according to the owning validation contract. An `error` string implies invalid state and owns its `aria-describedby` relationship; `invalid` may also exist without inline error copy when evidence is presented elsewhere.
 - **selected / current** identify semantic choice or current item. They are not focus state.
-- **focused** is browser-owned interaction state. Roving focus position is internal behavior and must not become a second selected-value source of truth.
-- **open** identifies committed visibility/state for shared overlays such as Dialog. Escape/close interactions request an open-state change; browser effects and focus restoration follow the committed component state.
-- **intent** is a user-requested action such as activation, selection, or dismissal. It is not interchangeable with committed state and must not create duplicate semantic state stores.
+- **focused** is browser-owned interaction state. Roving focus is internal behavior and must not become a second selected-value source of truth.
+- **open** identifies committed visibility/state for overlays such as Dialog.
+- **intent** is a user-requested action such as activation, selection, or dismissal. It is not interchangeable with committed state.
 
-Visual configuration such as variant, surface kind, density, or layout is not semantic state. Derived ARIA and styling states should come from the authoritative semantic state rather than being tracked independently.
+Visual configuration such as variant, surface kind, density, or layout is not semantic state. Derived ARIA and styling states come from authoritative semantic state rather than parallel state stores.
 
-Shared accessibility styling must remain usable with `prefers-reduced-motion` and `forced-colors: active`. Forced-colors handling belongs in base/shared component CSS, not production feature overrides. Focus, invalid, selected, disabled, and pending states must retain non-color-only or system-color-visible affordances in that mode.
+Shared accessibility styling must remain usable with reduced motion and forced-colors/high-contrast environments. A production workflow regression caused by those modes belongs in the relevant production browser flow; the UI Lab is not retained as a synthetic CI proxy.
 
 ## Validation ownership
 
-Validation follows the cheapest reliable layer rather than duplicating the same requirement in every test runtime.
+Validation follows the lowest reliable owner and protects durable behavior rather than the history of how a branch was implemented.
 
-- **Static contract checks** own contract shape, token integrity, theme-only palette ownership, shared/feature selector boundaries, raw native-control prevention, className escape prevention, `!important` prevention and import ordering.
-- **Unit tests** own pure deterministic logic such as semantic-state catalogs, ordering and metadata mapping.
-- **Real-browser behavioral tests** own keyboard/focus, Dialog/native behavior, selectable collection keyboard semantics, FilePicker relationships, computed CSS/theme resolution, representative contrast, forced-colors behavior, minimum targets/layout behavior, reduced motion and compact overflow.
-- **UI Lab component inventory** is the review surface for primitive/production-component states. Production pages are not used as the component laboratory.
-- **Visual regression** owns a curated representative shared appearance matrix, including semantic dimensions, global Studio shell and production component inventory. It is not a screenshot of every page/state.
-- **Visual evidence** from `.github/workflows/content-studio-visual.yml` uploads report/actual/expected/diff evidence. A mismatch fails the workflow and normal Studio browser Quality command.
+- **Static contract checks** own architecture and source-shape invariants: token integrity, theme-only palette ownership, shared/feature selector boundaries, raw native-control prevention, className escape prevention, `!important` prevention, import ordering, deployment structure and other repository contracts.
+- **Unit tests** own deterministic business/domain contracts such as authorization capabilities, canonical-change allowlists and mutation rules, Dashboard projection, read-model authority/provenance, registry rules and controlled identity catalogs.
+- **Real-browser tests** own complete production operator workflows where browser integration matters: sign-in/authorization/fail-closed behavior, Dashboard operational truth, Character browse/proposal flow, Asset search/create/source/version workflows, trusted multipart boundaries and production interaction regressions that cannot be proven reliably below the browser.
+- **UI Lab** is a manual development/review surface. Do not add permanent Playwright tests or screenshot baselines merely because a new primitive, component, template, state fixture or branch was introduced there.
+- **Responsive/accessibility browser coverage** is added only when a real production workflow has materially different interaction or failure risk at that environment. Do not multiply every test across viewports or keep synthetic component tests solely to prove CSS values.
+
+A new test must answer: **which durable production/business failure does this prevent, and why is this the lowest reliable owner?** If the answer is only “this component/fixture was added in this PR,” the test does not belong in the enduring suite.
 
 ## Change workflow
 
-When a visual or interaction defect appears in multiple features, or a feature needs to reach into a shared selector, stop and repair the owning primitive/production component first. Feature CSS should stay small enough that its purpose is domain layout/content arrangement.
+When a visual or interaction defect appears in multiple production features, or a feature needs to reach into a shared selector, repair the owning primitive/production component first. Feature CSS should stay limited to domain layout/content arrangement.
 
-When an intentional shared visual change modifies an accepted baseline, run `pnpm test:studio:visual:update` in the controlled browser environment, review the changed PNGs, commit only accepted baseline changes, and let CI prove compare-only mode from a clean checkout. CI never regenerates or auto-accepts baselines.
+Use the UI Lab for manual inspection while developing shared UI, but validate release-critical behavior through static contracts, deterministic unit tests, and real production operator workflows. Do not create a permanent automated suite for temporary branch scaffolding.

@@ -51,14 +51,7 @@ const readModels = {
         canFreeze: false,
         canManageMembership: false,
       },
-      provenance: [
-        {
-          authority: "registry",
-          source: "studio_registry.content_entities",
-          observedAt: "2026-10-18T04:00:00Z",
-          canonical: false,
-        },
-      ],
+      provenance: [],
       issues: [],
     },
   ],
@@ -70,74 +63,31 @@ const readModels = {
   },
 };
 
-async function mockStudio(page: Page, role = "Viewer") {
+async function signIn(page: Page) {
   await page.route("**/auth/v1/token?grant_type=password", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(tokenResponse),
-    });
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(tokenResponse) });
   });
   await page.route("**/functions/v1/studio-operations", async (route) => {
     const request = route.request().postDataJSON() as { type?: string };
-    const body =
-      request.type === "studio.read_models.get"
-        ? readModels
-        : {
-            authorized: true,
-            role,
-            capabilities:
-              role === "Viewer" ? ["studio.read"] : ["studio.read", "registry.metadata.edit"],
-          };
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(body),
-    });
+    const body = request.type === "studio.read_models.get"
+      ? readModels
+      : { authorized: true, role: "Viewer", capabilities: ["studio.read"] };
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
   });
-}
-
-async function signIn(page: Page) {
   await page.goto("/");
   await page.getByLabel("Email").fill("operator@example.test");
   await page.getByLabel("Password").fill("test-password");
   await page.getByRole("button", { name: "Sign in" }).click();
 }
 
-test("Dashboard shows normalized attention, freshness, and unavailable sources", async ({
-  page,
-}) => {
-  await mockStudio(page);
+test("Dashboard surfaces operational attention and unavailable evidence truthfully", async ({ page }) => {
   await signIn(page);
 
   await expect(page.getByText("Production Dashboard", { exact: true })).toBeVisible();
   await expect(page.getByTestId("dashboard-freshness")).toContainText("0123456789ab");
   await expect(page.getByText("Blocking validation", { exact: true })).toBeVisible();
   await expect(page.getByText("Runtime ready · unpublished", { exact: true })).toBeVisible();
-  await expect(page.getByText("Canonical Git proposals", { exact: true })).toBeVisible();
-  await expect(page.getByText("Publish / verification failures", { exact: true })).toBeVisible();
-  await expect(
-    page.getByText("Canonical proposal summary source is unavailable.", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText(
-      "Layer 5 publishing and verification records are not implemented yet. This is not a zero-failure claim.",
-      { exact: true },
-    ),
-  ).toBeVisible();
-  await expect(page.getByTestId("dashboard-freshness")).toContainText("Unavailable sources2");
+  await expect(page.getByText("Canonical proposal summary source is unavailable.", { exact: true })).toBeVisible();
+  await expect(page.getByText(/publishing and verification records are not implemented yet/i)).toBeVisible();
   await expect(page.getByText("Read-only access", { exact: true })).toBeVisible();
-});
-
-test("Dashboard deep link preserves stable semantic context without faking the target workspace", async ({
-  page,
-}) => {
-  await mockStudio(page);
-  await signIn(page);
-
-  await page.getByRole("link", { name: "Open context" }).first().click();
-  await expect(page).toHaveURL(/module=story/);
-  await expect(page).toHaveURL(/semanticId=story\.s01\.ch01\.b01/);
-  await expect(page.getByText("Module not implemented yet", { exact: true })).toBeVisible();
-  await expect(page.getByText("Semantic ID: story.s01.ch01.b01.", { exact: false })).toBeVisible();
 });

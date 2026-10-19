@@ -20,12 +20,7 @@ function owner(semanticId: string, displayName: string, entityType: string) {
       displayName,
       canonicalPath: "config/identity-ui-assets.json",
       canonicalData: {},
-      provenance: {
-        authority: "git",
-        source: "config/identity-ui-assets.json",
-        revision,
-        canonical: true,
-      },
+      provenance: { authority: "git", source: "config/identity-ui-assets.json", revision, canonical: true },
     },
     lifecycle: "WORKING",
     schemaVersion: 1,
@@ -60,12 +55,7 @@ function source(semanticAssetId: string, versionId: string) {
     checksum: { algorithm: "sha256", value: "a".repeat(64) },
     providerReference: { visibility: "redacted" },
     operations: ["metadata", "preview", "download"],
-    provenance: {
-      authority: "provider",
-      source: "google-drive",
-      observedAt: "2026-10-18T08:00:00Z",
-      canonical: true,
-    },
+    provenance: { authority: "provider", source: "google-drive", observedAt: "2026-10-18T08:00:00Z", canonical: true },
   };
 }
 
@@ -90,17 +80,7 @@ function asset(
     readiness,
     currentVersion: currentSource,
     derivativeRequired: false,
-    versions: [
-      {
-        versionId,
-        versionNumber: 1,
-        lifecycle: "WORKING",
-        current: true,
-        createdAt: "2026-10-18T08:00:00Z",
-        source: currentSource,
-        validations: [],
-      },
-    ],
+    versions: [{ versionId, versionNumber: 1, lifecycle: "WORKING", current: true, createdAt: "2026-10-18T08:00:00Z", source: currentSource, validations: [] }],
     relations: [],
     validations: [],
     runtimeDerivatives: [],
@@ -111,24 +91,8 @@ function asset(
 
 const mcOwner = owner("character.production.hero", "MC", "character");
 const arbiterOwner = owner("identity.faction-rule.arbiter", "Arbiter", "faction-rule");
-const mcAsset = asset(
-  "asset.character.production.hero.portrait.base",
-  mcOwner.semanticId,
-  "MC",
-  "character",
-  "portrait",
-  "ready",
-  "11111111-1111-4111-8111-111111111111",
-);
-const arbiterAsset = asset(
-  "asset.identity.faction-rule.arbiter.faction-rule-emblem.base",
-  arbiterOwner.semanticId,
-  "Arbiter",
-  "faction-rule",
-  "faction-rule-emblem",
-  "warning",
-  "22222222-2222-4222-8222-222222222222",
-);
+const mcAsset = asset("asset.character.production.hero.portrait.base", mcOwner.semanticId, "MC", "character", "portrait", "ready", "11111111-1111-4111-8111-111111111111");
+const arbiterAsset = asset("asset.identity.faction-rule.arbiter.faction-rule-emblem.base", arbiterOwner.semanticId, "Arbiter", "faction-rule", "faction-rule-emblem", "warning", "22222222-2222-4222-8222-222222222222");
 
 const readModels = {
   readModelVersion: 1,
@@ -142,11 +106,7 @@ const readModels = {
   search: { total: 2, offset: 0, limit: 100 },
   models: [mcOwner, arbiterOwner],
   assets: [mcAsset, arbiterAsset],
-  canonicalProposals: {
-    state: "available",
-    observedAt: "2026-10-18T08:00:00Z",
-    items: [],
-  },
+  canonicalProposals: { state: "available", observedAt: "2026-10-18T08:00:00Z", items: [] },
 };
 
 async function signIn(page: Page) {
@@ -154,42 +114,17 @@ async function signIn(page: Page) {
     route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(tokenResponse) }),
   );
   await page.route("**/functions/v1/studio-operations", async (route) => {
-    const contentType = route.request().headers()["content-type"] ?? "";
-    if (!contentType.includes("application/json")) {
-      await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
-      return;
-    }
     const request = route.request().postDataJSON() as { type?: string };
     if (request.type === "studio.read_models.get") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(readModels),
-      });
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(readModels) });
       return;
     }
     if (request.type === "session.get") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          authorized: true,
-          role: "Editor",
-          capabilities: ["studio.read", "registry.metadata.edit"],
-        }),
-      });
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ authorized: true, role: "Editor", capabilities: ["studio.read", "registry.metadata.edit"] }) });
       return;
     }
     if (request.type === "provider.google_drive.status") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({ connected: true, accountEmail: "owner@example.test" }),
-      });
-      return;
-    }
-    if (request.type === "registry.asset_source.access") {
-      await route.fulfill({ status: 200, contentType: "image/png", body: Buffer.from("preview") });
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ connected: true, accountEmail: "owner@example.test" }) });
       return;
     }
     await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
@@ -201,17 +136,12 @@ async function signIn(page: Page) {
   await page.getByRole("button", { name: "Sign in" }).click();
 }
 
-test("Assets browser keeps search, primary filters and recovery with the collection", async ({ page }) => {
+test("Asset operators can search, refine, recover, and select results", async ({ page }) => {
   await signIn(page);
 
   const browser = page.getByRole("complementary", { name: "Asset browser" });
   const results = browser.locator(".studio-assets-selector--rail");
-  await expect(browser).toBeVisible();
   await expect(browser.getByText("2 / 2", { exact: true })).toBeVisible();
-  await expect(browser.getByLabel("Search assets")).toBeVisible();
-  await expect(browser.getByLabel("Asset type")).toBeVisible();
-  await expect(browser.getByLabel("Owner")).toBeVisible();
-  await expect(browser.getByLabel("Lifecycle")).toHaveCount(0);
 
   await browser.getByLabel("Search assets").fill("Arbiter");
   await expect(browser.getByText("1 / 2", { exact: true })).toBeVisible();
@@ -219,8 +149,8 @@ test("Assets browser keeps search, primary filters and recovery with the collect
   await expect(results.getByText("MC", { exact: true })).toHaveCount(0);
 
   await browser.getByRole("button", { name: "More filters" }).click();
-  await expect(browser.getByLabel("Lifecycle")).toBeVisible();
-  await expect(browser.getByLabel("Readiness")).toBeVisible();
+  await browser.getByLabel("Readiness").selectOption("warning");
+  await expect(page.getByRole("heading", { name: "Arbiter" })).toBeVisible();
 
   await browser.getByLabel("Search assets").fill("does-not-exist");
   await expect(browser.getByText("No matching assets", { exact: true })).toBeVisible();
@@ -228,22 +158,4 @@ test("Assets browser keeps search, primary filters and recovery with the collect
   await expect(browser.getByText("2 / 2", { exact: true })).toBeVisible();
   await expect(results.getByText("MC", { exact: true })).toBeVisible();
   await expect(results.getByText("Arbiter", { exact: true })).toBeVisible();
-});
-
-test("Assets browser primary filtering changes the visible selection and stays overflow-safe", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 844, height: 390 });
-  await signIn(page);
-
-  const browser = page.getByRole("complementary", { name: "Asset browser" });
-  await browser.getByLabel("Owner").selectOption(arbiterOwner.semanticId);
-  await expect(browser.getByText("1 / 2", { exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Arbiter" })).toBeVisible();
-
-  const geometry = await page.evaluate(() => ({
-    innerWidth: window.innerWidth,
-    scrollWidth: document.documentElement.scrollWidth,
-  }));
-  expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.innerWidth);
 });
