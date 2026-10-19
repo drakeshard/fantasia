@@ -3,6 +3,7 @@ import { expect, type Page, test } from "@playwright/test";
 const visualContracts = [
   ["semantic-dimensions", "Independent semantic dimensions"],
   ["studio-shell", "Global Studio shell"],
+  ["production-components", "Production component inventory"],
 ] as const;
 
 function sectionByHeading(page: Page, heading: string) {
