@@ -1,0 +1,18 @@
+.ui-field { display: grid; gap: var(--studio-space-8); min-width: 0; color: var(--studio-text-primary); }
+.ui-field__label { color: var(--studio-text-secondary); font-size: var(--studio-font-size-label); font-weight: 700; }
+.ui-control { width: 100%; min-height: var(--studio-control-height-md); padding: 0 var(--studio-space-12); border: 1px solid var(--studio-border-control); border-radius: var(--studio-radius-control); outline: none; background: var(--studio-control-bg); box-shadow: var(--studio-control-shadow); color: var(--studio-text-primary); font: inherit; transition: border-color var(--studio-motion-feedback) var(--studio-ease-standard), box-shadow var(--studio-motion-feedback) var(--studio-ease-standard), background var(--studio-motion-feedback) var(--studio-ease-standard); }
+.ui-control::placeholder { color: var(--studio-text-muted); }
+.ui-control:not(:disabled):hover { border-color: var(--studio-control-hover-border); }
+.ui-control:disabled { cursor: not-allowed; opacity: 0.56; }
+.ui-control[aria-invalid="true"] { border-color: var(--studio-validation-blocking); }
+.ui-control--textarea { min-height: 7rem; padding-block: var(--studio-space-12); resize: vertical; }
+.ui-control--select { cursor: pointer; }
+.ui-field__message { color: var(--studio-text-muted); font-size: var(--studio-font-size-meta); }
+.ui-field__message--error { color: var(--studio-validation-blocking); }
+.ui-checkbox { display: inline-flex; min-height: var(--studio-target-min); align-items: flex-start; gap: var(--studio-space-12); color: var(--studio-text-primary); cursor: pointer; }
+.ui-checkbox__input { width: 1.125rem; height: 1.125rem; margin: 0.2rem 0 0; accent-color: var(--studio-accent-primary); }
+.ui-checkbox__copy { display: grid; gap: var(--studio-space-4); }
+.ui-checkbox__label { font-size: var(--studio-font-size-label); font-weight: 700; }
+.ui-checkbox__description { color: var(--studio-text-muted); font-size: var(--studio-font-size-meta); }
+.ui-control:focus-visible, .ui-checkbox__input:focus-visible { outline: 2px solid var(--studio-focus-ring); outline-offset: 2px; box-shadow: var(--studio-shadow-focus); }
+@media (prefers-reduced-motion: reduce) { .ui-control { transition: none; } }
