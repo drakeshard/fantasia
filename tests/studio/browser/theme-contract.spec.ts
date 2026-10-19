@@ -143,3 +143,34 @@ test("reduced-motion preference removes primitive animation and transition behav
   expect(reducedMotion.buttonTransitionDuration).toBe("0s");
   expect(reducedMotion.controlTransitionDuration).toBe("0s");
 });
+
+test("forced-colors preserves focus and non-color-only shared state affordances", async ({ page }) => {
+  await page.emulateMedia({ forcedColors: "active" });
+  await page.goto("/?lab=1&state-contract-test=1");
+
+  const invalid = page.getByLabel("Invalid without error copy");
+  const selected = page.getByRole("option", { name: "Alpha asset" });
+  const action = page.getByRole("button", { name: "Hide filters" });
+
+  await action.focus();
+  const metrics = await page.evaluate(() => {
+    const invalidStyle = getComputedStyle(document.querySelector("#state-contract-invalid")!);
+    const selectedStyle = getComputedStyle(document.querySelector('[role="option"][aria-selected="true"]')!);
+    const focusedStyle = getComputedStyle(document.activeElement!);
+    return {
+      forcedColorsActive: matchMedia("(forced-colors: active)").matches,
+      invalidBorderStyle: invalidStyle.borderStyle,
+      invalidBorderWidth: Number.parseFloat(invalidStyle.borderTopWidth),
+      selectedBorderWidth: Number.parseFloat(selectedStyle.borderTopWidth),
+      focusOutlineWidth: Number.parseFloat(focusedStyle.outlineWidth),
+    };
+  });
+
+  await expect(invalid).toHaveAttribute("aria-invalid", "true");
+  await expect(selected).toHaveAttribute("aria-selected", "true");
+  expect(metrics.forcedColorsActive).toBe(true);
+  expect(metrics.invalidBorderStyle).toBe("double");
+  expect(metrics.invalidBorderWidth).toBeGreaterThanOrEqual(2);
+  expect(metrics.selectedBorderWidth).toBeGreaterThanOrEqual(2);
+  expect(metrics.focusOutlineWidth).toBeGreaterThanOrEqual(2);
+});
