@@ -22,6 +22,7 @@ A lower layer never imports or targets a higher layer. Feature CSS never restyle
 | Shared composite presentation | `src/ui/composites.css`, `src/ui/entity-asset.*` | repeated shell/workspace/entity/asset-board presentation | one-off feature overrides |
 | Feature composition | `src/features/**`, `src/styles/production-*.css`, `src/styles/studio-auth.css` | feature-prefixed grids, sizing, content arrangement and feature-only visual hooks | `.ui-*`, shared workspace/semantic selectors, palette/material copies |
 | UI Lab only | `src/styles/foundation-preview.css`, `src/styles/material-fidelity.css` | reference/lab page composition | production shared component styling |
+| Visual regression | `tests/studio/visual/**`, `playwright.content-studio.visual.config.ts` | reviewed representative shared visual baselines and deterministic Chromium comparison | behavioral/accessibility assertions, automatic baseline acceptance |
 
 ## Rules
 
@@ -35,6 +36,8 @@ A lower layer never imports or targets a higher layer. Feature CSS never restyle
 8. Keyboard focus is separate from selected/current state. Shared controls keep visible `:focus-visible` treatment, >=44px targets, disabled/pending behavior and reduced-motion handling.
 9. `!important` in production feature CSS is an ownership bug. Fix the owning component/layer instead.
 10. `scripts/check-content-studio-design-system.mjs` is a required Quality gate. Do not weaken the checker to land a feature override; move the styling to the correct owner.
+11. Accepted visual baselines are repository files under `tests/studio/visual/__snapshots__/{projectName}`. CI uses compare-only `pnpm test:studio:visual`; it never runs snapshot-update mode.
+12. `pnpm test:studio:visual:update` is an intentional maintenance command only. A baseline change is reviewed like source code and committed only when the visual change is accepted.
 
 ## Validation ownership
 
@@ -42,12 +45,15 @@ Validation follows the cheapest reliable layer rather than duplicating the same 
 
 - **Static contract checks** own contract shape, token declaration/reference integrity, theme-only palette ownership, token-only theme scope, shared/feature selector boundaries, raw-palette prevention, `!important` prevention, and design-system import ordering.
 - **Unit tests** own pure deterministic logic such as semantic-state catalogs, ordering, metadata mapping, and renderer-neutral helpers. Do not add DOM-emulated unit tests merely to duplicate browser behavior.
-- **Real-browser tests** own keyboard/focus, dialog/native behavior, computed CSS/theme resolution, representative contrast, minimum target/layout behavior, reduced motion, and other browser-owned outcomes.
-- **Visual evidence** is separate from behavioral proof. Screenshot output is not called visual regression until accepted baselines are stored and CI compares against them.
+- **Real-browser behavioral tests** own keyboard/focus, dialog/native behavior, computed CSS/theme resolution, representative contrast, minimum target/layout behavior, reduced motion, and other browser-owned outcomes.
+- **Visual regression** owns representative shared appearance only. The accepted matrix currently covers the semantic-dimensions surface and global Studio shell at deterministic desktop and compact viewports. It is deliberately curated rather than snapshotting every production page/component state.
+- **Visual evidence** from `.github/workflows/content-studio-visual.yml` uploads the Playwright report and actual/expected/diff results when comparison runs. A mismatch fails the workflow and the normal Studio browser Quality command.
 - **Coverage metrics** are supporting diagnostics. Contract and scenario coverage are the acceptance target.
 
 ## Change workflow
 
 When a visual defect appears in more than one feature, or a feature must reach into a shared selector to fix it, stop and repair the shared layer first. Feature CSS should remain small enough that its purpose is obvious from its feature-prefixed selectors.
 
-When a token/theme change affects shared paint, update the centralized contract only when the public contract itself changes, then run static contract checks plus representative browser/theme and primitive scenarios. When a primitive behavior changes, prove browser-owned behavior in Playwright and add a unit test only if an independent pure rule actually exists.
+When a token/theme change affects shared paint, update the centralized contract only when the public contract itself changes, then run static contract checks plus representative browser/theme, primitive and visual scenarios. When a primitive behavior changes, prove browser-owned behavior in Playwright and add a unit test only if an independent pure rule actually exists.
+
+When an intentional shared visual change modifies an accepted baseline, run `pnpm test:studio:visual:update` locally, review the changed PNGs, commit only the accepted baseline changes, and let CI prove compare-only mode from a clean checkout. Never make CI regenerate or auto-accept baselines.
