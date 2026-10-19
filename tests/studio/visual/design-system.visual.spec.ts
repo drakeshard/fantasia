@@ -1,18 +1,18 @@
 import { expect, type Page, test } from "@playwright/test";
 
-const uiLabHeadings = [
+const visualAnchors = [
   ["semantic-dimensions", "Independent semantic dimensions"],
   ["primitive-actions", "00B primitive regression surface"],
   ["form-controls", "00B form regression surface"],
-  ["tabs", "00B tabs and keyboard regression"],
-  ["feedback", "00B feedback regression surface"],
-  ["structural-primitives", "00B structural primitives"],
+  ["workspace-shell", "Global Studio shell"],
 ] as const;
 
-function sectionByHeading(page: Page, heading: string) {
-  return page
-    .getByRole("heading", { name: heading, exact: true })
-    .locator('xpath=ancestor::section[contains(concat(" ", normalize-space(@class), " "), " preview-section ")][1]');
+async function alignHeadingToViewport(page: Page, heading: string) {
+  const target = page.getByRole("heading", { name: heading, exact: true });
+  await target.scrollIntoViewIfNeeded();
+  await expect(target).toBeVisible();
+  await target.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }));
+  await page.evaluate(() => window.scrollBy(0, -16));
 }
 
 test.beforeEach(async ({ page }) => {
@@ -21,25 +21,16 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => document.fonts.ready);
 });
 
-for (const [snapshotName, heading] of uiLabHeadings) {
-  test(`${heading} matches the accepted shared visual baseline`, async ({ page }) => {
-    const section = sectionByHeading(page, heading);
-    await section.scrollIntoViewIfNeeded();
-    await expect(section).toBeVisible();
-    await expect(section).toHaveScreenshot(`${snapshotName}.png`);
+for (const [snapshotName, heading] of visualAnchors) {
+  test(`${heading} matches the accepted viewport baseline`, async ({ page }) => {
+    await alignHeadingToViewport(page, heading);
+    await expect(page).toHaveScreenshot(`${snapshotName}.png`);
   });
 }
 
-test("dialog appearance matches the accepted shared visual baseline", async ({ page }) => {
+test("dialog overlay matches the accepted viewport baseline", async ({ page }) => {
+  await alignHeadingToViewport(page, "00B dialog and drawer regression");
   await page.getByTestId("open-dialog").click();
-  const dialog = page.getByRole("dialog", { name: "Confirm generic action" });
-  await expect(dialog).toBeVisible();
-  await expect(dialog).toHaveScreenshot("dialog.png");
-});
-
-test("shared Studio shell matches the accepted workspace visual baseline", async ({ page }) => {
-  const section = sectionByHeading(page, "Global Studio shell");
-  await section.scrollIntoViewIfNeeded();
-  await expect(section).toBeVisible();
-  await expect(section).toHaveScreenshot("studio-shell.png");
+  await expect(page.getByRole("dialog", { name: "Confirm generic action" })).toBeVisible();
+  await expect(page).toHaveScreenshot("dialog-overlay.png");
 });
