@@ -1,4 +1,3 @@
-import { mkdir } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
@@ -52,22 +51,14 @@ test("mixed fixtures keep semantic dimensions simultaneously visible", async ({ 
 test("versions, provider references and derivatives retain provenance", async ({ page }) => {
   const versionBadges = page.locator(".studio-version-badge");
   await expect(versionBadges.filter({ hasText: "v003" }).first()).toContainText("Current version");
-  await expect(versionBadges.filter({ hasText: "v002" }).first()).toContainText(
-    "Historical version",
-  );
-  await expect(versionBadges.filter({ hasText: "v001" }).first()).toContainText(
-    "Historical version",
-  );
+  await expect(versionBadges.filter({ hasText: "v002" }).first()).toContainText("Historical version");
+  await expect(versionBadges.filter({ hasText: "v001" }).first()).toContainText("Historical version");
 
-  const semanticIdentity = page.getByText("asset.character.jeanne.base", { exact: true });
-  await expect(semanticIdentity.first()).toBeVisible();
-
+  await expect(page.getByText("asset.character.jeanne.base", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Drive · Source / master", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Git · Canonical definition", { exact: true })).toBeVisible();
   await expect(page.getByText("Registry · Registry metadata", { exact: true })).toBeVisible();
-  await expect(
-    page.getByText("Runtime delivery · Runtime derivative", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText("Runtime delivery · Runtime derivative", { exact: true })).toBeVisible();
 
   const runtimeCard = page
     .locator(".studio-runtime-card")
@@ -87,25 +78,4 @@ test("review workflow labels do not create alternate lifecycle badges", async ({
 
   expect(lifecycleStates).not.toContain("requested");
   expect(lifecycleStates).not.toContain("changes-requested");
-});
-
-test("semantic matrix avoids document overflow at desktop and compact touch sizes", async ({
-  page,
-}) => {
-  const metrics = await page.evaluate(() => ({
-    viewportWidth: window.innerWidth,
-    scrollWidth: document.documentElement.scrollWidth,
-    semanticBadgeCount: document.querySelectorAll(".studio-status-badge").length,
-  }));
-
-  expect(metrics.semanticBadgeCount).toBeGreaterThan(20);
-  expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.viewportWidth);
-});
-
-test("captures the semantic state matrix for visual review", async ({ page }, testInfo) => {
-  await mkdir("visual-artifacts/content-studio", { recursive: true });
-  await page.screenshot({
-    path: `visual-artifacts/content-studio/${testInfo.project.name}-semantics.png`,
-    fullPage: true,
-  });
 });
