@@ -12,6 +12,14 @@ import { KeyValueList, Section } from "../../ui/production-components";
 import { type CharacterReadModel, characterDomainData } from "./model";
 import { useCharacterDisplayNameProposal } from "./use-display-name-proposal";
 
+function displayValue(value: unknown): string {
+  if (value === null || value === undefined) return "Not registered";
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+  return JSON.stringify(value);
+}
+
 export function CharacterOverviewPanel({
   model,
   revision,
@@ -37,11 +45,11 @@ export function CharacterOverviewPanel({
         <KeyValueList
           label="Canonical character identity"
           items={[
-            { label: "Display name", value: data.displayName },
-            { label: "Actor ID", value: data.actorId },
-            { label: "Tactical entity", value: data.tacticalEntityId },
-            { label: "Side", value: data.side },
-            { label: "Short label", value: data.shortLabel },
+            { label: "Display name", value: displayValue(data.displayName) },
+            { label: "Actor ID", value: displayValue(data.actorId) },
+            { label: "Tactical entity", value: displayValue(data.tacticalEntityId) },
+            { label: "Side", value: displayValue(data.side) },
+            { label: "Short label", value: displayValue(data.shortLabel) },
           ]}
         />
       </Section>
@@ -102,18 +110,18 @@ export function CharacterGameplayPanel({ model }: { model: CharacterReadModel })
         <KeyValueList
           label="Encounter definition"
           items={[
-            { label: "Movement allowance", value: data.movementAllowance },
-            { label: "Initial coordinate", value: data.initialCoord },
-            { label: "Classes", value: Array.isArray(rpg.classes) ? rpg.classes.join(", ") : String(rpg.classes) },
-            { label: "Initial class", value: rpg.initialClass },
-            { label: "HP", value: typeof hp === "object" ? JSON.stringify(hp) : String(hp) },
+            { label: "Movement allowance", value: displayValue(data.movementAllowance) },
+            { label: "Initial coordinate", value: displayValue(data.initialCoord) },
+            { label: "Classes", value: displayValue(rpg.classes) },
+            { label: "Initial class", value: displayValue(rpg.initialClass) },
+            { label: "HP", value: displayValue(hp) },
           ]}
         />
       </Section>
       <Section title="RPG attributes">
         <KeyValueList
           label="RPG attributes"
-          items={Object.entries(attributes).map(([label, value]) => ({ label, value: String(value) }))}
+          items={Object.entries(attributes).map(([label, value]) => ({ label, value: displayValue(value) }))}
         />
       </Section>
     </div>
