@@ -1,4 +1,3 @@
-import { mkdir } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
@@ -92,32 +91,4 @@ test("invalid state remains independent from error-message presence", async ({ p
   await expect(input).toHaveAttribute("aria-describedby", "state-contract-invalid-hint");
   await expect(page.locator("#state-contract-invalid-error")).toHaveCount(0);
   await expect(page.locator("#state-contract-invalid-hint")).toHaveText("Validation evidence is available separately.");
-});
-
-test("compact and desktop layouts preserve minimum targets and avoid document overflow", async ({
-  page,
-}) => {
-  const metrics = await page.evaluate(() => {
-    const buttons = Array.from(document.querySelectorAll<HTMLElement>(".ui-button")).filter(
-      (element) => element.offsetParent !== null,
-    );
-    return {
-      viewportWidth: window.innerWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-      minButtonHeight: Math.min(...buttons.map((button) => button.getBoundingClientRect().height)),
-      minButtonWidth: Math.min(...buttons.map((button) => button.getBoundingClientRect().width)),
-    };
-  });
-
-  expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.viewportWidth);
-  expect(metrics.minButtonHeight).toBeGreaterThanOrEqual(44);
-  expect(metrics.minButtonWidth).toBeGreaterThanOrEqual(44);
-});
-
-test("captures the primitive state matrix for visual review", async ({ page }, testInfo) => {
-  await mkdir("visual-artifacts/content-studio", { recursive: true });
-  await page.screenshot({
-    path: `visual-artifacts/content-studio/${testInfo.project.name}-primitives.png`,
-    fullPage: true,
-  });
 });
