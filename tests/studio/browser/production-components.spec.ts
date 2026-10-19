@@ -5,16 +5,26 @@ async function openInventory(page: import("@playwright/test").Page) {
   await expect(page.getByRole("heading", { name: "Production component inventory" })).toBeVisible();
 }
 
-test("shared selectable collection supports arrow selection with focus distinct from selected state", async ({ page }) => {
+test("shared selectable collection keeps focus navigation separate from selection", async ({ page }) => {
   await openInventory(page);
   const collection = page.getByRole("listbox", { name: "Inventory examples" });
   const alpha = collection.getByRole("option", { name: "Alpha asset" });
   const beta = collection.getByRole("option", { name: "Beta character" });
 
   await expect(alpha).toHaveAttribute("aria-selected", "true");
+  await expect(beta).toHaveAttribute("aria-selected", "false");
+
   await alpha.focus();
   await page.keyboard.press("ArrowDown");
   await expect(beta).toBeFocused();
+  await expect(alpha).toHaveAttribute("aria-selected", "true");
+  await expect(beta).toHaveAttribute("aria-selected", "false");
+
+  await page.keyboard.press("Home");
+  await expect(alpha).toBeFocused();
+  await expect(alpha).toHaveAttribute("aria-selected", "true");
+
+  await beta.click();
   await expect(beta).toHaveAttribute("aria-selected", "true");
   await expect(alpha).toHaveAttribute("aria-selected", "false");
 
