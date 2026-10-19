@@ -56,7 +56,7 @@ export function CharacterCollection({
             : "Change the filter to show another canonical character."}
         </StateMessage>
       ) : (
-        <SelectableCollection label="Canonical characters">
+        <SelectableCollection label="Canonical characters" testId="characters-collection">
           {visible.map((model) => (
             <SelectableRow
               selected={selectedSemanticId === model.semanticId}
