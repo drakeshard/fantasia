@@ -6,17 +6,14 @@ function cx(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(" ");
 }
 
-export function Section({
-  title,
-  description,
-  actions,
-  children,
-}: {
+type SectionProps = {
   title: string;
-  description?: string;
-  actions?: ComponentChildren;
+  description?: string | undefined;
+  actions?: ComponentChildren | undefined;
   children: ComponentChildren;
-}) {
+};
+
+export function Section({ title, description, actions, children }: SectionProps) {
   return (
     <section class="studio-component-section">
       <header class="studio-component-section__header">
@@ -31,17 +28,11 @@ export function Section({
   );
 }
 
-export function DetailSection(props: Parameters<typeof Section>[0]) {
+export function DetailSection(props: SectionProps) {
   return <Section {...props} />;
 }
 
-export function KeyValueList({
-  items,
-  label,
-}: {
-  items: readonly { label: string; value: ComponentChildren }[];
-  label?: string;
-}) {
+export function KeyValueList({ items, label }: { items: readonly { label: string; value: ComponentChildren }[]; label?: string | undefined }) {
   return (
     <dl class="studio-key-value-list" aria-label={label}>
       {items.map((item) => (
@@ -54,18 +45,8 @@ export function KeyValueList({
   );
 }
 
-export function StatusGroup({
-  label,
-  children,
-}: {
-  label: string;
-  children: ComponentChildren;
-}) {
-  return (
-    <div class="studio-status-group" aria-label={label}>
-      {children}
-    </div>
-  );
+export function StatusGroup({ label, children }: { label: string; children: ComponentChildren }) {
+  return <div class="studio-status-group" aria-label={label}>{children}</div>;
 }
 
 export function FilterBar({
@@ -76,8 +57,8 @@ export function FilterBar({
 }: {
   label: string;
   children: ComponentChildren;
-  activeSummary?: string;
-  onClear?: () => void;
+  activeSummary?: string | undefined;
+  onClear?: (() => void) | undefined;
 }) {
   return (
     <section class="studio-filter-bar" aria-label={label}>
@@ -85,64 +66,34 @@ export function FilterBar({
       {activeSummary || onClear ? (
         <div class="studio-filter-bar__summary" aria-live="polite">
           <span>{activeSummary ?? "Filters active"}</span>
-          {onClear ? (
-            <Button variant="quiet" onClick={onClear}>
-              Clear filters
-            </Button>
-          ) : null}
+          {onClear ? <Button variant="quiet" onClick={onClear}>Clear filters</Button> : null}
         </div>
       ) : null}
     </section>
   );
 }
 
-export function MasterDetailLayout({
-  masterLabel,
-  master,
-  detail,
-}: {
-  masterLabel: string;
-  master: ComponentChildren;
-  detail: ComponentChildren;
-}) {
+export function MasterDetailLayout({ masterLabel, master, detail }: { masterLabel: string; master: ComponentChildren; detail: ComponentChildren }) {
   return (
     <div class="studio-master-detail" data-testid="master-detail-layout">
-      <aside class="studio-master-detail__master" aria-label={masterLabel}>
-        {master}
-      </aside>
+      <aside class="studio-master-detail__master" aria-label={masterLabel}>{master}</aside>
       <div class="studio-master-detail__detail">{detail}</div>
     </div>
   );
 }
 
-type SelectableCollectionProps = {
-  label: string;
-  children: ComponentChildren;
-};
-
-export function SelectableCollection({ label, children }: SelectableCollectionProps) {
-  return (
-    <div class="studio-selectable-collection" role="listbox" aria-label={label}>
-      {children}
-    </div>
-  );
+export function SelectableCollection({ label, children }: { label: string; children: ComponentChildren }) {
+  return <div class="studio-selectable-collection" role="listbox" aria-label={label}>{children}</div>;
 }
 
 type SelectableRowProps = Omit<ComponentProps<"button">, "class" | "className" | "role"> & {
   selected: boolean;
   title: ComponentChildren;
-  metadata?: ComponentChildren;
-  status?: ComponentChildren;
+  metadata?: ComponentChildren | undefined;
+  status?: ComponentChildren | undefined;
 };
 
-export function SelectableRow({
-  selected,
-  title,
-  metadata,
-  status,
-  onKeyDown,
-  ...props
-}: SelectableRowProps) {
+export function SelectableRow({ selected, title, metadata, status, onKeyDown, ...props }: SelectableRowProps) {
   return (
     <button
       {...props}
@@ -176,50 +127,23 @@ export function SelectableRow({
 
 export type EmptyStateTone = "empty" | "loading" | "unavailable" | "error";
 
-export function EmptyState({
-  tone = "empty",
-  title,
-  children,
-  action,
-}: {
-  tone?: EmptyStateTone;
-  title: string;
-  children: ComponentChildren;
-  action?: ComponentChildren;
-}) {
+export function EmptyState({ tone = "empty", title, children, action }: { tone?: EmptyStateTone | undefined; title: string; children: ComponentChildren; action?: ComponentChildren | undefined }) {
   if (tone === "loading") {
     return (
       <div class="studio-empty-state" data-state="loading" role="status">
         <Spinner label={title} />
-        <div>
-          <strong>{title}</strong>
-          <span>{children}</span>
-        </div>
+        <div><strong>{title}</strong><span>{children}</span></div>
       </div>
     );
   }
   return (
-    <StateMessage
-      title={title}
-      tone={tone === "error" ? "error" : tone === "unavailable" ? "unavailable" : "neutral"}
-      action={action}
-    >
+    <StateMessage title={title} tone={tone === "error" ? "error" : tone === "unavailable" ? "unavailable" : "neutral"} action={action}>
       {children}
     </StateMessage>
   );
 }
 
-export function MetadataRow({
-  label,
-  primary,
-  secondary,
-  trailing,
-}: {
-  label?: string;
-  primary: ComponentChildren;
-  secondary?: ComponentChildren;
-  trailing?: ComponentChildren;
-}) {
+export function MetadataRow({ label, primary, secondary, trailing }: { label?: string | undefined; primary: ComponentChildren; secondary?: ComponentChildren | undefined; trailing?: ComponentChildren | undefined }) {
   return (
     <div class="studio-metadata-row">
       <div class="studio-metadata-row__copy">
@@ -232,46 +156,20 @@ export function MetadataRow({
   );
 }
 
-export function FilePicker({
-  id,
-  label,
-  value,
-  disabled = false,
-  hint,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  value: File | null;
-  disabled?: boolean;
-  hint?: string;
-  onChange: (file: File | null) => void;
-}) {
+export function FilePicker({ id, label, value, disabled = false, hint, onChange }: { id: string; label: string; value: File | null; disabled?: boolean | undefined; hint?: string | undefined; onChange: (file: File | null) => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div class="studio-file-picker">
       <span class="studio-file-picker__label">{label}</span>
-      <input
-        ref={inputRef}
-        id={id}
-        class="studio-file-picker__native"
-        type="file"
-        disabled={disabled}
-        onChange={(event) => onChange(event.currentTarget.files?.[0] ?? null)}
-      />
+      <input ref={inputRef} id={id} class="studio-file-picker__native" type="file" disabled={disabled} onChange={(event) => onChange(event.currentTarget.files?.[0] ?? null)} />
       <button
         type="button"
         class={cx("studio-file-picker__drop", value && "is-selected")}
         disabled={disabled}
         aria-describedby={hint ? `${id}-hint` : undefined}
         onClick={() => inputRef.current?.click()}
-        onDragOver={(event) => {
-          if (!disabled) event.preventDefault();
-        }}
-        onDrop={(event) => {
-          event.preventDefault();
-          if (!disabled) onChange(event.dataTransfer?.files?.[0] ?? null);
-        }}
+        onDragOver={(event) => { if (!disabled) event.preventDefault(); }}
+        onDrop={(event) => { event.preventDefault(); if (!disabled) onChange(event.dataTransfer?.files?.[0] ?? null); }}
       >
         <span class="studio-file-picker__mark" aria-hidden="true">⇧</span>
         <span class="studio-file-picker__copy">
@@ -286,11 +184,7 @@ export function FilePicker({
           label="Selected file"
           primary={value.name}
           secondary={`${value.type || "File type unavailable"} · ${formatFileSize(value.size)}`}
-          trailing={
-            <Button variant="quiet" disabled={disabled} onClick={() => onChange(null)}>
-              Remove
-            </Button>
-          }
+          trailing={<Button variant="quiet" disabled={disabled} onClick={() => onChange(null)}>Remove</Button>}
         />
       ) : null}
     </div>
