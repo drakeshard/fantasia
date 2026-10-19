@@ -173,7 +173,7 @@ export function FilePicker({ id, label, value, disabled = false, hint, onChange 
       >
         <span class="studio-file-picker__mark" aria-hidden="true">⇧</span>
         <span class="studio-file-picker__copy">
-          <strong>{value ? value.name : "Choose source/master"}</strong>
+          <strong>{value ? "Source selected" : "Choose a source/master"}</strong>
           <span>{value ? "Select again to replace this pending file." : "Drop a file here or choose from this device."}</span>
         </span>
         <span class="studio-file-picker__action">{value ? "Replace" : "Select file"}</span>
