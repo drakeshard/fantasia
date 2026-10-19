@@ -7,10 +7,11 @@
  * 3. reset/base
  * 4. low-level shared primitives
  * 5. reusable production components
- * 6. semantic components
- * 7. workspace structure
- * 8. shared composite presentation
- * 9. entity/asset shared compositions
+ * 6. component inventory / review-only shared composition
+ * 7. semantic components
+ * 8. workspace structure
+ * 9. shared composite presentation
+ * 10. entity/asset shared compositions
  *
  * Feature styles are imported separately by production-studio.tsx and may only
  * compose feature-prefixed layout/content hooks.
@@ -20,6 +21,7 @@
 @import "./base.css";
 @import "../ui/primitives.css";
 @import "../ui/production-components.css";
+@import "../ui/component-inventory.css";
 @import "../ui/semantic.css";
 @import "../ui/workspace.css";
 @import "../ui/composites.css";
