@@ -1,5 +1,12 @@
 import { useMemo, useState } from "preact/hooks";
-import { Chip, StateMessage, TextField } from "../../ui/primitives";
+import { Chip, TextField } from "../../ui/primitives";
+import {
+  EmptyState,
+  FilterBar,
+  SelectableCollection,
+  SelectableRow,
+  StatusGroup,
+} from "../../ui/production-components";
 import { CollectionTemplate, TemplateFixtureHeading } from "../../ui/workspace";
 import type { CharacterReadModel } from "./model";
 
@@ -33,47 +40,48 @@ export function CharacterCollection({
         />
       }
       filterSlot={
-        <TextField
-          id="character-filter"
-          label="Filter characters"
-          type="search"
-          value={query}
-          placeholder="Name or semantic ID"
-          onInput={(event) => setQuery(event.currentTarget.value)}
-        />
+        <FilterBar
+          label="Character filters"
+          activeSummary={query.trim() ? `${visible.length} of ${models.length} characters` : undefined}
+          onClear={query.trim() ? () => setQuery("") : undefined}
+        >
+          <TextField
+            id="character-filter"
+            label="Filter characters"
+            type="search"
+            value={query}
+            placeholder="Name or semantic ID"
+            onInput={(event) => setQuery(event.currentTarget.value)}
+          />
+        </FilterBar>
       }
     >
       {visible.length === 0 ? (
-        <StateMessage
-          title={models.length === 0 ? "No canonical characters" : "No matching characters"}
-        >
+        <EmptyState title={models.length === 0 ? "No canonical characters" : "No matching characters"}>
           {models.length === 0
             ? "The canonical Git source returned no character definitions. Empty is not treated as unavailable."
-            : "Change the filter to show another canonical character."}
-        </StateMessage>
+            : "Change or clear the filter to show another canonical character."}
+        </EmptyState>
       ) : (
-        <div class="studio-character-list" data-testid="characters-collection">
+        <SelectableCollection label="Characters">
           {visible.map((model) => (
-            <button
-              type="button"
-              class="studio-character-row"
-              aria-current={selectedSemanticId === model.semanticId ? "true" : undefined}
+            <SelectableRow
+              selected={selectedSemanticId === model.semanticId}
+              title={model.displayName}
+              metadata={<code>{model.semanticId}</code>}
+              status={
+                <StatusGroup label={`Status for ${model.displayName}`}>
+                  <Chip>{model.lifecycle ?? "registry unregistered"}</Chip>
+                  <Chip>
+                    {model.issues.length === 0 ? "no read issues" : `${model.issues.length} issues`}
+                  </Chip>
+                </StatusGroup>
+              }
               onClick={() => onSelect(model.semanticId)}
               key={model.semanticId}
-            >
-              <span>
-                <strong>{model.displayName}</strong>
-                <code>{model.semanticId}</code>
-              </span>
-              <span class="studio-character-row__status">
-                <Chip>{model.lifecycle ?? "registry unregistered"}</Chip>
-                <Chip>
-                  {model.issues.length === 0 ? "no read issues" : `${model.issues.length} issues`}
-                </Chip>
-              </span>
-            </button>
+            />
           ))}
-        </div>
+        </SelectableCollection>
       )}
     </CollectionTemplate>
   );
