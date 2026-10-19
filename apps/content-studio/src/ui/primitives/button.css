@@ -27,3 +27,10 @@
 .ui-icon-button { width: var(--studio-target-min); min-width: var(--studio-target-min); padding: 0; font-size: var(--studio-font-size-heading); }
 .ui-button:focus-visible { outline: 2px solid var(--studio-focus-ring); outline-offset: 2px; box-shadow: var(--studio-shadow-focus); }
 @media (prefers-reduced-motion: reduce) { .ui-button { transition: none; } .ui-button:not(:disabled):active { transform: none; } }
+@media (forced-colors: active) {
+  .ui-button { border-color: ButtonText; box-shadow: none; }
+  .ui-button--quiet { border-color: ButtonText; }
+  .ui-button:disabled { color: GrayText; opacity: 1; filter: none; }
+  .ui-button[aria-busy="true"] { border-style: double; }
+  .ui-button:focus-visible { outline-color: Highlight; box-shadow: none; }
+}

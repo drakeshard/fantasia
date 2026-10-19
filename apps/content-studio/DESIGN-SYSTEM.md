@@ -57,13 +57,30 @@ These components are intentionally explicit composition tools, not a schema-driv
 13. Accepted visual baselines are repository files under `tests/studio/visual/__snapshots__/{projectName}`. CI uses compare-only `pnpm test:studio:visual`; it never runs snapshot-update mode.
 14. `pnpm test:studio:visual:update` is an intentional maintenance command only. A baseline change is reviewed like source code and committed only when the visual change is accepted.
 
+## State and interaction contract
+
+Content Studio standardizes observable semantic state and component policy without introducing a universal state runtime. Native/browser behavior remains authoritative where the platform already owns it; shared primitives add only the policy and accessibility wiring required by the Studio contract.
+
+- **disabled** means the control is unavailable for interaction. Use native `disabled` semantics where the underlying control supports them.
+- **readonly** means content remains visible and normally focusable but is not modifiable where the underlying control supports readonly semantics. It is not interchangeable with disabled.
+- **pending / busy** means work associated with an operation is in progress. Busy is semantically distinct from disabled. The shared Content Studio `Button` deliberately combines `pending` with native disabled behavior to prevent duplicate command commitment; that is Button-specific Studio policy, not a global rule that busy always disables a control.
+- **invalid** means the field or value is invalid according to the owning validation contract. Invalid state is independent from whether an inline error message is currently rendered. An `error` string implies invalid state and owns its `aria-describedby` relationship; `invalid` may also be supplied without an error string when validation evidence is presented elsewhere.
+- **selected / current** identify semantic choice or current item. They are not focus state.
+- **focused** is browser-owned interaction state. Roving focus position is internal behavior and must not become a second selected-value source of truth.
+- **open** identifies committed visibility/state for shared overlays such as Dialog. Escape/close interactions request an open-state change; browser effects and focus restoration follow the committed component state.
+- **intent** is a user-requested action such as activation, selection, or dismissal. It is not interchangeable with committed state and must not create duplicate semantic state stores.
+
+Visual configuration such as variant, surface kind, density, or layout is not semantic state. Derived ARIA and styling states should come from the authoritative semantic state rather than being tracked independently.
+
+Shared accessibility styling must remain usable with `prefers-reduced-motion` and `forced-colors: active`. Forced-colors handling belongs in base/shared component CSS, not production feature overrides. Focus, invalid, selected, disabled, and pending states must retain non-color-only or system-color-visible affordances in that mode.
+
 ## Validation ownership
 
 Validation follows the cheapest reliable layer rather than duplicating the same requirement in every test runtime.
 
 - **Static contract checks** own contract shape, token integrity, theme-only palette ownership, shared/feature selector boundaries, raw native-control prevention, className escape prevention, `!important` prevention and import ordering.
 - **Unit tests** own pure deterministic logic such as semantic-state catalogs, ordering and metadata mapping.
-- **Real-browser behavioral tests** own keyboard/focus, Dialog/native behavior, selectable collection keyboard semantics, FilePicker relationships, computed CSS/theme resolution, representative contrast, minimum targets/layout behavior, reduced motion and compact overflow.
+- **Real-browser behavioral tests** own keyboard/focus, Dialog/native behavior, selectable collection keyboard semantics, FilePicker relationships, computed CSS/theme resolution, representative contrast, forced-colors behavior, minimum targets/layout behavior, reduced motion and compact overflow.
 - **UI Lab component inventory** is the review surface for primitive/production-component states. Production pages are not used as the component laboratory.
 - **Visual regression** owns a curated representative shared appearance matrix, including semantic dimensions, global Studio shell and production component inventory. It is not a screenshot of every page/state.
 - **Visual evidence** from `.github/workflows/content-studio-visual.yml` uploads report/actual/expected/diff evidence. A mismatch fails the workflow and normal Studio browser Quality command.

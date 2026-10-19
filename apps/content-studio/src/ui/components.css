@@ -46,5 +46,12 @@
 .studio-component-file-picker__summary strong { color: var(--studio-text-primary); }
 .studio-component-file-picker__summary small { color: var(--studio-text-muted); }
 @media (prefers-reduced-motion: reduce) { .studio-component-selectable-row { transition: none; } }
+@media (forced-colors: active) {
+  .studio-component-filter-bar, .studio-component-selectable-row, .studio-component-file-picker__dropzone, .studio-component-file-picker__summary { border-color: ButtonText; }
+  .studio-component-selectable-row[aria-selected="true"] { border-width: 2px; border-color: Highlight; box-shadow: none; }
+  .studio-component-selectable-row:focus-visible { outline-color: Highlight; box-shadow: none; }
+  .studio-component-selectable-row:disabled, .studio-component-file-picker__dropzone.is-disabled { color: GrayText; opacity: 1; }
+  .studio-component-file-picker__native:focus-visible + .studio-component-file-picker__dropzone { outline: 2px solid Highlight; outline-offset: 2px; box-shadow: none; }
+}
 @media (max-width: 61.25rem) { .studio-component-master-detail { grid-template-columns: 1fr; } }
 @media (max-width: 35rem) { .studio-component-facts--2, .studio-component-facts--3 { grid-template-columns: 1fr; } .studio-component-file-picker__dropzone { grid-template-columns: auto minmax(0, 1fr); } .studio-component-file-picker__action { grid-column: 2; } .studio-component-file-picker__summary { align-items: flex-start; flex-direction: column; } }
