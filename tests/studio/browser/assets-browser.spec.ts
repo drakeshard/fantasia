@@ -140,7 +140,7 @@ test("Asset operators can search, refine, recover, and select results", async ({
   await signIn(page);
 
   const browser = page.getByRole("complementary", { name: "Asset browser" });
-  const results = browser.locator(".studio-assets-selector--rail");
+  const results = browser.getByRole("listbox", { name: "Semantic assets" });
   await expect(browser.getByText("2 / 2", { exact: true })).toBeVisible();
 
   await browser.getByLabel("Search assets").fill("Arbiter");

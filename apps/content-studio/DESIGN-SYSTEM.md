@@ -17,7 +17,7 @@ A lower layer never imports or targets a higher layer. Feature CSS never restyle
 | Fantasia theme | `src/styles/theme-fantasia-midnight.css` | palette, semantic colors, surfaces/material recipes, shadows, component paint variables, lifecycle/validation colors | component DOM anatomy, feature layout |
 | Design-system entrypoint | `src/styles/design-system.css` | ordered imports for the shared system | feature styling |
 | Low-level primitives | `src/ui/primitives.tsx`, `src/ui/primitives/*`, `src/ui/primitives.css` | Button/IconButton, fields/select/checkbox, tabs, dialog/drawer, surfaces, feedback, table/list and browser-owned interaction states | asset/character-specific layout |
-| Reusable production components | `src/ui/components.tsx`, `src/ui/components/*`, `src/ui/components.css` | Section/DetailSection, KeyValueList, StatusGroup, FilterBar, SelectableCollection/Row, MasterDetailLayout, FilePicker | feature facts, registry semantics, provider-specific policy |
+| Reusable production components | `src/ui/components.tsx`, `src/ui/components/*`, `src/ui/components.css` | Section/DetailSection, KeyValueList, StatusGroup, FilterBar, SelectableCollection/Row, MasterDetailLayout, FilePicker, collection/media/detail presentation patterns | feature facts, registry semantics, provider-specific policy |
 | Semantic components | `src/ui/semantic.tsx`, `src/ui/semantic.css` | lifecycle, validation, review, readiness, provenance and runtime semantics | feature-specific styling |
 | Workspace structure | `src/ui/workspace.tsx`, `src/ui/workspace.css` | shell, workspace templates, responsive structural composition | title feature details |
 | Shared composite presentation | `src/ui/composites.css`, `src/ui/entity-asset.*` | repeated shell/workspace/entity/asset-board presentation | one-off feature overrides |
@@ -35,14 +35,20 @@ The shared production layer exists to stop domain pages from recreating common S
 - `SelectableCollection` / `SelectableRow`: single-selection collections with Arrow/Home/End keyboard behavior, selected state separate from focus, and shared minimum targets.
 - `MasterDetailLayout`: responsive collection/detail composition used by asset-style workspaces.
 - `FilePicker`: the sole production owner of the hidden native file input, drop/select/remove interaction and selected-file summary.
+- `CollectionPanel`: standard bordered collection/browser frame with title, count and local actions.
+- `MediaCollectionItem`: reusable visual-first selectable-row content anatomy with type/media marker, primary identity, subtitle, trailing fact and status/meta slot. It does not fetch media itself.
+- `DetailPanel`: selected-record framing with shared identity/header/status anatomy.
+- `PreviewSummaryLayout` / `MediaPreview`: reusable preview-dominant split and provider-agnostic preview/empty treatment for image/media-oriented records.
+- `UtilityStatus`: compact provider/service status for workspace utility areas; normal healthy integration state must not dominate the page hierarchy.
+- `StatusTag` / `DetailRow`: compact generic status and repeated evidence/history row presentation. Domain/semantic meaning still comes from the owning feature or semantic layer.
 - Low-level primitives continue to own actual Buttons, fields, selects, checkboxes, Tabs, Dialog/Drawer, surfaces and feedback states.
 
-These components are explicit composition tools, not a schema-driven generic admin renderer. The UI Lab may demonstrate them for human review, but the lab is not a production workflow and is not an enduring automated-test target.
+These components are explicit composition tools, not a schema-driven generic admin renderer. Assets is the first production consumer of the media/detail family; later Equipment, Skills, Enemies and other workspaces should reuse the applicable patterns rather than cloning their paint/layout. The UI Lab may demonstrate components for human review, but the lab is not a production workflow and is not an enduring automated-test target.
 
 ## Rules
 
 1. A feature needing a different Button, field, Dialog, Tab or Surface appearance changes the shared primitive or adds an explicit reusable primitive variant. It does not target `.ui-*` or pass `className` to repaint a shared root.
-2. A repeated production pattern such as filters, selectable results, fact grids, file selection or master/detail composition belongs in the reusable production layer. Assets and Characters are current consumers; later workspaces must consume this layer rather than clone it.
+2. A repeated production pattern such as filters, selectable results, fact grids, file selection, collection panels, media rows, preview/summary detail, evidence rows or master/detail composition belongs in the reusable production layer. Assets and Characters are current consumers; later workspaces must consume this layer rather than clone it.
 3. Production feature TSX must not declare raw `<button>`, `<input>`, `<select>`, `<textarea>` or `<dialog>` controls. The shared FilePicker is the documented exception because it encapsulates its hidden native file input.
 4. Feature CSS may style domain content placed inside shared components, but it may not target `.ui-*`, `.studio-component-*`, workspace or semantic roots. Use outer feature wrappers for layout.
 5. Raw palette values and `--studio-color-*` palette tokens belong only to the Fantasia theme or purpose-built visual-reference assets. Shared and production feature CSS consume semantic/component theme variables.

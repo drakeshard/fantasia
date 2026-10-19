@@ -1,0 +1,18 @@
+/* Assets-specific content arrangement only. Shared panel/media/detail paint lives in ui/components.css. */
+.studio-assets-provider-status { display: grid; min-width: min(24rem, 100%); }
+.studio-assets-browser-controls { padding: var(--studio-space-10); border-bottom: 1px solid var(--studio-border-subtle); }
+.studio-assets-selector-rail { min-height: 0; max-height: min(58vh, 42rem); padding: var(--studio-space-8); overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.studio-assets-browser-empty { display: grid; justify-items: start; gap: var(--studio-space-8); margin: var(--studio-space-8); padding: var(--studio-space-16); border: 1px dashed var(--studio-border-luminous-subtle); border-radius: var(--studio-radius-control); background: var(--studio-surface-inset-bg); }
+.studio-assets-browser-empty strong { color: var(--studio-text-primary); font-family: var(--studio-font-serif); }
+.studio-assets-browser-empty span { color: var(--studio-text-muted); font-size: var(--studio-font-size-label); }
+.studio-assets-summary-title { display: flex; align-items: baseline; justify-content: space-between; gap: var(--studio-space-12); padding-bottom: var(--studio-space-10); border-bottom: 1px solid var(--studio-border-subtle); }
+.studio-assets-summary-title span { color: var(--studio-text-muted); font-size: var(--studio-font-size-meta); letter-spacing: 0.065em; text-transform: uppercase; }
+.studio-assets-summary-title strong { color: var(--studio-text-primary); font-family: var(--studio-font-serif); }
+.studio-assets-summary-actions { display: flex; flex-wrap: wrap; gap: var(--studio-space-8); margin-top: auto; }
+.studio-assets-details { border-top: 1px solid var(--studio-border-subtle); }
+.studio-assets-details__body { min-height: 9.5rem; padding: 0 var(--studio-space-12) var(--studio-space-12); }
+.studio-assets-details__actions { display: flex; justify-content: flex-end; padding: 0 var(--studio-space-12) var(--studio-space-12); }
+.studio-assets-detail-list { display: grid; gap: var(--studio-space-8); }
+.studio-assets-dialog-note { margin: 0 0 var(--studio-space-12); color: var(--studio-text-secondary); font-size: var(--studio-font-size-label); }
+@media (max-width: 61.25rem) { .studio-assets-selector-rail { max-height: none; } }
+@media (max-width: 47.5rem) { .studio-assets-summary-title { align-items: flex-start; flex-direction: column; } }
