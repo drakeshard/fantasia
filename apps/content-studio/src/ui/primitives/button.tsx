@@ -25,7 +25,7 @@ export function Button({
       {...props}
       class={cx("ui-button", `ui-button--${variant}`, className)}
       disabled={disabled || pending}
-      aria-busy={pending || undefined}
+      aria-busy={pending}
     >
       {pending ? <Spinner label="Working" size="small" /> : null}
       <span>{children}</span>
