@@ -129,7 +129,8 @@ test("Add Asset keeps controlled identity/file recovery and uses trusted multipa
   await signIn(page);
 
   await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
-  await expect(page.getByText("Google Drive · Connected as owner@example.test", { exact: true })).toBeVisible();
+  await expect(page.getByText("Google Drive connected", { exact: true })).toBeVisible();
+  await expect(page.getByText("owner@example.test", { exact: true })).toBeVisible();
   await expect(page.getByText("No assets yet", { exact: true })).toBeVisible();
   await expect(page.getByLabel("Search assets")).toHaveCount(0);
   await expect(page.getByLabel("Lifecycle")).toHaveCount(0);
