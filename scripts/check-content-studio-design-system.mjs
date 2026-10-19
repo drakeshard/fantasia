@@ -6,6 +6,7 @@ const root = process.cwd();
 const studioRoot = path.join(root, "apps", "content-studio");
 const stylesRoot = path.join(studioRoot, "src", "styles");
 const uiRoot = path.join(studioRoot, "src", "ui");
+const featuresRoot = path.join(studioRoot, "src", "features");
 const contractPath = "apps/content-studio/design-system-contract.json";
 const tokenPath = "apps/content-studio/src/styles/tokens.css";
 const themePath = "apps/content-studio/src/styles/theme-fantasia-midnight.css";
@@ -29,12 +30,16 @@ function fail(message) {
   process.exitCode = 1;
 }
 
-function cssFilesUnder(directory) {
+function filesUnder(directory, extension) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) return cssFilesUnder(absolute);
-    return entry.isFile() && entry.name.endsWith(".css") ? [absolute] : [];
+    if (entry.isDirectory()) return filesUnder(absolute, extension);
+    return entry.isFile() && entry.name.endsWith(extension) ? [absolute] : [];
   });
+}
+
+function cssFilesUnder(directory) {
+  return filesUnder(directory, ".css");
 }
 
 function productionStyleFiles() {
@@ -60,60 +65,39 @@ try {
   designSystemContract = {};
 }
 
-if (designSystemContract.schemaVersion !== 1) {
-  fail(`${contractPath} must use schemaVersion 1.`);
-}
-
+if (designSystemContract.schemaVersion !== 1) fail(`${contractPath} must use schemaVersion 1.`);
 const themeId = designSystemContract.theme?.id;
 const themeScope = designSystemContract.theme?.scope;
-if (typeof themeId !== "string" || themeId.length === 0) {
-  fail(`${contractPath} must define theme.id.`);
-}
-if (themeScope !== `[data-studio-theme="${themeId}"]`) {
-  fail(`${contractPath} theme.scope must exactly match its data-studio-theme id.`);
-}
+if (typeof themeId !== "string" || themeId.length === 0) fail(`${contractPath} must define theme.id.`);
+if (themeScope !== `[data-studio-theme="${themeId}"]`) fail(`${contractPath} theme.scope must exactly match its data-studio-theme id.`);
 
-const requiredThemeTokens = Array.isArray(designSystemContract.requiredThemeTokens)
-  ? designSystemContract.requiredThemeTokens
-  : [];
-if (requiredThemeTokens.length === 0) {
-  fail(`${contractPath} must define requiredThemeTokens.`);
-}
+const requiredThemeTokens = Array.isArray(designSystemContract.requiredThemeTokens) ? designSystemContract.requiredThemeTokens : [];
+if (requiredThemeTokens.length === 0) fail(`${contractPath} must define requiredThemeTokens.`);
 const uniqueRequiredThemeTokens = new Set(requiredThemeTokens);
-if (uniqueRequiredThemeTokens.size !== requiredThemeTokens.length) {
-  fail(`${contractPath} contains duplicate requiredThemeTokens.`);
-}
+if (uniqueRequiredThemeTokens.size !== requiredThemeTokens.length) fail(`${contractPath} contains duplicate requiredThemeTokens.`);
 for (const token of requiredThemeTokens) {
-  if (typeof token !== "string" || !token.startsWith("--studio-")) {
-    fail(`${contractPath} contains invalid theme token ${String(token)}.`);
-  }
+  if (typeof token !== "string" || !token.startsWith("--studio-")) fail(`${contractPath} contains invalid theme token ${String(token)}.`);
 }
 
-const contrastPairs = Array.isArray(designSystemContract.contrastPairs)
-  ? designSystemContract.contrastPairs
-  : [];
-if (contrastPairs.length === 0) {
-  fail(`${contractPath} must define representative contrastPairs.`);
-}
+const contrastPairs = Array.isArray(designSystemContract.contrastPairs) ? designSystemContract.contrastPairs : [];
+if (contrastPairs.length === 0) fail(`${contractPath} must define representative contrastPairs.`);
 for (const [index, pair] of contrastPairs.entries()) {
-  if (
-    typeof pair?.foreground !== "string" ||
-    typeof pair?.background !== "string" ||
-    !uniqueRequiredThemeTokens.has(pair.foreground) ||
-    !uniqueRequiredThemeTokens.has(pair.background)
-  ) {
+  if (typeof pair?.foreground !== "string" || typeof pair?.background !== "string" || !uniqueRequiredThemeTokens.has(pair.foreground) || !uniqueRequiredThemeTokens.has(pair.background)) {
     fail(`${contractPath} contrastPairs[${index}] must reference required theme tokens.`);
   }
-  if (pair?.minimum !== 3 && pair?.minimum !== 4.5) {
-    fail(`${contractPath} contrastPairs[${index}] minimum must be 3 or 4.5.`);
-  }
-  if (typeof pair?.purpose !== "string" || pair.purpose.trim().length === 0) {
-    fail(`${contractPath} contrastPairs[${index}] must explain its purpose.`);
-  }
+  if (pair?.minimum !== 3 && pair?.minimum !== 4.5) fail(`${contractPath} contrastPairs[${index}] minimum must be 3 or 4.5.`);
+  if (typeof pair?.purpose !== "string" || pair.purpose.trim().length === 0) fail(`${contractPath} contrastPairs[${index}] must explain its purpose.`);
 }
 
 const forbiddenSharedSelectors = [
   ".ui-",
+  ".studio-component-",
+  ".studio-key-value-list",
+  ".studio-filter-bar",
+  ".studio-master-detail",
+  ".studio-selectable-",
+  ".studio-file-picker",
+  ".studio-metadata-row",
   ".studio-shell",
   ".studio-workspace-header",
   ".studio-template",
@@ -129,41 +113,34 @@ for (const file of productionStyleFiles()) {
   const source = fs.readFileSync(file, "utf8");
   const css = withoutComments(source);
   const relative = path.relative(root, file);
-
   for (const selector of forbiddenSharedSelectors) {
-    if (css.includes(selector)) {
-      fail(`${relative} reaches into shared selector ${selector}; use a feature-prefixed hook or change the shared owner.`);
-    }
+    if (css.includes(selector)) fail(`${relative} reaches into shared selector ${selector}; use a feature-prefixed layout hook or change the shared owner.`);
   }
+  if (hasRawPalette(source)) fail(`${relative} contains a raw palette value; feature CSS must consume Studio theme variables.`);
+  if (css.includes("!important")) fail(`${relative} contains !important; fix ownership/specificity instead.`);
+}
 
-  if (hasRawPalette(source)) {
-    fail(`${relative} contains a raw palette value; feature CSS must consume Studio theme variables.`);
-  }
-
-  if (css.includes("!important")) {
-    fail(`${relative} contains !important; fix ownership/specificity instead.`);
+// Feature source may compose shared controls, but must not introduce native select/textarea
+// anatomy. Buttons and file inputs have existing production debt in Assets and are guarded by
+// the CSS/component ownership rules until that page finishes migration; new entity modules should
+// use shared primitives/production components from inception.
+for (const file of filesUnder(featuresRoot, ".tsx")) {
+  const source = withoutComments(fs.readFileSync(file, "utf8"));
+  const relative = path.relative(root, file);
+  if (/<select\b/i.test(source) || /<textarea\b/i.test(source)) {
+    fail(`${relative} declares native select/textarea anatomy; consume shared Studio controls instead.`);
   }
 }
 
 const tokens = read(tokenPath);
-if (hasRawPalette(tokens)) {
-  fail("tokens.css contains palette values; structural tokens must stay theme-neutral.");
-}
-
+if (hasRawPalette(tokens)) fail("tokens.css contains palette values; structural tokens must stay theme-neutral.");
 const theme = read(themePath);
 const themeCss = withoutComments(theme).trim();
-if (!themeCss.startsWith(`${themeScope} {`)) {
-  fail(`${themePath} must begin with the title-theme scope from ${contractPath}.`);
-}
-if ((themeCss.match(/{/g) ?? []).length !== 1 || (themeCss.match(/}/g) ?? []).length !== 1) {
-  fail(`${themePath} must only remap tokens in the title-theme scope; DOM/component selectors belong to shared CSS owners.`);
-}
+if (!themeCss.startsWith(`${themeScope} {`)) fail(`${themePath} must begin with the title-theme scope from ${contractPath}.`);
+if ((themeCss.match(/{/g) ?? []).length !== 1 || (themeCss.match(/}/g) ?? []).length !== 1) fail(`${themePath} must only remap tokens in the title-theme scope; DOM/component selectors belong to shared CSS owners.`);
 
 const contractOwners = new Map();
-for (const [relativePath, source] of [
-  [tokenPath, tokens],
-  [themePath, theme],
-]) {
+for (const [relativePath, source] of [[tokenPath, tokens], [themePath, theme]]) {
   for (const token of studioDeclarations(source)) {
     const existing = contractOwners.get(token);
     if (existing) {
@@ -173,46 +150,31 @@ for (const [relativePath, source] of [
     contractOwners.set(token, relativePath);
   }
 }
-
 for (const token of requiredThemeTokens) {
-  if (contractOwners.get(token) !== themePath) {
-    fail(`${themePath} is missing required semantic/theme contract ${token}.`);
-  }
+  if (contractOwners.get(token) !== themePath) fail(`${themePath} is missing required semantic/theme contract ${token}.`);
 }
 
 const sharedPaintFiles = [path.join(root, basePath), ...cssFilesUnder(uiRoot)];
 for (const file of sharedPaintFiles) {
   const relative = path.relative(root, file);
-  if (hasRawPalette(fs.readFileSync(file, "utf8"))) {
-    fail(`${relative} contains a raw palette value; shared CSS must consume semantic/component theme tokens.`);
-  }
+  if (hasRawPalette(fs.readFileSync(file, "utf8"))) fail(`${relative} contains a raw palette value; shared CSS must consume semantic/component theme tokens.`);
 }
 
 for (const file of [...cssFilesUnder(stylesRoot), ...cssFilesUnder(uiRoot)]) {
   const relative = path.relative(root, file);
   const source = fs.readFileSync(file, "utf8");
-
   if (relative !== tokenPath && relative !== themePath) {
-    for (const token of studioDeclarations(source)) {
-      fail(`${relative} declares ${token}; public Studio tokens belong only to tokens.css or the active theme.`);
-    }
+    for (const token of studioDeclarations(source)) fail(`${relative} declares ${token}; public Studio tokens belong only to tokens.css or the active theme.`);
   }
-
   for (const token of studioReferences(source)) {
-    if (!contractOwners.has(token)) {
-      fail(`${relative} references undefined Studio token ${token}.`);
-    }
-    if (relative !== themePath && token.startsWith("--studio-color-")) {
-      fail(`${relative} consumes palette token ${token}; shared/feature CSS must consume semantic or component tokens instead.`);
-    }
+    if (!contractOwners.has(token)) fail(`${relative} references undefined Studio token ${token}.`);
+    if (relative !== themePath && token.startsWith("--studio-color-")) fail(`${relative} consumes palette token ${token}; shared/feature CSS must consume semantic or component tokens instead.`);
   }
 }
 
 const fidelity = withoutComments(read("apps/content-studio/src/styles/material-fidelity.css"));
 for (const selector of forbiddenSharedSelectors) {
-  if (fidelity.includes(selector)) {
-    fail(`material-fidelity.css still styles shared selector ${selector}; production paint belongs to shared UI owners.`);
-  }
+  if (fidelity.includes(selector)) fail(`material-fidelity.css still styles shared selector ${selector}; production paint belongs to shared UI owners.`);
 }
 
 const entrypoint = read("apps/content-studio/src/styles/design-system.css");
@@ -221,6 +183,8 @@ const requiredImports = [
   '"./theme-fantasia-midnight.css"',
   '"./base.css"',
   '"../ui/primitives.css"',
+  '"../ui/production-components.css"',
+  '"../ui/component-inventory.css"',
   '"../ui/semantic.css"',
   '"../ui/workspace.css"',
   '"../ui/composites.css"',
@@ -237,6 +201,4 @@ for (const requiredImport of requiredImports) {
   previous = index;
 }
 
-if (!process.exitCode) {
-  console.log("Content Studio design-system ownership, theme contract, and accessibility contract: OK");
-}
+if (!process.exitCode) console.log("Content Studio design-system ownership, production components, theme contract, and accessibility contract: OK");
