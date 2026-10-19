@@ -46,7 +46,10 @@
     "test:studio:unit": "vitest run tests/studio --passWithNoTests",
     "test:web:e2e": "playwright test --config=playwright.config.ts",
     "test:web:visual": "playwright test --config=playwright.visual.config.ts",
-    "test:studio:browser": "playwright test --config=playwright.content-studio.config.ts",
+    "test:studio:browser:behavior": "playwright test --config=playwright.content-studio.config.ts",
+    "test:studio:browser": "pnpm test:studio:browser:behavior && pnpm test:studio:visual",
+    "test:studio:visual": "playwright test --config=playwright.content-studio.visual.config.ts",
+    "test:studio:visual:update": "playwright test --config=playwright.content-studio.visual.config.ts --update-snapshots",
     "build": "pnpm -r build && pnpm story:build",
     "verify": "pnpm run audit && pnpm foundation:consumer && pnpm check && pnpm typecheck && pnpm test && pnpm build && pnpm test:web:e2e && pnpm test:studio:browser"
   },
