@@ -1,7 +1,4 @@
-/*
- * Assets dialog composition only.
- * Shared Dialog/Button/Field appearance is owned by ui/primitives.css.
- */
+/* Assets dialog/domain layout only. Shared fields, sections, metadata and FilePicker anatomy live in ui/. */
 
 #add-asset-dialog {
   width: min(52rem, calc(100vw - (2 * var(--studio-space-24))));
@@ -14,64 +11,6 @@
   gap: var(--studio-space-16);
 }
 
-.studio-assets-create-section {
-  position: relative;
-  display: grid;
-  gap: var(--studio-space-16);
-  padding: var(--studio-space-16);
-  overflow: hidden;
-  border: 1px solid var(--studio-border-luminous-subtle);
-  border-radius: var(--studio-radius-panel);
-  background: var(--studio-surface-inset-bg);
-}
-
-.studio-assets-create-section::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 8rem;
-  height: 1px;
-  background: linear-gradient(90deg, var(--studio-accent-primary), transparent);
-  content: "";
-}
-
-.studio-assets-create-section__heading {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--studio-space-12);
-}
-
-.studio-assets-create-section__step {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid color-mix(in srgb, var(--studio-accent-primary) 58%, var(--studio-border-subtle));
-  border-radius: var(--studio-radius-round);
-  background: color-mix(in srgb, var(--studio-accent-primary) 9%, var(--studio-surface-raised));
-  color: var(--studio-accent-primary);
-  font-family: var(--studio-font-serif);
-  font-size: var(--studio-font-size-meta);
-  font-weight: 700;
-}
-
-.studio-assets-create-section__heading > div {
-  display: grid;
-  gap: var(--studio-space-4);
-  min-width: 0;
-}
-
-.studio-assets-create-section__heading strong {
-  color: var(--studio-text-primary);
-  font-family: var(--studio-font-serif);
-}
-
-.studio-assets-create-section__heading small {
-  color: var(--studio-text-muted);
-  line-height: var(--studio-line-height-body);
-}
-
 .studio-assets-create-identity-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -81,174 +20,6 @@
 .studio-assets-create-identity-grid > :last-child {
   grid-column: 1 / -1;
   max-width: 50%;
-}
-
-.studio-assets-file-picker-field {
-  display: grid;
-  gap: var(--studio-space-8);
-}
-
-.studio-assets-file-input--native {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.studio-assets-file-picker {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--studio-space-16);
-  min-height: 7.5rem;
-  padding: var(--studio-space-16) var(--studio-space-24);
-  border: 1px dashed var(--studio-border-active);
-  border-radius: var(--studio-radius-panel);
-  background: var(--studio-surface-inset-bg);
-  box-shadow: inset 0 1px 8px color-mix(in srgb, var(--studio-surface-sidebar) 40%, transparent);
-  cursor: pointer;
-  transition:
-    border-color var(--studio-motion-feedback) var(--studio-ease-standard),
-    background var(--studio-motion-feedback) var(--studio-ease-standard),
-    transform var(--studio-motion-feedback) var(--studio-ease-standard);
-}
-
-.studio-assets-file-picker:hover {
-  border-color: color-mix(in srgb, var(--studio-accent-navigation) 72%, var(--studio-accent-primary));
-  background: var(--studio-surface-card-bg);
-  transform: translateY(-1px);
-}
-
-.studio-assets-file-input--native:focus-visible + .studio-assets-file-picker {
-  outline: 2px solid var(--studio-focus-ring);
-  outline-offset: 2px;
-  box-shadow: var(--studio-shadow-focus);
-}
-
-.studio-assets-file-picker--selected {
-  border-style: solid;
-  border-color: color-mix(in srgb, var(--studio-accent-primary) 45%, var(--studio-accent-navigation));
-}
-
-.studio-assets-file-picker__mark {
-  display: grid;
-  place-items: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  border: 1px solid var(--studio-border-luminous-subtle);
-  border-radius: var(--studio-radius-round);
-  background: var(--studio-surface-card-bg);
-  color: var(--studio-accent-navigation);
-  font-size: 1.25rem;
-}
-
-.studio-assets-file-picker__copy {
-  display: grid;
-  gap: var(--studio-space-4);
-  min-width: 0;
-}
-
-.studio-assets-file-picker__copy strong {
-  color: var(--studio-text-primary);
-  font-family: var(--studio-font-serif);
-}
-
-.studio-assets-file-picker__copy span,
-.studio-assets-file-summary small {
-  color: var(--studio-text-muted);
-  font-size: var(--studio-font-size-meta);
-}
-
-.studio-assets-file-picker__action {
-  display: inline-flex;
-  min-height: var(--studio-target-min);
-  align-items: center;
-  justify-content: center;
-  padding-inline: var(--studio-space-16);
-  border: 1px solid var(--studio-border-control);
-  border-radius: var(--studio-radius-control);
-  background: var(--studio-button-secondary-bg);
-  color: var(--studio-text-primary);
-  font-size: var(--studio-font-size-meta);
-  font-weight: 700;
-}
-
-.studio-assets-file-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--studio-space-12);
-  min-width: 0;
-  padding: var(--studio-space-8) var(--studio-space-12);
-  border: 1px solid var(--studio-border-luminous-subtle);
-  border-left: 2px solid var(--studio-accent-primary);
-  border-radius: var(--studio-radius-control);
-  background: var(--studio-surface-card-bg);
-}
-
-.studio-assets-file-summary__identity {
-  display: flex;
-  align-items: center;
-  gap: var(--studio-space-8);
-  min-width: 0;
-}
-
-.studio-assets-file-summary__identity > div {
-  display: grid;
-  min-width: 0;
-}
-
-.studio-assets-file-summary__icon {
-  color: var(--studio-accent-primary);
-}
-
-.studio-assets-file-summary strong,
-.studio-assets-file-summary small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.studio-assets-identity-confirmation {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(14rem, auto);
-  align-items: center;
-  gap: var(--studio-space-16);
-  padding: var(--studio-space-12) var(--studio-space-16);
-  border: 1px solid color-mix(in srgb, var(--studio-accent-primary) 30%, var(--studio-border-subtle));
-  border-left: 2px solid var(--studio-accent-primary);
-  border-radius: var(--studio-radius-control);
-  background: var(--studio-surface-card-bg);
-}
-
-.studio-assets-identity-confirmation > div {
-  display: grid;
-  gap: var(--studio-space-4);
-}
-
-.studio-assets-identity-confirmation span,
-.studio-assets-create-footer span {
-  color: var(--studio-text-muted);
-  font-size: var(--studio-font-size-meta);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.studio-assets-identity-confirmation strong,
-.studio-assets-create-footer strong {
-  color: var(--studio-text-primary);
-}
-
-.studio-assets-identity-confirmation code {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  color: var(--studio-text-secondary);
-  font-size: var(--studio-font-size-meta);
 }
 
 .studio-assets-create-footer {
@@ -265,9 +36,22 @@
   gap: var(--studio-space-4);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .studio-assets-file-picker { transition: none; }
-  .studio-assets-file-picker:hover { transform: none; }
+.studio-assets-create-footer span {
+  color: var(--studio-text-muted);
+  font-size: var(--studio-font-size-meta);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.studio-assets-create-footer strong {
+  color: var(--studio-text-primary);
+}
+
+.studio-assets-form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) auto;
+  gap: var(--studio-space-12);
+  align-items: end;
 }
 
 @media (max-width: 48rem) {
@@ -276,10 +60,18 @@
     max-height: calc(100vh - (2 * var(--studio-space-8)));
   }
 
-  .studio-assets-create-identity-grid { grid-template-columns: 1fr; }
-  .studio-assets-create-identity-grid > :last-child { grid-column: auto; max-width: none; }
-  .studio-assets-file-picker { grid-template-columns: 1fr; justify-items: start; }
-  .studio-assets-file-summary,
-  .studio-assets-identity-confirmation,
-  .studio-assets-create-footer { display: grid; grid-template-columns: 1fr; }
+  .studio-assets-create-identity-grid,
+  .studio-assets-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-assets-create-identity-grid > :last-child {
+    grid-column: auto;
+    max-width: none;
+  }
+
+  .studio-assets-create-footer {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 }
