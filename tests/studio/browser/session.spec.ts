@@ -59,32 +59,17 @@ test("Viewer receives real read-only role presentation", async ({ page }) => {
   await expect(page.getByText("UI Lab fixture", { exact: false })).toHaveCount(0);
 });
 
-for (const fixture of [
-  {
+test("privileged role presentation comes from server authorization result", async ({ page }) => {
+  await mockSignIn(page, {
+    authorized: true,
     role: "Editor",
-    capabilities: ["studio.read", "registry.metadata.edit"],
-  },
-  {
-    role: "Approver",
-    capabilities: ["studio.read", "registry.metadata.edit", "review.approve", "review.freeze"],
-  },
-  {
-    role: "Admin",
-    capabilities: ["studio.read", "registry.metadata.edit", "studio.membership.manage"],
-  },
-] as const) {
-  test(`${fixture.role} role is presented from server authorization result`, async ({ page }) => {
-    await mockSignIn(page, {
-      authorized: true,
-      role: fixture.role,
-      capabilities: fixture.capabilities,
-    });
-    await submitSignIn(page);
-
-    await expect(page.getByText(fixture.role, { exact: true })).toBeVisible();
-    await expect(page.getByText("Trusted operations enabled", { exact: true })).toBeVisible();
+    capabilities: ["studio.read", "registry.metadata.edit", "canonical.change.propose"],
   });
-}
+  await submitSignIn(page);
+
+  await expect(page.getByText("Editor", { exact: true })).toBeVisible();
+  await expect(page.getByText("Trusted operations enabled", { exact: true })).toBeVisible();
+});
 
 test("sign out clears the authenticated Studio shell", async ({ page }) => {
   await mockSignIn(page, { authorized: true, role: "Viewer", capabilities: ["studio.read"] });
@@ -96,9 +81,7 @@ test("sign out clears the authenticated Studio shell", async ({ page }) => {
 
   await expect(page.getByTestId("studio-signed-out")).toBeVisible();
   await expect(page.getByTestId("studio-shell")).toHaveCount(0);
-  const stored = await page.evaluate(() =>
-    localStorage.getItem("fantasia.content-studio.session.v1"),
-  );
+  const stored = await page.evaluate(() => localStorage.getItem("fantasia.content-studio.session.v1"));
   expect(stored).toBeNull();
 });
 

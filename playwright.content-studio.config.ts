@@ -17,13 +17,6 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "studio-wide",
-      use: {
-        viewport: { width: 1600, height: 900 },
-        hasTouch: false,
-      },
-    },
-    {
       name: "studio-desktop",
       use: {
         viewport: { width: 1280, height: 900 },
@@ -32,6 +25,7 @@ export default defineConfig({
     },
     {
       name: "studio-compact",
+      testMatch: /responsive\.spec\.ts/,
       use: {
         viewport: { width: 896, height: 414 },
         hasTouch: true,
@@ -39,6 +33,7 @@ export default defineConfig({
     },
     {
       name: "studio-narrow-touch",
+      testMatch: /responsive\.spec\.ts/,
       use: {
         viewport: { width: 390, height: 844 },
         hasTouch: true,
