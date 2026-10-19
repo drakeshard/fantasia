@@ -1,17 +1,12 @@
-import { type ComponentChildren, render } from "preact";
+import { render } from "preact";
 import { useState } from "preact/hooks";
 import { AssetBoard } from "./ui/asset-board";
 import { assetBoardLabFixtures } from "./ui/asset-board.fixtures";
+import { ProductionComponentInventory } from "./ui/component-inventory";
 import { Button, Chip, DataTable, SelectField, Surface, TextField } from "./ui/primitives";
-import {
-  LifecycleBadge,
-  RuntimeReadinessBadge,
-  ValidationBadge,
-  VersionBadge,
-} from "./ui/semantic";
+import { LifecycleBadge, RuntimeReadinessBadge, ValidationBadge } from "./ui/semantic";
 import {
   AssetBoardTemplate,
-  AuthoritySummary,
   CollectionTemplate,
   DashboardTemplate,
   EntityWorkspaceTemplate,
@@ -38,35 +33,20 @@ const entityTabs = [
   { id: "history", label: "History" },
 ] as const;
 
-function FixtureCard({ title, children }: { title: string; children: ComponentChildren }) {
-  return (
-    <article class="studio-fixture-card">
-      <strong>{title}</strong>
-      <p>{children}</p>
-    </article>
-  );
-}
-
 function WorkspaceLab() {
   const [activeModule, setActiveModule] = useState<StudioModuleId>("characters");
   const [collapsed, setCollapsed] = useState(false);
   const [entityTab, setEntityTab] = useState("overview");
   const [entityInspectorOpen, setEntityInspectorOpen] = useState(true);
-  const [assetInspectorOpen, setAssetInspectorOpen] = useState(true);
 
   return (
-    <section
-      class="foundation-preview"
-      aria-labelledby="workspace-lab-title"
-      data-testid="workspace-lab"
-    >
+    <section class="foundation-preview" aria-labelledby="workspace-lab-title" data-testid="workspace-lab">
       <header class="foundation-preview__hero">
-        <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00D / STUDIO06B</p>
-        <h2 id="workspace-lab-title">Shared shell and workspace templates</h2>
+        <p class="foundation-preview__eyebrow">UI Lab · GAME-STUDIO00K</p>
+        <h2 id="workspace-lab-title">Shared shell, production components and workspace templates</h2>
         <p>
-          Development-only fixtures for the shared Studio frame, templates, reusable entity/asset
-          composition, responsive behavior, and accessibility contracts. No production routes or
-          trusted mutations exist here.
+          Development-only fixtures for the reusable Studio system. Production pages consume these
+          contracts; they are not the component laboratory.
         </p>
       </header>
 
@@ -111,19 +91,7 @@ function WorkspaceLab() {
             selectedTab={entityTab}
             onTabSelect={setEntityTab}
             panels={{
-              overview: (
-                <div class="studio-fixture-card-grid">
-                  <FixtureCard title="Identity">
-                    Character identity and canonical metadata slot.
-                  </FixtureCard>
-                  <FixtureCard title="Gameplay">
-                    Class, faction, element, and stat summary slot.
-                  </FixtureCard>
-                  <FixtureCard title="Relations">
-                    Explicit semantic relations remain separately visible.
-                  </FixtureCard>
-                </div>
-              ),
+              overview: <p>Character identity and canonical metadata fixture.</p>,
               gameplay: <WorkspaceStateRegion state="loading" />,
               skills: <WorkspaceStateRegion state="empty" />,
               equipment: <WorkspaceStateRegion state="read-only" />,
@@ -133,14 +101,7 @@ function WorkspaceLab() {
               validation: <WorkspaceStateRegion state="error" />,
               history: <WorkspaceStateRegion state="empty" />,
             }}
-            inspector={
-              <>
-                <AuthoritySummary validation="warning" runtimeReadiness="not-ready" />
-                <p class="preview-meta">
-                  Source authority and readiness remain visible without fake mutations.
-                </p>
-              </>
-            }
+            inspector={<p class="preview-meta">Authority and readiness remain separate.</p>}
             inspectorLabel="Character inspector"
             inspectorOpen={entityInspectorOpen}
             onInspectorOpenChange={setEntityInspectorOpen}
@@ -169,100 +130,29 @@ function WorkspaceLab() {
         </StudioShell>
       </section>
 
+      <section class="preview-section" aria-labelledby="components-title">
+        <ProductionComponentInventory />
+      </section>
+
       <section class="preview-section" aria-labelledby="templates-title">
         <div class="preview-section__heading">
           <div>
             <h2 id="templates-title">Reusable template set</h2>
-            <p>Five shared structural patterns cover production-page composition.</p>
+            <p>Five structural patterns compose the shared production components.</p>
           </div>
         </div>
-
         <div class="studio-template-grid">
           <CollectionTemplate
-            header={
-              <TemplateFixtureHeading
-                title="Collection template"
-                description="Searchable and filterable collection layout."
-                status={<ValidationBadge state="passed" />}
-              />
-            }
-            toolbar={
-              <TemplateToolbar>
-                <Button variant="quiet">Saved view</Button>
-                <Button variant="quiet">Columns</Button>
-              </TemplateToolbar>
-            }
-            filterSlot={
-              <>
-                <TextField
-                  id="collection-search"
-                  label="Search collection"
-                  placeholder="Semantic ID or title"
-                />
-                <SelectField
-                  id="collection-filter"
-                  label="Lifecycle filter"
-                  defaultValue="all"
-                  options={[
-                    { value: "all", label: "All lifecycle states" },
-                    { value: "approved", label: "Approved" },
-                  ]}
-                />
-              </>
-            }
+            header={<TemplateFixtureHeading title="Collection template" description="Searchable collection layout." />}
+            filterSlot={<TextField id="collection-search" label="Search collection" />}
           >
             <DataTable label="Collection template fixture rows">
-              <thead>
-                <tr>
-                  <th scope="col">Identity</th>
-                  <th scope="col">Lifecycle</th>
-                  <th scope="col">Validation</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>entity.example-a</td>
-                  <td>
-                    <LifecycleBadge state="approved" />
-                  </td>
-                  <td>
-                    <ValidationBadge state="passed" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>entity.example-b</td>
-                  <td>
-                    <LifecycleBadge state="in-review" />
-                  </td>
-                  <td>
-                    <ValidationBadge state="warning" />
-                  </td>
-                </tr>
-              </tbody>
+              <thead><tr><th scope="col">Identity</th><th scope="col">Lifecycle</th></tr></thead>
+              <tbody><tr><td>entity.example</td><td><LifecycleBadge state="approved" /></td></tr></tbody>
             </DataTable>
           </CollectionTemplate>
 
-          <DashboardTemplate
-            header={
-              <TemplateFixtureHeading
-                title="Dashboard template"
-                description="Attention, summary, and navigation panels without invented metrics."
-              />
-            }
-          >
-            <div class="studio-fixture-metric-grid">
-              {[
-                ["Attention slot", "Real metric awaits an authoritative read model."],
-                ["Review slot", "No fake queue count is presented."],
-                ["Release slot", "Publishing state belongs to Layer 5 contracts."],
-              ].map(([title, copy]) => (
-                <article class="studio-fixture-metric" key={title}>
-                  <span>{title}</span>
-                  <strong>—</strong>
-                  <p>{copy}</p>
-                </article>
-              ))}
-            </div>
+          <DashboardTemplate header={<TemplateFixtureHeading title="Dashboard template" description="Summary composition." />}>
             <WorkspaceStateRegion state="loading" />
           </DashboardTemplate>
 
@@ -271,16 +161,7 @@ function WorkspaceLab() {
             tabs={entityTabs.slice(0, 4)}
             selectedTab="overview"
             onTabSelect={() => undefined}
-            panels={{
-              overview: (
-                <div class="studio-fixture-card-grid">
-                  <FixtureCard title="Main content">Shared tabbed entity composition.</FixtureCard>
-                  <FixtureCard title="Independent semantics">
-                    Lifecycle and readiness never collapse.
-                  </FixtureCard>
-                </div>
-              ),
-            }}
+            panels={{ overview: <p>Shared tabbed entity composition.</p> }}
             inspector={<WorkspaceStateRegion state="read-only" />}
             inspectorLabel="Entity inspector"
             inspectorOpen
@@ -300,85 +181,16 @@ function WorkspaceLab() {
           />
 
           <AssetBoardTemplate
-            header={
-              <WorkspaceHeader
-                breadcrumbs={["Characters", "Template", "Assets"]}
-                title="Asset Board template"
-                description="Semantic asset/version groups with source and derivative separation."
-                semanticId="asset.entity.template"
-                lifecycle="approved"
-                versionLabel="v003"
-                sourceSummary="Drive source/master · registry metadata"
-                validation="warning"
-                runtimeReadiness="not-ready"
-                warningCount={1}
-              />
-            }
-            toolbar={
-              <TemplateToolbar>
-                <Button variant="quiet">Role group</Button>
-                <Button variant="quiet">Variant group</Button>
-              </TemplateToolbar>
-            }
-            inspector={
-              <>
-                <VersionBadge label="v003" current />
-                <ValidationBadge state="warning" />
-                <RuntimeReadinessBadge state="not-ready" />
-                <p class="preview-meta">Provider location is metadata, not semantic identity.</p>
-              </>
-            }
-            inspectorLabel="Asset version inspector"
-            inspectorOpen={assetInspectorOpen}
-            onInspectorOpenChange={setAssetInspectorOpen}
+            header={<TemplateFixtureHeading title="Asset Board template" description="Semantic asset/version composition." />}
           >
             <AssetBoard assets={assetBoardLabFixtures} readOnly />
           </AssetBoardTemplate>
 
           <OperationalQueueTemplate
-            header={
-              <TemplateFixtureHeading
-                title="Operational Queue template"
-                description="Review, processing, publish, or verification queue structure."
-                status={<Chip>Presentation only</Chip>}
-              />
-            }
+            header={<TemplateFixtureHeading title="Operational Queue template" description="Workflow queue composition." />}
           >
-            <div class="studio-fixture-queue">
-              <article class="studio-fixture-queue-item">
-                <div>
-                  <strong>Version-specific review item</strong>
-                  <p>Workflow metadata is layered over lifecycle.</p>
-                </div>
-                <LifecycleBadge state="in-review" />
-              </article>
-              <article class="studio-fixture-queue-item">
-                <div>
-                  <strong>Runtime processing item</strong>
-                  <p>Processing status does not rewrite source approval.</p>
-                </div>
-                <RuntimeReadinessBadge state="not-ready" />
-              </article>
-            </div>
+            <RuntimeReadinessBadge state="not-ready" />
           </OperationalQueueTemplate>
-        </div>
-      </section>
-
-      <section class="preview-section" aria-labelledby="asset-states-title">
-        <div class="preview-section__heading">
-          <div>
-            <h2 id="asset-states-title">Reusable Asset Board states</h2>
-            <p>
-              Empty, unavailable, loading and read-error states remain distinct from registered
-              asset evidence.
-            </p>
-          </div>
-        </div>
-        <div class="feedback-grid">
-          <AssetBoard assets={[]} />
-          <AssetBoard assets={[]} availability="unavailable" />
-          <AssetBoard assets={[]} availability="loading" />
-          <AssetBoard assets={[]} availability="error" />
         </div>
       </section>
 
@@ -388,6 +200,7 @@ function WorkspaceLab() {
             <h2 id="states-title">Template state regions</h2>
             <p>Truthful reusable presentation for common non-success states.</p>
           </div>
+          <ValidationBadge state="passed" />
         </div>
         <div class="feedback-grid">
           <WorkspaceStateRegion state="loading" />
