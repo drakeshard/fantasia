@@ -120,15 +120,15 @@ for (const file of productionStyleFiles()) {
   if (css.includes("!important")) fail(`${relative} contains !important; fix ownership/specificity instead.`);
 }
 
-// Feature source may compose shared controls, but must not introduce native select/textarea
-// anatomy. Buttons and file inputs have existing production debt in Assets and are guarded by
-// the CSS/component ownership rules until that page finishes migration; new entity modules should
-// use shared primitives/production components from inception.
+// Production feature modules compose the shared control vocabulary. Native interactive
+// anatomy belongs in ui/primitives.tsx or a documented shared production component such
+// as FilePicker; feature modules must not create their own button/input/select/textarea system.
 for (const file of filesUnder(featuresRoot, ".tsx")) {
   const source = withoutComments(fs.readFileSync(file, "utf8"));
   const relative = path.relative(root, file);
-  if (/<select\b/i.test(source) || /<textarea\b/i.test(source)) {
-    fail(`${relative} declares native select/textarea anatomy; consume shared Studio controls instead.`);
+  const nativeControl = source.match(/<(button|input|select|textarea)\b/i)?.[1];
+  if (nativeControl) {
+    fail(`${relative} declares native <${nativeControl}> anatomy; consume shared Studio primitives or production components instead.`);
   }
 }
 
