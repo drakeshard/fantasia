@@ -32,6 +32,9 @@ jobs:
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Remove invalid baseline objects
+        run: rm -rf tests/studio/visual/__snapshots__
+
       - name: Regenerate accepted baselines
         run: pnpm test:studio:visual:update
 
