@@ -27,17 +27,17 @@ test("selectable collection keeps focus and selection as separate observable sta
 
 test("shared file picker encapsulates the native input and exposes selected-file feedback", async ({ page }) => {
   const inventory = page.getByTestId("production-component-inventory");
-  const input = inventory.locator('#inventory-file');
+  const input = inventory.locator("#inventory-file");
   await input.setInputFiles({
     name: "source-master.png",
     mimeType: "image/png",
     buffer: Buffer.from("fixture"),
   });
 
-  await expect(inventory.getByText("source-master.png").first()).toBeVisible();
+  await expect(inventory.getByText("source-master.png", { exact: true })).toBeVisible();
   await expect(inventory.getByRole("button", { name: "Remove" })).toBeVisible();
   await inventory.getByRole("button", { name: "Remove" }).click();
-  await expect(inventory.getByText("Choose source/master")).toBeVisible();
+  await expect(inventory.getByText("Choose a source/master", { exact: true })).toBeVisible();
 });
 
 test("production components preserve minimum targets, focus visibility and compact overflow", async ({ page }) => {
