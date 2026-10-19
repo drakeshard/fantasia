@@ -19,9 +19,9 @@ export function UtilityStatus({
 }: {
   label: string;
   value: string;
-  detail?: string;
+  detail?: string | undefined;
   tone?: StatusTone;
-  action?: ComponentChildren;
+  action?: ComponentChildren | undefined;
 }) {
   return (
     <div class={cx("studio-component-utility-status", `studio-component-utility-status--${tone}`)}>
@@ -43,8 +43,8 @@ export function CollectionPanel({
   children,
 }: {
   title: string;
-  count?: ComponentChildren;
-  actions?: ComponentChildren;
+  count?: ComponentChildren | undefined;
+  actions?: ComponentChildren | undefined;
   children: ComponentChildren;
 }) {
   return (
@@ -68,9 +68,9 @@ export function MediaCollectionItem({
 }: {
   marker: ComponentChildren;
   title: ComponentChildren;
-  subtitle?: ComponentChildren;
-  trailing?: ComponentChildren;
-  meta?: ComponentChildren;
+  subtitle?: ComponentChildren | undefined;
+  trailing?: ComponentChildren | undefined;
+  meta?: ComponentChildren | undefined;
 }) {
   return (
     <span class="studio-component-media-item">
@@ -96,10 +96,10 @@ export function DetailPanel({
   children,
 }: {
   label: string;
-  eyebrow?: ComponentChildren;
+  eyebrow?: ComponentChildren | undefined;
   title: ComponentChildren;
-  semanticId?: ComponentChildren;
-  status?: ComponentChildren;
+  semanticId?: ComponentChildren | undefined;
+  status?: ComponentChildren | undefined;
   children: ComponentChildren;
 }) {
   return (
@@ -134,12 +134,12 @@ export function MediaPreview({
   marker = "◇",
   testId,
 }: {
-  src?: string | null;
-  alt?: string;
+  src?: string | null | undefined;
+  alt?: string | undefined;
   title: string;
   description: string;
-  marker?: ComponentChildren;
-  testId?: string;
+  marker?: ComponentChildren | undefined;
+  testId?: string | undefined;
 }) {
   return (
     <div class="studio-component-media-preview" data-testid={testId}>
@@ -163,9 +163,9 @@ export function DetailRow({
   trailing,
 }: {
   title: ComponentChildren;
-  description?: ComponentChildren;
-  meta?: ComponentChildren;
-  trailing?: ComponentChildren;
+  description?: ComponentChildren | undefined;
+  meta?: ComponentChildren | undefined;
+  trailing?: ComponentChildren | undefined;
 }) {
   return (
     <div class="studio-component-detail-row">
