@@ -1,0 +1,50 @@
+name: Content Studio visual baseline repair
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  repair-baselines:
+    name: Repair Studio visual baselines
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Setup Content Studio
+        uses: ./.github/actions/setup-fantasia
+        with:
+          prepare-shared: "false"
+
+      - name: Build Content Studio
+        run: pnpm --filter @fantasia/content-studio build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Regenerate accepted baselines
+        run: pnpm test:studio:visual:update
+
+      - name: Commit repaired PNG objects when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add tests/studio/visual/__snapshots__
+          if git diff --cached --quiet; then
+            echo "Visual baselines already match generated PNG objects."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "test(studio): repair visual baseline PNG objects"
+          git push origin HEAD:${{ github.head_ref }}
