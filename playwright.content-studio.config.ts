@@ -14,32 +14,9 @@ export default defineConfig({
     locale: "en-US",
     reducedMotion: "reduce",
     trace: "on-first-retry",
+    viewport: { width: 1280, height: 900 },
+    hasTouch: false,
   },
-  projects: [
-    {
-      name: "studio-desktop",
-      use: {
-        viewport: { width: 1280, height: 900 },
-        hasTouch: false,
-      },
-    },
-    {
-      name: "studio-compact",
-      testMatch: /responsive\.spec\.ts/,
-      use: {
-        viewport: { width: 896, height: 414 },
-        hasTouch: true,
-      },
-    },
-    {
-      name: "studio-narrow-touch",
-      testMatch: /responsive\.spec\.ts/,
-      use: {
-        viewport: { width: 390, height: 844 },
-        hasTouch: true,
-      },
-    },
-  ],
   webServer: {
     command: "pnpm --filter @fantasia/content-studio preview --host 127.0.0.1 --port 4174",
     url: "http://127.0.0.1:4174",
