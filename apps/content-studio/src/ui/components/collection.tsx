@@ -1,16 +1,16 @@
 import type { ComponentChildren, TargetedKeyboardEvent } from "preact";
 
-function moveSelection(event: TargetedKeyboardEvent<HTMLDivElement>) {
+function moveFocus(event: TargetedKeyboardEvent<HTMLDivElement>) {
   if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
   const target = event.target instanceof Element ? event.target.closest<HTMLButtonElement>("[data-selectable-row]") : null;
   if (!target) return;
   const rows = [...event.currentTarget.querySelectorAll<HTMLButtonElement>("[data-selectable-row]:not(:disabled)")];
   if (rows.length === 0) return;
-  const current = Math.max(0, rows.indexOf(target));
+  const current = rows.indexOf(target);
+  if (current < 0) return;
   const next = event.key === "Home" ? 0 : event.key === "End" ? rows.length - 1 : event.key === "ArrowDown" ? (current + 1) % rows.length : (current - 1 + rows.length) % rows.length;
   event.preventDefault();
   rows[next]?.focus();
-  rows[next]?.click();
 }
 
 export function FilterBar({ primary, secondary, actions, expanded = false, label = "Filters" }: { primary: ComponentChildren; secondary?: ComponentChildren; actions?: ComponentChildren; expanded?: boolean; label?: string }) {
@@ -23,8 +23,8 @@ export function FilterBar({ primary, secondary, actions, expanded = false, label
   );
 }
 
-export function SelectableCollection({ label, children }: { label: string; children: ComponentChildren }) {
-  return <div class="studio-component-selectable" role="listbox" aria-label={label} onKeyDown={moveSelection}>{children}</div>;
+export function SelectableCollection({ label, children, testId }: { label: string; children: ComponentChildren; testId?: string }) {
+  return <div class="studio-component-selectable" role="listbox" aria-label={label} data-testid={testId} onKeyDown={moveFocus}>{children}</div>;
 }
 
 export function SelectableRow({ selected, onSelect, children, disabled = false, label }: { selected: boolean; onSelect: () => void; children: ComponentChildren; disabled?: boolean; label?: string }) {
@@ -36,6 +36,7 @@ export function SelectableRow({ selected, onSelect, children, disabled = false, 
       aria-selected={selected}
       aria-label={label}
       data-selectable-row
+      tabIndex={selected ? 0 : -1}
       disabled={disabled}
       onClick={onSelect}
     >
