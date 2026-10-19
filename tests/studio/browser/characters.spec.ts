@@ -153,7 +153,7 @@ test("Viewer can browse canonical Characters but cannot author", async ({ page }
   await mockStudio(page, "Viewer");
   await signIn(page);
   await expect(page.getByTestId("characters-collection")).toBeVisible();
-  await page.getByRole("button", { name: /MC/ }).click();
+  await page.getByRole("option", { name: /MC/ }).click();
   await expect(page).toHaveURL(/semanticId=character\.production\.hero/);
   await expect(page.getByText("Canonical identity", { exact: true })).toBeVisible();
   await expect(page.getByLabel("Display name")).toBeDisabled();
@@ -164,7 +164,7 @@ test("Viewer can browse canonical Characters but cannot author", async ({ page }
 test("Characters Assets tab consumes the shared Asset Board empty state", async ({ page }) => {
   await mockStudio(page, "Viewer");
   await signIn(page);
-  await page.getByRole("button", { name: /MC/ }).click();
+  await page.getByRole("option", { name: /MC/ }).click();
   await page.getByRole("tab", { name: "Assets" }).click();
   await expect(page.getByText("No registered semantic assets", { exact: true })).toBeVisible();
   await expect(
@@ -175,7 +175,7 @@ test("Characters Assets tab consumes the shared Asset Board empty state", async 
 test("Editor creates a controlled Git proposal without direct acceptance", async ({ page }) => {
   await mockStudio(page, "Editor");
   await signIn(page);
-  await page.getByRole("button", { name: /MC/ }).click();
+  await page.getByRole("option", { name: /MC/ }).click();
   await page.getByLabel("Display name").fill("Main Character");
   const proposal = page.waitForRequest("**/functions/v1/studio-canonical-change");
   await page.getByRole("button", { name: "Create Git proposal" }).click();
