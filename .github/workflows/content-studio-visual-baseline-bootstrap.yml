@@ -1,0 +1,42 @@
+name: Content Studio visual baseline bootstrap
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  generate-baselines:
+    name: Generate Studio visual baselines
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Content Studio
+        uses: ./.github/actions/setup-fantasia
+        with:
+          prepare-shared: "false"
+
+      - name: Build Content Studio
+        run: pnpm --filter @fantasia/content-studio build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Generate candidate baselines
+        run: pnpm test:studio:visual:update
+
+      - name: Upload candidate baselines and report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fantasia-content-studio-visual-baseline-candidate-${{ github.sha }}
+          path: |
+            tests/studio/visual/__snapshots__/
+            playwright-studio-visual-report/
+            test-results-studio-visual/
+          if-no-files-found: error
+          retention-days: 7
