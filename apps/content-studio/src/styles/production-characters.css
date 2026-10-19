@@ -33,7 +33,8 @@
   gap: var(--studio-space-8);
 }
 
-.studio-character-editor { display: grid; gap: var(--studio-space-12); }
+.studio-character-editor,
+.studio-character-editor__content { display: grid; gap: var(--studio-space-12); }
 
 .studio-character-grid {
   display: grid;
