@@ -126,7 +126,7 @@ for (const file of productionStyleFiles()) {
 for (const file of filesUnder(featuresRoot, ".tsx")) {
   const source = withoutComments(fs.readFileSync(file, "utf8"));
   const relative = path.relative(root, file);
-  const nativeControl = source.match(/<(button|input|select|textarea)\b/i)?.[1];
+  const nativeControl = source.match(/<(button|input|select|textarea)\b/)?.[1];
   if (nativeControl) {
     fail(`${relative} declares native <${nativeControl}> anatomy; consume shared Studio primitives or production components instead.`);
   }
