@@ -1,0 +1,54 @@
+name: Content Studio visual baseline bootstrap
+
+on:
+  push:
+    branches:
+      - game-studio00k-production-components
+    paths:
+      - "apps/content-studio/**"
+      - "tests/studio/visual/**"
+      - "playwright.content-studio.visual.config.ts"
+      - ".github/workflows/content-studio-visual-baseline-bootstrap.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  accept-reviewed-production-components:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: game-studio00k-production-components
+
+      - name: Setup Content Studio
+        uses: ./.github/actions/setup-fantasia
+        with:
+          prepare-shared: "false"
+
+      - name: Build Content Studio
+        run: pnpm --filter @fantasia/content-studio build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Generate controlled baselines
+        run: pnpm test:studio:visual:update
+
+      - name: Commit reviewed component baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add tests/studio/visual/__snapshots__/studio-desktop/production-components.png
+          git add tests/studio/visual/__snapshots__/studio-compact/production-components.png
+          if git diff --cached --quiet; then
+            echo "Reviewed production-component baselines are already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "test(studio): accept production component visual baselines"
+          git push origin HEAD:game-studio00k-production-components
