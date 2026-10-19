@@ -1,0 +1,18 @@
+.ui-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.ui-chip { display: inline-flex; min-height: var(--studio-control-height-sm); align-items: center; padding: 0 var(--studio-space-12); border: 1px solid var(--studio-border-subtle); border-radius: var(--studio-radius-round); background: var(--studio-surface-inset-bg); color: var(--studio-text-secondary); font-size: var(--studio-font-size-meta); font-weight: 700; }
+.ui-chip--accent { border-color: color-mix(in srgb, var(--studio-accent-primary) 72%, var(--studio-border-subtle)); color: var(--studio-accent-primary); }
+.ui-spinner { display: inline-flex; align-items: center; justify-content: center; }
+.ui-spinner__mark { width: 1.25rem; height: 1.25rem; border: 2px solid color-mix(in srgb, currentColor 28%, transparent); border-top-color: currentColor; border-radius: var(--studio-radius-round); animation: studio-spin var(--studio-motion-spinner) linear infinite; }
+.ui-spinner--small .ui-spinner__mark { width: 1rem; height: 1rem; }
+@keyframes studio-spin { to { transform: rotate(360deg); } }
+.ui-progress { display: grid; grid-template-columns: minmax(8rem, 1fr) minmax(10rem, 2fr) auto; align-items: center; gap: var(--studio-space-12); color: var(--studio-text-secondary); font-size: var(--studio-font-size-label); }
+.ui-progress progress { width: 100%; height: 0.65rem; accent-color: var(--studio-accent-primary); }
+.ui-progress__value { color: var(--studio-text-muted); font-size: var(--studio-font-size-meta); }
+.ui-state-message { display: grid; gap: var(--studio-space-8); padding: var(--studio-space-16); border: 1px solid var(--studio-border-luminous-subtle); border-radius: var(--studio-radius-control); background: var(--studio-surface-inset-bg); color: var(--studio-text-secondary); }
+.ui-state-message strong { color: var(--studio-text-primary); }
+.ui-state-message--unavailable { border-style: dashed; color: var(--studio-text-muted); }
+.ui-state-message--error { border-color: var(--studio-validation-blocking); }
+.ui-state-message--error strong { color: var(--studio-validation-blocking); }
+.ui-state-message__action { margin-top: var(--studio-space-4); }
+@media (prefers-reduced-motion: reduce) { .ui-spinner__mark { animation: none; } }
+@media (max-width: 48rem) { .ui-progress { grid-template-columns: 1fr auto; } .ui-progress progress { grid-column: 1 / -1; grid-row: 2; } }
