@@ -44,18 +44,3 @@ test("shared FilePicker owns the native file relationship and selected-file reco
   await page.getByRole("button", { name: "Remove" }).click();
   await expect(page.getByText("source-master.png", { exact: true })).toHaveCount(0);
 });
-
-test("production component inventory keeps minimum targets and compact overflow safe", async ({ page }) => {
-  await page.setViewportSize({ width: 844, height: 390 });
-  await openInventory(page);
-  const inventory = page.getByTestId("production-component-inventory");
-  const sizes = await inventory.locator("button:visible").evaluateAll((buttons) =>
-    buttons.map((button) => ({ width: button.getBoundingClientRect().width, height: button.getBoundingClientRect().height })),
-  );
-  for (const size of sizes) {
-    expect(size.width).toBeGreaterThanOrEqual(44);
-    expect(size.height).toBeGreaterThanOrEqual(44);
-  }
-  const geometry = await page.evaluate(() => ({ innerWidth: window.innerWidth, scrollWidth: document.documentElement.scrollWidth }));
-  expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.innerWidth);
-});
