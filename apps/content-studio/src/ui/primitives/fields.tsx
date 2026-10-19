@@ -5,6 +5,7 @@ type FieldBaseProps = {
   label: string;
   hint?: string;
   error?: string;
+  invalid?: boolean;
   required?: boolean;
   disabled?: boolean;
 };
@@ -21,21 +22,25 @@ function describedBy(id: string, hint?: string, error?: string) {
   return undefined;
 }
 
-type TextFieldProps = FieldBaseProps & Omit<ComponentProps<"input">, "id" | "type" | "disabled" | "required" | "class" | "className"> & { type?: "text" | "search" | "email" };
-
-export function TextField({ id, label, hint, error, required = false, disabled = false, type = "text", ...props }: TextFieldProps) {
-  return <label class="ui-field" for={id}><span class="ui-field__label">{label}{required ? <span aria-hidden="true"> *</span> : null}</span><input {...props} class="ui-control" id={id} type={type} required={required} disabled={disabled} aria-invalid={error ? "true" : undefined} aria-describedby={describedBy(id, hint, error)} /><FieldMessage id={id} hint={hint} error={error} /></label>;
+function invalidValue(invalid: boolean | undefined, error: string | undefined) {
+  return invalid || error ? "true" : undefined;
 }
 
-type TextAreaProps = FieldBaseProps & Omit<ComponentProps<"textarea">, "id" | "disabled" | "required" | "class" | "className">;
-export function TextArea({ id, label, hint, error, required = false, disabled = false, ...props }: TextAreaProps) {
-  return <label class="ui-field" for={id}><span class="ui-field__label">{label}{required ? <span aria-hidden="true"> *</span> : null}</span><textarea {...props} class="ui-control ui-control--textarea" id={id} required={required} disabled={disabled} aria-invalid={error ? "true" : undefined} aria-describedby={describedBy(id, hint, error)} /><FieldMessage id={id} hint={hint} error={error} /></label>;
+type TextFieldProps = FieldBaseProps & Omit<ComponentProps<"input">, "id" | "type" | "disabled" | "required" | "class" | "className" | "aria-invalid"> & { type?: "text" | "search" | "email" };
+
+export function TextField({ id, label, hint, error, invalid = false, required = false, disabled = false, type = "text", ...props }: TextFieldProps) {
+  return <label class="ui-field" for={id}><span class="ui-field__label">{label}{required ? <span aria-hidden="true"> *</span> : null}</span><input {...props} class="ui-control" id={id} type={type} required={required} disabled={disabled} aria-invalid={invalidValue(invalid, error)} aria-describedby={describedBy(id, hint, error)} /><FieldMessage id={id} hint={hint} error={error} /></label>;
+}
+
+type TextAreaProps = FieldBaseProps & Omit<ComponentProps<"textarea">, "id" | "disabled" | "required" | "class" | "className" | "aria-invalid">;
+export function TextArea({ id, label, hint, error, invalid = false, required = false, disabled = false, ...props }: TextAreaProps) {
+  return <label class="ui-field" for={id}><span class="ui-field__label">{label}{required ? <span aria-hidden="true"> *</span> : null}</span><textarea {...props} class="ui-control ui-control--textarea" id={id} required={required} disabled={disabled} aria-invalid={invalidValue(invalid, error)} aria-describedby={describedBy(id, hint, error)} /><FieldMessage id={id} hint={hint} error={error} /></label>;
 }
 
 export type SelectOption = { value: string; label: string; disabled?: boolean };
-type SelectFieldProps = FieldBaseProps & Omit<ComponentProps<"select">, "id" | "disabled" | "required" | "class" | "className" | "children"> & { options: readonly SelectOption[] };
-export function SelectField({ id, label, hint, error, required = false, disabled = false, options, ...props }: SelectFieldProps) {
-  return <label class="ui-field" for={id}><span class="ui-field__label">{label}{required ? <span aria-hidden="true"> *</span> : null}</span><select {...props} class="ui-control ui-control--select" id={id} required={required} disabled={disabled} aria-invalid={error ? "true" : undefined} aria-describedby={describedBy(id, hint, error)}>{options.map((option) => <option value={option.value} disabled={option.disabled} key={option.value}>{option.label}</option>)}</select><FieldMessage id={id} hint={hint} error={error} /></label>;
+type SelectFieldProps = FieldBaseProps & Omit<ComponentProps<"select">, "id" | "disabled" | "required" | "class" | "className" | "children" | "aria-invalid"> & { options: readonly SelectOption[] };
+export function SelectField({ id, label, hint, error, invalid = false, required = false, disabled = false, options, ...props }: SelectFieldProps) {
+  return <label class="ui-field" for={id}><span class="ui-field__label">{label}{required ? <span aria-hidden="true"> *</span> : null}</span><select {...props} class="ui-control ui-control--select" id={id} required={required} disabled={disabled} aria-invalid={invalidValue(invalid, error)} aria-describedby={describedBy(id, hint, error)}>{options.map((option) => <option value={option.value} disabled={option.disabled} key={option.value}>{option.label}</option>)}</select><FieldMessage id={id} hint={hint} error={error} /></label>;
 }
 
 type CheckboxProps = Omit<ComponentProps<"input">, "id" | "type" | "class" | "className"> & { id: string; label: string; description?: string };
