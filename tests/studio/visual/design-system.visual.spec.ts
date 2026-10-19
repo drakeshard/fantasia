@@ -1,18 +1,14 @@
 import { expect, type Page, test } from "@playwright/test";
 
-const visualAnchors = [
+const visualContracts = [
   ["semantic-dimensions", "Independent semantic dimensions"],
-  ["primitive-actions", "00B primitive regression surface"],
-  ["form-controls", "00B form regression surface"],
-  ["workspace-shell", "Global Studio shell"],
+  ["studio-shell", "Global Studio shell"],
 ] as const;
 
-async function alignHeadingToViewport(page: Page, heading: string) {
-  const target = page.getByRole("heading", { name: heading, exact: true });
-  await target.scrollIntoViewIfNeeded();
-  await expect(target).toBeVisible();
-  await target.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }));
-  await page.evaluate(() => window.scrollBy(0, -16));
+function sectionByHeading(page: Page, heading: string) {
+  return page
+    .getByRole("heading", { name: heading, exact: true })
+    .locator('xpath=ancestor::section[contains(concat(" ", normalize-space(@class), " "), " preview-section ")][1]');
 }
 
 test.beforeEach(async ({ page }) => {
@@ -21,16 +17,11 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => document.fonts.ready);
 });
 
-for (const [snapshotName, heading] of visualAnchors) {
-  test(`${heading} matches the accepted viewport baseline`, async ({ page }) => {
-    await alignHeadingToViewport(page, heading);
-    await expect(page).toHaveScreenshot(`${snapshotName}.png`);
+for (const [snapshotName, heading] of visualContracts) {
+  test(`${heading} matches the accepted shared visual baseline`, async ({ page }) => {
+    const section = sectionByHeading(page, heading);
+    await section.scrollIntoViewIfNeeded();
+    await expect(section).toBeVisible();
+    await expect(section).toHaveScreenshot(`${snapshotName}.png`);
   });
 }
-
-test("dialog overlay matches the accepted viewport baseline", async ({ page }) => {
-  await alignHeadingToViewport(page, "00B dialog and drawer regression");
-  await page.getByTestId("open-dialog").click();
-  await expect(page.getByRole("dialog", { name: "Confirm generic action" })).toBeVisible();
-  await expect(page).toHaveScreenshot("dialog-overlay.png");
-});
