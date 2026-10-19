@@ -11,11 +11,13 @@
     <div id="studio-app"></div>
     <div id="app"></div>
     <div id="workspace-lab"></div>
+    <div id="component-inventory"></div>
     <script type="module">
       const labMode = new URLSearchParams(window.location.search).get("lab") === "1";
       if (labMode) {
         await import("/src/main.tsx");
         await import("/src/workspace-lab.tsx");
+        await import("/src/component-inventory.tsx");
       } else {
         await import("/src/production-studio.tsx");
       }

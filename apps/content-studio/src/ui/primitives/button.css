@@ -1,0 +1,29 @@
+.ui-button {
+  display: inline-flex;
+  min-height: var(--studio-target-min);
+  align-items: center;
+  justify-content: center;
+  gap: var(--studio-space-8);
+  padding: 0 var(--studio-space-16);
+  border: 1px solid var(--studio-button-secondary-border);
+  border-radius: var(--studio-radius-control);
+  background: var(--studio-button-secondary-bg);
+  box-shadow: var(--studio-highlight-inset);
+  color: var(--studio-text-primary);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--studio-motion-feedback) var(--studio-ease-standard), border-color var(--studio-motion-feedback) var(--studio-ease-standard), box-shadow var(--studio-motion-feedback) var(--studio-ease-standard), color var(--studio-motion-feedback) var(--studio-ease-standard), transform var(--studio-motion-feedback) var(--studio-ease-standard);
+}
+.ui-button--primary { border-color: var(--studio-button-primary-border); background: var(--studio-button-primary-bg); color: var(--studio-text-on-accent); box-shadow: var(--studio-button-primary-shadow); }
+.ui-button--quiet { border-color: transparent; background: transparent; box-shadow: none; color: var(--studio-text-secondary); }
+.ui-button:not(:disabled):hover { border-color: var(--studio-border-active); }
+.ui-button--secondary:not(:disabled):hover, .ui-button--quiet:not(:disabled):hover { background: var(--studio-button-hover-bg); color: var(--studio-text-primary); }
+.ui-button--primary:not(:disabled):hover { filter: brightness(1.05); }
+.ui-button:not(:disabled):active { transform: translateY(1px); }
+.ui-button:disabled { cursor: not-allowed; opacity: 0.5; filter: saturate(0.65); }
+.ui-button[aria-busy="true"] { cursor: progress; }
+.ui-icon-button { width: var(--studio-target-min); min-width: var(--studio-target-min); padding: 0; font-size: var(--studio-font-size-heading); }
+.ui-button:focus-visible { outline: 2px solid var(--studio-focus-ring); outline-offset: 2px; box-shadow: var(--studio-shadow-focus); }
+@media (prefers-reduced-motion: reduce) { .ui-button { transition: none; } .ui-button:not(:disabled):active { transform: none; } }

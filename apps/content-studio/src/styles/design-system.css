@@ -1,23 +1,15 @@
 /*
  * Fantasia Content Studio design-system entrypoint.
- *
  * Ownership order is intentional and enforced by scripts/check-content-studio-design-system.mjs:
- * 1. structural tokens
- * 2. title theme / semantic paint variables
- * 3. reset/base
- * 4. shared primitives
- * 5. semantic components
- * 6. workspace structure
- * 7. shared composite presentation
- * 8. entity/asset shared compositions
- *
- * Feature styles are imported separately by production-studio.tsx and may only
- * compose feature-prefixed layout/content hooks.
+ * tokens → title theme → base → low-level primitives → reusable production components
+ * → semantic components → workspace structure → shared compositions.
+ * Feature styles are imported separately and may only compose feature-prefixed layout/content hooks.
  */
 @import "./tokens.css";
 @import "./theme-fantasia-midnight.css";
 @import "./base.css";
 @import "../ui/primitives.css";
+@import "../ui/components.css";
 @import "../ui/semantic.css";
 @import "../ui/workspace.css";
 @import "../ui/composites.css";
