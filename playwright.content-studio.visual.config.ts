@@ -30,14 +30,14 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "studio-visual-desktop",
+      name: "studio-desktop",
       use: {
         viewport: { width: 1280, height: 900 },
         hasTouch: false,
       },
     },
     {
-      name: "studio-visual-compact",
+      name: "studio-compact",
       use: {
         viewport: { width: 896, height: 414 },
         hasTouch: true,
