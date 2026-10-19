@@ -84,6 +84,16 @@ test("invalid form control exposes its error relationship", async ({ page }) => 
   await expect(page.locator(`#${describedBy}`)).toHaveText("This reference is unavailable.");
 });
 
+test("invalid state remains independent from error-message presence", async ({ page }) => {
+  await page.goto("/?lab=1&state-contract-test=1");
+  const input = page.getByLabel("Invalid without error copy");
+
+  await expect(input).toHaveAttribute("aria-invalid", "true");
+  await expect(input).toHaveAttribute("aria-describedby", "state-contract-invalid-hint");
+  await expect(page.locator("#state-contract-invalid-error")).toHaveCount(0);
+  await expect(page.locator("#state-contract-invalid-hint")).toHaveText("Validation evidence is available separately.");
+});
+
 test("compact and desktop layouts preserve minimum targets and avoid document overflow", async ({
   page,
 }) => {
