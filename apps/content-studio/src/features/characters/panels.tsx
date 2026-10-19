@@ -3,13 +3,12 @@ import { AssetBoard } from "../../ui/asset-board";
 import {
   EmptyEvidence,
   EntityAuthoritySummary,
-  EntityFact,
-  EntityFactGroup,
   HistoryEvidence,
   RelationEvidence,
   ValidationEvidence,
 } from "../../ui/entity-evidence";
-import { Button, StateMessage, Surface, TextField } from "../../ui/primitives";
+import { Button, StateMessage, TextField } from "../../ui/primitives";
+import { KeyValueList, Section } from "../../ui/production-components";
 import { type CharacterReadModel, characterDomainData } from "./model";
 import { useCharacterDisplayNameProposal } from "./use-display-name-proposal";
 
@@ -34,13 +33,18 @@ export function CharacterOverviewPanel({
 
   return (
     <div class="studio-character-grid">
-      <EntityFactGroup title="Canonical identity">
-        <EntityFact label="Display name" value={data.displayName} />
-        <EntityFact label="Actor ID" value={data.actorId} />
-        <EntityFact label="Tactical entity" value={data.tacticalEntityId} />
-        <EntityFact label="Side" value={data.side} />
-        <EntityFact label="Short label" value={data.shortLabel} />
-      </EntityFactGroup>
+      <Section title="Canonical identity">
+        <KeyValueList
+          label="Canonical character identity"
+          items={[
+            { label: "Display name", value: data.displayName },
+            { label: "Actor ID", value: data.actorId },
+            { label: "Tactical entity", value: data.tacticalEntityId },
+            { label: "Side", value: data.side },
+            { label: "Short label", value: data.shortLabel },
+          ]}
+        />
+      </Section>
       <EntityAuthoritySummary
         canonicalPath={model.canonical.canonicalPath}
         revision={model.canonical.provenance.revision ?? revision}
@@ -48,44 +52,44 @@ export function CharacterOverviewPanel({
         schemaVersion={model.schemaVersion}
         provenance={model.provenance}
       />
-      <Surface kind="inset" className="studio-character-editor">
-        <h4>Supported canonical edit</h4>
-        <p>
-          STUDIO06 intentionally exposes only the character display name through the controlled Git
-          proposal path.
-        </p>
-        <TextField
-          id={`display-name-${model.semanticId}`}
-          label="Display name"
-          value={displayName}
-          onInput={(event) => setDisplayName(event.currentTarget.value)}
-          disabled={!canPropose}
-        />
-        <Button
-          variant="primary"
-          pending={proposalState.kind === "pending"}
-          disabled={!canPropose || displayName.trim() === model.displayName || !displayName.trim()}
-          onClick={() => void propose()}
-        >
-          Create Git proposal
-        </Button>
-        {!canPropose ? (
-          <StateMessage title="Read-only access" tone="unavailable">
-            This role can inspect canonical character facts but cannot create canonical change
-            proposals.
-          </StateMessage>
-        ) : null}
-        {proposalState.kind === "success" ? (
-          <StateMessage title="Proposal recorded">
-            {proposalState.message}
-            {proposalState.url ? ` PR: ${proposalState.url}` : ""}
-          </StateMessage>
-        ) : proposalState.kind === "error" ? (
-          <StateMessage title="Proposal failed" tone="error">
-            {proposalState.message}
-          </StateMessage>
-        ) : null}
-      </Surface>
+      <Section
+        title="Supported canonical edit"
+        description="STUDIO06 intentionally exposes only the character display name through the controlled Git proposal path."
+      >
+        <div class="studio-character-editor">
+          <TextField
+            id={`display-name-${model.semanticId}`}
+            label="Display name"
+            value={displayName}
+            onInput={(event) => setDisplayName(event.currentTarget.value)}
+            disabled={!canPropose}
+          />
+          <Button
+            variant="primary"
+            pending={proposalState.kind === "pending"}
+            disabled={!canPropose || displayName.trim() === model.displayName || !displayName.trim()}
+            onClick={() => void propose()}
+          >
+            Create Git proposal
+          </Button>
+          {!canPropose ? (
+            <StateMessage title="Read-only access" tone="unavailable">
+              This role can inspect canonical character facts but cannot create canonical change
+              proposals.
+            </StateMessage>
+          ) : null}
+          {proposalState.kind === "success" ? (
+            <StateMessage title="Proposal recorded">
+              {proposalState.message}
+              {proposalState.url ? ` PR: ${proposalState.url}` : ""}
+            </StateMessage>
+          ) : proposalState.kind === "error" ? (
+            <StateMessage title="Proposal failed" tone="error">
+              {proposalState.message}
+            </StateMessage>
+          ) : null}
+        </div>
+      </Section>
     </div>
   );
 }
@@ -94,18 +98,24 @@ export function CharacterGameplayPanel({ model }: { model: CharacterReadModel })
   const { canonical: data, rpg, attributes, hp } = characterDomainData(model);
   return (
     <div class="studio-character-grid">
-      <EntityFactGroup title="Encounter definition">
-        <EntityFact label="Movement allowance" value={data.movementAllowance} />
-        <EntityFact label="Initial coordinate" value={data.initialCoord} />
-        <EntityFact label="Classes" value={rpg.classes} />
-        <EntityFact label="Initial class" value={rpg.initialClass} />
-        <EntityFact label="HP" value={hp} />
-      </EntityFactGroup>
-      <EntityFactGroup title="RPG attributes">
-        {Object.entries(attributes).map(([key, value]) => (
-          <EntityFact label={key} value={value} key={key} />
-        ))}
-      </EntityFactGroup>
+      <Section title="Encounter definition">
+        <KeyValueList
+          label="Encounter definition"
+          items={[
+            { label: "Movement allowance", value: data.movementAllowance },
+            { label: "Initial coordinate", value: data.initialCoord },
+            { label: "Classes", value: Array.isArray(rpg.classes) ? rpg.classes.join(", ") : String(rpg.classes) },
+            { label: "Initial class", value: rpg.initialClass },
+            { label: "HP", value: typeof hp === "object" ? JSON.stringify(hp) : String(hp) },
+          ]}
+        />
+      </Section>
+      <Section title="RPG attributes">
+        <KeyValueList
+          label="RPG attributes"
+          items={Object.entries(attributes).map(([label, value]) => ({ label, value: String(value) }))}
+        />
+      </Section>
     </div>
   );
 }
