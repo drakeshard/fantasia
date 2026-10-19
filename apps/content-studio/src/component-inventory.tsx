@@ -18,6 +18,7 @@ function ComponentInventory() {
   const [selected, setSelected] = useState("alpha");
   const [filtersOpen, setFiltersOpen] = useState(true);
   const [file, setFile] = useState<File | null>(null);
+  const showStateContractFixture = new URLSearchParams(window.location.search).has("state-contract-test");
 
   return (
     <section class="foundation-preview" aria-labelledby="production-components-title" data-testid="production-component-inventory">
@@ -77,6 +78,7 @@ function ComponentInventory() {
             <Button variant="primary" pending>Pending action</Button>
             <Button disabled>Disabled action</Button>
           </div>
+          {showStateContractFixture ? <TextField id="state-contract-invalid" label="Invalid without error copy" invalid hint="Validation evidence is available separately." /> : null}
         </Section>
       </section>
     </section>
